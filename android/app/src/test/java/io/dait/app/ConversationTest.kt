@@ -9,10 +9,20 @@ class ConversationTest {
         assertEquals("talk_ready", yes.answer("응, 챙겼어").clip)
         assertEquals("arrival_goodbye", yes.answer("체육이 기대돼").clip)
         assertTrue(yes.finished)
+
         val no = Conversation(true)
         assertEquals("talk_missing", no.answer("아직 안 챙겼어").clip)
         assertEquals("school_science", no.answer("과학").clip)
         assertEquals("arrival_goodbye", no.answer("우주가 궁금해").clip)
+        assertTrue(no.finished)
+    }
+
+    @Test fun morningWeatherAndReadingBranches() {
+        val rain = Conversation(true)
+        assertEquals("weather_rain", rain.answer("비 와").clip)
+        assertEquals("school_reading", rain.answer("독서").clip)
+        assertEquals("arrival_goodbye", rain.answer("주인공이 멋졌어").clip)
+        assertTrue(rain.finished)
     }
 
     @Test fun unclearAndRepeatDoNotAdvance() {
@@ -33,11 +43,27 @@ class ConversationTest {
         assertEquals("listen_ack", talk.answer("친구랑 피구 했어").clip)
         assertEquals("listen_parent", talk.answer("공을 피했어").clip)
         assertTrue(talk.finished)
+
         val rest = Conversation(false)
         assertEquals("rest_tired", rest.answer("오늘은 말하기 싫어").clip)
         assertTrue(rest.finished)
         assertEquals("rest_tired", rest.answer("피구").clip)
+
         assertEquals("listen_ack", Conversation(false).answer("그림 그렸어").clip)
         assertEquals("rest_skip", Conversation(false).answer("친구랑 싸웠어").clip)
+    }
+
+    @Test fun afternoonChangedScheduleBranch() {
+        val changed = Conversation(false)
+        assertEquals("afternoon_changed", changed.answer("시간표랑 달랐어").clip)
+        assertEquals("listen_parent", changed.answer("친구랑 만들기 했어").clip)
+        assertTrue(changed.finished)
+    }
+
+    @Test fun etaShortConclusion() {
+        val talk = Conversation(true)
+        val shortReply = talk.triggerEtaShort()
+        assertEquals("eta_short", shortReply.clip)
+        assertTrue(talk.finished)
     }
 }

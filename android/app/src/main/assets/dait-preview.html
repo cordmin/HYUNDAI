@@ -1,0 +1,1574 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAIT</title>
+  <style>
+    :root {
+      --surface: #F3F6F9;
+      --paper: #FFFFFF;
+      --accent: #004DA0;
+      --accent-hover: #003673;
+      --accent-soft: #E5EFFB;
+      --ink: #0E1B2A;
+      --muted: #5B6D82;
+      --outline: #D5DFEA;
+      --control: #E8EEF5;
+      --control-hover: #DCE5F0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #D5DBE3;
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    /* Pleos Display */
+    .pleos-display {
+      width: 100%;
+      max-width: 1060px;
+      height: 600px;
+      background: var(--surface);
+      border-radius: 28px;
+      border: 2px solid #C4CDD7;
+      box-shadow: 0 24px 50px rgba(11, 26, 44, 0.16);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      user-select: none;
+    }
+
+    /* In-App Fullscreen Integration for Hyundai Pleos */
+    body.in-app {
+      background: var(--surface);
+      padding: 0;
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    body.in-app .pleos-display {
+      max-width: 100%;
+      height: 100vh;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    body.in-app .stage-container {
+      padding: 30px 40px;
+    }
+
+    /* Driving Restriction Safety Screen (CarUxRestrictions) */
+    .driving-restriction-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--surface);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .restricted-message {
+      font-size: 42px;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.6px;
+    }
+
+    /* Main Stage */
+    .stage-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 30px 36px;
+      position: relative;
+      opacity: 1;
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ========================================================
+       스마트 벤토: 앰비언트 오브 융합형 (단일 확정안)
+       ======================================================== */
+    .bento-stage {
+      display: grid;
+      grid-template-columns: 1.32fr 1fr;
+      gap: 18px;
+      height: 100%;
+    }
+    .bento-hero {
+      background: linear-gradient(145deg, #07172C 0%, #0E294E 50%, #153C70 100%);
+      border-radius: 22px;
+      padding: 24px 28px 28px 28px;
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 14px 34px rgba(7, 23, 44, 0.32);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .bento-hero:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px rgba(7, 23, 44, 0.45);
+    }
+    .hero-top-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 4px;
+    }
+    .dait-brand-badge {
+      display: inline-flex;
+      align-items: center;
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.25));
+    }
+    .dait-brand-badge:hover {
+      filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.8));
+      transform: scale(1.03);
+    }
+
+    /* Hero Center: Vertical Stack (Orb Top-Center + Prompt Bottom-Center) */
+    .hero-center-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin: 8px 0 12px 0;
+      gap: 18px;
+      width: 100%;
+    }
+    .hero-text-col {
+      text-align: center;
+      width: 100%;
+    }
+    .hero-title {
+      font-size: 33px;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+    }
+    .hero-desc {
+      font-size: 17px;
+      opacity: 0.92;
+      font-weight: 500;
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+
+    /* Ambient Orb inside Bento Hero */
+    .hero-orb-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-ambient-orb {
+      width: 136px;
+      height: 136px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #00B4D8 0%, #0077B6 50%, #04244B 100%);
+      box-shadow: 0 0 42px rgba(0, 180, 216, 0.48), inset 0 0 20px rgba(255,255,255,0.32);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: floatHeroOrb 3.5s ease-in-out infinite;
+    }
+    @keyframes floatHeroOrb {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+        box-shadow: 0 0 34px rgba(0, 180, 216, 0.38), inset 0 0 16px rgba(255,255,255,0.28);
+      }
+      50% {
+        transform: translateY(-5px) scale(1.04);
+        box-shadow: 0 0 56px rgba(0, 180, 216, 0.7), inset 0 0 24px rgba(255,255,255,0.42);
+      }
+    }
+
+    /* Hero Bottom CTA Button */
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.32);
+      padding: 16px 24px;
+      border-radius: 20px;
+      font-size: 20px;
+      font-weight: 800;
+      transition: all 0.15s ease;
+    }
+    .hero-cta:hover {
+      background: rgba(255,255,255,0.28);
+      transform: translateY(-1px);
+    }
+    .hero-cta-plane {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.18);
+      color: #FFFFFF;
+      transition: all 0.2s ease;
+      transform: rotate(-10deg);
+    }
+    .hero-cta:hover .hero-cta-plane {
+      transform: translate(3px, -3px) rotate(-10deg);
+      background: #38BDF8;
+      color: #07172C;
+    }
+    .cta-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* ========================================================
+       Bento Right Column: Top Dual Mini Tiles + 2 Wide Cards
+       ======================================================== */
+    .bento-right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      height: 100%;
+    }
+
+    /* Top Row: 2 Mini Info Tiles */
+    .info-dual-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      height: 136px;
+    }
+    .info-mini-tile {
+      background: var(--paper);
+      border: 1.5px solid var(--outline);
+      border-radius: 22px;
+      padding: 20px 18px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(28,46,42,0.03);
+      transition: all 0.2s ease;
+    }
+    .info-mini-tile:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 77, 160, 0.08);
+    }
+    .tile-tint-prep {
+      background: #F4F8FD !important;
+      border-color: #D3E4F8 !important;
+    }
+    .tile-tint-meal {
+      background: #FDF9F4 !important;
+      border-color: #F6E6D5 !important;
+    }
+    .mini-tile-label {
+      display: flex;
+      align-items: center;
+      margin-top: 2px;
+    }
+    .mini-text-bold {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+    .text-prep {
+      color: #004DA0; /* 선명한 현대 딥 블루 */
+    }
+    .text-meal {
+      color: #C2410C; /* 선명한 웜 테라코타 오렌지 */
+    }
+
+    .mini-tile-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      margin-top: 6px;
+    }
+    .mini-tile-focus {
+      font-size: 23px;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.5px;
+      line-height: 1.25;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+    .mini-tile-sub {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+      margin-top: 5px;
+      width: 100%;
+    }
+
+    /* Wide Action Cards (Horizontally Long & Easy to Touch) */
+    .bento-wide-card {
+      flex: 1;
+      background: var(--paper);
+      border: 1.5px solid var(--outline);
+      border-radius: 22px;
+      padding: 22px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(28,46,42,0.03);
+      position: relative;
+      overflow: hidden;
+    }
+    .bento-wide-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 24px rgba(0,77,160,0.14);
+    }
+    .wide-card-text {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      z-index: 2;
+    }
+    .wide-card-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+    }
+    .wide-card-desc {
+      font-size: 15px;
+      color: var(--muted);
+      font-weight: 600;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    /* Ambient Backdrop Art inside Wide Cards (우측 외곽으로 이동하여 텍스트 간섭 100% 차단) */
+    .wide-card-bg-art {
+      position: absolute;
+      right: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 125px;
+      height: 125px;
+      pointer-events: none;
+      opacity: 0.14;
+      transition: all 0.35s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+    .bento-wide-card:hover .wide-card-bg-art {
+      opacity: 0.24;
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    /* Dialogue Screen */
+    .dialogue-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .dialogue-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .back-btn {
+      padding: 8px 18px;
+      border-radius: 14px;
+      background: var(--control);
+      border: 1px solid var(--outline);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .back-btn:hover { background: var(--control-hover); }
+
+    .dialogue-card {
+      background: var(--paper);
+      border: 1px solid var(--outline);
+      border-radius: 32px;
+      padding: 40px 48px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(28, 46, 42, 0.05);
+    }
+    .card-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    /* Dialogue Ambient Orb */
+    .dialogue-orb {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #00B4D8 0%, #0077B6 50%, #04244B 100%);
+      box-shadow: 0 0 35px rgba(0, 180, 216, 0.45), inset 0 0 14px rgba(255,255,255,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      animation: floatHeroOrb 3.2s ease-in-out infinite;
+    }
+
+    /* Voice Visualizer Wave */
+    .voice-visualizer {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      height: 32px;
+      margin-bottom: 24px;
+    }
+    .v-bar {
+      width: 4px;
+      height: 12px;
+      background: var(--accent);
+      border-radius: 4px;
+      animation: pulse 1s infinite ease-in-out;
+    }
+    .v-bar:nth-child(2) { animation-delay: 0.15s; height: 26px; }
+    .v-bar:nth-child(3) { animation-delay: 0.3s; height: 32px; }
+    .v-bar:nth-child(4) { animation-delay: 0.45s; height: 20px; }
+    .v-bar:nth-child(5) { animation-delay: 0.6s; height: 14px; }
+    @keyframes pulse {
+      0%, 100% { transform: scaleY(0.4); opacity: 0.4; }
+      50% { transform: scaleY(1.2); opacity: 1; }
+    }
+
+    .main-question {
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.3;
+      max-width: 780px;
+    }
+    .heard-bubble {
+      margin-top: 16px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 8px 20px;
+      border-radius: 16px;
+      display: inline-block;
+    }
+
+    /* Choice Chips */
+    .options-row {
+      display: flex;
+      gap: 14px;
+      width: 100%;
+      margin-top: 20px;
+      justify-content: center;
+    }
+    .choice-chip {
+      flex: 1;
+      max-width: 240px;
+      height: 60px;
+      background: var(--control);
+      border: 1px solid var(--outline);
+      border-radius: 20px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .choice-chip:hover {
+      background: var(--accent);
+      color: #FFFFFF;
+      border-color: var(--accent);
+    }
+
+    /* Primary Bottom Action */
+    .bottom-bar {
+      margin-top: 16px;
+      display: flex;
+      justify-content: center;
+    }
+    .primary-btn {
+      width: 280px;
+      height: 60px;
+      background: var(--accent);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 20px;
+      font-size: 19px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0, 77, 160, 0.28);
+    }
+    .primary-btn:hover { background: var(--accent-hover); }
+
+    /* Summary Card */
+    .summary-card {
+      width: 100%;
+      max-width: 620px;
+      background: var(--surface);
+      border: 1px solid var(--outline);
+      border-radius: 20px;
+      padding: 24px 30px;
+      text-align: left;
+      margin-top: 16px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    .summary-row {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+    .summary-row strong {
+      color: var(--accent);
+      width: 70px;
+      flex-shrink: 0;
+    }
+
+    /* Toast */
+    .toast-popup {
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0E1F36;
+      color: #FFFFFF;
+      padding: 16px 28px;
+      border-radius: 20px;
+      font-size: 16px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      display: none;
+      z-index: 100;
+    }
+
+    /* ========================================================
+       시그니처 인트로 스플래시 애니메이션 (Signature Splash Intro)
+       ======================================================== */
+    .splash-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 28px;
+      background: linear-gradient(145deg, #07172C 0%, #0E294E 50%, #153C70 100%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      opacity: 1;
+      visibility: visible;
+      box-shadow: 0 14px 34px rgba(7, 23, 44, 0.32);
+      transition: 
+        top 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+        left 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+        width 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+        height 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+        border-radius 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.22s ease,
+        visibility 0.22s ease;
+      cursor: pointer;
+    }
+    .splash-overlay.fade-out {
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    /* Ambient Pulsing Aura behind the logo */
+    .splash-aura {
+      position: absolute;
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 180, 216, 0.28) 0%, rgba(0, 77, 160, 0.14) 42%, transparent 70%);
+      filter: blur(36px);
+      transform: scale(0.9);
+      animation: splashAuraPulse 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes splashAuraPulse {
+      0%, 100% { transform: scale(0.9); opacity: 0.6; }
+      50% { transform: scale(1.15); opacity: 0.95; }
+    }
+
+    .splash-bg-decor {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.06) 1.2px, transparent 1.2px);
+      background-size: 30px 30px;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    /* Brand Container that will FLIP/glide to the top-left */
+    .splash-brand-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      transform-origin: center center;
+      transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
+    }
+
+    .splash-logo-svg {
+      width: 380px;
+      height: 130px;
+      overflow: visible;
+      filter: drop-shadow(0 12px 32px rgba(0, 180, 216, 0.42));
+    }
+
+    .splash-ribbon-path {
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    /* Dot Pop Animation & Shockwave Ripple */
+    .splash-dot-group {
+      transform-origin: 62px 7.5px;
+      opacity: 0;
+    }
+    .splash-dot-group.pop {
+      animation: dotPopIn 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes dotPopIn {
+      0% { transform: scale(0); opacity: 0; }
+      55% { transform: scale(1.65); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .splash-dot-ripple {
+      transform-origin: 62px 7.5px;
+      opacity: 0;
+    }
+    .splash-dot-ripple.expand {
+      animation: rippleExpand 0.75s cubic-bezier(0.1, 0.8, 0.25, 1) forwards;
+    }
+    @keyframes rippleExpand {
+      0% { r: 3px; stroke-width: 3.5px; opacity: 1; }
+      100% { r: 24px; stroke-width: 0.4px; opacity: 0; }
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <!-- Pleos Display (Pure App Window) -->
+  <div class="pleos-display">
+
+    <!-- Signature Splash Intro Overlay -->
+    <div id="splashOverlay" class="splash-overlay" onclick="skipSplashIntro()">
+      <div class="splash-bg-decor"></div>
+      <div class="splash-aura"></div>
+      
+      <div id="splashBrandContainer" class="splash-brand-container">
+        <svg id="splashLogoSvg" class="splash-logo-svg" viewBox="0 0 100 34" fill="none">
+          <defs>
+            <linearGradient id="splashFlowGrad" x1="0" y1="0" x2="100" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#38BDF8"/>
+              <stop offset="50%" stop-color="#FFFFFF"/>
+              <stop offset="100%" stop-color="#38BDF8"/>
+            </linearGradient>
+            <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="2.5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- Main cursive ribbon D-a-i-t -->
+          <path id="splashRibbonPath"
+                class="splash-ribbon-path"
+                d="M10 26 C12 10, 16 6, 22 6 C28 6, 32 12, 30 20 C28 28, 20 28, 16 28 C26 28, 38 28, 42 20 C44 14, 48 14, 50 18 C52 24, 48 28, 54 28 C60 28, 62 18, 62 14 C62 26, 68 28, 72 28 C76 28, 80 18, 80 10" 
+                stroke="url(#splashFlowGrad)" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+          <!-- t crossbar -->
+          <path id="splashCrossbarPath"
+                class="splash-ribbon-path"
+                d="M74 16 h12"
+                stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+
+          <!-- i Dot Accent (with shockwave ring) -->
+          <g id="splashDotGroup" class="splash-dot-group">
+            <circle id="splashDotRipple" class="splash-dot-ripple" cx="62" cy="7.5" r="3" fill="none" stroke="#38BDF8" stroke-width="2"/>
+            <circle id="splashDot" cx="62" cy="7.5" r="3.2" fill="#38BDF8" filter="url(#neonGlow)"/>
+            <circle cx="62" cy="7.5" r="1.5" fill="#FFFFFF"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Main Stage -->
+    <div id="stageArea" class="stage-container">
+      <!-- Injected by JS -->
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toastPopup" class="toast-popup">
+      학교 제출이 완료되었습니다.
+    </div>
+
+    <!-- Driving Restriction Safety Screen (CarUxRestrictions) -->
+    <div id="drivingRestrictionOverlay" class="driving-restriction-overlay" style="display: none;">
+      <div class="restricted-message">주차 후 이어갈게요</div>
+    </div>
+
+  </div>
+
+  <audio id="audioPlayer" preload="none"></audio>
+
+  <script>
+    // State
+    const voice = 'nika';
+    let currentMode = null; // 'morning' | 'afternoon' | 'report' | 'career' | 'tour' | null
+    let stage = '';
+    let heard = '';
+    let isFinished = false;
+
+    // DAIT 공식 확정 캘리그래피 로고 (시안 2 커넥티드 리본 + i Dot)
+    function getDaitLogoHtml() {
+      return `
+        <div class="dait-brand-badge" onclick="event.stopPropagation(); playSplashIntro();" title="클릭하여 오프닝 인트로 다시보기">
+          <svg width="94" height="28" viewBox="0 0 100 32" fill="none">
+            <path d="M10 26 C12 10, 16 6, 22 6 C28 6, 32 12, 30 20 C28 28, 20 28, 16 28 C26 28, 38 28, 42 20 C44 14, 48 14, 50 18 C52 24, 48 28, 54 28 C60 28, 62 18, 62 14 C62 26, 68 28, 72 28 C76 28, 80 18, 80 10 M74 16 h12" 
+                  stroke="url(#flowGradBadge)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <circle cx="62" cy="7.5" r="2.8" fill="#38BDF8"/>
+            <defs>
+              <linearGradient id="flowGradBadge" x1="0" y1="0" x2="100" y2="0" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#38BDF8"/>
+                <stop offset="0.6" stop-color="#FFFFFF"/>
+                <stop offset="1" stop-color="#38BDF8"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      `;
+    }
+
+    // Report Data
+    let reportData = { docType: '체험학습 결과보고서', field1: '', field2: '' };
+
+    // Dialogue Scenarios
+    const morningFlow = {
+      PREP: {
+        clip: 'talk_prepare',
+        title: '체육복과 숙제 챙겼나요?',
+        choices: ['다 챙겼어', '숙제 깜빡했어', '가방에 있어']
+      },
+      SUBJECT: {
+        clip: 'talk_ready',
+        title: '어떤 수업이 기대돼요?',
+        choices: ['체육', '과학', '독서']
+      },
+      SCIENCE_DETAIL: {
+        clip: 'school_science',
+        title: '무엇이 궁금해요?',
+        choices: ['우주가 궁금해', '실험이 기대돼', '다녀올게요']
+      },
+      READING_DETAIL: {
+        clip: 'school_reading',
+        title: '기억나는 이야기 있어?',
+        choices: ['주인공이 멋졌어', '마법 이야기', '다녀올게요']
+      },
+      DONE: {
+        clip: 'arrival_goodbye',
+        title: '잘 다녀와요!',
+        choices: []
+      }
+    };
+
+    const afternoonFlow = {
+      AFTER_EVENT: {
+        clip: 'afternoon_welcome',
+        title: '오늘은 어땠어요?',
+        choices: ['친구랑 피구 했어', '그림 그렸어', '쉬고 싶어']
+      },
+      AFTER_DETAIL: {
+        clip: 'listen_ack',
+        title: '조금 더 들려줄래요?',
+        choices: ['공을 피했어', '시간표랑 달랐어', '가족에게 물어볼래']
+      },
+      PARENT_BRIDGE: {
+        clip: 'listen_parent',
+        title: '가족의 하루도 들어볼까요?',
+        choices: ['오늘도 수고했어']
+      },
+      REST: {
+        clip: 'rest_tired',
+        title: '편하게 쉬어요',
+        choices: []
+      },
+      DONE: {
+        clip: 'arrival_home',
+        title: '집에 도착했어요!',
+        choices: []
+      }
+    };
+
+    const reportFlow = {
+      STEP0_DOC_TYPE: {
+        clip: 'prepare_notice',
+        title: '어떤 학교 서류를 작성할까요?',
+        choices: ['체험학습 결과보고서', '체험학습 신청서', '결석신고서']
+      },
+      STEP1_FIELD1: {
+        clip: 'school_science',
+        title: '',
+        choices: []
+      },
+      STEP2_FIELD2: {
+        clip: 'school_reading',
+        title: '',
+        choices: []
+      },
+      COMPLETE: {
+        clip: 'listen_parent',
+        title: '서류 작성이 완료되었어요',
+        choices: []
+      }
+    };
+
+    const tourFlow = {
+      STEP1: {
+        clip: 'school_science',
+        title: '오늘 탐방지에서 무엇이 제일 기대돼요?',
+        choices: ['역사 이야기', '과학 체험', '풍경 구경']
+      },
+      STEP2: {
+        clip: 'school_reading',
+        title: '도착 전 알고 싶은 퀴즈가 있나요?',
+        choices: ['퀴즈 내줘', '설명해 줘', '음악 들을래']
+      },
+      DONE: {
+        clip: 'arrival_goodbye',
+        title: '즐겁게 탐방하고 와요!',
+        choices: []
+      }
+    };
+
+    const careerFlow = {
+      STEP1: {
+        clip: 'school_science',
+        title: '오늘 과학 수업과 어울리는 진로를 알아볼까요?',
+        choices: ['궁금해', '어떤 분야가 있어?', '다른 진로 볼래']
+      },
+      STEP2: {
+        clip: 'school_reading',
+        title: '미래에 가장 관심이 가는 분야는 무엇인가요?',
+        choices: ['우주항공 연구원', '로봇 공학자', 'AI 개발자']
+      },
+      DONE: {
+        clip: 'arrival_goodbye',
+        title: '멋진 꿈을 응원해요! 차 안에서 언제든 물어보세요.',
+        choices: []
+      }
+    };
+
+    function render() {
+      const stageArea = document.getElementById('stageArea');
+
+      // 1. Home Screen (단일 완성형 스마트 벤토)
+      if (!currentMode) {
+        renderHome(stageArea);
+        return;
+      }
+
+      // 2. Report Flow
+      if (currentMode === 'report') {
+        renderReportFlow(stageArea);
+        return;
+      }
+
+      // 3. Dialogue Flow
+      renderDialogueFlow(stageArea);
+    }
+
+    // --- 스마트 벤토: 완성형 레이아웃 ---
+    function renderHome(container) {
+      container.innerHTML = `
+        <div class="bento-stage">
+          <!-- 좌측 히어로 카드 (등교 대화 + 보이스 앰비언트 구체) -->
+          <div class="bento-hero" onclick="startFlow('morning')">
+            <div class="hero-top-meta">
+              ${getDaitLogoHtml()}
+            </div>
+
+            <div class="hero-center-col">
+              <div class="hero-orb-wrap">
+                <div class="hero-ambient-orb">
+                  <div class="voice-visualizer" style="height:32px; margin:0;">
+                    <div class="v-bar" style="background:#fff;"></div>
+                    <div class="v-bar" style="background:#fff;"></div>
+                    <div class="v-bar" style="background:#fff;"></div>
+                    <div class="v-bar" style="background:#fff;"></div>
+                    <div class="v-bar" style="background:#fff;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="hero-text-col">
+                <div class="hero-title">오늘 등교 준비 됐나요?</div>
+                <div class="hero-desc">체육복과 숙제를 함께 확인해요</div>
+              </div>
+            </div>
+
+            <div class="hero-cta">
+              <div class="cta-left">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                  <line x1="12" y1="19" x2="12" y2="22"/>
+                </svg>
+                <span>등교 대화 시작하기</span>
+              </div>
+              <div class="hero-cta-plane" title="출발">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 2L11 13"/>
+                  <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- 우측 컬럼: 상단 2분할 미니 정보 + 하단 와이드 액션 카드 2개 -->
+          <div class="bento-right-col">
+            <!-- 1. 상단 미니 정보 2열 (시안 3: 카드 틴트형 확정) -->
+            <div class="info-dual-row">
+              <div class="info-mini-tile tile-tint-prep">
+                <div class="mini-tile-label"><span class="mini-text-bold text-prep">준비물 · 숙제</span></div>
+                <div class="mini-tile-body">
+                  <div class="mini-tile-focus">체육복 · 독서록</div>
+                </div>
+              </div>
+
+              <div class="info-mini-tile tile-tint-meal">
+                <div class="mini-tile-label"><span class="mini-text-bold text-meal">오늘 점심</span></div>
+                <div class="mini-tile-body">
+                  <div class="mini-tile-focus">떡갈비구이</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. 중간 와이드 카드: 학교 서류 간편 제출 (체험학습 신청/보고서/결석신고) -->
+            <div class="bento-wide-card" onclick="startFlow('report')">
+              <div class="wide-card-text">
+                <div class="wide-card-title">학교 서류 간편 제출</div>
+                <div class="wide-card-desc">체험학습 신청 · 결과보고서 · 결석신고서</div>
+              </div>
+              <div class="wide-card-bg-art">
+                <svg width="125" height="125" viewBox="0 0 100 100" fill="none">
+                  <rect x="18" y="14" width="64" height="76" rx="9" fill="#004DA0" />
+                  <rect x="24" y="20" width="52" height="64" rx="5" fill="#FFFFFF" />
+                  <rect x="31" y="29" width="24" height="4.5" rx="2" fill="#004DA0" />
+                  <rect x="31" y="38" width="38" height="3" rx="1.5" fill="#004DA0" opacity="0.6" />
+                  <rect x="31" y="45" width="32" height="3" rx="1.5" fill="#004DA0" opacity="0.6" />
+                  <rect x="31" y="52" width="38" height="3" rx="1.5" fill="#004DA0" opacity="0.6" />
+                  <rect x="31" y="59" width="26" height="3" rx="1.5" fill="#004DA0" opacity="0.6" />
+                  <rect x="37" y="9" width="26" height="9" rx="3" fill="#38BDF8" />
+                  <circle cx="50" cy="13.5" r="2.5" fill="#FFFFFF" />
+                  <circle cx="68" cy="69" r="13.5" fill="#38BDF8" />
+                  <path d="M62 69l4 4 8-8" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- 3. 하단 와이드 카드: 진로·진학 안내 (상하 중앙 & 품격 있는 학사모 단독 배경 아트) -->
+            <div class="bento-wide-card" onclick="startFlow('career')">
+              <div class="wide-card-text">
+                <div class="wide-card-title">진로·진학 안내</div>
+                <div class="wide-card-desc">최신 교육뉴스 및 학생 맞춤형 진학안내</div>
+              </div>
+              <div class="wide-card-bg-art">
+                <svg width="130" height="130" viewBox="0 0 100 100" fill="none">
+                  <!-- 학사모 상단 다이아몬드 보드 -->
+                  <path d="M50 20L12 38l38 17 38-17-38-17z" fill="#004DA0" />
+                  <!-- 학사모 모자 본체 (둥근 캡) -->
+                  <path d="M26 49v18c0 9 11 16 24 16s24-7 24-16V49" stroke="#004DA0" stroke-width="5" stroke-linecap="round" fill="none"/>
+                  <!-- 학사모 캡 내부 음영 -->
+                  <path d="M28 51c4 7 12 12 22 12s18-5 22-12" fill="#004DA0" opacity="0.25"/>
+                  <!-- 중앙 버튼 및 부드럽게 늘어뜨려진 태슬 (술) -->
+                  <circle cx="50" cy="37" r="3.5" fill="#38BDF8"/>
+                  <path d="M50 37c14 4 28 8 28 20v14" stroke="#38BDF8" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+                  <rect x="75" y="71" width="6" height="10" rx="2" fill="#38BDF8"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDialogueFlow(container) {
+      let flow, modeName;
+      if (currentMode === 'morning') {
+        flow = morningFlow;
+        modeName = '등교';
+      } else if (currentMode === 'afternoon') {
+        flow = afternoonFlow;
+        modeName = '하교';
+      } else if (currentMode === 'career') {
+        flow = careerFlow;
+        modeName = '진로·진학 안내';
+      } else {
+        flow = tourFlow;
+        modeName = '주말탐방';
+      }
+
+      const data = flow[stage] || flow.DONE;
+
+      playAudio(data.clip);
+
+      let optionsHtml = '';
+      if (data.choices && data.choices.length > 0) {
+        optionsHtml = `
+          <div class="options-row">
+            ${data.choices.map(c => `<button class="choice-chip" onclick="handleAnswer('${c}')">${c}</button>`).join('')}
+          </div>
+        `;
+      }
+
+      const buttonLabel = isFinished ? '마치기' : '말하기';
+
+      container.innerHTML = `
+        <div class="dialogue-wrap">
+          <div class="dialogue-top">
+            <button class="back-btn" onclick="goHome()">처음으로</button>
+            <span style="font-size:15px; font-weight:700; color:var(--muted);">${modeName}</span>
+          </div>
+
+          <div class="dialogue-card">
+            <div class="card-center">
+              <div class="dialogue-orb">
+                <div class="voice-visualizer" style="height:26px; margin:0;">
+                  <div class="v-bar" style="background:#fff;"></div>
+                  <div class="v-bar" style="background:#fff;"></div>
+                  <div class="v-bar" style="background:#fff;"></div>
+                  <div class="v-bar" style="background:#fff;"></div>
+                  <div class="v-bar" style="background:#fff;"></div>
+                </div>
+              </div>
+              <div class="main-question">${data.title}</div>
+              ${heard ? `<div class="heard-bubble">“${heard}”</div>` : ''}
+            </div>
+
+            ${optionsHtml}
+          </div>
+
+          <div class="bottom-bar">
+            <button class="primary-btn" onclick="handlePrimaryAction()">
+              ${buttonLabel}
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderReportFlow(container) {
+      let title = '';
+      let choices = [];
+      const clip = 'school_science';
+
+      if (stage === 'STEP0_DOC_TYPE') {
+        title = '어떤 학교 서류를 작성할까요?';
+        choices = ['체험학습 결과보고서', '체험학습 신청서', '결석신고서'];
+      } else if (stage === 'STEP1_FIELD1') {
+        if (reportData.docType === '체험학습 결과보고서') {
+          title = '어디에 다녀왔나요?';
+          choices = ['과천과학관', '경주유적지', '에버랜드'];
+        } else if (reportData.docType === '체험학습 신청서') {
+          title = '어디로 탐방을 가나요?';
+          choices = ['국립중앙박물관', '제주 생태탐방', '경주 역사지구'];
+        } else {
+          title = '어떤 사유로 결석하나요?';
+          choices = ['감기 몸살', '병원 진료', '가정 행사'];
+        }
+      } else if (stage === 'STEP2_FIELD2') {
+        if (reportData.docType === '체험학습 결과보고서') {
+          title = '가장 신기했던 점은 무엇인가요?';
+          choices = ['블랙홀 관람', '로봇 조종', '화석 발굴'];
+        } else if (reportData.docType === '체험학습 신청서') {
+          title = '어떤 학습 활동을 계획 중인가요?';
+          choices = ['역사 유적 답사', '자연 생태 체험', '과학 문화 탐구'];
+        } else {
+          title = '결석 기간을 알려주세요';
+          choices = ['오늘 하루', '2일간', '오전 결석'];
+        }
+      }
+
+      playAudio(clip);
+
+      if (stage === 'COMPLETE') {
+        container.innerHTML = `
+          <div class="dialogue-wrap">
+            <div class="dialogue-top">
+              <button class="back-btn" onclick="goHome()">처음으로</button>
+              <span style="font-size:15px; font-weight:700; color:var(--muted);">학교 서류 제출</span>
+            </div>
+
+            <div class="dialogue-card">
+              <div class="card-center">
+                <div class="main-question">${reportData.docType}가 완성되었어요</div>
+                
+                <div class="summary-card">
+                  <div class="summary-row"><strong>서류명</strong> <span>${reportData.docType}</span></div>
+                  <div class="summary-row"><strong>내용</strong> <span>${reportData.field1} · ${reportData.field2}</span></div>
+                  <div class="summary-row"><strong>제출</strong> <span>솔샘초등학교 3학년 2반 김지우 담임선생님</span></div>
+                </div>
+              </div>
+
+              <div class="options-row">
+                <button class="choice-chip" style="max-width:280px; background:var(--accent); color:#fff;" onclick="submitReport()">
+                  학교 제출
+                </button>
+              </div>
+            </div>
+
+            <div class="bottom-bar">
+              <button class="primary-btn" onclick="goHome()">
+                마치기
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      let optionsHtml = '';
+      if (choices.length > 0) {
+        optionsHtml = `
+          <div class="options-row">
+            ${choices.map(c => `<button class="choice-chip" onclick="handleReportChoice('${c}')">${c}</button>`).join('')}
+          </div>
+        `;
+      }
+
+      container.innerHTML = `
+        <div class="dialogue-wrap">
+          <div class="dialogue-top">
+            <button class="back-btn" onclick="goHome()">처음으로</button>
+            <span style="font-size:15px; font-weight:700; color:var(--muted);">학교 서류 제출</span>
+          </div>
+
+          <div class="dialogue-card">
+            <div class="card-center">
+              <div class="dialogue-orb">
+                <div class="voice-visualizer" style="height:26px; margin:0;">
+                  <div class="v-bar" style="background:#fff;"></div>
+                  <div class="v-bar" style="background:#fff;"></div>
+                  <div class="v-bar" style="background:#fff;"></div>
+                  <div class="v-bar" style="background:#fff;"></div>
+                  <div class="v-bar" style="background:#fff;"></div>
+                </div>
+              </div>
+              <div class="main-question">${title}</div>
+            </div>
+
+            ${optionsHtml}
+          </div>
+
+          <div class="bottom-bar">
+            <button class="primary-btn" onclick="alert('음성 또는 버튼으로 답변해 주세요.')">
+              말하기
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function startFlow(mode) {
+      currentMode = mode;
+      heard = '';
+      isFinished = false;
+
+      if (mode === 'morning') stage = 'PREP';
+      else if (mode === 'afternoon') stage = 'AFTER_EVENT';
+      else if (mode === 'report') {
+        stage = 'STEP0_DOC_TYPE';
+        reportData = { docType: '체험학습 결과보고서', field1: '', field2: '' };
+      } else if (mode === 'career') {
+        stage = 'STEP1';
+      } else if (mode === 'tour') {
+        stage = 'STEP1';
+      }
+      render();
+    }
+
+    function goHome() {
+      currentMode = null;
+      stage = '';
+      heard = '';
+      isFinished = false;
+      render();
+    }
+
+    function handleAnswer(ans) {
+      heard = ans;
+      if (currentMode === 'morning') {
+        if (stage === 'PREP') stage = 'SUBJECT';
+        else if (stage === 'SUBJECT') {
+          if (ans === '체육') stage = 'DONE';
+          else if (ans === '과학') stage = 'SCIENCE_DETAIL';
+          else stage = 'READING_DETAIL';
+        } else if (stage === 'SCIENCE_DETAIL' || stage === 'READING_DETAIL') {
+          stage = 'DONE';
+          isFinished = true;
+        }
+      } else if (currentMode === 'afternoon') {
+        if (stage === 'AFTER_EVENT') {
+          if (ans === '쉬고 싶어') stage = 'REST';
+          else stage = 'AFTER_DETAIL';
+        } else if (stage === 'AFTER_DETAIL') stage = 'PARENT_BRIDGE';
+        else if (stage === 'PARENT_BRIDGE') {
+          stage = 'DONE';
+          isFinished = true;
+        }
+      } else if (currentMode === 'career') {
+        if (stage === 'STEP1') stage = 'STEP2';
+        else if (stage === 'STEP2') {
+          stage = 'DONE';
+          isFinished = true;
+        }
+      } else if (currentMode === 'tour') {
+        if (stage === 'STEP1') stage = 'STEP2';
+        else if (stage === 'STEP2') {
+          stage = 'DONE';
+          isFinished = true;
+        }
+      }
+      render();
+    }
+
+    function handleReportChoice(ans) {
+      if (stage === 'STEP0_DOC_TYPE') {
+        reportData.docType = ans;
+        stage = 'STEP1_FIELD1';
+      } else if (stage === 'STEP1_FIELD1') {
+        reportData.field1 = ans;
+        stage = 'STEP2_FIELD2';
+      } else if (stage === 'STEP2_FIELD2') {
+        reportData.field2 = ans;
+        stage = 'COMPLETE';
+      }
+      render();
+    }
+
+    function submitReport() {
+      const toast = document.getElementById('toastPopup');
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+        goHome();
+      }, 2000);
+    }
+
+    function handlePrimaryAction() {
+      if (isFinished || stage === 'DONE' || stage === 'REST') {
+        goHome();
+      } else {
+        alert('마이크가 열려 음성을 인식합니다.');
+      }
+    }
+
+    function playAudio(clipId) {
+      const player = document.getElementById('audioPlayer');
+      const isAndroidAsset = window.location.href.includes('android_asset');
+      const src = isAndroidAsset 
+        ? `voices/${voice.toLowerCase()}/${clipId}.wav` 
+        : `../android/app/src/main/assets/voices/${voice.toLowerCase()}/${clipId}.wav`;
+      player.src = src;
+      player.play().catch(e => console.log('Audio error:', e));
+    }
+
+    // In-App Detection & Driving Restriction API
+    if (window.location.href.includes('android_asset') || navigator.userAgent.includes('Android')) {
+      document.body.classList.add('in-app');
+    }
+
+    window.setDrivingMode = function(isDriving) {
+      const overlay = document.getElementById('drivingRestrictionOverlay');
+      if (overlay) {
+        overlay.style.display = isDriving ? 'flex' : 'none';
+      }
+    };
+
+    // ========================================================
+    // 시그니처 인트로 스플래시 애니메이션 엔진
+    // ========================================================
+    let isIntroPlaying = false;
+    let introTimers = [];
+
+    function clearIntroTimers() {
+      introTimers.forEach(t => clearTimeout(t));
+      introTimers = [];
+    }
+
+    function playChimeSound() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        // 산뜻하고 경쾌한 현대 ccNC 차음 스타일 피치 (880Hz -> 1760Hz)
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.14, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.28);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.3);
+      } catch (e) {
+        // 브라우저 자동 재생 정책 제한 시 안전 패스
+      }
+    }
+
+    function playSplashIntro() {
+      if (isIntroPlaying) return;
+      isIntroPlaying = true;
+      clearIntroTimers();
+
+      const overlay = document.getElementById('splashOverlay');
+      const brand = document.getElementById('splashBrandContainer');
+      const ribbon = document.getElementById('splashRibbonPath');
+      const crossbar = document.getElementById('splashCrossbarPath');
+      const dotGroup = document.getElementById('splashDotGroup');
+      const dotRipple = document.getElementById('splashDotRipple');
+      const aura = document.querySelector('.splash-aura');
+
+      if (!overlay || !ribbon) {
+        isIntroPlaying = false;
+        return;
+      }
+
+      // 오버레이 및 브랜드 상태 초기화 (전체 화면 상태로 리셋)
+      overlay.style.transition = 'none';
+      overlay.style.top = '0px';
+      overlay.style.left = '0px';
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.borderRadius = '28px';
+      overlay.style.boxShadow = 'none';
+      overlay.classList.remove('fade-out');
+      overlay.style.display = 'flex';
+      overlay.style.opacity = '1';
+      overlay.style.visibility = 'visible';
+
+      if (aura) {
+        aura.style.transition = 'none';
+        aura.style.opacity = '0.9';
+      }
+
+      brand.style.transition = 'none';
+      brand.style.transform = 'translate(0, 0) scale(1)';
+      brand.style.opacity = '1';
+
+      if (dotGroup) dotGroup.classList.remove('pop');
+      if (dotRipple) dotRipple.classList.remove('expand');
+
+      // 우측 메뉴 카드 초기화 (오른쪽에서 당겨져 들어올 준비)
+      const rightCards = document.querySelectorAll('.bento-right-col > *');
+      rightCards.forEach((card) => {
+        card.style.transition = 'none';
+        card.style.transform = 'translateX(65px)';
+        card.style.opacity = '0';
+      });
+
+      // SVG 스트로크 대시 설정 (전체 길이 측정)
+      const ribbonLength = ribbon.getTotalLength ? ribbon.getTotalLength() : 380;
+      ribbon.style.transition = 'none';
+      ribbon.style.strokeDasharray = ribbonLength;
+      ribbon.style.strokeDashoffset = ribbonLength;
+
+      const crossbarLength = crossbar.getTotalLength ? crossbar.getTotalLength() : 20;
+      crossbar.style.transition = 'none';
+      crossbar.style.strokeDasharray = crossbarLength;
+      crossbar.style.strokeDashoffset = crossbarLength;
+
+      // 동기식 리플로우 강제 (트랜지션 보장)
+      void ribbon.getBoundingClientRect();
+
+      // 1. 손글씨 쓰듯 캘리그래피 스트로크 스르륵 써내려가기 (0 ~ 1.05s)
+      requestAnimationFrame(() => {
+        ribbon.style.transition = 'stroke-dashoffset 1.05s cubic-bezier(0.42, 0, 0.18, 1)';
+        ribbon.style.strokeDashoffset = '0';
+      });
+
+      // 2. t 가로획 연결 (0.92s)
+      introTimers.push(setTimeout(() => {
+        crossbar.style.transition = 'stroke-dashoffset 0.18s ease-out';
+        crossbar.style.strokeDashoffset = '0';
+      }, 920));
+
+      // 3. i 위에 점(Dot) 하나 마지막으로 딱! 찍히며 충격파 확산 (1.12s)
+      introTimers.push(setTimeout(() => {
+        if (dotGroup) dotGroup.classList.add('pop');
+        if (dotRipple) dotRipple.classList.add('expand');
+        playChimeSound();
+      }, 1120));
+
+      // 4. 파란색 화면 전체가 hero 카드 크기로 함께 줄어들면서, 로고도 좌측 상단으로 같이 빨려들어가는 모션 (1.62s)
+      introTimers.push(setTimeout(() => {
+        const hero = document.querySelector('.bento-hero');
+        const display = document.querySelector('.pleos-display');
+        const targetBadge = document.querySelector('.dait-brand-badge');
+
+        if (hero && display && targetBadge) {
+          const hRect = hero.getBoundingClientRect();
+          const dRect = display.getBoundingClientRect();
+          const targetTop = hRect.top - dRect.top;
+          const targetLeft = hRect.left - dRect.left;
+          const targetWidth = hRect.width;
+          const targetHeight = hRect.height;
+
+          // (1) 전체 파란색 화면이 hero 카드 위치와 크기로 함께 수축 (빨려들어가기)
+          overlay.style.transition = 'top 0.72s cubic-bezier(0.22, 1, 0.36, 1), left 0.72s cubic-bezier(0.22, 1, 0.36, 1), width 0.72s cubic-bezier(0.22, 1, 0.36, 1), height 0.72s cubic-bezier(0.22, 1, 0.36, 1), border-radius 0.72s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.72s cubic-bezier(0.22, 1, 0.36, 1)';
+          overlay.style.top = `${targetTop}px`;
+          overlay.style.left = `${targetLeft}px`;
+          overlay.style.width = `${targetWidth}px`;
+          overlay.style.height = `${targetHeight}px`;
+          overlay.style.borderRadius = '22px';
+          overlay.style.boxShadow = '0 14px 34px rgba(7, 23, 44, 0.32)';
+
+          // (2) 로고도 수축하는 파란색 화면 내부에서 좌측 상단으로 정확히 이동
+          // 축소된 카드 내부 기준: padding-left 28px, padding-top 24px
+          const targetX = 28 + (targetBadge.offsetWidth / 2) - (targetWidth / 2);
+          const targetY = 24 + (targetBadge.offsetHeight / 2) - (targetHeight / 2);
+          const scale = targetBadge.offsetWidth / brand.offsetWidth;
+
+          brand.style.transition = 'transform 0.72s cubic-bezier(0.22, 1, 0.36, 1)';
+          brand.style.transform = `translate(${targetX}px, ${targetY}px) scale(${scale})`;
+
+          // (3) 오버레이 내부 발광 아우라는 수축하면서 은은하게 소멸
+          if (aura) {
+            aura.style.transition = 'opacity 0.55s ease';
+            aura.style.opacity = '0';
+          }
+        }
+
+        // (4) 우측 메뉴 카드들이 왼쪽 수축 모션에 이끌리듯 오른쪽에서 화면 안으로 부드럽게 당겨져 들어옴 (스태거 캐스케이드)
+        rightCards.forEach((card, idx) => {
+          const delay = idx * 65; // 상단 2분할(0ms) -> 학교 서류(65ms) -> 진로·진학(130ms) 순차 진입
+          introTimers.push(setTimeout(() => {
+            card.style.transition = 'transform 0.68s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.48s ease-out';
+            card.style.transform = 'translateX(0)';
+            card.style.opacity = '1';
+          }, delay));
+        });
+      }, 1620));
+
+      // 5. 수축 완료 시점 (2.36s) - 파란색 화면이 hero 카드와 완전히 포개졌으므로 부드럽게 핸드오버
+      introTimers.push(setTimeout(() => {
+        overlay.style.transition = 'opacity 0.2s ease';
+        overlay.style.opacity = '0';
+      }, 2360));
+
+      // 5.5 우측 메뉴 카드 스타일 정리 (2.46s - 도착 완료 후 기본 CSS 호버 효과 정상화)
+      introTimers.push(setTimeout(() => {
+        rightCards.forEach((card) => {
+          card.style.transition = '';
+          card.style.transform = '';
+          card.style.opacity = '';
+        });
+      }, 2460));
+
+      // 6. 스플래시 완전 정리 (2.58s)
+      introTimers.push(setTimeout(() => {
+        overlay.style.display = 'none';
+        isIntroPlaying = false;
+      }, 2580));
+    }
+
+    function skipSplashIntro() {
+      clearIntroTimers();
+      const overlay = document.getElementById('splashOverlay');
+      const rightCards = document.querySelectorAll('.bento-right-col > *');
+      rightCards.forEach((card) => {
+        card.style.transition = 'opacity 0.2s ease';
+        card.style.transform = '';
+        card.style.opacity = '1';
+        setTimeout(() => {
+          card.style.transition = '';
+        }, 200);
+      });
+      if (overlay) {
+        overlay.style.transition = 'opacity 0.2s ease';
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+          overlay.style.display = 'none';
+          isIntroPlaying = false;
+        }, 200);
+      }
+    }
+
+    // Initial render and signature splash intro
+    render();
+    setTimeout(() => {
+      playSplashIntro();
+    }, 120);
+  </script>
+</body>
+</html>

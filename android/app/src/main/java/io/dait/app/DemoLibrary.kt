@@ -6,7 +6,8 @@ import org.json.JSONObject
 data class DemoLine(val id: String, val category: String, val title: String, val text: String, val cue: String, val scene: Scene)
 
 object DemoLibrary {
-    val voices = listOf("Cruz", "Nika")
+    val voices = listOf("Nika")
+    const val DEFAULT_VOICE = "Nika"
 
     fun load(context: Context): List<DemoLine> = runCatching {
         val catalog = context.assets.open("voices/catalog.json").bufferedReader().use { JSONObject(it.readText()) }

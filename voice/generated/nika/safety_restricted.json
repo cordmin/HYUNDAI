@@ -1,0 +1,14 @@
+{
+  "duration": 5.68,
+  "sample_rate": 24000,
+  "peak": 20729,
+  "rms": 2859.46,
+  "sha256": "9b1c86d4caf3056a6a4c0a43f4b3179e54979fe1324855e95fd3556a5e4147c0",
+  "id": "safety_restricted",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "지금은 이 기능을 사용할 수 없어요. 안전하게 주차한 뒤 이어갈게요.",
+  "fingerprint": "3eadc4fa169f00a6d241c12a6e2603596748de403efb7945bb832680f2f0cb4f",
+  "generated_at": "2026-10-30T11:16:43+0900",
+  "review": "generated_not_listening_reviewed"
+}

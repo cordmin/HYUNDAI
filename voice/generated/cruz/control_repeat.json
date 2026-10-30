@@ -1,0 +1,14 @@
+{
+  "duration": 5.48,
+  "sample_rate": 24000,
+  "peak": 28632,
+  "rms": 5580.15,
+  "sha256": "1ee69db041e6bc750a65113d16040b80f3fbd46be095412ab48de9e31e4f2742",
+  "id": "control_repeat",
+  "voice": "Cruz",
+  "model": "gemini-3.8-flash-tts",
+  "text": "핵심만 다시 말할게요. 오늘 학교 안내에 있는 체육복을 확인해 주세요.",
+  "fingerprint": "b913cfa8cc2e5856094ce6e4672726a78e0b79157cc6702510e8a78789b0d24d",
+  "generated_at": "2026-10-30T11:17:53+0900",
+  "review": "generated_not_listening_reviewed"
+}

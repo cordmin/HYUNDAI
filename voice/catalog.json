@@ -1,0 +1,489 @@
+{
+  "version": 1,
+  "model": "gemini-3.8-flash-tts",
+  "voices": [
+    "Cruz",
+    "Nika"
+  ],
+  "style": "차량용 가족 동행 앱 다잇의 음성. 자연스러운 현대 한국어 표준어. 차분하고 따뜻하며 또렷하게, 일상 대화 속도로 짧게 말한다. 과장된 연기나 사투리, 유아 말투, 웃음 효과, 배경음악 없이 입력 대사만 읽는다. 운전자에게 재촉하거나 잔소리하지 않는다. 성별에 따른 말투 차이를 과장하지 않는다.",
+  "lines": [
+    {
+      "id": "morning_welcome",
+      "category": "등교 시작",
+      "title": "오늘을 함께 준비해요",
+      "text": "좋은 아침이에요. 오늘 학교에서 챙길 것부터 짧게 알아볼까요?",
+      "cue": "오늘 학교 가기 전에 뭐 챙겨야 해?",
+      "scene": "morning"
+    },
+    {
+      "id": "morning_brief",
+      "category": "등교 시작",
+      "title": "오늘은 체육이 있어요",
+      "text": "오늘 시간표에는 체육과 과학이 있어요. 학교에서 안내한 체육복을 확인해 주세요.",
+      "cue": "오늘 시간표 알려줘.",
+      "scene": "morning"
+    },
+    {
+      "id": "morning_short",
+      "category": "등교 시작",
+      "title": "핵심만 짧게",
+      "text": "짧게 알려드릴게요. 오늘 학교 안내에 있는 체육복만 한 번 확인해요.",
+      "cue": "시간이 없으니까 짧게 말해줘.",
+      "scene": "morning"
+    },
+    {
+      "id": "morning_question",
+      "category": "등교 시작",
+      "title": "기대되는 시간은?",
+      "text": "오늘 가장 기대되는 시간은 언제야? 하나만 골라 봐도 좋아.",
+      "cue": "아이랑 가볍게 이야기하고 싶어.",
+      "scene": "morning"
+    },
+    {
+      "id": "prepare_pe",
+      "category": "준비물 확인",
+      "title": "체육복, 챙겼나요?",
+      "text": "오늘 학교 안내에 체육복이 있어요. 가방에 들어 있는지 함께 확인해 볼까요?",
+      "cue": "오늘 준비물 뭐야?",
+      "scene": "morning"
+    },
+    {
+      "id": "prepare_confirmed",
+      "category": "준비물 확인",
+      "title": "확인했어요",
+      "text": "확인했군요. 그럼 준비물 안내는 여기까지 할게요.",
+      "cue": "체육복은 챙겼어.",
+      "scene": "morning"
+    },
+    {
+      "id": "prepare_uncertain",
+      "category": "준비물 확인",
+      "title": "학교 안내가 필요해요",
+      "text": "시간표에 체육은 있지만, 필요한 준비물까지는 확인하지 못했어요. 학교 안내를 확인해 주세요.",
+      "cue": "체육 있으면 무조건 체육복 가져가야 해?",
+      "scene": "morning"
+    },
+    {
+      "id": "prepare_notice",
+      "category": "준비물 확인",
+      "title": "확인한 안내 기준",
+      "text": "보호자가 확인한 내일 체험학습 안내에는 물과 모자가 있어요. 오늘 저녁에 미리 준비해도 좋겠어요.",
+      "cue": "내일 체험학습 준비물 알려줘.",
+      "scene": "morning"
+    },
+    {
+      "id": "school_science",
+      "category": "배움 연결",
+      "title": "궁금한 것 하나",
+      "text": "오늘 과학 시간에는 어떤 게 궁금해? 정답을 맞히는 질문은 아니야.",
+      "cue": "과학 이야기 하나 해줘.",
+      "scene": "morning"
+    },
+    {
+      "id": "school_reading",
+      "category": "배움 연결",
+      "title": "기억나는 이야기",
+      "text": "최근에 읽은 이야기에서 기억나는 장면이 있어? 한 장면만 들려줘도 좋아.",
+      "cue": "책 이야기로 대화하고 싶어.",
+      "scene": "morning"
+    },
+    {
+      "id": "school_followup",
+      "category": "배움 연결",
+      "title": "네 생각이 궁금해",
+      "text": "그 장면이 기억에 남았구나. 어떤 점이 가장 궁금했어?",
+      "cue": "주인공이 혼자 여행하는 장면이 기억나.",
+      "scene": "morning"
+    },
+    {
+      "id": "school_no_guess",
+      "category": "배움 연결",
+      "title": "배운 내용은 직접 듣기",
+      "text": "시간표만으로 오늘 배울 단원까지는 알 수 없어요. 어떤 수업이었는지는 아이에게 직접 들어볼게요.",
+      "cue": "오늘 과학 시간에 무슨 실험 해?",
+      "scene": "morning"
+    },
+    {
+      "id": "afternoon_welcome",
+      "category": "하교 대화",
+      "title": "오늘도 반가워",
+      "text": "오늘도 반가워. 학교에서 가장 기억나는 장면 하나만 들려줄래?",
+      "cue": "학교 끝났어. 오늘 이야기 시작해줘.",
+      "scene": "afternoon"
+    },
+    {
+      "id": "afternoon_pe",
+      "category": "하교 대화",
+      "title": "체육 시간엔 뭐 했어?",
+      "text": "시간표에는 체육이 있었는데, 오늘은 어떤 활동을 했어?",
+      "cue": "오늘 체육이 있었다던데?",
+      "scene": "afternoon"
+    },
+    {
+      "id": "afternoon_followup",
+      "category": "하교 대화",
+      "title": "친구와 함께했구나",
+      "text": "친구랑 함께해서 즐거웠구나. 가장 기억나는 순간은 언제였어?",
+      "cue": "친구랑 피구해서 재밌었어.",
+      "scene": "afternoon"
+    },
+    {
+      "id": "afternoon_changed",
+      "category": "하교 대화",
+      "title": "시간표와 달랐군요",
+      "text": "오늘은 시간표와 다르게 수업했구나. 알려줘서 고마워. 실제로 했던 이야기를 들을게.",
+      "cue": "오늘 체육 안 했어. 다른 수업 했어.",
+      "scene": "afternoon"
+    },
+    {
+      "id": "listen_ack",
+      "category": "듣고 이어가기",
+      "title": "이야기를 들었어요",
+      "text": "그런 일이 있었구나. 더 이야기하고 싶을 때 편하게 들려줘.",
+      "cue": "오늘 친구랑 같이 그림 그렸어.",
+      "scene": "afternoon"
+    },
+    {
+      "id": "listen_parent",
+      "category": "듣고 이어가기",
+      "title": "부모와 이어가기",
+      "text": "이번에는 함께 탄 가족의 이야기도 들어볼까? 오늘 기억나는 일을 하나씩 나눠 봐도 좋아.",
+      "cue": "부모랑 아이가 같이 이야기할 질문 줘.",
+      "scene": "afternoon"
+    },
+    {
+      "id": "listen_one",
+      "category": "듣고 이어가기",
+      "title": "하나만 말해도 좋아",
+      "text": "전부 설명하지 않아도 괜찮아. 가장 기억나는 것 하나만 말해도 좋아.",
+      "cue": "오늘 있었던 일을 다 말해야 해?",
+      "scene": "afternoon"
+    },
+    {
+      "id": "listen_no_judge",
+      "category": "듣고 이어가기",
+      "title": "정답 없는 이야기",
+      "text": "잘했는지 점수를 매기려는 건 아니야. 네가 어떻게 느꼈는지 듣고 싶어.",
+      "cue": "이거 잘 말해야 하는 거야?",
+      "scene": "afternoon"
+    },
+    {
+      "id": "rest_skip",
+      "category": "쉬어가기",
+      "title": "오늘은 쉬어가요",
+      "text": "괜찮아. 오늘은 질문 없이 편하게 쉬어가자.",
+      "cue": "오늘은 말하기 싫어.",
+      "scene": "afternoon"
+    },
+    {
+      "id": "rest_tired",
+      "category": "쉬어가기",
+      "title": "조용히 함께 갈게",
+      "text": "조금 쉬고 싶구나. 더 묻지 않고 조용히 함께 갈게.",
+      "cue": "피곤해. 질문 그만해.",
+      "scene": "afternoon"
+    },
+    {
+      "id": "rest_later",
+      "category": "쉬어가기",
+      "title": "나중에 이어가요",
+      "text": "좋아요. 지금은 멈추고, 원할 때 다시 이어갈게요.",
+      "cue": "이따가 다시 하자.",
+      "scene": "afternoon"
+    },
+    {
+      "id": "rest_resume",
+      "category": "쉬어가기",
+      "title": "다시 반가워요",
+      "text": "다시 이야기할 준비가 됐군요. 아까 이야기부터 이어갈까요?",
+      "cue": "이제 다시 이야기하자.",
+      "scene": "afternoon"
+    },
+    {
+      "id": "eta_short",
+      "category": "남은 시간",
+      "title": "짧게 마무리할게요",
+      "text": "도착까지 얼마 남지 않았어요. 새 질문은 하지 않고 짧게 마무리할게요.",
+      "cue": "곧 도착하니까 마무리해줘.",
+      "scene": "arrival"
+    },
+    {
+      "id": "eta_long",
+      "category": "남은 시간",
+      "title": "하나만 천천히",
+      "text": "아직 여유가 있네요. 서두르지 말고 이야기 하나만 천천히 나눠요.",
+      "cue": "시간 조금 남았어. 이야기 이어가자.",
+      "scene": "afternoon"
+    },
+    {
+      "id": "eta_unknown",
+      "category": "남은 시간",
+      "title": "남은 시간 확인 불가",
+      "text": "지금은 남은 이동 시간을 확인하지 못했어요. 길게 이어가지 않고 짧게 안내할게요.",
+      "cue": "몇 분 남았어?",
+      "scene": "arrival"
+    },
+    {
+      "id": "eta_destination",
+      "category": "남은 시간",
+      "title": "이동 목적 확인",
+      "text": "학교가 목적지로 보이네요. 등교 안내가 필요하신가요?",
+      "cue": "목적지가 학교로 바뀌었어.",
+      "scene": "morning"
+    },
+    {
+      "id": "arrival_bag",
+      "category": "도착과 하차",
+      "title": "가방, 잊지 마세요",
+      "text": "도착하면 가방과 준비물을 차에 두고 내리지 않도록 확인해요.",
+      "cue": "도착 전에 챙길 것 알려줘.",
+      "scene": "arrival"
+    },
+    {
+      "id": "arrival_parked",
+      "category": "도착과 하차",
+      "title": "주차 후 직접 확인",
+      "text": "안전하게 주차한 뒤 가방을 직접 확인해 주세요. 앱이 물건을 챙겼는지 확인할 수는 없어요.",
+      "cue": "가방 챙겼는지 네가 확인해줘.",
+      "scene": "arrival"
+    },
+    {
+      "id": "arrival_goodbye",
+      "category": "도착과 하차",
+      "title": "좋은 하루 보내",
+      "text": "오늘도 좋은 하루 보내. 돌아오는 길에 네 이야기를 또 들려줘.",
+      "cue": "이제 학교에 내려.",
+      "scene": "arrival"
+    },
+    {
+      "id": "arrival_home",
+      "category": "도착과 하차",
+      "title": "오늘도 수고했어요",
+      "text": "집에 도착했네요. 오늘 이야기 들려줘서 고마워. 편안하게 쉬어요.",
+      "cue": "집에 도착했어.",
+      "scene": "afternoon"
+    },
+    {
+      "id": "safety_navigation",
+      "category": "주행과 음성 우선",
+      "title": "길 안내 먼저",
+      "text": "길 안내를 먼저 들으세요. 다잇은 잠시 멈출게요.",
+      "cue": "내비게이션 안내가 시작됨",
+      "scene": "morning"
+    },
+    {
+      "id": "safety_call",
+      "category": "주행과 음성 우선",
+      "title": "통화 먼저 하세요",
+      "text": "통화를 먼저 하세요. 안내는 자동으로 다시 시작하지 않을게요.",
+      "cue": "전화가 걸려옴",
+      "scene": "morning"
+    },
+    {
+      "id": "safety_restricted",
+      "category": "주행과 음성 우선",
+      "title": "주차 후 이어갈게요",
+      "text": "지금은 이 기능을 사용할 수 없어요. 안전하게 주차한 뒤 이어갈게요.",
+      "cue": "플랫폼 제한 상태 예시",
+      "scene": "morning"
+    },
+    {
+      "id": "safety_no_touch",
+      "category": "주행과 음성 우선",
+      "title": "지금 조작하지 마세요",
+      "text": "지금 화면을 조작하지 않으셔도 돼요. 필요한 설정은 주차한 뒤 확인해요.",
+      "cue": "운전 중에 설정을 바꾸고 싶어.",
+      "scene": "morning"
+    },
+    {
+      "id": "error_school",
+      "category": "정보와 예외",
+      "title": "오늘 정보가 없어요",
+      "text": "오늘 학교 정보를 확인하지 못했어요. 지난 정보를 오늘 일정처럼 안내하지 않을게요.",
+      "cue": "오늘 시간표가 안 불러와졌어.",
+      "scene": "morning"
+    },
+    {
+      "id": "error_notice",
+      "category": "정보와 예외",
+      "title": "원문 확인이 먼저",
+      "text": "이 안내의 날짜와 준비물은 원문 확인이 필요해요. 보호자가 확인한 뒤 반영할게요.",
+      "cue": "통신문 사진만 보고 준비물 확정해줘.",
+      "scene": "morning"
+    },
+    {
+      "id": "error_network",
+      "category": "정보와 예외",
+      "title": "연결이 끊겼어요",
+      "text": "지금 연결이 원활하지 않아요. 확인되지 않은 새 정보는 안내하지 않을게요.",
+      "cue": "인터넷 연결이 끊어짐",
+      "scene": "morning"
+    },
+    {
+      "id": "error_repeat",
+      "category": "정보와 예외",
+      "title": "한 번만 다시",
+      "text": "잘 듣지 못했어요. 괜찮으시면 한 번만 다시 말씀해 주세요.",
+      "cue": "음성 인식 실패를 가정한 시연",
+      "scene": "afternoon"
+    },
+    {
+      "id": "control_repeat",
+      "category": "짧은 요청 응답",
+      "title": "핵심만 다시",
+      "text": "핵심만 다시 말할게요. 오늘 학교 안내에 있는 체육복을 확인해 주세요.",
+      "cue": "다시 한 번 말해줘.",
+      "scene": "morning"
+    },
+    {
+      "id": "control_brief",
+      "category": "짧은 요청 응답",
+      "title": "더 짧게 말할게요",
+      "text": "알겠어요. 앞으로는 더 짧게 말할게요.",
+      "cue": "설명이 너무 길어.",
+      "scene": "morning"
+    },
+    {
+      "id": "control_stop",
+      "category": "짧은 요청 응답",
+      "title": "안내를 멈춰요",
+      "text": "알겠어요. 안내를 멈출게요.",
+      "cue": "다잇, 그만 말해.",
+      "scene": "afternoon"
+    },
+    {
+      "id": "control_privacy",
+      "category": "짧은 요청 응답",
+      "title": "이번 시연은 녹음하지 않아요",
+      "text": "이번 시연은 미리 만든 예시 음성을 재생하고 있어요. 마이크로 대화를 녹음하지 않아요.",
+      "cue": "지금 우리 이야기 녹음하고 있어?",
+      "scene": "afternoon"
+    },
+    {
+      "id": "weather_rain",
+      "category": "날씨와 학교 안내",
+      "title": "비 오는 날",
+      "text": "비가 오는 날이네요. 우산은 안전하게 주차한 뒤 챙겨 주세요.",
+      "cue": "오늘 비가 온다고 가정한 시연",
+      "scene": "morning"
+    },
+    {
+      "id": "weather_dust",
+      "category": "날씨와 학교 안내",
+      "title": "학교 안내를 확인해요",
+      "text": "공기질이 좋지 않다는 안내가 있어요. 체육 수업 변경 여부는 학교 안내를 확인해 주세요.",
+      "cue": "미세먼지 나쁘니까 체육 안 하겠지?",
+      "scene": "morning"
+    },
+    {
+      "id": "weather_no_cancel",
+      "category": "날씨와 학교 안내",
+      "title": "휴업은 학교 공지로",
+      "text": "날씨 정보만으로 학교가 쉬는지 알 수는 없어요. 학교의 공식 공지를 확인해 주세요.",
+      "cue": "비 많이 오면 오늘 학교 쉬어?",
+      "scene": "morning"
+    },
+    {
+      "id": "meal_no_safety",
+      "category": "날씨와 학교 안내",
+      "title": "급식 정보의 범위",
+      "text": "급식 메뉴만으로 아이가 먹어도 안전한지 판단할 수는 없어요. 필요한 내용은 학교와 보호자가 확인해 주세요.",
+      "cue": "오늘 급식 알레르기 괜찮아?",
+      "scene": "morning"
+    },
+    {
+      "id": "talk_prepare",
+      "title": "체육복 챙겼나요?",
+      "text": "오늘 학교 안내에 체육복이 있어요. 체육복 챙겼나요?",
+      "category": "등교 시작",
+      "scene": "morning",
+      "cue": "대화 흐름에서 사용자의 답에 따라 자동 선택"
+    },
+    {
+      "id": "talk_ready",
+      "title": "어떤 수업이 기대돼요?",
+      "text": "잘 챙겼네요. 오늘은 어떤 수업이 가장 기대돼요?",
+      "category": "대화 응답",
+      "scene": "morning",
+      "cue": "대화 흐름에서 사용자의 답에 따라 자동 선택"
+    },
+    {
+      "id": "talk_missing",
+      "title": "어떤 수업이 기대돼요?",
+      "text": "아직 못 챙겼군요. 주차 후 보호자와 확인해요. 오늘은 어떤 수업이 기대돼요?",
+      "category": "대화 응답",
+      "scene": "morning",
+      "cue": "대화 흐름에서 사용자의 답에 따라 자동 선택"
+    }
+  ],
+  "playlists": [
+    {
+      "id": "demo_morning",
+      "title": "등굣길 준비 확인",
+      "line_ids": [
+        "morning_welcome",
+        "prepare_pe",
+        "prepare_confirmed",
+        "morning_question",
+        "eta_short",
+        "arrival_bag",
+        "arrival_goodbye"
+      ]
+    },
+    {
+      "id": "demo_afternoon",
+      "title": "하굣길 가족 대화",
+      "line_ids": [
+        "afternoon_welcome",
+        "afternoon_pe",
+        "afternoon_followup",
+        "listen_parent",
+        "arrival_home"
+      ]
+    },
+    {
+      "id": "demo_rest",
+      "title": "말하고 싶지 않은 날",
+      "line_ids": [
+        "afternoon_welcome",
+        "rest_skip",
+        "rest_tired",
+        "rest_later",
+        "rest_resume"
+      ]
+    },
+    {
+      "id": "demo_uncertain",
+      "title": "정보가 달라졌을 때",
+      "line_ids": [
+        "error_school",
+        "prepare_uncertain",
+        "school_no_guess",
+        "afternoon_changed",
+        "error_notice"
+      ]
+    },
+    {
+      "id": "demo_safety",
+      "title": "안내·통화·제한 대응",
+      "line_ids": [
+        "safety_navigation",
+        "safety_call",
+        "safety_restricted",
+        "safety_no_touch",
+        "control_privacy"
+      ]
+    },
+    {
+      "id": "demo_requests",
+      "title": "짧은 요청과 응답",
+      "line_ids": [
+        "morning_brief",
+        "control_repeat",
+        "control_brief",
+        "error_repeat",
+        "control_stop"
+      ]
+    }
+  ]
+}

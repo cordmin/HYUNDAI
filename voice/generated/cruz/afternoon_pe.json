@@ -1,0 +1,14 @@
+{
+  "duration": 4.52,
+  "sample_rate": 24000,
+  "peak": 23075,
+  "rms": 5117.27,
+  "sha256": "2a335912c86fc8452972c677b0ab55dd735913690a384540d9a6b7f0c666a859",
+  "id": "afternoon_pe",
+  "voice": "Cruz",
+  "model": "gemini-3.8-flash-tts",
+  "text": "시간표에는 체육이 있었는데, 오늘은 어떤 활동을 했어?",
+  "fingerprint": "8f69faf082db8995b646c1cccefce4e0c258f269857d34e58c2fb7bb4a1ed1d5",
+  "generated_at": "2026-10-30T11:11:42+0900",
+  "review": "generated_not_listening_reviewed"
+}

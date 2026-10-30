@@ -1,0 +1,14 @@
+{
+  "duration": 5.2,
+  "sample_rate": 24000,
+  "peak": 17184,
+  "rms": 2707.53,
+  "sha256": "74d24fd6d281c1205a2cf9bc54051758c6c806357469490bc6d26767f181fefe",
+  "id": "listen_one",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "전부 설명하지 않아도 괜찮아. 가장 기억나는 것 하나만 말해도 좋아.",
+  "fingerprint": "a2971cea3623c69fcb9873baae0f6106621a9a417a5342972aaa1ce4bd592a78",
+  "generated_at": "2026-10-30T11:12:51+0900",
+  "review": "generated_not_listening_reviewed"
+}

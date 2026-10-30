@@ -1,0 +1,14 @@
+{
+  "duration": 5.56,
+  "sample_rate": 24000,
+  "peak": 23629,
+  "rms": 3259.11,
+  "sha256": "8a5a050b258d24bbf858855819f785eee10c27f321d1149a5a0bb779ffa5788c",
+  "id": "afternoon_followup",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "친구랑 함께해서 즐거웠구나. 가장 기억나는 순간은 언제였어?",
+  "fingerprint": "35367a1b6e9e9818409c85fe8d5da13ce296c594dc0d4d13803f624cfcace71f",
+  "generated_at": "2026-10-30T11:12:01+0900",
+  "review": "generated_not_listening_reviewed"
+}

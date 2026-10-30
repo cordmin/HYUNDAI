@@ -1,0 +1,14 @@
+{
+  "duration": 3.96,
+  "sample_rate": 24000,
+  "peak": 20967,
+  "rms": 2185.88,
+  "sha256": "949bf1c419f2ce2c021694c4698768e3840b1cd0b817a89ddd2fdddb655a6713",
+  "id": "control_brief",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "알겠어요. 앞으로는 더 짧게 말할게요.",
+  "fingerprint": "79273bf6a0db6ece16a19e764842499aeffa7f5b234d44e8c043fccde1cc8d57",
+  "generated_at": "2026-10-30T11:18:11+0900",
+  "review": "generated_not_listening_reviewed"
+}

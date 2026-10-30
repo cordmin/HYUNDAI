@@ -1,0 +1,14 @@
+{
+  "duration": 6.92,
+  "sample_rate": 24000,
+  "peak": 22693,
+  "rms": 3366.92,
+  "sha256": "90a6343d1c3e8683db4d5b4c6ba21e830141475b0d0fc43732f4f9a4c2644d71",
+  "id": "error_notice",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이 안내의 날짜와 준비물은 원문 확인이 필요해요. 보호자가 확인한 뒤 반영할게요.",
+  "fingerprint": "48ed8043f5be9e4c4f0ebc35658e1b83740dbed8f46236ff4cfdc0cab2a99188",
+  "generated_at": "2026-10-30T11:17:22+0900",
+  "review": "generated_not_listening_reviewed"
+}

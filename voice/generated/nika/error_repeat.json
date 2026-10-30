@@ -1,0 +1,14 @@
+{
+  "duration": 5.44,
+  "sample_rate": 24000,
+  "peak": 22347,
+  "rms": 3550.56,
+  "sha256": "f7ee08771786ce005fd88922ca8d4da2fc1c0d205305032dcf7467b629105bf7",
+  "id": "error_repeat",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "잘 듣지 못했어요. 괜찮으시면 한 번만 다시 말씀해 주세요.",
+  "fingerprint": "f470a012c5b4c9360d2de41ce0bc1d5c108a0a55c7c9a1e96537411939f7a9a0",
+  "generated_at": "2026-10-30T11:17:47+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 5.36,
+  "sample_rate": 24000,
+  "peak": 19538,
+  "rms": 3265.99,
+  "sha256": "e27b00e7ad8631f5f946ad7315e8249326715b0afc320ca10a471f27ec6a7a1a",
+  "id": "weather_rain",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "비가 오는 날이네요. 우산은 안전하게 주차한 뒤 챙겨 주세요.",
+  "fingerprint": "017f97f3abcf99eb2a7f17f44f28524cd25f677883387364ce5db7c35073d241",
+  "generated_at": "2026-10-30T11:18:50+0900",
+  "review": "generated_not_listening_reviewed"
+}

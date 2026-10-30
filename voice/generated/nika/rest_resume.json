@@ -1,0 +1,14 @@
+{
+  "duration": 5.56,
+  "sample_rate": 24000,
+  "peak": 22684,
+  "rms": 2815.69,
+  "sha256": "85688d281d247f5b260c2bf9939a1ccf8b079780c9037d614d9a6edc37db9055",
+  "id": "rest_resume",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "다시 이야기할 준비가 됐군요. 아까 이야기부터 이어갈까요?",
+  "fingerprint": "62603ad1f516d3505f98833ae6aaa024c7a719bbb185634ca1ace2e0cb694cfc",
+  "generated_at": "2026-10-30T11:14:25+0900",
+  "review": "generated_not_listening_reviewed"
+}

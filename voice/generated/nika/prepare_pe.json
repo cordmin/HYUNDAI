@@ -1,0 +1,14 @@
+{
+  "duration": 6.56,
+  "sample_rate": 24000,
+  "peak": 22509,
+  "rms": 3784.63,
+  "sha256": "fa14a526ad66ab1e9db139a3781cd90b9b9fd0161ad7cddd0440b12ed217e34d",
+  "id": "prepare_pe",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘 학교 안내에 체육복이 있어요. 가방에 들어 있는지 함께 확인해 볼까요?",
+  "fingerprint": "238293d594bb62e498fdd2dcf0eb5cc4e09414e9c92c318a50a69e72482d72f4",
+  "generated_at": "2026-10-30T11:09:55+0900",
+  "review": "generated_not_listening_reviewed"
+}

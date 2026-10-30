@@ -1,0 +1,14 @@
+{
+  "duration": 4.72,
+  "sample_rate": 24000,
+  "peak": 26382,
+  "rms": 4385.55,
+  "sha256": "53a064baedcec319c3dd8c3cef9d44d3a383249cdb40a8edac3f56cba89ffafc",
+  "id": "safety_call",
+  "voice": "Cruz",
+  "model": "gemini-3.8-flash-tts",
+  "text": "통화를 먼저 하세요. 안내는 자동으로 다시 시작하지 않을게요.",
+  "fingerprint": "6aa41b965973129239d7217fce60c3bfd609bbeb0d6abe5d794ab40441429b6d",
+  "generated_at": "2026-10-30T11:16:24+0900",
+  "review": "generated_not_listening_reviewed"
+}

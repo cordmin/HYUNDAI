@@ -1,0 +1,14 @@
+{
+  "duration": 8.16,
+  "sample_rate": 24000,
+  "peak": 19484,
+  "rms": 2589.44,
+  "sha256": "a968feb8bdc4f551a3164733fd0a35b3b304fde325b00111bd3289c189085919",
+  "id": "arrival_parked",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "안전하게 주차한 뒤 가방을 직접 확인해 주세요. 앱이 물건을 챙겼는지 확인할 수는 없어요.",
+  "fingerprint": "3acb2c7685b88a287d9f816cfb68d59d558b82feba09db5a80fff65dc8327258",
+  "generated_at": "2026-10-30T11:15:41+0900",
+  "review": "generated_not_listening_reviewed"
+}

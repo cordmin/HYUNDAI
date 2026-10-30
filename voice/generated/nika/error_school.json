@@ -1,0 +1,14 @@
+{
+  "duration": 6.68,
+  "sample_rate": 24000,
+  "peak": 20543,
+  "rms": 3773.8,
+  "sha256": "eac31026a843f27508f1725367aeb5e791ca874b4378c03238de1672919d5731",
+  "id": "error_school",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘 학교 정보를 확인하지 못했어요. 지난 정보를 오늘 일정처럼 안내하지 않을게요.",
+  "fingerprint": "de649884800b1b0685f046a3605b715ca1f0e418dc2d9ce64fffb3131024f390",
+  "generated_at": "2026-10-30T11:17:09+0900",
+  "review": "generated_not_listening_reviewed"
+}

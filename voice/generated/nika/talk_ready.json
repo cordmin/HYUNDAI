@@ -1,0 +1,14 @@
+{
+  "duration": 4.8,
+  "sample_rate": 24000,
+  "peak": 21934,
+  "rms": 2872.56,
+  "sha256": "7f4310f317e840cd27132d2c31f77456e3528ed1c5093be260a0f26d6d696506",
+  "id": "talk_ready",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "잘 챙겼네요. 오늘은 어떤 수업이 가장 기대돼요?",
+  "fingerprint": "3e78bfaded9ce626f11bc3f09bfccfd9e5ebe18e688a19915b2c267bf1fbb943",
+  "generated_at": "2026-10-30T11:48:45+0900",
+  "review": "generated_not_listening_reviewed"
+}

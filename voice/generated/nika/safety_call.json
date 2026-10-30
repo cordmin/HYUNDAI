@@ -1,0 +1,14 @@
+{
+  "duration": 4.6,
+  "sample_rate": 24000,
+  "peak": 23188,
+  "rms": 3013.49,
+  "sha256": "1432b9b9e0a99f8ee8b9fd7c3e9b9f1d896a426d4a6b14f0764ba73ba4065446",
+  "id": "safety_call",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "통화를 먼저 하세요. 안내는 자동으로 다시 시작하지 않을게요.",
+  "fingerprint": "856afba33a375464da6b9ce17a4319d09fe5672f56ce3ef435b4c33039bb59b1",
+  "generated_at": "2026-10-30T11:16:30+0900",
+  "review": "generated_not_listening_reviewed"
+}

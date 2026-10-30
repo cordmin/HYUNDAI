@@ -1,0 +1,14 @@
+{
+  "duration": 6.36,
+  "sample_rate": 24000,
+  "peak": 14006,
+  "rms": 2567.81,
+  "sha256": "48b0f8c33067098a51af168a104fd4dc08b7d3368bd23b0a687671cc7dc6ba9c",
+  "id": "eta_short",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "도착까지 얼마 남지 않았어요. 새 질문은 하지 않고 짧게 마무리할게요.",
+  "fingerprint": "221ea6d23f45191405cdccc2b0f65c673a708bf120bbe1955a863a3871ac5db7",
+  "generated_at": "2026-10-30T11:14:37+0900",
+  "review": "generated_not_listening_reviewed"
+}

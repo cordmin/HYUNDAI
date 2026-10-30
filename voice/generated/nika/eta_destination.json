@@ -1,0 +1,14 @@
+{
+  "duration": 4.6,
+  "sample_rate": 24000,
+  "peak": 21672,
+  "rms": 3717.27,
+  "sha256": "03ba5b682d7258e484ee3f475ca5428d6d50fa50e1920146a37497ce9ba6f41f",
+  "id": "eta_destination",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "학교가 목적지로 보이네요. 등교 안내가 필요하신가요?",
+  "fingerprint": "b20cbc97dbcb550aec35314367a9f5918866b0d5aef69900d49d530e046badc7",
+  "generated_at": "2026-10-30T11:15:15+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 2.68,
+  "sample_rate": 24000,
+  "peak": 21351,
+  "rms": 3185.57,
+  "sha256": "ea9c7377c564b1e8367cfc52331222f2e6ddc36b261ba25026cde2a1a666bc31",
+  "id": "control_stop",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "알겠어요. 안내를 멈출게요.",
+  "fingerprint": "348d2f5e940863bb96c712dbd00fe997dd536599f22eec386c8cbba902b5e000",
+  "generated_at": "2026-10-30T11:18:24+0900",
+  "review": "generated_not_listening_reviewed"
+}

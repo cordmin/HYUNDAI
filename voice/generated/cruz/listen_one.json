@@ -1,0 +1,14 @@
+{
+  "duration": 5.36,
+  "sample_rate": 24000,
+  "peak": 22444,
+  "rms": 3542.05,
+  "sha256": "9929d1c78d491cf58a9d5edbbce7f1f03b82337a2ec6a32113409ffd3bf7c72b",
+  "id": "listen_one",
+  "voice": "Cruz",
+  "model": "gemini-3.8-flash-tts",
+  "text": "전부 설명하지 않아도 괜찮아. 가장 기억나는 것 하나만 말해도 좋아.",
+  "fingerprint": "46b21a81fc32a13500ecbada182cae86f090012e566f1aa44c496ad65d3a7c3f",
+  "generated_at": "2026-10-30T11:12:45+0900",
+  "review": "generated_not_listening_reviewed"
+}

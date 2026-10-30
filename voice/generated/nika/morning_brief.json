@@ -1,0 +1,14 @@
+{
+  "duration": 6.72,
+  "sample_rate": 24000,
+  "peak": 17893,
+  "rms": 3111.28,
+  "sha256": "fa2b4aa91703789a391747e9aabfc52de721589d9102eddc09037098ff55c952",
+  "id": "morning_brief",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘 시간표에는 체육과 과학이 있어요. 학교에서 안내한 체육복을 확인해 주세요.",
+  "fingerprint": "534be223520b5b4e71afd3700e4069f0089d6661f4d2dd706aa3f646e35c5ded",
+  "generated_at": "2026-10-30T11:09:16+0900",
+  "review": "generated_not_listening_reviewed"
+}

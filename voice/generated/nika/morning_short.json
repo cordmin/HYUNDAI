@@ -1,0 +1,14 @@
+{
+  "duration": 5.64,
+  "sample_rate": 24000,
+  "peak": 19427,
+  "rms": 2709.72,
+  "sha256": "6457adb90cf81bc99d95b08432da844ba8ff7fa2e251316a920b4ed267fd774f",
+  "id": "morning_short",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "짧게 알려드릴게요. 오늘 학교 안내에 있는 체육복만 한 번 확인해요.",
+  "fingerprint": "f6af5563d1a2a0583f9ed6226512a43c405865dd8f8fbe5336697ee9f4ae687c",
+  "generated_at": "2026-10-30T11:09:29+0900",
+  "review": "generated_not_listening_reviewed"
+}

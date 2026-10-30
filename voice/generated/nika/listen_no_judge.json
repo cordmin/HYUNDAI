@@ -1,0 +1,14 @@
+{
+  "duration": 5.72,
+  "sample_rate": 24000,
+  "peak": 18106,
+  "rms": 2389.16,
+  "sha256": "f5fdee80cc75d585181c02258077c3fa51ff89dc81a64f5d9db3e7b0905b60f3",
+  "id": "listen_no_judge",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "잘했는지 점수를 매기려는 건 아니야. 네가 어떻게 느꼈는지 듣고 싶어.",
+  "fingerprint": "4f2b5b01ff5ce1c392beee8e2c45c708cc558d459547c8e75a7072b217838d37",
+  "generated_at": "2026-10-30T11:13:04+0900",
+  "review": "generated_not_listening_reviewed"
+}

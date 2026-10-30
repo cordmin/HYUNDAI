@@ -1,0 +1,14 @@
+{
+  "duration": 4.84,
+  "sample_rate": 24000,
+  "peak": 16898,
+  "rms": 2353.18,
+  "sha256": "44b36c93426486d6d88abfa56ec9b9c0b5ffe7c1656b71ab5e043717de876210",
+  "id": "school_followup",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "그 장면이 기억에 남았구나. 어떤 점이 가장 궁금했어?",
+  "fingerprint": "7c06bb45b00162024f49980d895faad1690e5ee21e3eb7937ccb605538a0dc26",
+  "generated_at": "2026-10-30T11:11:10+0900",
+  "review": "generated_not_listening_reviewed"
+}

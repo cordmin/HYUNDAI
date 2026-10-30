@@ -1,0 +1,14 @@
+{
+  "duration": 5.4,
+  "sample_rate": 24000,
+  "peak": 26007,
+  "rms": 5146.24,
+  "sha256": "3dd3e5802dd09af9437b173f8b26b84c96c25b5eb0eaccf34466b0ec0d545aed",
+  "id": "safety_no_touch",
+  "voice": "Cruz",
+  "model": "gemini-3.8-flash-tts",
+  "text": "지금 화면을 조작하지 않으셔도 돼요. 필요한 설정은 주차한 뒤 확인해요.",
+  "fingerprint": "7976f7141aa08536fdf52636395928866a009a6015743dbbe4db24584c2c38fc",
+  "generated_at": "2026-10-30T11:16:50+0900",
+  "review": "generated_not_listening_reviewed"
+}

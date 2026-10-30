@@ -1,0 +1,14 @@
+{
+  "duration": 5.04,
+  "sample_rate": 24000,
+  "peak": 25225,
+  "rms": 3320.31,
+  "sha256": "583acd8790f9991249c4bf27be4e07dac0f80389f32b2ae37694681593834519",
+  "id": "morning_question",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘 가장 기대되는 시간은 언제야? 하나만 골라 봐도 좋아.",
+  "fingerprint": "95e0fb46870428fe5d6c049dc576a0d6188970724f58a5a7c8994e39944e9e8d",
+  "generated_at": "2026-10-30T11:09:42+0900",
+  "review": "generated_not_listening_reviewed"
+}

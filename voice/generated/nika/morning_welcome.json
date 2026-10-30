@@ -1,0 +1,14 @@
+{
+  "duration": 5.12,
+  "sample_rate": 24000,
+  "peak": 22735,
+  "rms": 2971.43,
+  "sha256": "e46bfd58246aa00f40e3d8ed2626d1b0e07660b75fa23b8e27667e8dca7da54c",
+  "id": "morning_welcome",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "좋은 아침이에요. 오늘 학교에서 챙길 것부터 짧게 알아볼까요?",
+  "fingerprint": "bf3b0775f97781c95ad0124de8cd1badeef2dc833987f4aba430f8ef8e7c0b9d",
+  "generated_at": "2026-10-30T11:08:22+0900",
+  "review": "generated_not_listening_reviewed"
+}

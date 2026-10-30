@@ -1,0 +1,14 @@
+{
+  "duration": 4.92,
+  "sample_rate": 24000,
+  "peak": 27306,
+  "rms": 3276.18,
+  "sha256": "9a009364a45059fd6b125e315287c5e5f3e6d8d5229da7ee6eb9ad60cca7fae6",
+  "id": "rest_later",
+  "voice": "Cruz",
+  "model": "gemini-3.8-flash-tts",
+  "text": "좋아요. 지금은 멈추고, 원할 때 다시 이어갈게요.",
+  "fingerprint": "55f3095abfffdf39e5c764de39b7ee6c24791f0896d13f4cbea3c2c4b190390b",
+  "generated_at": "2026-10-30T11:13:34+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 6.12,
+  "sample_rate": 24000,
+  "peak": 19482,
+  "rms": 2303.61,
+  "sha256": "e80697797def973867524de6c88fb45077b26d7c560537a22a9d3284782e6ce4",
+  "id": "arrival_home",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "집에 도착했네요. 오늘 이야기 들려줘서 고마워. 편안하게 쉬어요.",
+  "fingerprint": "687b272b9140b200ac5b213f1b612d40c7874893d6800a75a1af0efc33f42cf9",
+  "generated_at": "2026-10-30T11:16:06+0900",
+  "review": "generated_not_listening_reviewed"
+}

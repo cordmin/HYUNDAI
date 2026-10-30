@@ -1,0 +1,14 @@
+{
+  "duration": 7.92,
+  "sample_rate": 24000,
+  "peak": 21240,
+  "rms": 2867.94,
+  "sha256": "bab8827f1cae7d4357563ab9822d0e4e70822bc3dd36b5880649238001707135",
+  "id": "school_no_guess",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "시간표만으로 오늘 배울 단원까지는 알 수 없어요. 어떤 수업이었는지는 아이에게 직접 들어볼게요.",
+  "fingerprint": "0abd391ecce6b74411b59d91170b388c36889dce9cad15f969a9156b9380ccda",
+  "generated_at": "2026-10-30T11:11:23+0900",
+  "review": "generated_not_listening_reviewed"
+}

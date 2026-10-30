@@ -1,0 +1,14 @@
+{
+  "duration": 8.12,
+  "sample_rate": 24000,
+  "peak": 27037,
+  "rms": 4504.05,
+  "sha256": "17ce924ead1537925bc1b12c0ce00c8b9dacb1c0180757938cfc7af6eb161e1a",
+  "id": "prepare_notice",
+  "voice": "Cruz",
+  "model": "gemini-3.8-flash-tts",
+  "text": "보호자가 확인한 내일 체험학습 안내에는 물과 모자가 있어요. 오늘 저녁에 미리 준비해도 좋겠어요.",
+  "fingerprint": "8b30aba9c3417a7b532f470e827b91c9f3be86c1d9cc693d73ef4e0100f6ca5e",
+  "generated_at": "2026-10-30T11:10:26+0900",
+  "review": "generated_not_listening_reviewed"
+}

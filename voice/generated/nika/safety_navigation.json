@@ -1,0 +1,14 @@
+{
+  "duration": 4.16,
+  "sample_rate": 24000,
+  "peak": 20385,
+  "rms": 3443.29,
+  "sha256": "d8632f87479f633a5a0d81de24a49757a4b54e891377cc9b8bfb1dea64d8e727",
+  "id": "safety_navigation",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "길 안내를 먼저 들으세요. 다잇은 잠시 멈출게요.",
+  "fingerprint": "60d00a89f9ab9d61b3c9d70aee75c7981ef2330475846038570443016f34099c",
+  "generated_at": "2026-10-30T11:16:18+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 5.12,
+  "sample_rate": 24000,
+  "peak": 17831,
+  "rms": 2545.46,
+  "sha256": "0c402c78a9b75b266e0cdde6e093946f0e9934090dd2467df85c1ef705752ec7",
+  "id": "listen_ack",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "그런 일이 있었구나. 더 이야기하고 싶을 때 편하게 들려줘.",
+  "fingerprint": "744fd50cba59d7ed9c25b5188c1309aa13f24d54f7f0d8448a07ef4db16a904c",
+  "generated_at": "2026-10-30T11:12:25+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 4.16,
+  "sample_rate": 24000,
+  "peak": 25630,
+  "rms": 3366.05,
+  "sha256": "0978b581befffc252e5f271a9c6364c1143a70bb602417ffe1390b8e8dbaecbc",
+  "id": "prepare_confirmed",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "확인했군요. 그럼 준비물 안내는 여기까지 할게요.",
+  "fingerprint": "6447faf17da0f2441f54dd4cd1f6193c8636e48c20883e8acff80891ebfe11d4",
+  "generated_at": "2026-10-30T11:10:06+0900",
+  "review": "generated_not_listening_reviewed"
+}

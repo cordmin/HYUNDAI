@@ -1,0 +1,14 @@
+{
+  "duration": 5.2,
+  "sample_rate": 24000,
+  "peak": 25588,
+  "rms": 3721.77,
+  "sha256": "a0d4ec764e35207bb945ab8019eb854f45ee8b9c62e00cb3f622982eb9e91442",
+  "id": "school_science",
+  "voice": "Cruz",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘 과학 시간에는 어떤 게 궁금해? 정답을 맞히는 질문은 아니야.",
+  "fingerprint": "b07bf954991d1f3c03558e5cc7d48258dcc4481467cd0fa33227a5fbe42b7767",
+  "generated_at": "2026-10-30T11:10:39+0900",
+  "review": "generated_not_listening_reviewed"
+}

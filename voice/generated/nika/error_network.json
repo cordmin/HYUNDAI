@@ -1,0 +1,14 @@
+{
+  "duration": 6.4,
+  "sample_rate": 24000,
+  "peak": 18026,
+  "rms": 2973.42,
+  "sha256": "e88e3a9524d5a60afeb8cba6d4376bf8e29c57f3ce9f35cd1901b434c6af0a85",
+  "id": "error_network",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "지금 연결이 원활하지 않아요. 확인되지 않은 새 정보는 안내하지 않을게요.",
+  "fingerprint": "86034e5a2309709ef7dff443e025de774cca40ceb15cf5019690906d2bbc667f",
+  "generated_at": "2026-10-30T11:17:34+0900",
+  "review": "generated_not_listening_reviewed"
+}

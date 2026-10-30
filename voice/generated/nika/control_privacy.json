@@ -1,0 +1,14 @@
+{
+  "duration": 6.96,
+  "sample_rate": 24000,
+  "peak": 24891,
+  "rms": 3019.95,
+  "sha256": "22d548a62b43d24d5882c7987789a68e8de04e1f89d0ff2aca92ee60e552ee4c",
+  "id": "control_privacy",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이번 시연은 미리 만든 예시 음성을 재생하고 있어요. 마이크로 대화를 녹음하지 않아요.",
+  "fingerprint": "6a91c108ed4ab7c995190d67d9fd7833efcffa189063ff3f7c30204ccd9e1bd5",
+  "generated_at": "2026-10-30T11:18:37+0900",
+  "review": "generated_not_listening_reviewed"
+}

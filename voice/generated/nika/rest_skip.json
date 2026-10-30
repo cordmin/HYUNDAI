@@ -1,0 +1,14 @@
+{
+  "duration": 4.52,
+  "sample_rate": 24000,
+  "peak": 16073,
+  "rms": 2894.73,
+  "sha256": "c1b18468e86c6d73a9c426e964b25e947c7c8a73189e20550b73efd1422d4844",
+  "id": "rest_skip",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "괜찮아. 오늘은 질문 없이 편하게 쉬어가자.",
+  "fingerprint": "c89a2c3d552fd99c5f7cfb451c42fd0b542c173af259db44859276d73d5cb632",
+  "generated_at": "2026-10-30T11:13:15+0900",
+  "review": "generated_not_listening_reviewed"
+}

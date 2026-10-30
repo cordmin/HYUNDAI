@@ -1,0 +1,14 @@
+{
+  "duration": 5.72,
+  "sample_rate": 24000,
+  "peak": 25360,
+  "rms": 4502.13,
+  "sha256": "f847b9b963d4f90419c3e829be5dab7140e62122857d29fdf14ff844648964ec",
+  "id": "afternoon_welcome",
+  "voice": "Cruz",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘도 반가워. 학교에서 가장 기억나는 장면 하나만 들려줄래?",
+  "fingerprint": "e3ae170e5d0754860791e0b35e55c7ff9d212023ab25621e96e0ce892b4dca84",
+  "generated_at": "2026-10-30T11:11:29+0900",
+  "review": "generated_not_listening_reviewed"
+}

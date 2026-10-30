@@ -1,0 +1,14 @@
+{
+  "duration": 6.08,
+  "sample_rate": 24000,
+  "peak": 21271,
+  "rms": 3312.89,
+  "sha256": "8fb573ab1ac150c8365a782ab75439bd49421bbaa8ac86f704073d29bf1cea7e",
+  "id": "school_reading",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "최근에 읽은 이야기에서 기억나는 장면이 있어? 한 장면만 들려줘도 좋아.",
+  "fingerprint": "6ea38a5b644de7cad8c7118d17a683a614311413df934537cbae8c4577d751b9",
+  "generated_at": "2026-10-30T11:10:57+0900",
+  "review": "generated_not_listening_reviewed"
+}

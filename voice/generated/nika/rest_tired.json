@@ -1,0 +1,14 @@
+{
+  "duration": 5.24,
+  "sample_rate": 24000,
+  "peak": 15000,
+  "rms": 2275.55,
+  "sha256": "e38782bf6d014f16912a072f00ec58a1f4588fcb2d37e13bf5e99518da44d23d",
+  "id": "rest_tired",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "조금 쉬고 싶구나. 더 묻지 않고 조용히 함께 갈게.",
+  "fingerprint": "6be9acb7763ee1657766a491b51906b040a2a53ca7634c104a1c4b713082c2c8",
+  "generated_at": "2026-10-30T11:13:29+0900",
+  "review": "generated_not_listening_reviewed"
+}

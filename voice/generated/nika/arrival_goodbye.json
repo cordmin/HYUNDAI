@@ -1,0 +1,14 @@
+{
+  "duration": 5.08,
+  "sample_rate": 24000,
+  "peak": 18784,
+  "rms": 3144.13,
+  "sha256": "5f2609ad5dd7081b85ad677b0f097ea3c0773da31952dec557acf129eba4116d",
+  "id": "arrival_goodbye",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘도 좋은 하루 보내. 돌아오는 길에 네 이야기를 또 들려줘.",
+  "fingerprint": "e0f789d644e518d53c1870b72a4609ff1fe6cc491f4a8716643e358951b7aaff",
+  "generated_at": "2026-10-30T11:15:52+0900",
+  "review": "generated_not_listening_reviewed"
+}

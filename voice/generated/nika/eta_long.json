@@ -1,0 +1,14 @@
+{
+  "duration": 5.8,
+  "sample_rate": 24000,
+  "peak": 27524,
+  "rms": 3705.29,
+  "sha256": "2cc355bc4d812728a26ad1f82857092162c78ef8ebb6a664baf83f495d60dd51",
+  "id": "eta_long",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "아직 여유가 있네요. 서두르지 말고 이야기 하나만 천천히 나눠요.",
+  "fingerprint": "8fd50dbee47edf99ee359220745c240d0b4d5cd7ab6c9ad6305ab7dd4861fff6",
+  "generated_at": "2026-10-30T11:14:50+0900",
+  "review": "generated_not_listening_reviewed"
+}

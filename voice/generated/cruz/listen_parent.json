@@ -1,0 +1,14 @@
+{
+  "duration": 6.88,
+  "sample_rate": 24000,
+  "peak": 24692,
+  "rms": 3945.22,
+  "sha256": "c32ee26f9747b7a7490a1f343fa0f193b6d03548f494894dde03db712b4269bc",
+  "id": "listen_parent",
+  "voice": "Cruz",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이번에는 함께 탄 가족의 이야기도 들어볼까? 오늘 기억나는 일을 하나씩 나눠 봐도 좋아.",
+  "fingerprint": "290e2357a44c4703d9b948b2e15b2450bb3a4e7313cfd816c0ee7ced6edb1c0a",
+  "generated_at": "2026-10-30T11:12:31+0900",
+  "review": "generated_not_listening_reviewed"
+}

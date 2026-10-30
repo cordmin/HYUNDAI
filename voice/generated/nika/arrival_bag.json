@@ -1,0 +1,14 @@
+{
+  "duration": 5.16,
+  "sample_rate": 24000,
+  "peak": 24353,
+  "rms": 3938.61,
+  "sha256": "4f5cbcdd2012176a02d548202967fe1f99689a987410488b41d03aa059bfc8bb",
+  "id": "arrival_bag",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "도착하면 가방과 준비물을 차에 두고 내리지 않도록 확인해요.",
+  "fingerprint": "86c10499c20871e4fd298a988cfce2326750f2acdbcc962566119a840d6fd0a7",
+  "generated_at": "2026-10-30T11:15:29+0900",
+  "review": "generated_not_listening_reviewed"
+}

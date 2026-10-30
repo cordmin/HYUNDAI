@@ -1,0 +1,14 @@
+{
+  "duration": 7.08,
+  "sample_rate": 24000,
+  "peak": 19090,
+  "rms": 3032.12,
+  "sha256": "877c66cf4c25d87ca5aba74182393fef75b9a28dcd6468353da1160eb9128773",
+  "id": "eta_unknown",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "지금은 남은 이동 시간을 확인하지 못했어요. 길게 이어가지 않고 짧게 안내할게요.",
+  "fingerprint": "91f4f6e027326f52865e04ad6d7addc7e7d48ad428dbd415ac38261c971fd70c",
+  "generated_at": "2026-10-30T11:15:02+0900",
+  "review": "generated_not_listening_reviewed"
+}

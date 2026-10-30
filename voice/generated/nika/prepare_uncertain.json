@@ -1,0 +1,14 @@
+{
+  "duration": 7.84,
+  "sample_rate": 24000,
+  "peak": 23701,
+  "rms": 2986.43,
+  "sha256": "18697133938dabebf1880481648697f2d71e7e857bf8d08dd92b35b92d75aa49",
+  "id": "prepare_uncertain",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "시간표에 체육은 있지만, 필요한 준비물까지는 확인하지 못했어요. 학교 안내를 확인해 주세요.",
+  "fingerprint": "ecaf3cdbfd67a8b7d7cf9b873f37c0d12877d7d6c95b0747d601b34a997e8107",
+  "generated_at": "2026-10-30T11:10:20+0900",
+  "review": "generated_not_listening_reviewed"
+}

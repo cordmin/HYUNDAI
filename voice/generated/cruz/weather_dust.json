@@ -1,0 +1,14 @@
+{
+  "duration": 6.72,
+  "sample_rate": 24000,
+  "peak": 26241,
+  "rms": 4053.07,
+  "sha256": "eef526e7b08b2edb428dbf386fa2e3852f4636c52a345135f3d77630739f6871",
+  "id": "weather_dust",
+  "voice": "Cruz",
+  "model": "gemini-3.8-flash-tts",
+  "text": "공기질이 좋지 않다는 안내가 있어요. 체육 수업 변경 여부는 학교 안내를 확인해 주세요.",
+  "fingerprint": "2180d0dc5fb7eace13a53b4ab627bb2991833f0e82dbc5b03a38ec1639b8bc6a",
+  "generated_at": "2026-10-30T11:18:56+0900",
+  "review": "generated_not_listening_reviewed"
+}

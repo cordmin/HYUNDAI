@@ -1,0 +1,1034 @@
+{
+  "generated_at": "2026-10-30T12:10:19.140826+09:00",
+  "lines": 51,
+  "clips": 102,
+  "voices": [
+    "Cruz",
+    "Nika"
+  ],
+  "model": "gemini-3.8-flash-tts",
+  "pending_clips": 16,
+  "review": "File QA passed; exhaustive human listening pending",
+  "clips_data": [
+    {
+      "id": "morning_welcome",
+      "voice": "Cruz",
+      "file": "generated/cruz/morning_welcome.wav",
+      "duration": 4.8,
+      "sample_rate": 24000,
+      "peak": 26438,
+      "rms": 4458.69,
+      "sha256": "93eb1d3ef467481d91339572141a9b08f041760ba49053dac4f05963fcb4a078"
+    },
+    {
+      "id": "morning_welcome",
+      "voice": "Nika",
+      "file": "generated/nika/morning_welcome.wav",
+      "duration": 5.12,
+      "sample_rate": 24000,
+      "peak": 22735,
+      "rms": 2971.43,
+      "sha256": "e46bfd58246aa00f40e3d8ed2626d1b0e07660b75fa23b8e27667e8dca7da54c"
+    },
+    {
+      "id": "morning_brief",
+      "voice": "Cruz",
+      "file": "generated/cruz/morning_brief.wav",
+      "duration": 6.4,
+      "sample_rate": 24000,
+      "peak": 27003,
+      "rms": 3918.58,
+      "sha256": "f040f9adadd4a4481eb6156bdc7a6ffcc8a4cf072970b2fc033ebd7b6f6fe460"
+    },
+    {
+      "id": "morning_brief",
+      "voice": "Nika",
+      "file": "generated/nika/morning_brief.wav",
+      "duration": 6.72,
+      "sample_rate": 24000,
+      "peak": 17893,
+      "rms": 3111.28,
+      "sha256": "fa2b4aa91703789a391747e9aabfc52de721589d9102eddc09037098ff55c952"
+    },
+    {
+      "id": "morning_short",
+      "voice": "Cruz",
+      "file": "generated/cruz/morning_short.wav",
+      "duration": 4.8,
+      "sample_rate": 24000,
+      "peak": 25014,
+      "rms": 3981.58,
+      "sha256": "e5539df0e745ab6ba8f27e205158a797471b550600abc456843d530e6c09fe44"
+    },
+    {
+      "id": "morning_short",
+      "voice": "Nika",
+      "file": "generated/nika/morning_short.wav",
+      "duration": 5.64,
+      "sample_rate": 24000,
+      "peak": 19427,
+      "rms": 2709.72,
+      "sha256": "6457adb90cf81bc99d95b08432da844ba8ff7fa2e251316a920b4ed267fd774f"
+    },
+    {
+      "id": "morning_question",
+      "voice": "Cruz",
+      "file": "generated/cruz/morning_question.wav",
+      "duration": 4.8,
+      "sample_rate": 24000,
+      "peak": 27894,
+      "rms": 4470.6,
+      "sha256": "a4a57e5b115837028e5ddb14690d25963310bb293d8c2b737ba0f6d3fb4d465a"
+    },
+    {
+      "id": "morning_question",
+      "voice": "Nika",
+      "file": "generated/nika/morning_question.wav",
+      "duration": 5.04,
+      "sample_rate": 24000,
+      "peak": 25225,
+      "rms": 3320.31,
+      "sha256": "583acd8790f9991249c4bf27be4e07dac0f80389f32b2ae37694681593834519"
+    },
+    {
+      "id": "prepare_pe",
+      "voice": "Cruz",
+      "file": "generated/cruz/prepare_pe.wav",
+      "duration": 5.76,
+      "sample_rate": 24000,
+      "peak": 27769,
+      "rms": 4590.94,
+      "sha256": "4691aef740b71fa3da8c1e6faa32501379843cdce7ed6dbaa40dbbb432ea44bb"
+    },
+    {
+      "id": "prepare_pe",
+      "voice": "Nika",
+      "file": "generated/nika/prepare_pe.wav",
+      "duration": 6.56,
+      "sample_rate": 24000,
+      "peak": 22509,
+      "rms": 3784.63,
+      "sha256": "fa14a526ad66ab1e9db139a3781cd90b9b9fd0161ad7cddd0440b12ed217e34d"
+    },
+    {
+      "id": "prepare_confirmed",
+      "voice": "Cruz",
+      "file": "generated/cruz/prepare_confirmed.wav",
+      "duration": 4.4,
+      "sample_rate": 24000,
+      "peak": 27011,
+      "rms": 4334.45,
+      "sha256": "07168a126db1db64aad0d7cb7848f0591b4753b0a8c63c35c1e7ffca1eec9d6e"
+    },
+    {
+      "id": "prepare_confirmed",
+      "voice": "Nika",
+      "file": "generated/nika/prepare_confirmed.wav",
+      "duration": 4.16,
+      "sample_rate": 24000,
+      "peak": 25630,
+      "rms": 3366.05,
+      "sha256": "0978b581befffc252e5f271a9c6364c1143a70bb602417ffe1390b8e8dbaecbc"
+    },
+    {
+      "id": "prepare_uncertain",
+      "voice": "Cruz",
+      "file": "generated/cruz/prepare_uncertain.wav",
+      "duration": 7.04,
+      "sample_rate": 24000,
+      "peak": 27816,
+      "rms": 5107.68,
+      "sha256": "180b92d9bedab87bb6dca027fcd71987c2e82d72534a209134b46f7f002f278f"
+    },
+    {
+      "id": "prepare_uncertain",
+      "voice": "Nika",
+      "file": "generated/nika/prepare_uncertain.wav",
+      "duration": 7.84,
+      "sample_rate": 24000,
+      "peak": 23701,
+      "rms": 2986.43,
+      "sha256": "18697133938dabebf1880481648697f2d71e7e857bf8d08dd92b35b92d75aa49"
+    },
+    {
+      "id": "prepare_notice",
+      "voice": "Cruz",
+      "file": "generated/cruz/prepare_notice.wav",
+      "duration": 8.12,
+      "sample_rate": 24000,
+      "peak": 27037,
+      "rms": 4504.05,
+      "sha256": "17ce924ead1537925bc1b12c0ce00c8b9dacb1c0180757938cfc7af6eb161e1a"
+    },
+    {
+      "id": "prepare_notice",
+      "voice": "Nika",
+      "file": "generated/nika/prepare_notice.wav",
+      "duration": 8.8,
+      "sample_rate": 24000,
+      "peak": 21700,
+      "rms": 3811.48,
+      "sha256": "cdc502c1af12a6bdf11532160d3f3a89bd8b8e4e2f08a1584d18279ba5bfd609"
+    },
+    {
+      "id": "school_science",
+      "voice": "Cruz",
+      "file": "generated/cruz/school_science.wav",
+      "duration": 5.2,
+      "sample_rate": 24000,
+      "peak": 25588,
+      "rms": 3721.77,
+      "sha256": "a0d4ec764e35207bb945ab8019eb854f45ee8b9c62e00cb3f622982eb9e91442"
+    },
+    {
+      "id": "school_science",
+      "voice": "Nika",
+      "file": "generated/nika/school_science.wav",
+      "duration": 5.72,
+      "sample_rate": 24000,
+      "peak": 23241,
+      "rms": 2743.18,
+      "sha256": "d7a245b8ce5416c5c38364ef33c7df20bba0ee2759eda5ea57f4f4c09a1f7a4e"
+    },
+    {
+      "id": "school_reading",
+      "voice": "Cruz",
+      "file": "generated/cruz/school_reading.wav",
+      "duration": 5.84,
+      "sample_rate": 24000,
+      "peak": 27848,
+      "rms": 5401.73,
+      "sha256": "331924a3111de1a696d394e06a058e111323dfde3f51ab0737c32c50cda32c3d"
+    },
+    {
+      "id": "school_reading",
+      "voice": "Nika",
+      "file": "generated/nika/school_reading.wav",
+      "duration": 6.08,
+      "sample_rate": 24000,
+      "peak": 21271,
+      "rms": 3312.89,
+      "sha256": "8fb573ab1ac150c8365a782ab75439bd49421bbaa8ac86f704073d29bf1cea7e"
+    },
+    {
+      "id": "school_followup",
+      "voice": "Cruz",
+      "file": "generated/cruz/school_followup.wav",
+      "duration": 4.8,
+      "sample_rate": 24000,
+      "peak": 24854,
+      "rms": 4139.81,
+      "sha256": "2365710deac7913d600d1bee59a6e5c5fd2429a174b69e4f15fcebfe4ce7dfab"
+    },
+    {
+      "id": "school_followup",
+      "voice": "Nika",
+      "file": "generated/nika/school_followup.wav",
+      "duration": 4.84,
+      "sample_rate": 24000,
+      "peak": 16898,
+      "rms": 2353.18,
+      "sha256": "44b36c93426486d6d88abfa56ec9b9c0b5ffe7c1656b71ab5e043717de876210"
+    },
+    {
+      "id": "school_no_guess",
+      "voice": "Cruz",
+      "file": "generated/cruz/school_no_guess.wav",
+      "duration": 7.44,
+      "sample_rate": 24000,
+      "peak": 26822,
+      "rms": 4871.69,
+      "sha256": "dce0ac570acd4eb31794002789bb24134a7f4578e450566a014bdc20b6e5be3b"
+    },
+    {
+      "id": "school_no_guess",
+      "voice": "Nika",
+      "file": "generated/nika/school_no_guess.wav",
+      "duration": 7.92,
+      "sample_rate": 24000,
+      "peak": 21240,
+      "rms": 2867.94,
+      "sha256": "bab8827f1cae7d4357563ab9822d0e4e70822bc3dd36b5880649238001707135"
+    },
+    {
+      "id": "afternoon_welcome",
+      "voice": "Cruz",
+      "file": "generated/cruz/afternoon_welcome.wav",
+      "duration": 5.72,
+      "sample_rate": 24000,
+      "peak": 25360,
+      "rms": 4502.13,
+      "sha256": "f847b9b963d4f90419c3e829be5dab7140e62122857d29fdf14ff844648964ec"
+    },
+    {
+      "id": "afternoon_welcome",
+      "voice": "Nika",
+      "file": "generated/nika/afternoon_welcome.wav",
+      "duration": 6.24,
+      "sample_rate": 24000,
+      "peak": 14167,
+      "rms": 2483.13,
+      "sha256": "15161ff1274128f9dc8709d9ca058320eeba1ed2449caaced2d077a1650d7501"
+    },
+    {
+      "id": "afternoon_pe",
+      "voice": "Cruz",
+      "file": "generated/cruz/afternoon_pe.wav",
+      "duration": 4.52,
+      "sample_rate": 24000,
+      "peak": 23075,
+      "rms": 5117.27,
+      "sha256": "2a335912c86fc8452972c677b0ab55dd735913690a384540d9a6b7f0c666a859"
+    },
+    {
+      "id": "afternoon_pe",
+      "voice": "Nika",
+      "file": "generated/nika/afternoon_pe.wav",
+      "duration": 5.28,
+      "sample_rate": 24000,
+      "peak": 19974,
+      "rms": 3894.35,
+      "sha256": "5f9013acd006e047caf229004ffb74b6a43249c52afa1b116a4334e5d4fedac7"
+    },
+    {
+      "id": "afternoon_followup",
+      "voice": "Cruz",
+      "file": "generated/cruz/afternoon_followup.wav",
+      "duration": 6.24,
+      "sample_rate": 24000,
+      "peak": 24195,
+      "rms": 4158.97,
+      "sha256": "46eeefc3de3c0358df1301e8d8c223b3bd7523cbcbfdc49d8b20531d679a4bcb"
+    },
+    {
+      "id": "afternoon_followup",
+      "voice": "Nika",
+      "file": "generated/nika/afternoon_followup.wav",
+      "duration": 5.56,
+      "sample_rate": 24000,
+      "peak": 23629,
+      "rms": 3259.11,
+      "sha256": "8a5a050b258d24bbf858855819f785eee10c27f321d1149a5a0bb779ffa5788c"
+    },
+    {
+      "id": "afternoon_changed",
+      "voice": "Cruz",
+      "file": "generated/cruz/afternoon_changed.wav",
+      "duration": 6.84,
+      "sample_rate": 24000,
+      "peak": 26273,
+      "rms": 3787.15,
+      "sha256": "1f3be3e361b7186d81f1046f1cb21478ca55488d0b1ed7cf6e6a40874a159f3f"
+    },
+    {
+      "id": "afternoon_changed",
+      "voice": "Nika",
+      "file": "generated/nika/afternoon_changed.wav",
+      "duration": 7.36,
+      "sample_rate": 24000,
+      "peak": 26433,
+      "rms": 3318.74,
+      "sha256": "8e26f67cfb2b5c3e6066a2f8c8e85e0a37812d3f6bb7ac0f49d8f84794649aed"
+    },
+    {
+      "id": "listen_ack",
+      "voice": "Cruz",
+      "file": "generated/cruz/listen_ack.wav",
+      "duration": 5.12,
+      "sample_rate": 24000,
+      "peak": 26835,
+      "rms": 4181.61,
+      "sha256": "aab517e0b28841ca5c319de918668e3490b2de2e410c43b481397d91737484d6"
+    },
+    {
+      "id": "listen_ack",
+      "voice": "Nika",
+      "file": "generated/nika/listen_ack.wav",
+      "duration": 5.12,
+      "sample_rate": 24000,
+      "peak": 17831,
+      "rms": 2545.46,
+      "sha256": "0c402c78a9b75b266e0cdde6e093946f0e9934090dd2467df85c1ef705752ec7"
+    },
+    {
+      "id": "listen_parent",
+      "voice": "Cruz",
+      "file": "generated/cruz/listen_parent.wav",
+      "duration": 6.88,
+      "sample_rate": 24000,
+      "peak": 24692,
+      "rms": 3945.22,
+      "sha256": "c32ee26f9747b7a7490a1f343fa0f193b6d03548f494894dde03db712b4269bc"
+    },
+    {
+      "id": "listen_parent",
+      "voice": "Nika",
+      "file": "generated/nika/listen_parent.wav",
+      "duration": 7.16,
+      "sample_rate": 24000,
+      "peak": 19976,
+      "rms": 2537.52,
+      "sha256": "e5ebfab1666b54233477c990bde41df3cc7de0a1f6d5467761430567ce115a15"
+    },
+    {
+      "id": "listen_one",
+      "voice": "Cruz",
+      "file": "generated/cruz/listen_one.wav",
+      "duration": 5.36,
+      "sample_rate": 24000,
+      "peak": 22444,
+      "rms": 3542.05,
+      "sha256": "9929d1c78d491cf58a9d5edbbce7f1f03b82337a2ec6a32113409ffd3bf7c72b"
+    },
+    {
+      "id": "listen_one",
+      "voice": "Nika",
+      "file": "generated/nika/listen_one.wav",
+      "duration": 5.2,
+      "sample_rate": 24000,
+      "peak": 17184,
+      "rms": 2707.53,
+      "sha256": "74d24fd6d281c1205a2cf9bc54051758c6c806357469490bc6d26767f181fefe"
+    },
+    {
+      "id": "listen_no_judge",
+      "voice": "Cruz",
+      "file": "generated/cruz/listen_no_judge.wav",
+      "duration": 5.8,
+      "sample_rate": 24000,
+      "peak": 25666,
+      "rms": 3899.16,
+      "sha256": "dfbf1c547206d0f7bd2ed4472c9578c9069d6df5adcdf3235a63a10816dedcf1"
+    },
+    {
+      "id": "listen_no_judge",
+      "voice": "Nika",
+      "file": "generated/nika/listen_no_judge.wav",
+      "duration": 5.72,
+      "sample_rate": 24000,
+      "peak": 18106,
+      "rms": 2389.16,
+      "sha256": "f5fdee80cc75d585181c02258077c3fa51ff89dc81a64f5d9db3e7b0905b60f3"
+    },
+    {
+      "id": "rest_skip",
+      "voice": "Cruz",
+      "file": "generated/cruz/rest_skip.wav",
+      "duration": 4.44,
+      "sample_rate": 24000,
+      "peak": 20858,
+      "rms": 3238.59,
+      "sha256": "10e2a4a831a748dd986c5deb70c73811f7d78e2fefcf362a8d733308d0239eec"
+    },
+    {
+      "id": "rest_skip",
+      "voice": "Nika",
+      "file": "generated/nika/rest_skip.wav",
+      "duration": 4.52,
+      "sample_rate": 24000,
+      "peak": 16073,
+      "rms": 2894.73,
+      "sha256": "c1b18468e86c6d73a9c426e964b25e947c7c8a73189e20550b73efd1422d4844"
+    },
+    {
+      "id": "rest_tired",
+      "voice": "Cruz",
+      "file": "generated/cruz/rest_tired.wav",
+      "duration": 5.72,
+      "sample_rate": 24000,
+      "peak": 23043,
+      "rms": 3464.93,
+      "sha256": "f11ee136384b5d8855c5f924f9e45a4b0c6a3e1f93712cd0cbaf18261dcce98b"
+    },
+    {
+      "id": "rest_tired",
+      "voice": "Nika",
+      "file": "generated/nika/rest_tired.wav",
+      "duration": 5.24,
+      "sample_rate": 24000,
+      "peak": 15000,
+      "rms": 2275.55,
+      "sha256": "e38782bf6d014f16912a072f00ec58a1f4588fcb2d37e13bf5e99518da44d23d"
+    },
+    {
+      "id": "rest_later",
+      "voice": "Cruz",
+      "file": "generated/cruz/rest_later.wav",
+      "duration": 4.92,
+      "sample_rate": 24000,
+      "peak": 27306,
+      "rms": 3276.18,
+      "sha256": "9a009364a45059fd6b125e315287c5e5f3e6d8d5229da7ee6eb9ad60cca7fae6"
+    },
+    {
+      "id": "rest_later",
+      "voice": "Nika",
+      "file": "generated/nika/rest_later.wav",
+      "duration": 5.08,
+      "sample_rate": 24000,
+      "peak": 16675,
+      "rms": 2156.79,
+      "sha256": "cbe96770b8ce6ff2f26cec4b4928237d0b232188cfab97d94f540ed9bb582673"
+    },
+    {
+      "id": "rest_resume",
+      "voice": "Cruz",
+      "file": "generated/cruz/rest_resume.wav",
+      "duration": 4.32,
+      "sample_rate": 24000,
+      "peak": 26221,
+      "rms": 3613.88,
+      "sha256": "c78502080825dda7aa2c7a4649794296160e966c8a8eef50828ec7211111a23f"
+    },
+    {
+      "id": "rest_resume",
+      "voice": "Nika",
+      "file": "generated/nika/rest_resume.wav",
+      "duration": 5.56,
+      "sample_rate": 24000,
+      "peak": 22684,
+      "rms": 2815.69,
+      "sha256": "85688d281d247f5b260c2bf9939a1ccf8b079780c9037d614d9a6edc37db9055"
+    },
+    {
+      "id": "eta_short",
+      "voice": "Cruz",
+      "file": "generated/cruz/eta_short.wav",
+      "duration": 5.8,
+      "sample_rate": 24000,
+      "peak": 26254,
+      "rms": 3643.88,
+      "sha256": "d98c1b8b13b15bf2ff157d219e4369b0b6fda05619af01f5e9031bcd48397d20"
+    },
+    {
+      "id": "eta_short",
+      "voice": "Nika",
+      "file": "generated/nika/eta_short.wav",
+      "duration": 6.36,
+      "sample_rate": 24000,
+      "peak": 14006,
+      "rms": 2567.81,
+      "sha256": "48b0f8c33067098a51af168a104fd4dc08b7d3368bd23b0a687671cc7dc6ba9c"
+    },
+    {
+      "id": "eta_long",
+      "voice": "Cruz",
+      "file": "generated/cruz/eta_long.wav",
+      "duration": 6.08,
+      "sample_rate": 24000,
+      "peak": 26382,
+      "rms": 4834.26,
+      "sha256": "47b9e83e1e314280054b8a28470eab0581fad5e1842bb1ff629aaf4acc415295"
+    },
+    {
+      "id": "eta_long",
+      "voice": "Nika",
+      "file": "generated/nika/eta_long.wav",
+      "duration": 5.8,
+      "sample_rate": 24000,
+      "peak": 27524,
+      "rms": 3705.29,
+      "sha256": "2cc355bc4d812728a26ad1f82857092162c78ef8ebb6a664baf83f495d60dd51"
+    },
+    {
+      "id": "eta_unknown",
+      "voice": "Cruz",
+      "file": "generated/cruz/eta_unknown.wav",
+      "duration": 6.4,
+      "sample_rate": 24000,
+      "peak": 26272,
+      "rms": 4116.95,
+      "sha256": "78cc388f21db265336703aa7fed1ec5e93a39e7a4155050c79a78e1e2a234960"
+    },
+    {
+      "id": "eta_unknown",
+      "voice": "Nika",
+      "file": "generated/nika/eta_unknown.wav",
+      "duration": 7.08,
+      "sample_rate": 24000,
+      "peak": 19090,
+      "rms": 3032.12,
+      "sha256": "877c66cf4c25d87ca5aba74182393fef75b9a28dcd6468353da1160eb9128773"
+    },
+    {
+      "id": "eta_destination",
+      "voice": "Cruz",
+      "file": "generated/cruz/eta_destination.wav",
+      "duration": 4.28,
+      "sample_rate": 24000,
+      "peak": 27774,
+      "rms": 5854.83,
+      "sha256": "385cb43fb750ab91be59d62bae1bfcf54a4e235fc54018b9e7809de67f382127"
+    },
+    {
+      "id": "eta_destination",
+      "voice": "Nika",
+      "file": "generated/nika/eta_destination.wav",
+      "duration": 4.6,
+      "sample_rate": 24000,
+      "peak": 21672,
+      "rms": 3717.27,
+      "sha256": "03ba5b682d7258e484ee3f475ca5428d6d50fa50e1920146a37497ce9ba6f41f"
+    },
+    {
+      "id": "arrival_bag",
+      "voice": "Cruz",
+      "file": "generated/cruz/arrival_bag.wav",
+      "duration": 4.64,
+      "sample_rate": 24000,
+      "peak": 28555,
+      "rms": 4710.54,
+      "sha256": "f042b02230d2f0e4fcf794900b2a5add5c4ba415039e61cabb0a611038e026c3"
+    },
+    {
+      "id": "arrival_bag",
+      "voice": "Nika",
+      "file": "generated/nika/arrival_bag.wav",
+      "duration": 5.16,
+      "sample_rate": 24000,
+      "peak": 24353,
+      "rms": 3938.61,
+      "sha256": "4f5cbcdd2012176a02d548202967fe1f99689a987410488b41d03aa059bfc8bb"
+    },
+    {
+      "id": "arrival_parked",
+      "voice": "Cruz",
+      "file": "generated/cruz/arrival_parked.wav",
+      "duration": 7.36,
+      "sample_rate": 24000,
+      "peak": 22676,
+      "rms": 3710.31,
+      "sha256": "648585a76fb6c2335451e677d1db4c1dc95214097853082f326101375af68d80"
+    },
+    {
+      "id": "arrival_parked",
+      "voice": "Nika",
+      "file": "generated/nika/arrival_parked.wav",
+      "duration": 8.16,
+      "sample_rate": 24000,
+      "peak": 19484,
+      "rms": 2589.44,
+      "sha256": "a968feb8bdc4f551a3164733fd0a35b3b304fde325b00111bd3289c189085919"
+    },
+    {
+      "id": "arrival_goodbye",
+      "voice": "Cruz",
+      "file": "generated/cruz/arrival_goodbye.wav",
+      "duration": 5.36,
+      "sample_rate": 24000,
+      "peak": 28839,
+      "rms": 6087.06,
+      "sha256": "2490b414f8b2c8cd68f4157c329bd7427c11b20927dadf6abd99ef3771ec9754"
+    },
+    {
+      "id": "arrival_goodbye",
+      "voice": "Nika",
+      "file": "generated/nika/arrival_goodbye.wav",
+      "duration": 5.08,
+      "sample_rate": 24000,
+      "peak": 18784,
+      "rms": 3144.13,
+      "sha256": "5f2609ad5dd7081b85ad677b0f097ea3c0773da31952dec557acf129eba4116d"
+    },
+    {
+      "id": "arrival_home",
+      "voice": "Cruz",
+      "file": "generated/cruz/arrival_home.wav",
+      "duration": 6.32,
+      "sample_rate": 24000,
+      "peak": 25999,
+      "rms": 3319.13,
+      "sha256": "865cce88922276298bf852c573c3562aa0292852f5867e5abf891cdd2ef89f53"
+    },
+    {
+      "id": "arrival_home",
+      "voice": "Nika",
+      "file": "generated/nika/arrival_home.wav",
+      "duration": 6.12,
+      "sample_rate": 24000,
+      "peak": 19482,
+      "rms": 2303.61,
+      "sha256": "e80697797def973867524de6c88fb45077b26d7c560537a22a9d3284782e6ce4"
+    },
+    {
+      "id": "safety_navigation",
+      "voice": "Cruz",
+      "file": "generated/cruz/safety_navigation.wav",
+      "duration": 4.2,
+      "sample_rate": 24000,
+      "peak": 23022,
+      "rms": 3507.38,
+      "sha256": "fe67e2b092ef84a448f3a274c3207b0c6176e464f39b95bf8289341c17433e9e"
+    },
+    {
+      "id": "safety_navigation",
+      "voice": "Nika",
+      "file": "generated/nika/safety_navigation.wav",
+      "duration": 4.16,
+      "sample_rate": 24000,
+      "peak": 20385,
+      "rms": 3443.29,
+      "sha256": "d8632f87479f633a5a0d81de24a49757a4b54e891377cc9b8bfb1dea64d8e727"
+    },
+    {
+      "id": "safety_call",
+      "voice": "Cruz",
+      "file": "generated/cruz/safety_call.wav",
+      "duration": 4.72,
+      "sample_rate": 24000,
+      "peak": 26382,
+      "rms": 4385.55,
+      "sha256": "53a064baedcec319c3dd8c3cef9d44d3a383249cdb40a8edac3f56cba89ffafc"
+    },
+    {
+      "id": "safety_call",
+      "voice": "Nika",
+      "file": "generated/nika/safety_call.wav",
+      "duration": 4.6,
+      "sample_rate": 24000,
+      "peak": 23188,
+      "rms": 3013.49,
+      "sha256": "1432b9b9e0a99f8ee8b9fd7c3e9b9f1d896a426d4a6b14f0764ba73ba4065446"
+    },
+    {
+      "id": "safety_restricted",
+      "voice": "Cruz",
+      "file": "generated/cruz/safety_restricted.wav",
+      "duration": 5.6,
+      "sample_rate": 24000,
+      "peak": 23609,
+      "rms": 3959.98,
+      "sha256": "11514d94db759d1b931fbc10645753403af160f691a4d721154c8ebb4f03a547"
+    },
+    {
+      "id": "safety_restricted",
+      "voice": "Nika",
+      "file": "generated/nika/safety_restricted.wav",
+      "duration": 5.68,
+      "sample_rate": 24000,
+      "peak": 20729,
+      "rms": 2859.46,
+      "sha256": "9b1c86d4caf3056a6a4c0a43f4b3179e54979fe1324855e95fd3556a5e4147c0"
+    },
+    {
+      "id": "safety_no_touch",
+      "voice": "Cruz",
+      "file": "generated/cruz/safety_no_touch.wav",
+      "duration": 5.4,
+      "sample_rate": 24000,
+      "peak": 26007,
+      "rms": 5146.24,
+      "sha256": "3dd3e5802dd09af9437b173f8b26b84c96c25b5eb0eaccf34466b0ec0d545aed"
+    },
+    {
+      "id": "safety_no_touch",
+      "voice": "Nika",
+      "file": "generated/nika/safety_no_touch.wav",
+      "duration": 5.52,
+      "sample_rate": 24000,
+      "peak": 25217,
+      "rms": 3059.07,
+      "sha256": "c9a08691f2a5cbf6da47266f75191ffc7bdc37aa924e4759fff2f6121127e1c3"
+    },
+    {
+      "id": "error_school",
+      "voice": "Cruz",
+      "file": "generated/cruz/error_school.wav",
+      "duration": 7.2,
+      "sample_rate": 24000,
+      "peak": 26645,
+      "rms": 4262.24,
+      "sha256": "ba4fae622c467c783f9794ff9e30997a4e1abcf67b71e0a13553858b19e66c45"
+    },
+    {
+      "id": "error_school",
+      "voice": "Nika",
+      "file": "generated/nika/error_school.wav",
+      "duration": 6.68,
+      "sample_rate": 24000,
+      "peak": 20543,
+      "rms": 3773.8,
+      "sha256": "eac31026a843f27508f1725367aeb5e791ca874b4378c03238de1672919d5731"
+    },
+    {
+      "id": "error_notice",
+      "voice": "Cruz",
+      "file": "generated/cruz/error_notice.wav",
+      "duration": 6.24,
+      "sample_rate": 24000,
+      "peak": 26922,
+      "rms": 4863.57,
+      "sha256": "d3791f8f2130dadc2b55c48cb80e2757cd582a1a07fa3d4f811f5923318fc5f7"
+    },
+    {
+      "id": "error_notice",
+      "voice": "Nika",
+      "file": "generated/nika/error_notice.wav",
+      "duration": 6.92,
+      "sample_rate": 24000,
+      "peak": 22693,
+      "rms": 3366.92,
+      "sha256": "90a6343d1c3e8683db4d5b4c6ba21e830141475b0d0fc43732f4f9a4c2644d71"
+    },
+    {
+      "id": "error_network",
+      "voice": "Cruz",
+      "file": "generated/cruz/error_network.wav",
+      "duration": 6.0,
+      "sample_rate": 24000,
+      "peak": 26650,
+      "rms": 5300.26,
+      "sha256": "58f44073e06b0cc1406f8df7127c2a0352478b3120741948c7afd8e348a76727"
+    },
+    {
+      "id": "error_network",
+      "voice": "Nika",
+      "file": "generated/nika/error_network.wav",
+      "duration": 6.4,
+      "sample_rate": 24000,
+      "peak": 18026,
+      "rms": 2973.42,
+      "sha256": "e88e3a9524d5a60afeb8cba6d4376bf8e29c57f3ce9f35cd1901b434c6af0a85"
+    },
+    {
+      "id": "error_repeat",
+      "voice": "Cruz",
+      "file": "generated/cruz/error_repeat.wav",
+      "duration": 4.72,
+      "sample_rate": 24000,
+      "peak": 27710,
+      "rms": 4687.58,
+      "sha256": "dcc8ea00ea192a1cdbab30cb6b1d2e383258c8cd6a4900b9faca71ee4de78e60"
+    },
+    {
+      "id": "error_repeat",
+      "voice": "Nika",
+      "file": "generated/nika/error_repeat.wav",
+      "duration": 5.44,
+      "sample_rate": 24000,
+      "peak": 22347,
+      "rms": 3550.56,
+      "sha256": "f7ee08771786ce005fd88922ca8d4da2fc1c0d205305032dcf7467b629105bf7"
+    },
+    {
+      "id": "control_repeat",
+      "voice": "Cruz",
+      "file": "generated/cruz/control_repeat.wav",
+      "duration": 5.48,
+      "sample_rate": 24000,
+      "peak": 28632,
+      "rms": 5580.15,
+      "sha256": "1ee69db041e6bc750a65113d16040b80f3fbd46be095412ab48de9e31e4f2742"
+    },
+    {
+      "id": "control_repeat",
+      "voice": "Nika",
+      "file": "generated/nika/control_repeat.wav",
+      "duration": 4.88,
+      "sample_rate": 24000,
+      "peak": 21084,
+      "rms": 3390.93,
+      "sha256": "032669039b93c9407d9cc188a7ca2172b66e03cc8446b4fa79aaafc04d405581"
+    },
+    {
+      "id": "control_brief",
+      "voice": "Cruz",
+      "file": "generated/cruz/control_brief.wav",
+      "duration": 3.28,
+      "sample_rate": 24000,
+      "peak": 27935,
+      "rms": 5231.18,
+      "sha256": "9a85a1d9588adff47271fed6682413c4268ed25bdba91f9730d36d23ed341a83"
+    },
+    {
+      "id": "control_brief",
+      "voice": "Nika",
+      "file": "generated/nika/control_brief.wav",
+      "duration": 3.96,
+      "sample_rate": 24000,
+      "peak": 20967,
+      "rms": 2185.88,
+      "sha256": "949bf1c419f2ce2c021694c4698768e3840b1cd0b817a89ddd2fdddb655a6713"
+    },
+    {
+      "id": "control_stop",
+      "voice": "Cruz",
+      "file": "generated/cruz/control_stop.wav",
+      "duration": 2.76,
+      "sample_rate": 24000,
+      "peak": 21965,
+      "rms": 3696.98,
+      "sha256": "02aac6390d257b2151b9b388b49e16c43306a141dbf5f9755e94aedd40615f40"
+    },
+    {
+      "id": "control_stop",
+      "voice": "Nika",
+      "file": "generated/nika/control_stop.wav",
+      "duration": 2.68,
+      "sample_rate": 24000,
+      "peak": 21351,
+      "rms": 3185.57,
+      "sha256": "ea9c7377c564b1e8367cfc52331222f2e6ddc36b261ba25026cde2a1a666bc31"
+    },
+    {
+      "id": "control_privacy",
+      "voice": "Cruz",
+      "file": "generated/cruz/control_privacy.wav",
+      "duration": 6.16,
+      "sample_rate": 24000,
+      "peak": 22360,
+      "rms": 3893.37,
+      "sha256": "cf66b39ebce81abe279e6d7488f5959d627673cb90049bb448da9376fe35b6e5"
+    },
+    {
+      "id": "control_privacy",
+      "voice": "Nika",
+      "file": "generated/nika/control_privacy.wav",
+      "duration": 6.96,
+      "sample_rate": 24000,
+      "peak": 24891,
+      "rms": 3019.95,
+      "sha256": "22d548a62b43d24d5882c7987789a68e8de04e1f89d0ff2aca92ee60e552ee4c"
+    },
+    {
+      "id": "weather_rain",
+      "voice": "Cruz",
+      "file": "generated/cruz/weather_rain.wav",
+      "duration": 5.28,
+      "sample_rate": 24000,
+      "peak": 21346,
+      "rms": 3085.1,
+      "sha256": "c778d8378d67d592b622b39ae0718faa48fc1b8f2fdb7c7cb9c9320375431816"
+    },
+    {
+      "id": "weather_rain",
+      "voice": "Nika",
+      "file": "generated/nika/weather_rain.wav",
+      "duration": 5.36,
+      "sample_rate": 24000,
+      "peak": 19538,
+      "rms": 3265.99,
+      "sha256": "e27b00e7ad8631f5f946ad7315e8249326715b0afc320ca10a471f27ec6a7a1a"
+    },
+    {
+      "id": "weather_dust",
+      "voice": "Cruz",
+      "file": "generated/cruz/weather_dust.wav",
+      "duration": 6.72,
+      "sample_rate": 24000,
+      "peak": 26241,
+      "rms": 4053.07,
+      "sha256": "eef526e7b08b2edb428dbf386fa2e3852f4636c52a345135f3d77630739f6871"
+    },
+    {
+      "id": "weather_dust",
+      "voice": "Nika",
+      "file": "generated/nika/weather_dust.wav",
+      "duration": 6.6,
+      "sample_rate": 24000,
+      "peak": 19176,
+      "rms": 2828.46,
+      "sha256": "8684d38c9dcc7b79f4281a9577b99b20e14d1265c14b401ecad4cbb203298ae6"
+    },
+    {
+      "id": "weather_no_cancel",
+      "voice": "Cruz",
+      "file": "generated/cruz/weather_no_cancel.wav",
+      "duration": 6.56,
+      "sample_rate": 24000,
+      "peak": 26815,
+      "rms": 3386.91,
+      "sha256": "0f33af5485d3091f24010452e44953cac0f4e89d7ae840c8b258d7cfaaac1653"
+    },
+    {
+      "id": "weather_no_cancel",
+      "voice": "Nika",
+      "file": "generated/nika/weather_no_cancel.wav",
+      "duration": 7.4,
+      "sample_rate": 24000,
+      "peak": 15806,
+      "rms": 2590.71,
+      "sha256": "202e6c9378edbb10c2d09441629affa76db5c78a0790cd095ceffa0965a61960"
+    },
+    {
+      "id": "meal_no_safety",
+      "voice": "Cruz",
+      "file": "generated/cruz/meal_no_safety.wav",
+      "duration": 7.88,
+      "sample_rate": 24000,
+      "peak": 27743,
+      "rms": 4326.98,
+      "sha256": "fa7de82613088d34fdb5eedfe4c7c3309af03feef656125dd1051bc0f1a805cd"
+    },
+    {
+      "id": "meal_no_safety",
+      "voice": "Nika",
+      "file": "generated/nika/meal_no_safety.wav",
+      "duration": 8.88,
+      "sample_rate": 24000,
+      "peak": 15863,
+      "rms": 2724.66,
+      "sha256": "af9cc9688c9d90e909090e03b6b9eacf1d7b243f6e81bbc7b05294839d17e811"
+    },
+    {
+      "id": "talk_prepare",
+      "voice": "Cruz",
+      "file": "generated/cruz/talk_prepare.wav",
+      "duration": 4.36,
+      "sample_rate": 24000,
+      "peak": 26994,
+      "rms": 4799.99,
+      "sha256": "bf292139344078476ea47079ad37a326e8b47d8e26742dd940b2ecf3ab9ff85d"
+    },
+    {
+      "id": "talk_prepare",
+      "voice": "Nika",
+      "file": "generated/nika/talk_prepare.wav",
+      "duration": 4.96,
+      "sample_rate": 24000,
+      "peak": 18017,
+      "rms": 2380.38,
+      "sha256": "0d29a3be926711a134d1d45a04c26e12879e063ddb84caaa757bb2764016b981"
+    },
+    {
+      "id": "talk_ready",
+      "voice": "Cruz",
+      "file": "generated/cruz/talk_ready.wav",
+      "duration": 4.24,
+      "sample_rate": 24000,
+      "peak": 26470,
+      "rms": 4734.2,
+      "sha256": "63f30addf71402b9fc023dec8e638ed65e456a13d6db3f3542515b7ddeed4802"
+    },
+    {
+      "id": "talk_ready",
+      "voice": "Nika",
+      "file": "generated/nika/talk_ready.wav",
+      "duration": 4.8,
+      "sample_rate": 24000,
+      "peak": 21934,
+      "rms": 2872.56,
+      "sha256": "7f4310f317e840cd27132d2c31f77456e3528ed1c5093be260a0f26d6d696506"
+    },
+    {
+      "id": "talk_missing",
+      "voice": "Cruz",
+      "file": "generated/cruz/talk_missing.wav",
+      "duration": 6.8,
+      "sample_rate": 24000,
+      "peak": 30074,
+      "rms": 5408.65,
+      "sha256": "1f52cf570d2bf36aa88562a945083b83e5ef6a9d6649a27f46f39b8f29e4d4d4"
+    },
+    {
+      "id": "talk_missing",
+      "voice": "Nika",
+      "file": "generated/nika/talk_missing.wav",
+      "duration": 7.24,
+      "sample_rate": 24000,
+      "peak": 18286,
+      "rms": 3102.92,
+      "sha256": "0855f0a44d121c77953990779d859a6b9d85784ba37728669a48e4d8d158a04c"
+    }
+  ]
+}

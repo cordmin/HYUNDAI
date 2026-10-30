@@ -1,0 +1,14 @@
+{
+  "duration": 7.36,
+  "sample_rate": 24000,
+  "peak": 26433,
+  "rms": 3318.74,
+  "sha256": "8e26f67cfb2b5c3e6066a2f8c8e85e0a37812d3f6bb7ac0f49d8f84794649aed",
+  "id": "afternoon_changed",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘은 시간표와 다르게 수업했구나. 알려줘서 고마워. 실제로 했던 이야기를 들을게.",
+  "fingerprint": "8972e4990ca3aab12d1b3aaa1ec15c145d7a47a747abff001b2daabbea46425e",
+  "generated_at": "2026-10-30T11:12:14+0900",
+  "review": "generated_not_listening_reviewed"
+}

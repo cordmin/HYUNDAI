@@ -1,0 +1,14 @@
+{
+  "duration": 4.96,
+  "sample_rate": 24000,
+  "peak": 18017,
+  "rms": 2380.38,
+  "sha256": "0d29a3be926711a134d1d45a04c26e12879e063ddb84caaa757bb2764016b981",
+  "id": "talk_prepare",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘 학교 안내에 체육복이 있어요. 체육복 챙겼나요?",
+  "fingerprint": "4d83ccd15af8457c25122cdbb5907e1a84170c25dbfc3507966a626ead8d3a9c",
+  "generated_at": "2026-10-30T11:48:07+0900",
+  "review": "generated_not_listening_reviewed"
+}

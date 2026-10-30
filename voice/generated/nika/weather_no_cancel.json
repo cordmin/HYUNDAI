@@ -1,0 +1,14 @@
+{
+  "duration": 7.4,
+  "sample_rate": 24000,
+  "peak": 15806,
+  "rms": 2590.71,
+  "sha256": "202e6c9378edbb10c2d09441629affa76db5c78a0790cd095ceffa0965a61960",
+  "id": "weather_no_cancel",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "날씨 정보만으로 학교가 쉬는지 알 수는 없어요. 학교의 공식 공지를 확인해 주세요.",
+  "fingerprint": "431b0ec8a8de052ebe8a0d7c2192b7bd08b540c03d4f62abcb0eb97221ceb353",
+  "generated_at": "2026-10-30T11:19:15+0900",
+  "review": "generated_not_listening_reviewed"
+}

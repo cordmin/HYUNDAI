@@ -16,6 +16,11 @@
       --outline: #D5DFEA;
       --control: #E8EEF5;
       --control-hover: #DCE5F0;
+      /* 큰 카드 색. 여정에 따라 바뀐다 */
+      --hero-a: #061B3D;
+      --hero-b: #0B3B7A;
+      --hero-glow: #22B8E8;
+      --hero-ink: #0B2A5B;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -35,7 +40,9 @@
       width: 100%;
       max-width: 1060px;
       height: 600px;
-      background: var(--surface);
+      background:
+        radial-gradient(80% 60% at 100% 100%, #E7EEF8 0%, transparent 60%),
+        var(--surface);
       border-radius: 28px;
       border: 2px solid #C4CDD7;
       box-shadow: 0 24px 50px rgba(11, 26, 44, 0.16);
@@ -172,299 +179,300 @@
     }
 
     /* ========================================================
-       스마트 벤토: 앰비언트 오브 융합형 (단일 확정안)
+       첫 화면: 여정 하나를 크게, 보조 정보는 얇게
+       왼쪽 큰 카드 = 지금 여정(어디로 · 몇 분 · 할 말 한 문장)
+       오른쪽 = 오늘 챙길 것 두 줄 + 다른 여정으로 가는 작은 길
        ======================================================== */
     .bento-stage {
       display: grid;
-      grid-template-columns: 1.32fr 1fr;
+      grid-template-columns: 1.45fr 1fr;
       gap: 18px;
-      height: 100%;
+      flex: 1;
+      min-height: 0;
     }
+
+    /* 큰 카드 */
     .bento-hero {
-      background: linear-gradient(145deg, #07172C 0%, #0E294E 50%, #153C70 100%);
-      border-radius: 22px;
-      padding: 24px 28px 28px 28px;
+      background:
+        radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--hero-glow) 55%, transparent) 0%, transparent 55%),
+        linear-gradient(160deg, var(--hero-b) 0%, var(--hero-a) 100%);
+      border-radius: 28px;
+      padding: 26px 30px 28px;
       color: #FFFFFF;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 0 14px 34px rgba(7, 23, 44, 0.32);
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
       position: relative;
       overflow: hidden;
+      min-height: 0;
+      box-shadow: 0 24px 48px -18px color-mix(in srgb, var(--hero-a) 70%, transparent);
+      transition: transform 0.18s ease;
     }
-    .bento-hero:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 18px 40px rgba(7, 23, 44, 0.45);
+    .bento-hero.afternoon { --hero-a: #3B1033; --hero-b: #8A2E4F; --hero-glow: #FFA14A; --hero-ink: #5B1F3D; }
+    .bento-hero.weekend { --hero-a: #1C1F3A; --hero-b: #3C3F6E; --hero-glow: #9A8CFF; --hero-ink: #2A2D55; }
+    .bento-hero:hover { transform: translateY(-2px); }
+    /* 가는 격자: 차량 계기판의 결 */
+    .bento-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.07) 1px, transparent 1.2px);
+      background-size: 22px 22px;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), transparent 70%);
+      -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), transparent 70%);
+      pointer-events: none;
     }
     .hero-top-meta {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      width: 100%;
-      margin-bottom: 4px;
+      gap: 12px;
     }
     .dait-brand-badge {
       display: inline-flex;
       align-items: center;
-      background: transparent;
-      border: none;
-      padding: 0;
-      margin: 0;
       cursor: pointer;
       user-select: none;
-      transition: all 0.2s ease;
       filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.25));
     }
-    .dait-brand-badge:hover {
-      filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.8));
-      transform: scale(1.03);
-    }
-
-    /* Hero Center: Vertical Stack (Orb Top-Center + Prompt Bottom-Center) */
-    .hero-center-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      margin: 8px 0 12px 0;
-      gap: 18px;
-      width: 100%;
-    }
-    .hero-text-col {
-      text-align: center;
-      width: 100%;
-    }
-    .hero-title {
-      font-size: 33px;
-      font-weight: 800;
-      line-height: 1.25;
-      margin-bottom: 8px;
-      letter-spacing: -0.5px;
+    .school-setting-btn {
+      min-height: 48px;
+      padding: 8px 20px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.22);
+      color: #FFFFFF;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
       white-space: nowrap;
+    }
+    .school-setting-btn:hover { background: rgba(255,255,255,0.18); }
+
+    /* 여정 그림: 출발점에서 목적지까지 한 획. 차 위치 점이 남은 시간만큼 가 있다 */
+    .hero-figure {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-route {
+      width: 100%;
+      height: auto;
+      max-height: 100%;
+      overflow: visible;
+    }
+    .hero-route .route-path { stroke: rgba(255,255,255,0.22); stroke-width: 2.5; fill: none; stroke-linecap: round; }
+    .hero-route .route-done { stroke: #FFFFFF; stroke-width: 2.5; fill: none; stroke-linecap: round; }
+    .hero-route .route-dot { fill: #FFFFFF; }
+    .hero-route .route-dot-halo { fill: var(--hero-glow); opacity: 0.35; }
+    .hero-route .route-end { fill: none; stroke: #FFFFFF; stroke-width: 2.5; }
+    .hero-route .route-end-fill { fill: var(--hero-glow); }
+    .hero-route text { font-family: inherit; font-weight: 800; fill: #FFFFFF; }
+    .hero-route .route-figure { font-size: 34px; letter-spacing: -1.5px; }
+    .hero-route .route-unit { font-size: 15px; font-weight: 700; fill: rgba(255,255,255,0.75); letter-spacing: 0; }
+    .hero-route .route-label { font-size: 13px; font-weight: 700; fill: rgba(255,255,255,0.6); letter-spacing: 0.3px; }
+
+    /* 여정 줄: 어디로 · 몇 분 */
+    .hero-trip {
+      margin-top: 0;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      font-size: 17px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.72);
+      letter-spacing: 0.2px;
+      min-height: 24px;
+    }
+    .hero-trip strong {
+      color: #FFFFFF;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+    .hero-trip .trip-sep { opacity: 0.45; }
+
+    /* 한 문장 */
+    .hero-title {
+      margin-top: 8px;
+      font-size: 44px;
+      font-weight: 800;
+      line-height: 1.14;
+      letter-spacing: -1.4px;
+      text-wrap: balance;
+      position: relative;
+      z-index: 1;
     }
     .hero-desc {
-      font-size: 17px;
-      opacity: 0.92;
+      margin-top: 10px;
+      font-size: 19px;
       font-weight: 500;
       line-height: 1.4;
-      white-space: nowrap;
+      color: rgba(255,255,255,0.78);
+      position: relative;
+      z-index: 1;
     }
+    .hero-trip { position: relative; z-index: 1; }
 
-    /* Ambient Orb inside Bento Hero */
-    .hero-orb-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .hero-ambient-orb {
-      width: 136px;
-      height: 136px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #00B4D8 0%, #0077B6 50%, #04244B 100%);
-      box-shadow: 0 0 42px rgba(0, 180, 216, 0.48), inset 0 0 20px rgba(255,255,255,0.32);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Hero Bottom CTA Button */
+    /* 시작 버튼 */
     .hero-cta {
+      margin-top: 22px;
+      position: relative;
+      z-index: 1;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(255,255,255,0.18);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.32);
-      padding: 16px 24px;
+      background: #FFFFFF;
+      color: var(--hero-ink);
+      padding: 0 10px 0 24px;
+      height: 68px;
       border-radius: 20px;
-      font-size: 20px;
+      font-size: 21px;
       font-weight: 800;
-      transition: all 0.15s ease;
+      transition: transform 0.15s ease;
     }
-    .hero-cta:hover {
-      background: rgba(255,255,255,0.28);
-      transform: translateY(-1px);
-    }
+    .hero-cta:hover { transform: translateX(2px); }
     .hero-cta-plane {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.18);
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--hero-ink);
       color: #FFFFFF;
-      transition: all 0.2s ease;
-      transform: rotate(-10deg);
     }
-    .hero-cta:hover .hero-cta-plane {
-      transform: translate(3px, -3px) rotate(-10deg);
-      background: #38BDF8;
-      color: #07172C;
-    }
-    .cta-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .cta-left { display: flex; align-items: center; gap: 12px; }
 
-    /* ========================================================
-       Bento Right Column: Top Dual Mini Tiles + Wide Card
-       ======================================================== */
+    /* 오른쪽 열 */
     .bento-right-col {
       display: flex;
       flex-direction: column;
       gap: 14px;
-      height: 100%;
+      min-height: 0;
     }
-
-    /* Top Row: 2 Mini Info Tiles */
     .info-dual-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
-      height: 136px;
     }
     .info-mini-tile {
-      background: var(--paper);
-      border: 1.5px solid var(--outline);
-      border-radius: 22px;
-      padding: 20px 18px 18px 18px;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.9);
+      box-shadow: 0 8px 24px -14px rgba(11, 26, 44, 0.25);
+      border-radius: 20px;
+      padding: 18px 20px 16px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 0 4px 12px rgba(28,46,42,0.03);
-      transition: all 0.2s ease;
+      gap: 8px;
+      min-height: 118px;
+      min-width: 0;
     }
-    .info-mini-tile:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 18px rgba(0, 77, 160, 0.08);
-    }
-    .tile-tint-prep {
-      background: #F4F8FD !important;
-      border-color: #D3E4F8 !important;
-    }
-    .tile-tint-meal {
-      background: #FDF9F4 !important;
-      border-color: #F6E6D5 !important;
-    }
-    .mini-tile-label {
-      display: flex;
-      align-items: center;
-      margin-top: 2px;
-    }
+    .tile-tint-prep { border-top: 4px solid var(--accent); }
+    .tile-tint-meal { border-top: 4px solid #C2410C; }
+    .mini-tile-label { display: flex; align-items: center; }
     .mini-text-bold {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
-      letter-spacing: -0.3px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
     }
-    .text-prep {
-      color: #004DA0; /* 선명한 현대 딥 블루 */
-    }
-    .text-meal {
-      color: #C2410C; /* 선명한 웜 테라코타 오렌지 */
-    }
-
-    .mini-tile-body {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      width: 100%;
-      margin-top: 6px;
-    }
+    .text-prep { color: var(--accent); }
+    .text-meal { color: #C2410C; }
+    .mini-tile-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
     .mini-tile-focus {
-      font-size: 23px;
+      font-size: 24px;
       font-weight: 800;
       color: var(--ink);
       letter-spacing: -0.5px;
       line-height: 1.25;
-      text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      width: 100%;
+      overflow-wrap: anywhere;
     }
     .mini-tile-sub {
       font-size: 16px;
       font-weight: 600;
       color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      text-align: center;
-      margin-top: 5px;
-      width: 100%;
     }
 
-    /* Wide Action Cards (Horizontally Long & Easy to Touch) */
+    /* 오른쪽 큰 카드: 다른 여정으로 가는 길 */
     .bento-wide-card {
       flex: 1;
-      background: var(--paper);
-      border: 1.5px solid var(--outline);
-      border-radius: 22px;
-      padding: 22px 28px;
+      min-height: 0;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.9);
+      box-shadow: 0 8px 24px -14px rgba(11, 26, 44, 0.25);
+      border-radius: 20px;
+      padding: 22px 24px;
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: space-between;
       cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 14px rgba(28,46,42,0.03);
       position: relative;
       overflow: hidden;
+      transition: border-color 0.15s ease;
     }
-    .bento-wide-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--accent);
-      box-shadow: 0 10px 24px rgba(0,77,160,0.14);
+    .bento-wide-card:hover { border-color: var(--accent); }
+    .bento-wide-card.info {
+      cursor: default;
+      align-items: center;
+      border-left: 4px solid var(--accent);
     }
-    .wide-card-text {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      position: relative;
-      z-index: 2;
+    .bento-wide-card.info:hover { border-color: rgba(255,255,255,0.9); border-left-color: var(--accent); }
+    .bento-wide-card.info .wide-card-title { font-size: 28px; line-height: 1.25; text-wrap: balance; }
+    .wide-card-text { display: flex; flex-direction: column; gap: 6px; position: relative; z-index: 2; min-width: 0; }
+    .wide-card-kicker {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--muted);
     }
     .wide-card-title {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 800;
       color: var(--ink);
-      letter-spacing: -0.3px;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
     }
     .wide-card-desc {
       font-size: 17px;
       color: var(--muted);
       font-weight: 600;
       line-height: 1.35;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
-    /* Ambient Backdrop Art inside Wide Cards (우측 외곽으로 이동하여 텍스트 간섭 100% 차단) */
-    .wide-card-bg-art {
-      position: absolute;
-      right: -10px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 125px;
-      height: 125px;
-      pointer-events: none;
-      opacity: 0.14;
-      transition: all 0.35s ease;
+    .wide-card-arrow {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid var(--outline);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1;
+      color: var(--accent);
     }
-    .bento-wide-card:hover .wide-card-bg-art {
-      opacity: 0.24;
-      transform: translateY(-50%) scale(1.05);
+    .subject-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
     }
+    .subject-chip {
+      padding: 6px 12px;
+      border-radius: 12px;
+      background: var(--control);
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .subject-chip.pe { background: #E0F2FE; color: #0369A1; }
+    .subject-chip.art { background: #FDF2E9; color: #B45309; }
+    .subject-chip.sci { background: #ECFDF5; color: #047857; }
 
     /* Dialogue Screen */
     .dialogue-wrap {
@@ -732,18 +740,6 @@
     }
 
     /* School Settings */
-    .school-setting-btn {
-      min-height: 48px;
-      padding: 8px 20px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.14);
-      border: 1px solid rgba(255,255,255,0.28);
-      color: #FFFFFF;
-      font-size: 17px;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
-    }
     .settings-center {
       flex: 1;
       min-height: 0;
@@ -814,28 +810,32 @@
       .drive-sentence { font-size: 28px; }
       .drive-btn { height: 60px; min-width: 170px; font-size: 20px; }
       .back-btn, .school-setting-btn { min-height: 44px; }
+      .school-setting-btn { padding: 6px 14px; font-size: 16px; }
 
       .bento-stage { gap: 12px; }
-      .bento-hero { padding: 24px 28px 16px 28px; }
-      .hero-center-col { gap: 10px; margin: 0; }
-      .hero-ambient-orb { width: 88px; height: 88px; }
-      .hero-title { font-size: 26px; margin-bottom: 4px; }
-      .hero-desc { font-size: 16px; }
-      .hero-cta { padding: 10px 14px; font-size: 17px; white-space: nowrap; }
-      .hero-cta-plane { width: 34px; height: 34px; }
+      .bento-hero { padding: 18px 22px 20px; border-radius: 22px; }
+      .hero-title { font-size: 27px; letter-spacing: -0.8px; }
+      .hero-desc { font-size: 15px; }
+      .hero-route .route-figure { font-size: 26px; }
+      .hero-route .route-label { font-size: 12px; }
+      .subject-chip { font-size: 14px; padding: 4px 10px; }
+      .hero-trip { font-size: 15px; }
+      .hero-title { margin-top: 6px; }
+      .hero-desc { margin-top: 6px; }
+      .hero-cta { height: 54px; margin-top: 16px; font-size: 18px; padding: 0 6px 0 18px; }
+      .hero-cta-plane { width: 40px; height: 40px; }
       .cta-left { gap: 8px; }
 
-      .bento-right-col { gap: 12px; }
-      .info-dual-row { gap: 10px; height: 100px; }
-      .info-mini-tile { padding: 10px 12px; }
-      .mini-tile-body { margin-top: 2px; }
+      .bento-right-col { gap: 10px; }
+      .info-dual-row { gap: 10px; }
+      .info-mini-tile { padding: 12px 14px 12px; min-height: 92px; gap: 4px; }
+      .mini-text-bold { font-size: 13px; }
       .mini-tile-focus { font-size: 20px; }
-      .mini-tile-sub { margin-top: 2px; }
-      .bento-wide-card { padding: 14px 16px; min-height: 0; }
-      .wide-card-title { font-size: 26px; }
-      .wide-card-desc { font-size: 16px; }
-      .wide-card-bg-art { top: 80%; }
-      .wide-card-bg-art svg { width: 96px; height: 96px; }
+      .mini-tile-sub { font-size: 15px; }
+      .bento-wide-card { padding: 14px 16px; }
+      .wide-card-title { font-size: 22px; }
+      .wide-card-desc { font-size: 15px; }
+      .wide-card-arrow { width: 38px; height: 38px; }
 
       .dialogue-top { margin-bottom: 8px; }
       .back-btn { padding: 6px 16px; }
@@ -920,6 +920,7 @@
       <button id="demoDrive" onclick="toggleDrivingDemo()">주행</button>
       <button id="demoEtaLong" onclick="setEtaDemo('long')">8분 전</button>
       <button id="demoEtaShort" onclick="setEtaDemo('short')">2분 전</button>
+      <button id="demoDest" onclick="cycleDestDemo()">목적지</button>
     </div>
 
   </div>
@@ -1090,64 +1091,41 @@
 
     // --- 스마트 벤토: 완성형 레이아웃 ---
     function renderHome(container) {
-      const info = homeInfo();
+      const trip = currentTrip();
+      const info = homeInfo(trip);
+      const isMorning = trip.mode === 'morning';
+      const other = isMorning ? 'afternoon' : 'morning';
+      const heroClass = trip.kind === 'weekend' ? 'weekend' : (isMorning ? '' : 'afternoon');
       container.innerHTML = `
         <div class="bento-stage">
-          <!-- 좌측 히어로 카드 (등교 대화 + 보이스 앰비언트 구체) -->
-          <div class="bento-hero" onclick="startFlow('morning')">
+          <div class="bento-hero ${heroClass}" onclick="startFlow('${trip.mode}')">
             <div class="hero-top-meta">
               ${getDaitLogoHtml()}
               <button class="school-setting-btn" onclick="event.stopPropagation(); openSettings();">학교 설정</button>
             </div>
 
-            <div class="hero-center-col">
-              <div class="hero-orb-wrap">
-                <div class="hero-ambient-orb">
-                  <div class="voice-visualizer" style="height:32px; margin:0;">
-                    <div class="v-bar" style="background:#fff;"></div>
-                    <div class="v-bar" style="background:#fff;"></div>
-                    <div class="v-bar" style="background:#fff;"></div>
-                    <div class="v-bar" style="background:#fff;"></div>
-                    <div class="v-bar" style="background:#fff;"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="hero-text-col">
-                <div class="hero-title">${escapeHtml(info.title)}</div>
-                <div class="hero-desc">${escapeHtml(info.desc)}</div>
-              </div>
-            </div>
+            <div class="hero-figure">${routeSvg(trip)}</div>
+            <div class="hero-trip">${trip.where ? `<strong>${escapeHtml(trip.where)}</strong>` : ''}${trip.where && trip.minutes !== null ? '<span class="trip-sep">·</span>' : ''}${trip.minutes !== null ? `<strong>${trip.minutes}분</strong><span>남음</span>` : ''}${!trip.where && trip.minutes === null ? `<span>${escapeHtml(trip.when)}</span>` : ''}</div>
+            <div class="hero-title">${escapeHtml(info.title)}</div>
+            <div class="hero-desc">${escapeHtml(info.desc)}</div>
 
             <div class="hero-cta">
-              <div class="cta-left">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
-                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                  <line x1="12" y1="19" x2="12" y2="22"/>
-                </svg>
-                <span>등교 대화 시작하기</span>
-              </div>
-              <div class="hero-cta-plane" title="출발">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M22 2L11 13"/>
-                  <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
-                </svg>
+              <div class="cta-left"><span>${isMorning ? '등교' : '하교'} 대화 시작하기</span></div>
+              <div class="hero-cta-plane">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
               </div>
             </div>
           </div>
 
-          <!-- 우측 컬럼: 상단 2분할 미니 정보 + 하단 하교 대화 카드 -->
           <div class="bento-right-col">
-            <!-- 1. 상단 미니 정보 2열 (시안 3: 카드 틴트형 확정) -->
             <div class="info-dual-row">
               <div class="info-mini-tile tile-tint-prep">
-                <div class="mini-tile-label"><span class="mini-text-bold text-prep">준비물</span></div>
+                <div class="mini-tile-label"><span class="mini-text-bold text-prep">${escapeHtml(info.prepLabel)}</span></div>
                 <div class="mini-tile-body">
                   <div class="mini-tile-focus">${escapeHtml(info.prep)}</div>
                   ${info.prepSub ? `<div class="mini-tile-sub">${escapeHtml(info.prepSub)}</div>` : ''}
                 </div>
               </div>
-
               <div class="info-mini-tile tile-tint-meal">
                 <div class="mini-tile-label"><span class="mini-text-bold text-meal">${escapeHtml(info.mealLabel)}</span></div>
                 <div class="mini-tile-body">
@@ -1157,23 +1135,21 @@
               </div>
             </div>
 
-            <!-- 2. 하단 와이드 카드: 하교 대화 -->
-            <div class="bento-wide-card" onclick="startFlow('afternoon')">
+            <div class="bento-wide-card${trip.known ? ' info' : ''}"${trip.known ? '' : ` onclick="startFlow('${other}')"`}>
               <div class="wide-card-text">
-                <div class="wide-card-title">하교 대화 시작하기</div>
-                <div class="wide-card-desc">오늘 기억나는 장면을 들려줘요</div>
+                <div class="wide-card-kicker">${info.otherKicker}</div>
+                ${info.otherChips ? `<div class="subject-chips">${info.otherChips.map(c => `<span class="subject-chip${chipClass(c)}">${escapeHtml(c)}</span>`).join('')}</div>` : ''}
+                <div class="wide-card-title">${escapeHtml(info.otherTitle)}</div>
+                ${info.otherDesc ? `<div class="wide-card-desc">${escapeHtml(info.otherDesc)}</div>` : ''}
               </div>
-              <div class="wide-card-bg-art">
-                <svg width="125" height="125" viewBox="0 0 100 100" fill="none">
-                  <path d="M50 16L12 48h12v36h52V48h12L50 16z" fill="#004DA0" />
-                  <rect x="42" y="58" width="16" height="26" rx="3" fill="#FFFFFF" />
-                  <circle cx="54" cy="72" r="2" fill="#38BDF8" />
-                </svg>
-              </div>
+              ${trip.known ? '' : `<div class="wide-card-arrow">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+              </div>`}
             </div>
           </div>
         </div>
       `;
+      placeRouteDot();
     }
 
     function renderDialogueFlow(container) {
@@ -1500,22 +1476,129 @@
       return [...new Set([...preferred, ...plan.subjects])].slice(0, 3);
     }
 
-    function homeInfo() {
-      if (!school) {
-        return { title: '오늘 준비 됐나요?', desc: '체육복을 함께 확인해요', prep: '체육복', prepSub: '예시', mealLabel: '오늘 점심', meal: '떡갈비구이', mealSub: '예시' };
+    function chipClass(subject) {
+      if (subject === '체육') return ' pe';
+      if (/미술|음악|체육/.test(subject)) return ' art';
+      if (/과학|수학/.test(subject)) return ' sci';
+      return '';
+    }
+
+    // 여정 그림. 출발점에서 목적지까지 한 획, 그 위에 차 위치. 남은 시간이 없으면 선만 그린다.
+    function routeSvg(trip) {
+      const total = trip.kind === 'school' || trip.kind === 'home' ? 20 : null; // 기준 20분 여정
+      const remain = trip.minutes;
+      const progress = total && remain !== null ? Math.min(0.92, Math.max(0.08, 1 - remain / total)) : null;
+      const W = 420, H = 140;
+      const path = `M 24 ${H - 30} C 120 ${H - 30}, 170 34, 250 34 S ${W - 40} ${H - 70}, ${W - 24} 44`;
+      const figure = trip.figure || '';
+      const unit = trip.figureUnit || '';
+      const endLabel = trip.kind === 'school' ? '학교' : trip.kind === 'home' ? '집' : (trip.kind === 'weekend' ? '다음 수업일' : (trip.mode === 'afternoon' ? '집' : '학교'));
+      const startLabel = trip.kind === 'school' ? '집' : trip.kind === 'home' ? '학교' : '지금';
+      let dot = '';
+      if (progress !== null) {
+        dot = `<path class="route-done" d="${path}" pathLength="1" stroke-dasharray="${progress} 1"/>
+          <g id="routeDot"><circle class="route-dot-halo" r="14"/><circle class="route-dot" r="6"/></g>`;
       }
-      const plan = schoolPlan();
-      if (!plan) {
-        return { title: '오늘 준비 됐나요?', desc: '학교 정보를 확인하지 못했어요', prep: '확인 필요', prepSub: '', mealLabel: '오늘 점심', meal: '확인 필요', mealSub: '' };
+      return `<svg class="hero-route" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <path class="route-path" d="${path}"/>
+        ${dot}
+        <circle class="route-dot" cx="24" cy="${H - 30}" r="4"/>
+        <text class="route-label" x="24" y="${H - 8}" text-anchor="start">${escapeHtml(startLabel)}</text>
+        <circle class="route-end-fill" cx="${W - 24}" cy="44" r="9"/>
+        <circle class="route-end" cx="${W - 24}" cy="44" r="9"/>
+        <text class="route-label" x="${W - 24}" y="22" text-anchor="end">${escapeHtml(endLabel)}</text>
+        <text class="route-figure" x="${W / 2}" y="${H - 14}" text-anchor="middle">${escapeHtml(figure)}<tspan class="route-unit" dx="4">${escapeHtml(unit)}</tspan></text>
+      </svg>`;
+    }
+
+    // 그린 뒤 차 위치 점을 선 위로 옮긴다 (pathLength 비율 → 실제 좌표)
+    function placeRouteDot() {
+      const svg = document.querySelector('.hero-route');
+      const dot = svg && svg.querySelector('#routeDot');
+      const done = svg && svg.querySelector('.route-done');
+      if (!svg || !dot || !done) return;
+      const ratio = parseFloat(done.getAttribute('stroke-dasharray'));
+      const len = done.getTotalLength();
+      const pt = done.getPointAtLength(len * ratio);
+      dot.setAttribute('transform', `translate(${pt.x} ${pt.y})`);
+    }
+
+    // 지금 여정을 한 곳에서 정한다. 첫 화면·칸·대화 시작이 모두 이것을 따른다.
+    // 우선순위: 내비 목적지(학교/집) → 수업일의 시간대(오전 등교·오후 하교) → 주말·방학은 다음 수업일 준비
+    function currentTrip() {
+      const now = new Date();
+      const minutes = naviRemainMinutes();
+      const mins = minutes === null ? null : Math.max(1, Math.round(minutes));
+      if (naviInfo && naviInfo.name) {
+        const fig = { figure: mins === null ? '' : String(mins), figureUnit: mins === null ? '' : '분' };
+        if (school && placeMatches(naviInfo, school)) return { mode: 'morning', kind: 'school', known: true, where: `${school.name}까지`, minutes: mins, when: '', ...fig };
+        if (homePlace && placeMatches(naviInfo, homePlace)) return { mode: 'afternoon', kind: 'home', known: true, where: '집까지', minutes: mins, when: '', ...fig };
+      }
+      // 여기부터는 목적지가 학교도 집도 아니거나 없다. 남은 시간은 쓰지 않는다
+      const unknownMins = null;
+      const todayYmd = toYmd(now);
+      const todayHasClass = !!(schoolDays[todayYmd] && schoolDays[todayYmd].subjects.length);
+      const isWeekend = now.getDay() === 0 || now.getDay() === 6;
+      if (school && Object.keys(schoolDays).length && !todayHasClass) {
+        const plan = schoolPlan();
+        const label = plan ? plan.label : '다음 수업일';
+        return { mode: 'morning', kind: 'weekend', known: false, where: '', minutes: unknownMins, when: `${label} 준비`, figure: label.replace('요일', ''), figureUnit: label.endsWith('요일') ? '요일' : '' };
+      }
+      if (!school && isWeekend) return { mode: 'morning', kind: 'weekend', known: false, where: '', minutes: unknownMins, when: '다음 수업일 준비', figure: '월', figureUnit: '요일' };
+      const afternoon = now.getHours() >= 12;
+      const hhmm = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+      return { mode: afternoon ? 'afternoon' : 'morning', kind: afternoon ? 'afternoon' : 'morning', known: false, where: '', minutes: unknownMins, when: afternoon ? '오늘 오후' : '오늘 아침', figure: hhmm, figureUnit: '' };
+    }
+
+    function homeInfo(trip) {
+      const plan = school ? schoolPlan() : null;
+      const dayWord = plan ? plan.label : '오늘';
+      const memory = readStored(MEMORY_KEY);
+      const morningSubject = memory && memory.date === toYmd(new Date()) ? memory.subject : null;
+      const prepLine = !school ? { prep: '체육복', prepSub: '예시' }
+        : !plan ? { prep: '확인 필요', prepSub: '' }
+        : plan.hasPe ? { prep: '체육복', prepSub: '시간표 기준' }
+        : { prep: '학교 안내 확인', prepSub: plan.subjects.slice(0, 2).join(' · ') };
+      const mealLine = !school ? { meal: '떡갈비구이', mealSub: '예시' } : { meal: plan && plan.meal ? plan.meal : '확인 필요', mealSub: '' };
+
+      const subjects = plan ? plan.subjects : (!school ? ['체육', '국어', '수학', '과학'] : []);
+      // 오늘의 질문: 시간표에서 고른다. 기획안 교사 규칙표의 과목별 질문
+      const question = plan && plan.subjects.includes('과학') ? '오늘 과학 시간엔 뭐가 궁금해?'
+        : plan && plan.hasPe ? '체육 시간에 해 보고 싶은 게 있어?'
+        : plan && plan.subjects.includes('미술') ? '오늘은 뭘 그리고 싶어?'
+        : plan && plan.subjects.includes('국어') ? '기억나는 이야기 하나 있어?'
+        : '오늘 가장 기대되는 시간은 언제야?';
+      const otherMorning = trip.known
+        ? { otherKicker: '하교 때 다시 물을 질문', otherChips: null, otherTitle: question, otherDesc: '아침에 답하면 집에 갈 때 이어서 물어요' }
+        : { otherKicker: '등교', otherChips: subjects.slice(0, 6), otherTitle: `${dayWord} 시간표`, otherDesc: subjects.length ? '' : '학교를 설정하면 보여 줘요' };
+      const otherAfternoon = trip.known
+        ? { otherKicker: '오늘의 질문', otherChips: subjects.slice(0, 6), otherTitle: question, otherDesc: '대답은 아이가 해요. 부모는 듣다가 끼어들면 돼요' }
+        : { otherKicker: trip.kind === 'weekend' ? `${dayWord} 시간표` : '하교', otherChips: trip.kind === 'weekend' ? subjects.slice(0, 6) : null, otherTitle: trip.kind === 'weekend' ? '하교 대화는 집에 갈 때' : '오늘 이야기 들려주기', otherDesc: trip.kind === 'weekend' ? '아침 질문을 기억했다가 이어서 물어요' : '기억나는 장면 하나면 돼요' };
+
+      if (trip.mode === 'afternoon') {
+        return {
+          title: morningSubject ? `아침에 고른 ${morningSubject}, 어땠나요?` : '오늘은 어땠나요?',
+          desc: '기억나는 장면 하나만 들려줘요',
+          prepLabel: '아침에 고른 수업', prep: morningSubject || '없음', prepSub: morningSubject ? '하교 대화에서 다시 물어요' : '등교 대화에서 고르면 여기 남아요',
+          mealLabel: `${dayWord === '오늘' ? '내일' : dayWord} 점심`, ...mealLine,
+          ...otherMorning
+        };
+      }
+      if (trip.kind === 'weekend') {
+        return {
+          title: `${dayWord} 준비 됐나요?`,
+          desc: plan ? (plan.hasPe ? '체육이 있어요. 체육복을 미리 챙겨요' : `${plan.subjects.slice(0, 3).join(' · ')}`) : '학교를 설정하면 시간표를 보여 줘요',
+          prepLabel: `${dayWord} 준비물`, ...prepLine,
+          mealLabel: `${dayWord} 점심`, ...mealLine,
+          ...otherAfternoon
+        };
       }
       return {
-        title: `${plan.label} 준비 됐나요?`,
-        desc: plan.hasPe ? '체육복을 함께 확인해요' : (plan.subjects.slice(0, 3).join(' · ') || '학교 안내를 확인해요'),
-        prep: plan.hasPe ? '체육복' : '학교 안내 확인',
-        prepSub: plan.hasPe ? '시간표 기준' : '',
-        mealLabel: `${plan.label} 점심`,
-        meal: plan.meal || '확인 필요',
-        mealSub: ''
+        title: trip.known ? (plan && plan.hasPe ? '체육복 챙겼나요?' : '오늘 준비 됐나요?') : `${dayWord} 준비 됐나요?`,
+        desc: !school ? '체육복을 함께 확인해요' : !plan ? '학교 정보를 확인하지 못했어요' : (plan.hasPe ? '체육복을 함께 확인해요' : (plan.subjects.slice(0, 3).join(' · ') || '학교 안내를 확인해요')),
+        prepLabel: '준비물', ...prepLine,
+        mealLabel: `${dayWord} 점심`, ...mealLine,
+        ...otherAfternoon
       };
     }
 
@@ -1560,6 +1643,8 @@
           <div class="dialogue-top">
             <button class="back-btn" onclick="goHome()">처음으로</button>
             ${school ? '<button class="back-btn" onclick="clearSchool()">학교 지우기</button>' : ''}
+            ${homePlace ? `<button class="back-btn" onclick="clearHome()">집 지우기 (${escapeHtml(homePlace.name)})</button>` : ''}
+            ${canSaveHome() ? `<button class="back-btn" onclick="saveHomeFromNavi()">지금 목적지를 집으로</button>` : ''}
           </div>
           <div class="dialogue-card">
             <div class="settings-center">
@@ -1623,6 +1708,7 @@
         office: settings.picked.ATPT_OFCDC_SC_CODE,
         code: settings.picked.SD_SCHUL_CODE,
         name: settings.picked.SCHUL_NM,
+        address: settings.picked.ORG_RDNMA || '',
         kind: settings.picked.SCHUL_KND_SC_NM,
         grade: String(settings.grade),
         classNm: settings.classes[index]
@@ -1648,6 +1734,8 @@
 
     function playAudio(clipId) {
       currentClip = clipId;
+      // 음원은 '오늘' 기준으로 녹음되어 있어, 수업이 없는 날에는 틀지 않는다. 음원 조각 작업에서 요일별로 바꾼다.
+      if (currentTrip().kind === 'weekend') return;
       const player = document.getElementById('audioPlayer');
       const isAndroidAsset = window.location.href.includes('android_asset');
       const src = isAndroidAsset 
@@ -1712,18 +1800,71 @@
       console.log('Navi:', jsonText);
       if (info.event === 'destination' || info.event === 'routeStarted') {
         // 길 안내가 없을 때는 이름 없이 0으로 오므로 도착 직전과 구분한다.
-        if (!info.name && !(Number(info.remainTime) > 0)) { naviInfo = null; renderDemoPanel(); return; }
-        naviInfo = { name: info.name || '', remainTime: Number(info.remainTime), remainDistance: Number(info.remainDistance), at: Date.now() };
+        if (!info.name && !(Number(info.remainTime) > 0)) { const had = !!naviInfo; naviInfo = null; renderDemoPanel(); if (had) refreshHomeIfIdle(); return; }
+        const changed = !naviInfo || naviInfo.name !== (info.name || '') || (currentMode === 'settings' && !document.querySelector('[onclick="saveHomeFromNavi()"]') && canSaveHomeFor(info));
+        naviInfo = { name: info.name || '', address: info.address || '', remainTime: Number(info.remainTime), remainDistance: Number(info.remainDistance), at: Date.now() };
         applyNaviEta();
+        if (changed) refreshHomeIfIdle();
       } else if (info.event === 'routeCancelled' || info.event === 'routeEnded' || info.event === 'arrived' || info.event === 'unavailable') {
         if (info.event === 'arrived' && naviInfo) { naviInfo.remainTime = 0; applyNaviEta(); }
         naviInfo = null;
         renderDemoPanel();
+        refreshHomeIfIdle();
       } else if (info.event === 'status' && info.status !== 'ROUTE_DRIVE') {
         naviInfo = null;
         renderDemoPanel();
+        refreshHomeIfIdle();
       }
     };
+
+    function refreshHomeIfIdle() {
+      if (isIntroPlaying) { homeStale = true; return; }
+      if (!currentMode || currentMode === 'settings') render();
+    }
+    // 길 안내 중 10초마다 같은 목적지가 와도 설정 화면의 '집으로' 버튼이 늦지 않게, 목적지 이름이 생기면 다시 그린다
+
+    // ========================================================
+    // 목적지로 등교·하교 제안 (기획안 ②: 목적지가 학교면 등교, 집이면 하교)
+    // 자동으로 대화를 시작하지는 않는다. 안전 원칙: 운전자 조작 없이 소리를 내지 않는다.
+    // ========================================================
+    const HOME_KEY = 'dait.home';
+    let homePlace = readStored(HOME_KEY);
+
+    function normalizePlace(text) {
+      return String(text || '').replace(/\s+/g, '').replace(/[()·,.]/g, '');
+    }
+
+    // 도로명 주소에서 '산정로 171'처럼 도로 이름과 번지만 뽑는다.
+    function roadPart(address) {
+      const m = String(address || '').match(/([가-힣A-Za-z0-9]+(?:로|길|대로))\s*(\d+(?:-\d+)?)/);
+      return m ? m[1] + m[2] : '';
+    }
+
+    function placeMatches(dest, place) {
+      if (!dest || !place) return false;
+      const destName = normalizePlace(dest.name), placeName = normalizePlace(place.name);
+      if (destName && placeName && (destName === placeName || destName.includes(placeName) || placeName.includes(destName))) return true;
+      const destRoad = roadPart(dest.address), placeRoad = roadPart(place.address);
+      return !!(destRoad && placeRoad && destRoad === placeRoad);
+    }
+
+    function canSaveHome() { return canSaveHomeFor(naviInfo); }
+    function canSaveHomeFor(dest) {
+      return !!(dest && dest.name) && !(school && placeMatches(dest, school)) && !(homePlace && placeMatches(dest, homePlace));
+    }
+
+    function saveHomeFromNavi() {
+      if (!canSaveHome()) return;
+      homePlace = { name: naviInfo.name, address: naviInfo.address || '' };
+      writeStored(HOME_KEY, homePlace);
+      goHome();
+    }
+
+    function clearHome() {
+      homePlace = null;
+      try { localStorage.removeItem(HOME_KEY); } catch (e) { console.log('Storage error:', e); }
+      render();
+    }
 
     // 남은 시간은 초, 남은 거리는 m 단위다. 에뮬레이터에서 판교→서울시청 1740초·26000m로 확인했다.
     function naviRemainMinutes() {
@@ -1750,6 +1891,19 @@
       document.getElementById('demoEtaLong').textContent = live ? `${Math.max(1, Math.round(minutes))}분 전` : '8분 전';
       document.getElementById('demoEtaLong').disabled = live;
       document.getElementById('demoEtaShort').disabled = live;
+    }
+
+    // 시연용 목적지. 차에서 실제 값이 오면(앱 안) 쓰지 않는다. 없음 → 학교 → 집 → 없음 순으로 돈다.
+    let destDemoStep = 0;
+    function cycleDestDemo() {
+      if (window.AndroidBridge) return;
+      destDemoStep = (destDemoStep + 1) % 3;
+      const fake = destDemoStep === 1 && school ? { name: school.name, address: school.address, remainTime: 480, remainDistance: 4000 }
+        : destDemoStep === 2 ? { name: homePlace ? homePlace.name : '우리집', address: homePlace ? homePlace.address : '', remainTime: 480, remainDistance: 4000 }
+        : null;
+      document.getElementById('demoDest').classList.toggle('on', !!fake);
+      if (fake) window.onNaviUpdate(JSON.stringify({ event: 'destination', ...fake }));
+      else window.onNaviUpdate(JSON.stringify({ event: 'routeCancelled' }));
     }
 
     // 시연용 남은 시간. 차에서 실제 값이 오면 쓰지 않는다.

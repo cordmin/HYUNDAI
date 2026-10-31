@@ -688,6 +688,75 @@
       100% { r: 24px; stroke-width: 0.4px; opacity: 0; }
     }
 
+    /* School Settings */
+    .school-setting-btn {
+      padding: 6px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.28);
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .settings-center {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+    .school-search-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      max-width: 520px;
+      margin-top: 14px;
+    }
+    .school-input {
+      flex: 1;
+      min-width: 0;
+      height: 52px;
+      padding: 0 18px;
+      border-radius: 16px;
+      border: 1px solid var(--outline);
+      background: var(--surface);
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 18px;
+      font-weight: 600;
+      user-select: text;
+    }
+    .settings-message {
+      margin-top: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .settings-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      width: 100%;
+      min-height: 0;
+      margin-top: 14px;
+      overflow-y: auto;
+    }
+    .settings-list .choice-chip {
+      flex: 0 1 auto;
+      min-width: 72px;
+      max-width: none;
+      padding: 0 18px;
+    }
+    .school-search-row .choice-chip {
+      flex: 0 0 96px;
+      height: 52px;
+    }
+
     /* 작은 앱 창(Pleos 분할 화면 등): 잘리는 곳 없이 한 화면에 들어오도록 줄인다 */
     @media (max-height: 540px), (max-width: 860px) {
       .stage-container,
@@ -808,6 +877,7 @@
     let isFinished = false;
     let currentClip = '';
     let isDrivingMode = false;
+    let currentChoices = [];
 
     // DAIT 공식 확정 캘리그래피 로고 (시안 2 커넥티드 리본 + i Dot)
     function getDaitLogoHtml() {
@@ -843,6 +913,11 @@
       },
       SUBJECT_MISSING: {
         clip: 'talk_missing',
+        title: '어떤 수업이 기대돼요?',
+        choices: ['체육', '과학', '독서']
+      },
+      SUBJECT_TODAY: {
+        clip: 'morning_question',
         title: '어떤 수업이 기대돼요?',
         choices: ['체육', '과학', '독서']
       },
@@ -923,18 +998,26 @@
         return;
       }
 
-      // 2. Dialogue Flow
+      // 2. School Settings
+      if (currentMode === 'settings') {
+        renderSettings(stageArea);
+        return;
+      }
+
+      // 3. Dialogue Flow
       renderDialogueFlow(stageArea);
     }
 
     // --- 스마트 벤토: 완성형 레이아웃 ---
     function renderHome(container) {
+      const info = homeInfo();
       container.innerHTML = `
         <div class="bento-stage">
           <!-- 좌측 히어로 카드 (등교 대화 + 보이스 앰비언트 구체) -->
           <div class="bento-hero" onclick="startFlow('morning')">
             <div class="hero-top-meta">
               ${getDaitLogoHtml()}
+              <button class="school-setting-btn" onclick="event.stopPropagation(); openSettings();">학교 설정</button>
             </div>
 
             <div class="hero-center-col">
@@ -950,8 +1033,8 @@
                 </div>
               </div>
               <div class="hero-text-col">
-                <div class="hero-title">오늘 준비 됐나요?</div>
-                <div class="hero-desc">체육복을 함께 확인해요</div>
+                <div class="hero-title">${escapeHtml(info.title)}</div>
+                <div class="hero-desc">${escapeHtml(info.desc)}</div>
               </div>
             </div>
 
@@ -980,16 +1063,16 @@
               <div class="info-mini-tile tile-tint-prep">
                 <div class="mini-tile-label"><span class="mini-text-bold text-prep">준비물</span></div>
                 <div class="mini-tile-body">
-                  <div class="mini-tile-focus">체육복</div>
-                  <div class="mini-tile-sub">예시</div>
+                  <div class="mini-tile-focus">${escapeHtml(info.prep)}</div>
+                  ${info.prepSub ? `<div class="mini-tile-sub">${escapeHtml(info.prepSub)}</div>` : ''}
                 </div>
               </div>
 
               <div class="info-mini-tile tile-tint-meal">
-                <div class="mini-tile-label"><span class="mini-text-bold text-meal">오늘 점심</span></div>
+                <div class="mini-tile-label"><span class="mini-text-bold text-meal">${escapeHtml(info.mealLabel)}</span></div>
                 <div class="mini-tile-body">
-                  <div class="mini-tile-focus">떡갈비구이</div>
-                  <div class="mini-tile-sub">예시</div>
+                  <div class="mini-tile-focus">${escapeHtml(info.meal)}</div>
+                  ${info.mealSub ? `<div class="mini-tile-sub">${escapeHtml(info.mealSub)}</div>` : ''}
                 </div>
               </div>
             </div>
@@ -1030,11 +1113,15 @@
 
       playAudio(data.clip);
 
+      const subjectStages = ['SUBJECT', 'SUBJECT_MISSING', 'SUBJECT_TODAY'];
+      const todayChoices = currentMode === 'morning' && subjectStages.includes(stage) ? subjectChoices() : null;
+      currentChoices = todayChoices || data.choices || [];
+
       let optionsHtml = '';
-      if (data.choices && data.choices.length > 0) {
+      if (currentChoices.length > 0) {
         optionsHtml = `
           <div class="options-row">
-            ${data.choices.map(c => `<button class="choice-chip" onclick="handleAnswer('${c}')">${c}</button>`).join('')}
+            ${currentChoices.map((c, i) => `<button class="choice-chip" onclick="handleAnswer(currentChoices[${i}])">${escapeHtml(c)}</button>`).join('')}
           </div>
         `;
       }
@@ -1060,7 +1147,7 @@
                 </div>
               </div>
               <div class="main-question">${data.title}</div>
-              ${heard ? `<div class="heard-bubble">“${heard}”</div>` : ''}
+              ${heard ? `<div class="heard-bubble">“${escapeHtml(heard)}”</div>` : ''}
             </div>
 
             ${optionsHtml}
@@ -1080,8 +1167,10 @@
       heard = '';
       isFinished = false;
 
-      if (mode === 'morning') stage = 'PREP';
-      else if (mode === 'afternoon') stage = 'AFTER_EVENT';
+      if (mode === 'morning') {
+        const plan = schoolPlan();
+        stage = school && !(plan && plan.hasPe) ? 'SUBJECT_TODAY' : 'PREP';
+      } else if (mode === 'afternoon') stage = 'AFTER_EVENT';
       else if (mode === 'tour') {
         stage = 'STEP1';
       }
@@ -1101,10 +1190,10 @@
       heard = ans;
       if (currentMode === 'morning') {
         if (stage === 'PREP') stage = ans === '깜빡했어' ? 'SUBJECT_MISSING' : 'SUBJECT';
-        else if (stage === 'SUBJECT' || stage === 'SUBJECT_MISSING') {
-          if (ans === '체육') stage = 'DONE';
-          else if (ans === '과학') stage = 'SCIENCE_DETAIL';
-          else stage = 'READING_DETAIL';
+        else if (stage === 'SUBJECT' || stage === 'SUBJECT_MISSING' || stage === 'SUBJECT_TODAY') {
+          if (ans === '과학') stage = 'SCIENCE_DETAIL';
+          else if (ans === '독서' || ans === '국어') stage = 'READING_DETAIL';
+          else stage = 'DONE';
         } else if (stage === 'SCIENCE_DETAIL' || stage === 'READING_DETAIL') {
           stage = 'DONE';
           isFinished = true;
@@ -1139,6 +1228,288 @@
       } else {
         playAudio(currentClip);
       }
+    }
+
+    // ========================================================
+    // 학교 정보 (나이스 교육정보 개방 포털)
+    // ========================================================
+    const NEIS_URL = 'https://open.neis.go.kr/hub/';
+    const SCHOOL_KEY = 'dait.school';
+    const DAYS_KEY = 'dait.schoolDays';
+    const DAYS_AHEAD = 7;
+    const WEEKDAYS = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+
+    let school = readStored(SCHOOL_KEY);
+    let schoolDays = readStored(DAYS_KEY) || {};
+    let settings = {};
+    let neisSeq = 0;
+    let homeStale = false;
+    const neisWaiting = {};
+
+    function readStored(key) {
+      try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; }
+    }
+
+    function writeStored(key, value) {
+      try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { console.log('Storage error:', e); }
+    }
+
+    function escapeHtml(text) {
+      return String(text).replace(/[&<>"']/g, c => `&#${c.charCodeAt(0)};`);
+    }
+
+    function toYmd(date) {
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${date.getFullYear()}${month}${day}`;
+    }
+
+    function fromYmd(ymd) {
+      return new Date(Number(ymd.slice(0, 4)), Number(ymd.slice(4, 6)) - 1, Number(ymd.slice(6, 8)));
+    }
+
+    function upcomingDates() {
+      const start = new Date();
+      return Array.from({ length: DAYS_AHEAD + 1 }, (_, i) => new Date(start.getFullYear(), start.getMonth(), start.getDate() + i));
+    }
+
+    function dayLabel(ymd) {
+      const dates = upcomingDates();
+      if (ymd === toYmd(dates[0])) return '오늘';
+      if (ymd === toYmd(dates[1])) return '내일';
+      return WEEKDAYS[fromYmd(ymd).getDay()];
+    }
+
+    // 앱에서는 Kotlin이 대신 받아 인증키를 화면 코드 밖에 두고, 브라우저 미리보기는 직접 받는다.
+    window.onNeisResult = function(requestId, body) {
+      const resolve = neisWaiting[requestId];
+      delete neisWaiting[requestId];
+      if (resolve) resolve(body);
+    };
+
+    function neisBody(service, query) {
+      if (window.AndroidBridge) {
+        return new Promise(resolve => {
+          const requestId = ++neisSeq;
+          neisWaiting[requestId] = resolve;
+          window.AndroidBridge.neisGet(requestId, service, query);
+        });
+      }
+      return fetch(`${NEIS_URL}${service}?${query}`).then(response => response.text());
+    }
+
+    async function neisRows(service, params) {
+      const query = new URLSearchParams({ Type: 'json', pIndex: '1', pSize: '100', ...params }).toString();
+      const data = JSON.parse(await neisBody(service, query));
+      if (data.RESULT) {
+        if (data.RESULT.CODE === 'INFO-200') return [];
+        throw new Error(data.RESULT.CODE);
+      }
+      return data[service][1].row;
+    }
+
+    function mainDish(dishes) {
+      const items = dishes.split(/<br\s*\/?>/i)
+        .map(item => item.replace(/\([^)]*\)/g, '').replace(/[*]/g, '').replace(/[a-zA-Z]+\s*$/, '').trim())
+        .filter(Boolean);
+      return items.find(item => !/(밥|국|탕|찌개|김치|깍두기|우유|주스)$/.test(item)) || items[0] || '';
+    }
+
+    // 인증키가 없으면 응답이 5건으로 줄어들어 시간표는 하루씩 받는다.
+    async function refreshSchoolDays() {
+      if (!school) return;
+      const target = school;
+      const dates = upcomingDates();
+      const ymds = dates.map(toYmd);
+      const base = { ATPT_OFCDC_SC_CODE: target.office, SD_SCHUL_CODE: target.code };
+      try {
+        const schoolDates = dates.filter(date => date.getDay() !== 0 && date.getDay() !== 6);
+        const [timetables, meals] = await Promise.all([
+          Promise.all(schoolDates.map(date => neisRows('elsTimetable', {
+            ...base, GRADE: target.grade, CLASS_NM: target.classNm, ALL_TI_YMD: toYmd(date)
+          }))),
+          neisRows('mealServiceDietInfo', {
+            ...base, MMEAL_SC_CODE: '2', MLSV_FROM_YMD: ymds[0], MLSV_TO_YMD: ymds[ymds.length - 1]
+          })
+        ]);
+        const days = {};
+        ymds.forEach(ymd => { days[ymd] = { subjects: [], meal: '' }; });
+        timetables.flat().sort((a, b) => Number(a.PERIO) - Number(b.PERIO)).forEach(row => {
+          const day = days[row.ALL_TI_YMD];
+          if (day && !day.subjects.includes(row.ITRT_CNTNT)) day.subjects.push(row.ITRT_CNTNT);
+        });
+        meals.forEach(row => {
+          if (days[row.MLSV_YMD]) days[row.MLSV_YMD].meal = mainDish(row.DDISH_NM);
+        });
+        if (school !== target) return;
+        schoolDays = days;
+        writeStored(DAYS_KEY, days);
+        if (isIntroPlaying) homeStale = true;
+        else if (!currentMode) render();
+      } catch (e) {
+        console.log('School data error:', e);
+      }
+    }
+
+    function schoolPlan() {
+      const today = toYmd(new Date());
+      const ymd = Object.keys(schoolDays).sort()
+        .find(key => key >= today && (schoolDays[key].subjects.length > 0 || schoolDays[key].meal));
+      if (!school || !ymd) return null;
+      const day = schoolDays[ymd];
+      return { ...day, label: dayLabel(ymd), hasPe: day.subjects.includes('체육') };
+    }
+
+    function subjectChoices() {
+      const plan = schoolPlan();
+      if (!plan || plan.subjects.length === 0) return null;
+      const preferred = ['체육', '과학', '국어'].filter(subject => plan.subjects.includes(subject));
+      return [...new Set([...preferred, ...plan.subjects])].slice(0, 3);
+    }
+
+    function homeInfo() {
+      if (!school) {
+        return { title: '오늘 준비 됐나요?', desc: '체육복을 함께 확인해요', prep: '체육복', prepSub: '예시', mealLabel: '오늘 점심', meal: '떡갈비구이', mealSub: '예시' };
+      }
+      const plan = schoolPlan();
+      if (!plan) {
+        return { title: '오늘 준비 됐나요?', desc: '학교 정보를 확인하지 못했어요', prep: '확인 필요', prepSub: '', mealLabel: '오늘 점심', meal: '확인 필요', mealSub: '' };
+      }
+      return {
+        title: `${plan.label} 준비 됐나요?`,
+        desc: plan.hasPe ? '체육복을 함께 확인해요' : (plan.subjects.slice(0, 3).join(' · ') || '학교 안내를 확인해요'),
+        prep: plan.hasPe ? '체육복' : '학교 안내 확인',
+        prepSub: plan.hasPe ? '시간표 기준' : '',
+        mealLabel: `${plan.label} 점심`,
+        meal: plan.meal || '확인 필요',
+        mealSub: ''
+      };
+    }
+
+    function openSettings() {
+      document.getElementById('audioPlayer').pause();
+      currentMode = 'settings';
+      settings = { step: 'search', query: '', results: [], classes: [], message: '' };
+      render();
+    }
+
+    function renderSettings(container) {
+      let title = school ? `${school.name} ${school.grade}학년 ${school.classNm}반` : '학교를 찾아 주세요';
+      let body = '';
+
+      if (settings.step === 'search') {
+        body = `
+          <div class="school-search-row">
+            <input id="schoolInput" class="school-input" type="text" placeholder="학교 이름" value="${escapeHtml(settings.query)}"
+                   onkeydown="if (event.key === 'Enter') searchSchools()">
+            <button class="choice-chip" onclick="searchSchools()">찾기</button>
+          </div>
+          ${settings.message ? `<div class="settings-message">${escapeHtml(settings.message)}</div>` : ''}
+          <div class="settings-list">
+            ${settings.results.map((row, i) => `<button class="choice-chip" onclick="pickSchool(${i})">${escapeHtml(row.SCHUL_NM)} · ${escapeHtml(row.LCTN_SC_NM)}</button>`).join('')}
+          </div>
+        `;
+      } else if (settings.step === 'grade') {
+        title = '몇 학년인가요?';
+        body = `<div class="settings-list">${[1, 2, 3, 4, 5, 6].map(grade => `<button class="choice-chip" onclick="pickGrade(${grade})">${grade}학년</button>`).join('')}</div>`;
+      } else {
+        title = '몇 반인가요?';
+        body = `
+          ${settings.message ? `<div class="settings-message">${escapeHtml(settings.message)}</div>` : ''}
+          <div class="settings-list">
+            ${settings.classes.map((name, i) => `<button class="choice-chip" onclick="pickClass(${i})">${escapeHtml(name)}${/^\d+$/.test(name) ? '반' : ''}</button>`).join('')}
+          </div>
+        `;
+      }
+
+      container.innerHTML = `
+        <div class="dialogue-wrap">
+          <div class="dialogue-top">
+            <button class="back-btn" onclick="goHome()">처음으로</button>
+            ${school ? '<button class="back-btn" onclick="clearSchool()">학교 지우기</button>' : ''}
+          </div>
+          <div class="dialogue-card">
+            <div class="settings-center">
+              <div class="main-question">${escapeHtml(title)}</div>
+              ${body}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function searchSchools() {
+      const query = document.getElementById('schoolInput').value.trim();
+      if (!query) return;
+      settings.query = query;
+      settings.results = [];
+      settings.message = '찾는 중이에요';
+      render();
+      try {
+        const rows = await neisRows('schoolInfo', { SCHUL_NM: query, SCHUL_KND_SC_NM: '초등학교' });
+        settings.results = rows.filter(row => row.SD_SCHUL_CODE.trim()).slice(0, 8);
+        settings.message = settings.results.length > 0 ? '' : '찾는 학교가 없어요';
+      } catch (e) {
+        console.log('School search error:', e);
+        settings.message = '지금은 학교를 찾을 수 없어요';
+      }
+      if (currentMode === 'settings') render();
+    }
+
+    function pickSchool(index) {
+      settings.picked = settings.results[index];
+      settings.step = 'grade';
+      render();
+    }
+
+    async function pickGrade(grade) {
+      const now = new Date();
+      settings.grade = grade;
+      settings.step = 'class';
+      settings.classes = [];
+      settings.message = '찾는 중이에요';
+      render();
+      try {
+        const rows = await neisRows('classInfo', {
+          ATPT_OFCDC_SC_CODE: settings.picked.ATPT_OFCDC_SC_CODE,
+          SD_SCHUL_CODE: settings.picked.SD_SCHUL_CODE,
+          AY: String(now.getMonth() < 2 ? now.getFullYear() - 1 : now.getFullYear()),
+          GRADE: String(grade)
+        });
+        settings.classes = [...new Set(rows.map(row => row.CLASS_NM))];
+        settings.message = settings.classes.length > 0 ? '' : '찾는 반이 없어요';
+      } catch (e) {
+        console.log('Class search error:', e);
+        settings.message = '지금은 반을 찾을 수 없어요';
+      }
+      if (currentMode === 'settings') render();
+    }
+
+    function pickClass(index) {
+      school = {
+        office: settings.picked.ATPT_OFCDC_SC_CODE,
+        code: settings.picked.SD_SCHUL_CODE,
+        name: settings.picked.SCHUL_NM,
+        grade: String(settings.grade),
+        classNm: settings.classes[index]
+      };
+      schoolDays = {};
+      writeStored(SCHOOL_KEY, school);
+      writeStored(DAYS_KEY, schoolDays);
+      goHome();
+      refreshSchoolDays();
+    }
+
+    function clearSchool() {
+      school = null;
+      schoolDays = {};
+      try {
+        localStorage.removeItem(SCHOOL_KEY);
+        localStorage.removeItem(DAYS_KEY);
+      } catch (e) {
+        console.log('Storage error:', e);
+      }
+      goHome();
     }
 
     function playAudio(clipId) {
@@ -1364,8 +1735,14 @@
       // 6. 스플래시 완전 정리 (2.58s)
       introTimers.push(setTimeout(() => {
         overlay.style.display = 'none';
-        isIntroPlaying = false;
+        finishIntro();
       }, 2580));
+    }
+
+    function finishIntro() {
+      isIntroPlaying = false;
+      if (homeStale && !currentMode) render();
+      homeStale = false;
     }
 
     function skipSplashIntro() {
@@ -1385,13 +1762,14 @@
         overlay.style.opacity = '0';
         setTimeout(() => {
           overlay.style.display = 'none';
-          isIntroPlaying = false;
+          finishIntro();
         }, 200);
       }
     }
 
     // Initial render and signature splash intro
     render();
+    refreshSchoolDays();
     setTimeout(() => {
       playSplashIntro();
     }, 120);

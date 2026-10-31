@@ -10,6 +10,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import org.json.JSONObject
 
 class MainActivity : Activity() {
     private lateinit var webView: WebView
@@ -116,6 +117,18 @@ class MainActivity : Activity() {
     }
 
     inner class WebAppInterface {
+        @JavascriptInterface
+        fun neisGet(requestId: Int, service: String, query: String) {
+            Thread {
+                val body = try { NeisClient.fetch(service, query, BuildConfig.NEIS_API_KEY) } catch (_: Exception) { "" }
+                runOnUiThread {
+                    if (!isDestroyed) {
+                        webView.evaluateJavascript("window.onNeisResult && window.onNeisResult($requestId, ${JSONObject.quote(body)});", null)
+                    }
+                }
+            }.start()
+        }
+
         @JavascriptInterface
         fun toggleDrivingSim() {
             runOnUiThread {

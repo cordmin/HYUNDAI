@@ -2,10 +2,18 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
 }
+// The NEIS key stays out of the repository: set NEIS_API_KEY or put it in the root .env file.
+def neisApiKey = System.getenv('NEIS_API_KEY') ?: ''
+def envFile = rootProject.file('../.env')
+if (!neisApiKey && envFile.exists()) {
+    def line = envFile.readLines('UTF-8').find { it.startsWith('NEIS_API_KEY=') }
+    if (line) neisApiKey = line.substring('NEIS_API_KEY='.length()).trim()
+}
 android {
     namespace 'io.dait.app'
     compileSdk 34
     useLibrary 'android.car'
+    buildFeatures { buildConfig true }
     defaultConfig {
         applicationId 'io.dait.app'
         minSdk 28
@@ -13,6 +21,7 @@ android {
         versionCode 2
         versionName '0.2-dialogue'
         testInstrumentationRunner 'io.dait.app.OfflineVoiceCheck'
+        buildConfigField 'String', 'NEIS_API_KEY', "\"${neisApiKey}\""
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17

@@ -65,46 +65,99 @@
       padding: 30px 40px;
     }
 
-    /* Driving Restriction Safety Screen (CarUxRestrictions) */
-    .driving-restriction-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--surface);
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
     .restricted-message {
-      font-size: 42px;
+      font-size: 38px;
       font-weight: 800;
       color: var(--ink);
       letter-spacing: -0.6px;
     }
 
-    /* Driving Demo Switch (평소에는 인트로 뒤에 있고, 제한 화면이 켜지면 눌러야 하므로 그 앞으로 온다) */
-    .driving-demo-btn {
+    /* Driving Simple Screen: 문장 하나와 큰 버튼 둘 */
+    .drive-screen {
+      position: absolute;
+      inset: 0;
+      background: var(--surface);
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      padding: 40px 48px;
+      text-align: center;
+    }
+    body.driving .drive-screen { display: flex; }
+    .drive-sentence {
+      font-size: 38px;
+      font-weight: 800;
+      line-height: 1.3;
+      color: var(--ink);
+      letter-spacing: -0.6px;
+      max-width: 900px;
+    }
+    .drive-sub {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .drive-actions {
+      display: flex;
+      gap: 20px;
+    }
+    .drive-btn {
+      min-width: 220px;
+      height: 76px;
+      padding: 0 32px;
+      border-radius: 24px;
+      border: 1px solid var(--outline);
+      background: var(--paper);
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 24px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .drive-btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #FFFFFF;
+    }
+    .drive-btn:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+
+    /* Demo Panel (시연용) */
+    .demo-panel {
       position: absolute;
       right: 36px;
       bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 500;
+    }
+    body.in-app .demo-panel { right: 40px; }
+    body.driving .demo-panel { z-index: 10000; }
+    .demo-panel button {
       height: 24px;
-      padding: 0 12px;
+      padding: 0 10px;
       border-radius: 12px;
       background: var(--control);
       border: 1px solid var(--outline);
       color: var(--muted);
+      font-family: inherit;
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
-      z-index: 500;
     }
-    .driving-demo-btn:hover { background: var(--control-hover); }
-    body.in-app .driving-demo-btn { right: 40px; }
-    body.driving .driving-demo-btn { z-index: 10000; }
+    .demo-panel button:hover { background: var(--control-hover); }
+    .demo-panel button.on {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #FFFFFF;
+    }
+
 
     /* Main Stage */
     .stage-container {
@@ -214,17 +267,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      animation: floatHeroOrb 3.5s ease-in-out infinite;
-    }
-    @keyframes floatHeroOrb {
-      0%, 100% {
-        transform: translateY(0) scale(1);
-        box-shadow: 0 0 34px rgba(0, 180, 216, 0.38), inset 0 0 16px rgba(255,255,255,0.28);
-      }
-      50% {
-        transform: translateY(-5px) scale(1.04);
-        box-shadow: 0 0 56px rgba(0, 180, 216, 0.7), inset 0 0 24px rgba(255,255,255,0.42);
-      }
     }
 
     /* Hero Bottom CTA Button */
@@ -437,12 +479,13 @@
       margin-bottom: 14px;
     }
     .back-btn {
-      padding: 8px 18px;
-      border-radius: 14px;
+      min-height: 48px;
+      padding: 8px 22px;
+      border-radius: 16px;
       background: var(--control);
       border: 1px solid var(--outline);
       color: var(--ink);
-      font-size: 14px;
+      font-size: 17px;
       font-weight: 700;
       cursor: pointer;
     }
@@ -481,7 +524,6 @@
       align-items: center;
       justify-content: center;
       margin-bottom: 20px;
-      animation: floatHeroOrb 3.2s ease-in-out infinite;
     }
 
     /* Voice Visualizer Wave */
@@ -497,16 +539,13 @@
       height: 12px;
       background: var(--accent);
       border-radius: 4px;
-      animation: pulse 1s infinite ease-in-out;
+      transform: scaleY(0.8);
+      opacity: 0.9;
     }
     .v-bar:nth-child(2) { animation-delay: 0.15s; height: 26px; }
     .v-bar:nth-child(3) { animation-delay: 0.3s; height: 32px; }
     .v-bar:nth-child(4) { animation-delay: 0.45s; height: 20px; }
     .v-bar:nth-child(5) { animation-delay: 0.6s; height: 14px; }
-    @keyframes pulse {
-      0%, 100% { transform: scaleY(0.4); opacity: 0.4; }
-      50% { transform: scaleY(1.2); opacity: 1; }
-    }
 
     .main-question {
       font-size: 38px;
@@ -558,7 +597,15 @@
       margin-top: 16px;
       display: flex;
       justify-content: center;
+      gap: 14px;
     }
+    .primary-btn.secondary {
+      width: 200px;
+      background: var(--control);
+      color: var(--ink);
+      box-shadow: none;
+    }
+    .primary-btn.secondary:hover { background: var(--control-hover); }
     .primary-btn {
       width: 280px;
       height: 60px;
@@ -619,12 +666,7 @@
       background: radial-gradient(circle, rgba(0, 180, 216, 0.28) 0%, rgba(0, 77, 160, 0.14) 42%, transparent 70%);
       filter: blur(36px);
       transform: scale(0.9);
-      animation: splashAuraPulse 3s ease-in-out infinite;
       pointer-events: none;
-    }
-    @keyframes splashAuraPulse {
-      0%, 100% { transform: scale(0.9); opacity: 0.6; }
-      50% { transform: scale(1.15); opacity: 0.95; }
     }
 
     .splash-bg-decor {
@@ -690,12 +732,13 @@
 
     /* School Settings */
     .school-setting-btn {
-      padding: 6px 14px;
-      border-radius: 14px;
+      min-height: 48px;
+      padding: 8px 20px;
+      border-radius: 16px;
       background: rgba(255,255,255,0.14);
       border: 1px solid rgba(255,255,255,0.28);
       color: #FFFFFF;
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 700;
       cursor: pointer;
       font-family: inherit;
@@ -764,8 +807,12 @@
         min-height: 0;
         padding: 14px 20px 30px;
       }
-      .driving-demo-btn,
-      body.in-app .driving-demo-btn { right: 20px; }
+      .demo-panel,
+      body.in-app .demo-panel { right: 20px; }
+      .drive-screen { gap: 18px; padding: 24px 28px 36px; }
+      .drive-sentence { font-size: 28px; }
+      .drive-btn { height: 60px; min-width: 170px; font-size: 20px; }
+      .back-btn, .school-setting-btn { min-height: 44px; }
 
       .bento-stage { gap: 12px; }
       .bento-hero { padding: 24px 28px 16px 28px; }
@@ -790,7 +837,7 @@
       .wide-card-bg-art svg { width: 96px; height: 96px; }
 
       .dialogue-top { margin-bottom: 8px; }
-      .back-btn { padding: 6px 14px; }
+      .back-btn { padding: 6px 16px; }
       .dialogue-card { padding: 12px 20px; border-radius: 24px; }
       .dialogue-orb { width: 52px; height: 52px; margin-bottom: 8px; }
       .main-question { font-size: 26px; }
@@ -857,12 +904,22 @@
       <!-- Injected by JS -->
     </div>
 
-    <!-- Driving Restriction Safety Screen (CarUxRestrictions) -->
-    <div id="drivingRestrictionOverlay" class="driving-restriction-overlay" style="display: none;">
-      <div class="restricted-message">주차 후 이어갈게요</div>
+    <!-- Driving Simple Screen: 주행 중에는 문장 하나와 큰 버튼 둘만 -->
+    <div id="driveScreen" class="drive-screen">
+      <div id="driveSentence" class="drive-sentence">주차 후 이어갈게요</div>
+      <div id="driveSub" class="drive-sub"></div>
+      <div class="drive-actions">
+        <button id="driveReplay" class="drive-btn" onclick="driveReplay()">다시 듣기</button>
+        <button id="driveNext" class="drive-btn primary" onclick="driveNext()">넘기기</button>
+      </div>
     </div>
 
-    <button class="driving-demo-btn" onclick="toggleDrivingDemo()">주차/주행 전환</button>
+    <!-- Demo Panel: 시연용 주행 상태와 남은 시간 -->
+    <div class="demo-panel">
+      <button id="demoDrive" onclick="toggleDrivingDemo()">주행</button>
+      <button id="demoEtaLong" onclick="setEtaDemo('long')">8분 전</button>
+      <button id="demoEtaShort" onclick="setEtaDemo('short')">2분 전</button>
+    </div>
 
   </div>
 
@@ -878,6 +935,8 @@
     let currentClip = '';
     let isDrivingMode = false;
     let currentChoices = [];
+    let etaState = 'unknown'; // 'unknown' | 'long' | 'short'
+    const MEMORY_KEY = 'dait.morningMemory';
 
     // DAIT 공식 확정 캘리그래피 로고 (시안 2 커넥티드 리본 + i Dot)
     function getDaitLogoHtml() {
@@ -931,6 +990,11 @@
         title: '기억나는 이야기 있어?',
         choices: ['주인공이 멋졌어', '마법 이야기', '다녀올게요']
       },
+      ETA_SHORT: {
+        clip: 'arrival_bag',
+        title: '가방과 준비물을 챙겨요',
+        choices: []
+      },
       DONE: {
         clip: 'arrival_goodbye',
         title: '잘 다녀와요!',
@@ -943,6 +1007,16 @@
         clip: 'afternoon_welcome',
         title: '오늘은 어땠어요?',
         choices: ['친구랑 피구 했어', '그림 그렸어', '쉬고 싶어']
+      },
+      AFTER_PE: {
+        clip: 'afternoon_pe',
+        title: '아침에 기대한 체육, 어땠어요?',
+        choices: ['재밌었어', '시간표랑 달랐어', '쉬고 싶어']
+      },
+      AFTER_SCIENCE: {
+        clip: 'afternoon_welcome',
+        title: '아침에 궁금해한 과학, 어땠어요?',
+        choices: ['재밌었어', '시간표랑 달랐어', '쉬고 싶어']
       },
       AFTER_DETAIL: {
         clip: 'listen_ack',
@@ -962,6 +1036,11 @@
       REST: {
         clip: 'rest_tired',
         title: '편하게 쉬어요',
+        choices: []
+      },
+      ETA_SHORT: {
+        clip: 'eta_short',
+        title: '곧 도착해요',
         choices: []
       },
       DONE: {
@@ -1116,6 +1195,7 @@
       const subjectStages = ['SUBJECT', 'SUBJECT_MISSING', 'SUBJECT_TODAY'];
       const todayChoices = currentMode === 'morning' && subjectStages.includes(stage) ? subjectChoices() : null;
       currentChoices = todayChoices || data.choices || [];
+      updateDriveScreen(data.title);
 
       let optionsHtml = '';
       if (currentChoices.length > 0) {
@@ -1127,12 +1207,13 @@
       }
 
       const buttonLabel = isDialogueDone() ? '마치기' : '다시 듣기';
+      const skipHtml = isDialogueDone() ? '' : '<button class="primary-btn secondary" onclick="skipQuestion()">넘기기</button>';
 
       container.innerHTML = `
         <div class="dialogue-wrap">
           <div class="dialogue-top">
             <button class="back-btn" onclick="goHome()">처음으로</button>
-            <span style="font-size:15px; font-weight:700; color:var(--muted);">${modeName}</span>
+            <span style="font-size:17px; font-weight:700; color:var(--muted);">${modeName}</span>
           </div>
 
           <div class="dialogue-card">
@@ -1157,6 +1238,7 @@
             <button class="primary-btn" onclick="handlePrimaryAction()">
               ${buttonLabel}
             </button>
+            ${skipHtml}
           </div>
         </div>
       `;
@@ -1170,10 +1252,17 @@
       if (mode === 'morning') {
         const plan = schoolPlan();
         stage = school && !(plan && plan.hasPe) ? 'SUBJECT_TODAY' : 'PREP';
-      } else if (mode === 'afternoon') stage = 'AFTER_EVENT';
-      else if (mode === 'tour') {
+      } else if (mode === 'afternoon') {
+        const memory = readStored(MEMORY_KEY);
+        const fresh = memory && memory.date === toYmd(new Date());
+        if (fresh && memory.rest) stage = 'REST';
+        else if (fresh && memory.subject === '체육') stage = 'AFTER_PE';
+        else if (fresh && memory.subject === '과학') stage = 'AFTER_SCIENCE';
+        else stage = 'AFTER_EVENT';
+      } else if (mode === 'tour') {
         stage = 'STEP1';
       }
+      if (etaState === 'short' && stage !== 'REST') stage = 'ETA_SHORT';
       render();
     }
 
@@ -1184,6 +1273,7 @@
       heard = '';
       isFinished = false;
       render();
+      updateDriveScreen();
     }
 
     function handleAnswer(ans) {
@@ -1191,6 +1281,7 @@
       if (currentMode === 'morning') {
         if (stage === 'PREP') stage = ans === '깜빡했어' ? 'SUBJECT_MISSING' : 'SUBJECT';
         else if (stage === 'SUBJECT' || stage === 'SUBJECT_MISSING' || stage === 'SUBJECT_TODAY') {
+          rememberMorning({ subject: ans });
           if (ans === '과학') stage = 'SCIENCE_DETAIL';
           else if (ans === '독서' || ans === '국어') stage = 'READING_DETAIL';
           else stage = 'DONE';
@@ -1199,9 +1290,11 @@
           isFinished = true;
         }
       } else if (currentMode === 'afternoon') {
-        if (stage === 'AFTER_EVENT') {
-          if (ans === '쉬고 싶어') stage = 'REST';
-          else stage = 'AFTER_DETAIL';
+        if (ans === '쉬고 싶어') {
+          rememberMorning({ rest: true });
+          stage = 'REST';
+        } else if (stage === 'AFTER_EVENT' || stage === 'AFTER_PE' || stage === 'AFTER_SCIENCE') {
+          stage = ans === '시간표랑 달랐어' ? 'AFTER_CHANGED' : 'AFTER_DETAIL';
         } else if (stage === 'AFTER_DETAIL') stage = ans === '시간표랑 달랐어' ? 'AFTER_CHANGED' : 'PARENT_BRIDGE';
         else if (stage === 'AFTER_CHANGED') stage = 'PARENT_BRIDGE';
         else if (stage === 'PARENT_BRIDGE') {
@@ -1215,11 +1308,39 @@
           isFinished = true;
         }
       }
+      // 도착이 가까우면 새 질문 대신 마무리 (기획안 ④)
+      if (etaState === 'short' && !isDialogueDone()) stage = 'ETA_SHORT';
       render();
     }
 
     function isDialogueDone() {
-      return isFinished || stage === 'DONE' || stage === 'REST';
+      return isFinished || stage === 'DONE' || stage === 'REST' || stage === 'ETA_SHORT';
+    }
+
+    // 질문을 건너뛴다. 답을 지어내지 않고 다음 단계로만 넘어간다.
+    function skipQuestion() {
+      if (!currentMode || currentMode === 'settings' || isDialogueDone()) return;
+      heard = '';
+      if (currentMode === 'morning') {
+        if (stage === 'PREP') stage = 'SUBJECT_TODAY';
+        else stage = 'DONE';
+      } else if (currentMode === 'afternoon') {
+        if (stage === 'AFTER_EVENT' || stage === 'AFTER_PE' || stage === 'AFTER_SCIENCE') stage = 'PARENT_BRIDGE';
+        else stage = 'DONE';
+      } else {
+        stage = 'DONE';
+      }
+      if (stage === 'DONE') isFinished = true;
+      if (etaState === 'short' && !isDialogueDone()) stage = 'ETA_SHORT';
+      render();
+    }
+
+    // 아침에 고른 과목과 쉬기 여부를 기기에 남겨 하교 때 다시 꺼낸다 (기획안 ③⑤)
+    function rememberMorning(patch) {
+      const today = toYmd(new Date());
+      const memory = readStored(MEMORY_KEY);
+      const base = memory && memory.date === today ? memory : { date: today };
+      writeStored(MEMORY_KEY, { ...base, ...patch });
     }
 
     function handlePrimaryAction() {
@@ -1514,7 +1635,6 @@
 
     function playAudio(clipId) {
       currentClip = clipId;
-      if (isDrivingMode) return;
       const player = document.getElementById('audioPlayer');
       const isAndroidAsset = window.location.href.includes('android_asset');
       const src = isAndroidAsset 
@@ -1529,23 +1649,53 @@
       document.body.classList.add('in-app');
     }
 
+    // 주행 중: 상세 화면을 닫고 문장 하나와 큰 버튼 둘만 보여 준다. 재생 중인 음성은 이어 간다.
+    // 대화 중이 아니면(첫 화면·설정) 조작할 것이 없으므로 "주차 후 이어갈게요"만 보여 준다.
     window.setDrivingMode = function(isDriving) {
       isDrivingMode = isDriving;
       document.body.classList.toggle('driving', isDriving);
-      const overlay = document.getElementById('drivingRestrictionOverlay');
-      if (overlay) {
-        overlay.style.display = isDriving ? 'flex' : 'none';
-      }
-      if (isDriving) {
-        document.getElementById('audioPlayer').pause();
-      }
+      document.getElementById('demoDrive').classList.toggle('on', isDriving);
+      if (isDriving && currentMode === 'settings') goHome();
+      updateDriveScreen();
     };
+
+    function updateDriveScreen(sentence) {
+      const inDialogue = currentMode && currentMode !== 'settings';
+      const text = inDialogue ? (sentence || document.querySelector('.main-question')?.textContent || '') : '주차 후 이어갈게요';
+      document.getElementById('driveSentence').textContent = text;
+      document.getElementById('driveSub').textContent = inDialogue && heard ? `“${heard}”` : (inDialogue ? '' : '설정과 자세한 내용은 주차한 뒤 열어요');
+      const done = inDialogue && isDialogueDone();
+      document.getElementById('driveReplay').disabled = !inDialogue;
+      document.getElementById('driveNext').textContent = done ? '마치기' : '넘기기';
+      document.getElementById('driveNext').disabled = !inDialogue;
+    }
+
+    function driveReplay() {
+      if (currentMode && currentMode !== 'settings') playAudio(currentClip);
+    }
+
+    function driveNext() {
+      if (isDialogueDone()) goHome();
+      else skipQuestion();
+      updateDriveScreen();
+    }
 
     function toggleDrivingDemo() {
       if (window.AndroidBridge) {
         window.AndroidBridge.toggleDrivingSim();
       } else {
         window.setDrivingMode(!isDrivingMode);
+      }
+    }
+
+    // 시연용 남은 시간. NaviHelper 연결 전까지는 버튼으로 흉내 낸다.
+    function setEtaDemo(state) {
+      etaState = etaState === state ? 'unknown' : state;
+      document.getElementById('demoEtaLong').classList.toggle('on', etaState === 'long');
+      document.getElementById('demoEtaShort').classList.toggle('on', etaState === 'short');
+      if (etaState === 'short' && currentMode && currentMode !== 'settings' && !isDialogueDone()) {
+        stage = 'ETA_SHORT';
+        render();
       }
     }
 

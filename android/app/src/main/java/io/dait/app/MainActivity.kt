@@ -40,7 +40,7 @@ class MainActivity : Activity() {
             webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
-                    applyPlatformRestriction(simulatedDriving || isRestricted)
+                    applyPlatformRestriction(isRestricted)
                 }
             }
             addJavascriptInterface(WebAppInterface(), "AndroidBridge")
@@ -100,16 +100,16 @@ class MainActivity : Activity() {
                         restrictions = connectedCar.getCarManager(Car.CAR_UX_RESTRICTION_SERVICE) as CarUxRestrictionsManager
                         restrictions?.registerListener(restrictionListener)
                         val blocked = restrictions?.currentCarUxRestrictions?.isRequiresDistractionOptimization != false
-                        applyPlatformRestriction(blocked || simulatedDriving)
-                    } catch (_: Exception) { applyPlatformRestriction(simulatedDriving) }
+                        applyPlatformRestriction(blocked)
+                    } catch (_: Exception) { applyPlatformRestriction(false) }
                 }
             }
-        } catch (_: Exception) { applyPlatformRestriction(simulatedDriving) }
+        } catch (_: Exception) { applyPlatformRestriction(false) }
     }
 
     private fun applyPlatformRestriction(blocked: Boolean) {
+        isRestricted = blocked
         val effective = blocked || simulatedDriving
-        isRestricted = effective
         runOnUiThread {
             webView.evaluateJavascript("window.setDrivingMode && window.setDrivingMode($effective);", null)
         }
@@ -119,8 +119,9 @@ class MainActivity : Activity() {
         @JavascriptInterface
         fun toggleDrivingSim() {
             runOnUiThread {
+                if (isRestricted) return@runOnUiThread
                 simulatedDriving = !simulatedDriving
-                applyPlatformRestriction(simulatedDriving)
+                applyPlatformRestriction(isRestricted)
             }
         }
     }

@@ -7,7 +7,7 @@ import java.net.URLEncoder
 object NeisClient {
     private const val BASE_URL = "https://open.neis.go.kr/hub/"
     private const val TIMEOUT_MS = 10_000
-    private val allowedServices = setOf("schoolInfo", "classInfo", "elsTimetable", "mealServiceDietInfo", "SchoolSchedule")
+    private val allowedServices = setOf("schoolInfo", "classInfo", "elsTimetable", "misTimetable", "hisTimetable", "mealServiceDietInfo", "SchoolSchedule")
 
     fun requestUrl(service: String, query: String, apiKey: String): String {
         require(service in allowedServices) { "Unknown service: $service" }

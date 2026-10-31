@@ -16,9 +16,9 @@
 | 대화 규칙 엔진 | 시험 | `Conversation.kt`(등교·하교 분기, 쉬기, 도착 임박 마무리)와 단위 테스트 9개. 앱 화면과는 아직 연결되지 않음 |
 | 음성 안내 | 시연 | 사전 제작 음원 51개(`assets/voices/nika`). Pleos TextToSpeech SDK는 현재 '준비 중' |
 | 음성 인식 | 시험 | 오픈소스 Vosk 기반 기기 내 인식 클래스 `LocalVoiceInput.kt`. 모델 파일은 저장소에 없고 화면과 연결되지 않음. Pleos SpeechToText SDK는 현재 '준비 중' |
-| 학교 정보(나이스) | 구현(일부) | 주차 중 '학교 설정'에서 학교·학년·반을 고르면 앞으로 7일의 시간표와 점심을 받아 기기에 저장하고, 통신이 끊기면 저장본을 씀. 앱을 열 때만 받음. 학교를 설정하기 전에는 예시를 표시 |
+| 학교 정보(나이스) | 구현(일부) | 주차 중 '학교 설정'에서 학교·학년·반을 고르면 앞으로 7일의 시간표와 점심을 받아 기기에 저장하고, 통신이 끊기면 저장본을 씀. 초등·중·고 모두 검색되며 학교급에 맞는 시간표 창구(`elsTimetable`·`misTimetable`·`hisTimetable`)를 씀. 앱을 열 때만 받음. 학교를 설정하기 전에는 예시를 표시 |
 | 준비물 | 시연 | 나이스에 준비물 항목이 없음. 시간표에 체육이 있으면 체육복 확인을 안내하고, 없으면 학교 안내를 확인하라고 표시 |
-| 목적지·남은 시간(NaviHelper) | 시연 | 남은 시간은 시연 조작(8분 전·2분 전)으로 흉내 냄. NaviHelper 연결은 계획 |
+| 목적지·남은 시간(NaviHelper) | 구현(일부) | `NaviBridge`가 Pleos NaviHelper SDK 3.0.5에 연결해 길 안내 중 10초마다 목적지 이름과 남은 시간(초)·거리(m)를 받음. 남은 시간이 2분 이하면 새 질문 없이 준비물 확인으로 마무리. 실제 값이 오면 시연 조작(8분 전·2분 전)은 잠김. 길 안내가 없을 때는 시연 조작을 씀. 목적지가 학교인지 판단하는 기능은 계획 |
 
 제출 전에 남은 확인 항목은 [`DAIT-기획안.md`](DAIT-기획안.md) 부록 B에 있습니다.
 
@@ -47,7 +47,7 @@ powershell -ExecutionPolicy Bypass -File .\tools\Build-App.ps1 -Install
 |---|---|
 | 플랫폼 | Android Automotive OS, Pleos Connect Emulator 2.1.0 (Android 14 / API 34, RAM 4GB, Cold boot) |
 | 가상 기기 이름 | `DAIT_Pleos_2_1` (스크립트가 이 이름을 사용) |
-| 빌드 | JBR 21, Gradle 8.7, AGP 8.5.2, Kotlin 1.9.24, compileSdk 34, minSdk 28 |
+| 빌드 | JBR 21, Gradle 8.7, AGP 8.5.2, Kotlin 1.9.24, compileSdk 34, minSdk 28. Pleos SDK 저장소(`nexus-playground.pleos.ai`)에서 NaviHelper를 받으므로 첫 빌드에 인터넷이 필요 |
 | 빌드 스크립트 전제 | `Build-App.ps1`은 JDK를 `%USERPROFILE%\.jdks\jbr-21.0.11`에서 찾고, 에뮬레이터를 `emulator-5554`로 가정함. 다른 PC에서는 이 두 값을 맞춤 |
 | 패키지명 | `io.dait.app` |
 | 마이크 | 음성 인식을 시험하려면 Virtual Console에서 마이크 접근을 허용 |
@@ -68,6 +68,7 @@ powershell -ExecutionPolicy Bypass -File .\tools\Build-App.ps1 -Install
 | `DAIT-기획안.md` | 공모전 기획서(접수양식 1~8번 순서) |
 | `android/app/src/main/java/io/dait/app/MainActivity.kt` | 앱 진입점, 주행 제한 연동, 웹 화면 표시 |
 | `android/app/src/main/java/io/dait/app/NeisClient.kt` | 나이스 공개 데이터 호출 |
+| `android/app/src/main/java/io/dait/app/NaviBridge.kt` | Pleos NaviHelper 연결, 남은 시간 전달 |
 | `android/app/src/main/java/io/dait/app/Conversation.kt` | 등교·하교 대화 규칙 엔진 |
 | `android/app/src/main/java/io/dait/app/LocalVoiceInput.kt` | 기기 내 음성 인식 시험 코드 |
 | `android/app/src/main/assets/dait-preview.html` | 현재 앱 화면(웹) |
@@ -81,7 +82,9 @@ powershell -ExecutionPolicy Bypass -File .\tools\Build-App.ps1 -Install
 - 단위 테스트 11개: `ConversationTest` 6개(등교 분기, 날씨·독서 분기, 불명확한 답, 하교 대화와 멈춤, 시간표 변경, 도착 임박 마무리), `JourneySessionTest` 3개는 앱 화면이 아직 호출하지 않는 규칙 엔진을 검사하고, `NeisClientTest` 2개는 나이스 호출 주소를 검사합니다.
 - 이전 네이티브 화면 빌드의 설치·주차 상태·음원 재생 기록: `design/앱-실행-검증.md`, `voice/검증.md`.
 - 현재 WebView 화면은 Pleos 에뮬레이터 2.1.0(가상 기기 `Automotive_1408p_landscape`, 앱 창 665×420)에 설치해 등교·하교 경로와 '주차/주행 전환' 버튼을 터치로 확인했습니다. 시험한 PC에 SDK 34가 없어 임시 복사본을 compileSdk 35로 빌드했습니다.
+- 내비 연결은 Pleos 에뮬레이터에서 확인했습니다. 시험용 호출로 길 안내(판교→서울시청)를 시작하자 앱이 1740초·26000m를 받았고 내비 앱 화면의 29분·26km와 일치했습니다. 길 안내가 없을 때는 빈 값이 와서 화면이 무시합니다. 실제 차에서는 확인 안 함.
 - 주행 화면 전환, 아침 과목을 하교에 잇기, 2분 전 마무리, 넘기기는 브라우저 미리보기에서 23개 경로를 확인했습니다.
+- 학교급 확장은 브라우저 미리보기에서 초등(경기)·중학교(전남)·고등학교(전남) 각 한 곳으로 확인했습니다.
 - 나이스 연결은 같은 에뮬레이터에서 인증키를 넣고 빌드해 확인했습니다. 한 주 시간표 27건이 모두 왔고 6교시가 있는 날도 6과목이 표시됩니다. 키 없이 빌드하면 하루 5건까지만 옵니다. 학교 검색부터 시간표·점심 표시까지 터치로 진행했고, 인터넷을 끊고 앱을 다시 켜도 저장본이 표시됩니다.
 - 소리 없이 실행해 음원을 귀로 듣는 확인은 하지 않았습니다. 차량이 보내는 실제 주행 신호는 해당 명령이 막혀 있어 시험하지 못했고, 같은 처리 코드를 시험용 호출로 확인했습니다. `DAIT_Pleos_2_1`에서는 아직 실행하지 않았습니다.
 - 에뮬레이터 부팅 직후 부하가 높으면 앱이 응답 없음으로 꺼질 수 있습니다. 부하가 내려간 뒤에는 수정 전 화면과 현재 화면 모두 정상이었습니다.

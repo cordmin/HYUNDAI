@@ -19,6 +19,7 @@ class MainActivity : Activity() {
     private var resumed = false
     private var simulatedDriving = false
     private var isRestricted = false
+    private var navi: NaviBridge? = null
 
     private val restrictionListener = CarUxRestrictionsManager.OnUxRestrictionsChangedListener { value ->
         runOnUiThread { applyPlatformRestriction(value.isRequiresDistractionOptimization) }
@@ -49,6 +50,12 @@ class MainActivity : Activity() {
         }
 
         setContentView(webView)
+
+        navi = NaviBridge(this) { json ->
+            if (!isDestroyed) {
+                webView.evaluateJavascript("window.onNaviUpdate && window.onNaviUpdate(${JSONObject.quote(json.toString())});", null)
+            }
+        }.also { it.connect() }
     }
 
     override fun onStart() {
@@ -77,6 +84,8 @@ class MainActivity : Activity() {
     }
 
     override fun onDestroy() {
+        navi?.release()
+        navi = null
         webView.destroy()
         super.onDestroy()
     }

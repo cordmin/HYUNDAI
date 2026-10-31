@@ -157,6 +157,7 @@
       border-color: var(--accent);
       color: #FFFFFF;
     }
+    .demo-panel button:disabled { cursor: default; opacity: 0.9; }
 
 
     /* Main Stage */
@@ -1436,6 +1437,17 @@
       return items.find(item => !/(밥|국|탕|찌개|김치|깍두기|우유|주스)$/.test(item)) || items[0] || '';
     }
 
+    // 시간표 창구는 학교급마다 다르다.
+    const SCHOOL_KINDS = {
+      '초등학교': { service: 'elsTimetable', grades: [1, 2, 3, 4, 5, 6] },
+      '중학교': { service: 'misTimetable', grades: [1, 2, 3] },
+      '고등학교': { service: 'hisTimetable', grades: [1, 2, 3] }
+    };
+
+    function timetableService(target) {
+      return (SCHOOL_KINDS[target.kind] || SCHOOL_KINDS['초등학교']).service;
+    }
+
     // 인증키가 없으면 응답이 5건으로 줄어들어 시간표는 하루씩 받는다.
     async function refreshSchoolDays() {
       if (!school) return;
@@ -1446,7 +1458,7 @@
       try {
         const schoolDates = dates.filter(date => date.getDay() !== 0 && date.getDay() !== 6);
         const [timetables, meals] = await Promise.all([
-          Promise.all(schoolDates.map(date => neisRows('elsTimetable', {
+          Promise.all(schoolDates.map(date => neisRows(timetableService(target), {
             ...base, GRADE: target.grade, CLASS_NM: target.classNm, ALL_TI_YMD: toYmd(date)
           }))),
           neisRows('mealServiceDietInfo', {
@@ -1532,7 +1544,7 @@
         `;
       } else if (settings.step === 'grade') {
         title = '몇 학년인가요?';
-        body = `<div class="settings-list">${[1, 2, 3, 4, 5, 6].map(grade => `<button class="choice-chip" onclick="pickGrade(${grade})">${grade}학년</button>`).join('')}</div>`;
+        body = `<div class="settings-list">${SCHOOL_KINDS[settings.picked.SCHUL_KND_SC_NM].grades.map(grade => `<button class="choice-chip" onclick="pickGrade(${grade})">${grade}학년</button>`).join('')}</div>`;
       } else {
         title = '몇 반인가요?';
         body = `
@@ -1567,8 +1579,8 @@
       settings.message = '찾는 중이에요';
       render();
       try {
-        const rows = await neisRows('schoolInfo', { SCHUL_NM: query, SCHUL_KND_SC_NM: '초등학교' });
-        settings.results = rows.filter(row => row.SD_SCHUL_CODE.trim()).slice(0, 8);
+        const rows = await neisRows('schoolInfo', { SCHUL_NM: query });
+        settings.results = rows.filter(row => row.SD_SCHUL_CODE.trim() && SCHOOL_KINDS[row.SCHUL_KND_SC_NM]).slice(0, 8);
         settings.message = settings.results.length > 0 ? '' : '찾는 학교가 없어요';
       } catch (e) {
         console.log('School search error:', e);
@@ -1611,6 +1623,7 @@
         office: settings.picked.ATPT_OFCDC_SC_CODE,
         code: settings.picked.SD_SCHUL_CODE,
         name: settings.picked.SCHUL_NM,
+        kind: settings.picked.SCHUL_KND_SC_NM,
         grade: String(settings.grade),
         classNm: settings.classes[index]
       };
@@ -1688,11 +1701,62 @@
       }
     }
 
-    // 시연용 남은 시간. NaviHelper 연결 전까지는 버튼으로 흉내 낸다.
-    function setEtaDemo(state) {
-      etaState = etaState === state ? 'unknown' : state;
+    // 차가 보내는 목적지와 남은 시간. 앱의 NaviBridge가 부른다.
+    // 실제 값이 오면 시연 조작(8분 전·2분 전)보다 우선한다.
+    let naviInfo = null;
+    const ETA_SHORT_MIN = 2;
+
+    window.onNaviUpdate = function(jsonText) {
+      let info;
+      try { info = JSON.parse(jsonText); } catch (e) { return; }
+      console.log('Navi:', jsonText);
+      if (info.event === 'destination' || info.event === 'routeStarted') {
+        // 길 안내가 없을 때는 이름 없이 0으로 오므로 도착 직전과 구분한다.
+        if (!info.name && !(Number(info.remainTime) > 0)) { naviInfo = null; renderDemoPanel(); return; }
+        naviInfo = { name: info.name || '', remainTime: Number(info.remainTime), remainDistance: Number(info.remainDistance), at: Date.now() };
+        applyNaviEta();
+      } else if (info.event === 'routeCancelled' || info.event === 'routeEnded' || info.event === 'arrived' || info.event === 'unavailable') {
+        if (info.event === 'arrived' && naviInfo) { naviInfo.remainTime = 0; applyNaviEta(); }
+        naviInfo = null;
+        renderDemoPanel();
+      } else if (info.event === 'status' && info.status !== 'ROUTE_DRIVE') {
+        naviInfo = null;
+        renderDemoPanel();
+      }
+    };
+
+    // 남은 시간은 초, 남은 거리는 m 단위다. 에뮬레이터에서 판교→서울시청 1740초·26000m로 확인했다.
+    function naviRemainMinutes() {
+      if (!naviInfo || !Number.isFinite(naviInfo.remainTime)) return null;
+      return naviInfo.remainTime / 60;
+    }
+
+    function applyNaviEta() {
+      const minutes = naviRemainMinutes();
+      if (minutes === null) return;
+      etaState = minutes <= ETA_SHORT_MIN ? 'short' : 'long';
+      renderDemoPanel();
+      if (etaState === 'short' && currentMode && currentMode !== 'settings' && !isDialogueDone()) {
+        stage = 'ETA_SHORT';
+        render();
+      }
+    }
+
+    function renderDemoPanel() {
+      const minutes = naviRemainMinutes();
+      const live = minutes !== null;
       document.getElementById('demoEtaLong').classList.toggle('on', etaState === 'long');
       document.getElementById('demoEtaShort').classList.toggle('on', etaState === 'short');
+      document.getElementById('demoEtaLong').textContent = live ? `${Math.max(1, Math.round(minutes))}분 전` : '8분 전';
+      document.getElementById('demoEtaLong').disabled = live;
+      document.getElementById('demoEtaShort').disabled = live;
+    }
+
+    // 시연용 남은 시간. 차에서 실제 값이 오면 쓰지 않는다.
+    function setEtaDemo(state) {
+      if (naviRemainMinutes() !== null) return;
+      etaState = etaState === state ? 'unknown' : state;
+      renderDemoPanel();
       if (etaState === 'short' && currentMode && currentMode !== 'settings' && !isDialogueDone()) {
         stage = 'ETA_SHORT';
         render();

@@ -1,76 +1,83 @@
-# DAIT (다잇) — 차 안에서 학교와 가정을 잇는 에듀-모빌리티 대화 앱
+# 다잇(DAIT) — 차 안에서 학교와 가정을 잇다
 
-현대자동차그룹 모빌리티 인포테인먼트 공모전 출품작
+등하굣길 남은 시간에 맞춰 오늘의 학교 준비를 짧게 들려주고, 아이의 학교생활을 가족의 대화로 잇는 차량용 교육 메이트입니다.
 
----
-
-## 1. 개요 및 주요 기능
-
-DAIT(다잇)은 초등학생 자녀의 등하굣길 15분 동안, 학교의 교육 맥락(시간표, 준비물, 급식)과 차량의 주행 상태(주행/정차, 도착 잔여 시간 ETA)를 결합하여 **학교 생활에 대한 호기심과 가족 대화를 촉진하는 차량용 대화형 에듀테인먼트 앱**입니다.
-
-### 핵심 기능
-- **등교 준비**:
-  - 1단계: 시간표/날씨 기반 준비물 점검 ("체육복 챙겼나요?", "비가 와요. 우산 챙겨요!")
-  - 2단계: 기대 수업 선택 ("체육", "과학", "독서")
-  - 3단계: 정답 없는 교과 호기심 질문 ("오늘 과학 시간에 무엇이 궁금해요?")
-  - 4단계: 도착 전 소지품 챙김 및 활기찬 하루 응원 ("가방 잊지 마세요! 오늘도 좋은 하루 보내요")
-- **하교 대화**:
-  - 1단계: 구체적인 수업/활동 회고 ("시간표에 체육이 있었는데 어떤 활동을 했어? 피구 했어?")
-  - 2단계: 시간표 예외 수용 ("시간표와 다르게 수업했구나! 실제로 했던 이야기를 들려줘")
-  - 3단계: 가족 대화 연결 ("이번에는 함께 탄 가족의 이야기도 들어볼까? 엄마/아빠는 오늘 어떠셨어요?")
-- **체험학습 보고서 (NEIS 나이스 전자제출 킬러 피처)**:
-  - 1단계: 귀가 차량에서 대화 3문답 진행 (체험 장소/활동 $\rightarrow$ 배운 점 $\rightarrow$ 느낀 점)
-  - 2단계: 아이의 발화가 화면의 공식 [교외체험학습 결과보고서] 서식에 실시간 자동 요약 작성
-  - 3단계: 교육부 나이스(NEIS) 원클릭 전자 제출로 학부모/학생의 귀가 후 보고서 작성 부담 100% 해소
-- **아이 감정 존중 (Rest & Skip)**:
-  - "쉬고 싶어", "말하기 싫어", "피곤해" 발화 시 *"조금 쉬고 싶구나. 조용히 함께 갈게"*라며 강요 없이 조용히 종료.
-- **차량 안전 가이드라인 (CarUxRestrictions)**:
-  - 주행(D단) 중에는 운전자 주의 분산 방지를 위해 화면 조작이 차단되고 `"주차 후 이어갈게요"` 안전 모드로 자동 전환.
-- **도착 시간 적응형 마무리 (NaviHelper ETA)**:
-  - 도착 2분 전 감지 시 새 질문을 중단하고 `"도착까지 얼마 남지 않았어요. 가방과 준비물을 확인해요"`로 안전 하차 안내.
-- **온디바이스 음성 AI (On-Device Speech AI)**:
-  - 인터넷이 끊기는 터널·지하주차장에서도 Vosk 한국어 로컬 음성 엔진으로 100% 무중단 동작하며, 아동 음성 데이터가 외부로 전송되지 않습니다.
-- **시연용 드라이빙 컨트롤러**:
-  - 심사위원 시연 및 영상 촬영을 위해 상단 헤더에 **[주차(P) / 주행(D)]** 및 **[도착 8분 전 / 2분 전]** 토글 스위치가 내장되어 있어, 차량 주행 상황과 ETA 변경에 따른 앱의 반응을 즉각 시연 가능.
+현대자동차그룹 차량용 앱 개발 공모전(Pleos App Market) 출품을 준비하는 저장소입니다. 서비스 기획은 [`DAIT-기획안.md`](DAIT-기획안.md)에 접수양식 순서대로 정리되어 있습니다.
 
 ---
 
-## 2. 개발 및 빌드 환경
+## 현재 구현 상태 (2026-10-31)
 
-- **플랫폼**: Android Automotive OS / Pleos Connect SDK (API 34, Android 14)
-- **개발 환경**: JBR 21.0.11, Gradle 8.7, AGP 8.5.2, Kotlin 1.9.24
-- **패키지명**: `io.dait.app`
+| 기능 | 상태 | 설명 |
+|---|---|---|
+| Pleos Connect Emulator 실행 | 구현 | Pleos Connect 2.1.0(Android 14, API 34)에 설치·실행 확인 |
+| 주행 제한 처리 | 구현(일부) | `CarUxRestrictionsManager`로 주행 제한 상태를 받아 화면 전체를 "주차 후 이어갈게요" 안내로 덮고 재생 중인 음원을 멈춤. 주행 중에는 새 음원을 재생하지 않음. 화면의 '주차/주행 전환' 시연 버튼은 앱에서 `toggleDrivingSim`을 호출하고, 브라우저 미리보기에서는 안내 화면을 직접 켜고 끔. 시연 버튼으로 실제 주행 제한은 풀리지 않음. 주행 중 단순 화면은 계획 |
+| 앱 화면 | 시연 | WebView로 띄운 `dait-preview.html`. 첫 화면 진입점은 등교·하교 둘. 대화는 짧은 답 버튼으로 진행하고 '다시 듣기'로 같은 음원을 다시 재생 |
+| 대화 규칙 엔진 | 시험 | `Conversation.kt`(등교·하교 분기, 쉬기, 도착 임박 마무리)와 단위 테스트 9개. 앱 화면과는 아직 연결되지 않음 |
+| 음성 안내 | 시연 | 사전 제작 음원 51개(`assets/voices/nika`). Pleos TextToSpeech SDK는 현재 '준비 중' |
+| 음성 인식 | 시험 | 오픈소스 Vosk 기반 기기 내 인식 클래스 `LocalVoiceInput.kt`. 모델 파일은 저장소에 없고 화면과 연결되지 않음. Pleos SpeechToText SDK는 현재 '준비 중' |
+| 학교 정보(나이스) | 계획 | 화면의 준비물·급식은 예시 |
+| 목적지·남은 시간(NaviHelper) | 계획 | 아직 화면에 없음 |
 
-### 플레오스(Pleos) 에뮬레이터 및 앱 실행
+제출 전에 남은 확인 항목은 [`DAIT-기획안.md`](DAIT-기획안.md) 부록 B에 있습니다.
+
+## 실행 방법
+
+Windows PowerShell 기준입니다.
+
 ```powershell
-# 1. 플레오스 에뮬레이터 실행 (더블 클릭 가능)
+# 1. Pleos 에뮬레이터 실행 (더블 클릭 가능)
 .\run_pleos.bat
-# 또는 PowerShell:
+# 또는
 powershell -ExecutionPolicy Bypass -File .\tools\Start-Pleos.ps1
 
-# 2. 빌드 및 에뮬레이터 자동 설치 & 실행
+# 2. 빌드, 단위 테스트, lint 후 에뮬레이터에 설치
 powershell -ExecutionPolicy Bypass -File .\tools\Build-App.ps1 -Install
 
-# 3. 브라우저용 인터랙티브 프로토타입 시뮬레이터 (더블 클릭 가능)
+# 3. 브라우저에서 화면만 미리 보기 (더블 클릭 가능)
 .\run_preview.bat
 ```
-- 빌드 결과물: `apk/DAIT-dialogue-debug.apk`
 
----
+단위 테스트만 실행하려면 `android` 폴더에서 `gradlew.bat :app:testDebugUnitTest`를 실행합니다.
 
-## 3. 핵심 아키텍처 및 주요 파일
+## 테스트 환경 및 필요한 설정
 
-- `MainActivity.kt`: 현대차 Pleos 디자인 가이드를 준수한 반응형 UI, 오디오 포커스, CarUxRestrictions 주행 제한 연동, 시연용 차량 시뮬레이션 토글.
-- `Conversation.kt`: 교과 연계 호기심 질문 및 하굣길 가족 소통 대화 트리 엔진 (단위 테스트 100% 검증).
-- `ContextRecognizer.kt` & `LocalVoiceInput.kt`: Vosk 온디바이스 음성 인식 엔진 및 문맥 기반 후보 대조 필터링.
-- `assets/conversation-grammar.json`: Vosk 한국어 오프라인 음성 인식을 위한 단계별 후보 문법 단어집.
-- `assets/voices/nika/`: 친근하고 다정한 전용 여성 에듀 버디(Nika) 로컬 wav 음원 51종.
-- `DAIT-기획안.md`: 공모전 제출용 종합 서비스 기획서 및 90초 시연 비디오 큐시트.
+| 항목 | 값 |
+|---|---|
+| 플랫폼 | Android Automotive OS, Pleos Connect Emulator 2.1.0 (Android 14 / API 34, RAM 4GB, Cold boot) |
+| 가상 기기 이름 | `DAIT_Pleos_2_1` (스크립트가 이 이름을 사용) |
+| 빌드 | JBR 21, Gradle 8.7, AGP 8.5.2, Kotlin 1.9.24, compileSdk 34, minSdk 28 |
+| 빌드 스크립트 전제 | `Build-App.ps1`은 JDK를 `%USERPROFILE%\.jdks\jbr-21.0.11`에서 찾고, 에뮬레이터를 `emulator-5554`로 가정함. 다른 PC에서는 이 두 값을 맞춤 |
+| 패키지명 | `io.dait.app` |
+| 마이크 | 음성 인식을 시험하려면 Virtual Console에서 마이크 접근을 허용 |
+| 음성 인식 모델(선택) | Vosk 한국어 모델을 `android/app/src/main/assets/model-ko/`에 둠 (용량 때문에 저장소에서 제외) |
 
----
+설치 과정과 점검 결과는 [`개발환경-점검.md`](개발환경-점검.md)에 있습니다.
 
-## 4. 검증 결과
+## APK 위치
 
-- **단위 테스트**: `ConversationTest.kt` (등교 준비물/호기심/날씨 분기, 하교 회고/예외/가족연결, 휴식/거절 처리, ETA 단축 마무리 등 9개 테스트 케이스 All Pass).
-- **Android Lint**: No issues found (Clean).
-- **실기기 테스트**: 실제 안드로이드 디바이스(`LGMV300S4d35d2a5`) 설치 및 정상 동작 검증 완료.
+- 현재 빌드 스크립트 결과: `apk/DAIT-dialogue-debug.apk` (개발용 debug 빌드, 저장소에는 올리지 않음)
+- 공모전 제출 형식: `apk/팀명_앱이름_release.apk` (실행 가능한 release 빌드). 제출 전에 `.gitignore`의 `/apk/` 제외 설정을 조정하거나 GitHub Releases에 올립니다.
+
+## 주요 파일
+
+| 경로 | 내용 |
+|---|---|
+| `DAIT-기획안.md` | 공모전 기획서(접수양식 1~8번 순서) |
+| `android/app/src/main/java/io/dait/app/MainActivity.kt` | 앱 진입점, 주행 제한 연동, 웹 화면 표시 |
+| `android/app/src/main/java/io/dait/app/Conversation.kt` | 등교·하교 대화 규칙 엔진 |
+| `android/app/src/main/java/io/dait/app/LocalVoiceInput.kt` | 기기 내 음성 인식 시험 코드 |
+| `android/app/src/main/assets/dait-preview.html` | 현재 앱 화면(웹) |
+| `android/app/src/main/assets/conversation-grammar.json` | 단계별 음성 인식 후보 단어 |
+| `voice/` | 시연 음원 대본과 제작 도구 안내 |
+| `design/` | 화면 시안과 검증 기록 |
+| `GEMINI.md` | 화면 문구·차량 UX 작성 규칙 |
+
+## 검증
+
+- 단위 테스트 9개: `ConversationTest` 6개(등교 분기, 날씨·독서 분기, 불명확한 답, 하교 대화와 멈춤, 시간표 변경, 도착 임박 마무리), `JourneySessionTest` 3개. 앱 화면이 아직 호출하지 않는 규칙 엔진을 검사합니다.
+- 이전 네이티브 화면 빌드의 설치·주차 상태·음원 재생 기록: `design/앱-실행-검증.md`, `voice/검증.md`.
+- 현재 WebView 화면은 Pleos 에뮬레이터 2.1.0(가상 기기 `Automotive_1408p_landscape`, 앱 창 665×420)에 설치해 등교·하교 경로와 '주차/주행 전환' 버튼을 터치로 확인했습니다. 시험한 PC에 SDK 34가 없어 임시 복사본을 compileSdk 35로 빌드했습니다.
+- 소리 없이 실행해 음원을 귀로 듣는 확인은 하지 않았습니다. 차량이 보내는 실제 주행 신호는 해당 명령이 막혀 있어 시험하지 못했고, 같은 처리 코드를 시험용 호출로 확인했습니다. `DAIT_Pleos_2_1`에서는 아직 실행하지 않았습니다.
+- 에뮬레이터 부팅 직후 부하가 높으면 앱이 응답 없음으로 꺼질 수 있습니다. 부하가 내려간 뒤에는 수정 전 화면과 현재 화면 모두 정상이었습니다.
+- `design/device-screen.png`는 화면을 정리하기 전 캡처입니다.

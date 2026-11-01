@@ -1329,6 +1329,22 @@
     }
 
 
+    .route-wait {
+      padding: 28px 4px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .route-notice {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.45;
+      color: #92400E;
+      background: #FEF3C7;
+      border-radius: 14px;
+      padding: 10px 14px;
+    }
+
     /* 시간표 칸이 줄지 않도록 진로 체험 칸은 내용 높이만 쓴다. */
     .bento-wide-card.career {
       flex: 0 0 auto;
@@ -1472,6 +1488,7 @@
     let mediaTab = 'read'; // 'read' | 'listen' | 'video'
     let videoScene = 0;
     let videoTimer = null;
+    let careerRoute = { status: 'sample', region: null, stops: [], reason: 'no-school' }; // 'loading' | 'ready' | 'sample'
     let currentChoices = [];
     let demoMinutes = null; // 시연 조작으로 고른 남은 분
     let speechPhase = 'idle'; // 'idle' | 'speaking' | 'listening'
@@ -1626,6 +1643,22 @@
     const stopTypeLabels = { exp: '체험관', museum: '박물관', heritage: '유적지', trip: '여행지' };
     // 루트 화면의 '근처에서 더 찾기'가 여는 가 볼 만한 곳 주제
     const careerPlaceTopics = { space: '과학관', ai: '과학관', env: '체험관', history: '유적지' };
+
+    // 학교 지역 루트: 기사 주제마다 들를 곳의 검색어와 종류 (한국관광공사 키워드 검색)
+    const TOUR_URL = 'https://relay-khaki-omega.vercel.app/tour/';
+    const careerRouteKeywords = {
+      space: [['과학관', 'exp'], ['천문대', 'exp'], ['공원', 'trip']],
+      ai: [['과학관', 'exp'], ['체험관', 'exp'], ['천문대', 'exp']],
+      env: [['생태', 'exp'], ['수목원', 'trip'], ['습지', 'trip']],
+      history: [['박물관', 'museum'], ['유적', 'heritage'], ['향교', 'heritage']]
+    };
+    const stopStayMinutes = { exp: 90, museum: 90, heritage: 60, trip: 50 };
+    const stopTypeLines = {
+      exp: '직접 해 보면서 배워요.',
+      museum: '전시를 보며 궁금한 것을 찾아요.',
+      heritage: '옛사람들이 살던 모습을 떠올려요.',
+      trip: '걸으며 오늘 본 것을 이야기해요.'
+    };
 
     function render() {
       renderStage();
@@ -2682,26 +2715,45 @@
       if (mediaTab === 'video') startVideo();
     }
 
+    // 루트에 보일 장소 목록. 학교 지역 자료가 있으면 그것을, 없으면 서울 예시를 쓴다.
+    function careerRouteStops() {
+      if (careerRoute.status === 'ready') return careerRoute.stops;
+      return careerRoutes[careerNewsId].stops;
+    }
+
     function renderCareerRoute(container) {
       const n = currentNews();
       const c = careerCategories[n.id];
-      const route = careerRoutes[n.id];
-      const driveTotal = route.stops.reduce((sum, s) => sum + s.drive, 0);
-      const stayTotal = route.stops.reduce((sum, s) => sum + s.stay, 0);
+      const local = careerRoute.status === 'ready';
+      const loading = careerRoute.status === 'loading';
+      const regionName = careerRoute.region ? careerRoute.region.name : '';
+      const stops = careerRouteStops();
+      const stayTotal = stops.reduce((sum, s) => sum + s.stay, 0);
+      const driveTotal = local ? null : stops.reduce((sum, s) => sum + s.drive, 0);
 
-      const stopsHtml = route.stops.map((s, i) => `
-        <div class="route-leg">이동 약 ${formatMinutes(s.drive)}</div>
+      const stopsHtml = loading
+        ? `<div class="route-wait">${escapeHtml(regionName)} 장소를 찾는 중이에요</div>`
+        : stops.map((s, i) => `
+        <div class="route-leg">${local ? '다음 장소' : `이동 약 ${formatMinutes(s.drive)}`}</div>
         <div class="route-stop">
           <div class="stop-num">${i + 1}</div>
           <div class="stop-body">
             <div class="stop-top">
-              <span class="stop-name">${s.name}</span>
+              <span class="stop-name">${escapeHtml(s.name)}</span>
               <span class="stop-type t-${s.type}">${stopTypeLabels[s.type]}</span>
             </div>
-            <div class="stop-meta">${s.region} · 머무는 시간 ${formatMinutes(s.stay)}</div>
-            <div class="stop-desc">${s.desc}</div>
+            <div class="stop-meta">${escapeHtml(s.region)} · 머무는 시간 약 ${formatMinutes(s.stay)}</div>
+            <div class="stop-desc">${escapeHtml(s.desc)}</div>
           </div>
         </div>`).join('');
+
+      // 예시 루트를 보여 주는 까닭을 감추지 않는다.
+      const notice = local || loading ? ''
+        : careerRoute.reason === 'no-school' ? '학교를 등록하면 우리 지역 장소로 바꿔 줘요. 지금은 서울 예시예요.'
+        : `${regionName} 장소를 불러오지 못해 서울 예시를 보여 줘요.`;
+      const source = local
+        ? `장소: 한국관광공사 (${escapeHtml(regionName)}) · 들르는 순서와 이동 시간은 내비에서 정해요`
+        : '장소·시간: 서울 출발 기준 예시 데이터';
 
       container.innerHTML = `
         <div class="career-wrap" style="${catStyle(n.id)}">
@@ -2710,27 +2762,28 @@
             <span style="font-size:15px; font-weight:700; color:var(--muted);">주말 진로 체험</span>
           </div>
           <div class="career-head">
-            <div class="career-title">${c.label} 체험 여행 루트</div>
-            <span class="cat-tag">${n.jobs[0]} 꿈나무 코스</span>
+            <div class="career-title">${local || loading ? `${escapeHtml(regionName)} ` : ''}${c.label} 체험 여행 루트</div>
+            <span class="cat-tag">${local || loading ? '우리 지역' : '예시 루트'}</span>
           </div>
           <div class="route-layout">
             <div class="route-list">
-              <div class="route-start"><div class="stop-num">집</div>출발 (서울 기준)</div>
+              <div class="route-start"><div class="stop-num">집</div>${local || loading ? '출발' : '출발 (서울 기준)'}</div>
               ${stopsHtml}
             </div>
             <div class="news-side">
               <div class="side-block">
                 <div class="route-stats">
-                  <div class="route-stat"><b>${route.stops.length}곳</b><span>방문</span></div>
-                  <div class="route-stat"><b>${formatMinutes(stayTotal)}</b><span>체험</span></div>
-                  <div class="route-stat"><b>${formatMinutes(driveTotal)}</b><span>이동</span></div>
+                  <div class="route-stat"><b>${loading ? '-' : `${stops.length}곳`}</b><span>방문</span></div>
+                  <div class="route-stat"><b>${loading ? '-' : formatMinutes(stayTotal)}</b><span>체험</span></div>
+                  <div class="route-stat"><b>${driveTotal === null ? '내비' : formatMinutes(driveTotal)}</b><span>이동</span></div>
                 </div>
               </div>
+              ${notice ? `<div class="route-notice">${escapeHtml(notice)}</div>` : ''}
               <div class="side-block">
                 <div class="side-label">이 루트를 추천하는 이유</div>
-                <div class="route-why">${route.why}</div>
+                <div class="route-why">${careerRoutes[n.id].why}</div>
               </div>
-              <div class="source-note">장소: 한국관광공사 TourAPI · 국가유산청 · 경유 순서와 이동 시간: TMAP 예상값 (예시 데이터)</div>
+              <div class="source-note">${source}</div>
               <div class="side-actions">
                 <button class="wide-btn" onclick="openPlaces(careerPlaceTopics[careerNewsId])">근처에서 더 찾기</button>
                 <button class="wide-btn primary" onclick="sendRouteToNavi()">차량 내비로 보내기</button>
@@ -2766,7 +2819,40 @@
     function showCareerRoute() {
       stopCareerMedia();
       careerView = 'route';
+      const region = schoolRegion();
+      careerRoute = region ? { status: 'loading', region, stops: [], reason: '' } : { status: 'sample', region: null, stops: [], reason: 'no-school' };
       render();
+      if (region) loadCareerRoute(careerNewsId, region);
+    }
+
+    // 학교 지역에서 주제별 검색어마다 한 곳씩 골라 루트를 만든다. 두 곳 이상 모이면 쓴다.
+    async function loadCareerRoute(newsId, region) {
+      const stops = [];
+      for (const [keyword, type] of careerRouteKeywords[newsId]) {
+        const query = new URLSearchParams({
+          numOfRows: '30', pageNo: '1', MobileOS: 'AND', MobileApp: 'DAIT', _type: 'json', arrange: 'A',
+          keyword, lDongRegnCd: region.code
+        }).toString();
+        try {
+          const rows = tourRows(JSON.parse(await careerTourBody(query)));
+          const pick = rows.find(row => !stops.some(s => s.name === row.name));
+          if (pick) stops.push({ name: pick.name, type, region: pick.address || region.name, stay: stopStayMinutes[type], desc: stopTypeLines[type] });
+        } catch (e) {
+          break; // 중계 서버나 자료가 없으면 나머지도 같으므로 멈춘다.
+        }
+      }
+      // 기다리는 사이 다른 화면이나 기사로 옮겼으면 버린다.
+      if (currentMode !== 'career' || careerView !== 'route' || careerNewsId !== newsId) return;
+      careerRoute = stops.length >= 2
+        ? { status: 'ready', region, stops, reason: '' }
+        : { status: 'sample', region, stops: [], reason: 'no-data' };
+      render();
+    }
+
+    // 앱에서는 TourClient가, 브라우저 미리보기에서는 같은 중계 서버를 직접 부른다.
+    function careerTourBody(query) {
+      if (window.AndroidBridge) return tourBody(query);
+      return fetch(`${TOUR_URL}searchKeyword2?${query}`).then(response => response.text());
     }
 
     function setMediaTab(tab) {
@@ -2783,7 +2869,7 @@
 
     function sendRouteToNavi() {
       // Pleos NaviHelper 연결 전: 경유지 목록을 넘기는 자리
-      const stops = careerRoutes[careerNewsId].stops.map(s => s.name).join(' → ');
+      const stops = careerRouteStops().map(s => s.name).join(' → ');
       showCareerToast(`내비게이션에 경로를 보냈어요: ${stops}`);
     }
 

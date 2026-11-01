@@ -73,7 +73,7 @@ powershell -ExecutionPolicy Bypass -File .\tools\Build-App.ps1 -Install -DeviceC
 ## APK 위치
 
 - 개발용: `apk/DAIT-dialogue-debug.apk` (debug 빌드, 저장소에는 올리지 않음)
-- 제출용: `powershell -ExecutionPolicy Bypass -File .\tools\Build-App.ps1 -Release -TeamName 팀명`을 실행하면 `apk/팀명_다잇_release.apk`가 만들어집니다(음성 모델 포함 약 156MB). 서명 키는 PC마다 `tools\Make-Release-Key.ps1`을 한 번 실행해 만들고 저장소에는 올리지 않습니다. 키는 `%USERPROFILE%\.dait\`에, 비밀번호는 `android/keystore.properties`에 있습니다. 키를 잃으면 같은 앱으로 덮어 설치할 수 없습니다.
+- 제출용: `powershell -ExecutionPolicy Bypass -File .\tools\Build-App.ps1 -Release -TeamName 팀명`을 실행하면 `apk/팀명_다잇_release.apk`가 만들어집니다(음성 모델 포함 약 160MB). 서명 키는 PC마다 `tools\Make-Release-Key.ps1`을 한 번 실행해 만들고 저장소에는 올리지 않습니다. 키는 `%USERPROFILE%\.dait\`에, 비밀번호는 `android/keystore.properties`에 있습니다. 키를 잃으면 같은 앱으로 덮어 설치할 수 없습니다.
 - 공모전 제출 형식: `apk/팀명_앱이름_release.apk`. GitHub는 저장소에 100MB가 넘는 파일을 올릴 수 없으므로 GitHub Releases에 올리고 그 주소를 제출합니다.
 
 ## 주요 파일

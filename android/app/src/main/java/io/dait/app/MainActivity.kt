@@ -78,6 +78,7 @@ class MainActivity : Activity() {
         super.onResume()
         visible = true
         webView.onResume()
+        callPage("window.onAppResumed && window.onAppResumed();")
     }
 
     // 여정 중에는 내비가 앱을 덮어도 대화가 이어져야 하므로 웹 화면을 멈추지 않는다.

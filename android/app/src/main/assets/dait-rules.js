@@ -833,6 +833,8 @@
     "p_check": "temp/p_check",
     "p_nodata": "temp/p_nodata",
     "p_door_bag": "temp/p_door_bag",
+    "p_after_pick": "temp/p_after_pick",
+    "p_after_how": "temp/p_after_how",
     "s_1": "temp/s_1",
     "s_2": "temp/s_2",
     "s_3": "temp/s_3",

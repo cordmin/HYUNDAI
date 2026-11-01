@@ -66,6 +66,37 @@ test('신호 대기로 잠깐 멈췄다 다시 달리면 주차 시각을 지운
   page(`goHome();`);
 });
 
+test('대화를 끝까지 마친 등교도 2분 전에 준비물을 확인하고, 그 뒤에는 반복하지 않는다', () => {
+  page(`startFlow('morning'); stage = 'DONE'; speechPhase = 'idle'; demoMinutes = 2; applyNaviEta();`);
+  assert.strictEqual(page('stage'), 'ETA_SHORT');
+  page(`speechPhase = 'idle'; applyNaviEta(); demoMinutes = null; goHome();`);
+});
+
+test('2분 전에도 가족 대화는 끊지 않고, 도착하면 인사한다', () => {
+  page(`startFlow('afternoon'); stage = 'PARENT_BRIDGE'; speechPhase = 'idle'; demoMinutes = 2; applyNaviEta();`);
+  assert.strictEqual(page('stage'), 'PARENT_BRIDGE');
+  page(`finishOnArrival();`);
+  assert.strictEqual(page('stage'), 'DONE');
+  page(`startFlow('afternoon'); stage = 'ETA_SHORT'; speechPhase = 'idle'; finishOnArrival();`);
+  assert.strictEqual(page('stage'), 'DONE');
+  page(`demoMinutes = null; goHome();`);
+});
+
+test('기어 D로 세운 채 문이 열려도 도착 직전이면 말하고, 달리는 중이면 말하지 않는다', () => {
+  page(`startFlow('morning'); window.setDrivingMode(true); demoMinutes = 8; window.onDoorOpened();`);
+  assert.ok(page('tripForDoor'));
+  page(`demoMinutes = 2; window.onDoorOpened();`);
+  assert.strictEqual(page('tripForDoor'), null);
+  page(`demoMinutes = null; window.setDrivingMode(false); goHome();`);
+});
+
+test('앞 경로가 끝났다는 신호가 새 경로를 지우지 않는다', () => {
+  page(`window.onNaviUpdate(JSON.stringify({ event: 'routeStarted', name: '학교', remainTime: 600, remainDistance: 3000 }));
+        window.onNaviUpdate(JSON.stringify({ event: 'routeEnded' }));`);
+  assert.strictEqual(page('naviInfo.name'), '학교');
+  page(`naviInfo = null;`);
+});
+
 test('좌표를 배울 때는 이름만 비슷한 곳을 같은 곳으로 보지 않는다', () => {
   assert.strictEqual(page(`isSamePlace({ name: '피자집', address: '' }, { name: '집', address: '' })`), false);
   assert.strictEqual(page(`isSamePlace({ name: '중앙초등학교', address: '부산 동구 초량동' }, { name: '중앙초등학교', address: '서울특별시 중구 정동길 1' })`), false);
@@ -134,6 +165,19 @@ test('2분 이하면 새 질문 없이 마무리한다', () => {
   assert.strictEqual(Journey.skip('morning', 'PREP', arrive), 'ETA_SHORT');
 });
 
+test('수업이 없던 날 집에 갈 때는 학교 이야기를 묻지 않는다', () => {
+  assert.strictEqual(Journey.start('afternoon', { ...full, nextDay: true }), 'SILENT');
+});
+
+test('번호가 붙은 과목도 오늘의 질문을 찾는다', () => {
+  assert.strictEqual(Journey.pickQuestion(rules, ['체육①'], '중'), '체육 시간에 해 보고 싶은 게 있어?');
+});
+
+test('쉬는 날로 표시된 일정은 시험 말을 하지 않는다', () => {
+  const off = { 20261110: [{ name: '3학년 시험', off: true }] };
+  assert.strictEqual(Journey.pickRule(rules, { mode: 'morning', level: '중', ymd: '20261110', events: off }), null);
+});
+
 test('달리는 중에 하교 대화를 마칠 때는 도착 인사를 하지 않는다', () => {
   const driving = { ...full, driving: true };
   assert.strictEqual(Journey.next('afternoon', 'PARENT_BRIDGE', '오늘도 수고했어', driving).stage, 'STOPPED');
@@ -158,7 +202,11 @@ test('가족 설정에서 질문을 끄면 준비 안내만 하고 하교에는 
 
 test('아침에 고른 과목으로 하교 대화를 시작한다', () => {
   assert.strictEqual(Journey.start('afternoon', { ...full, memory: { subject: '체육' } }), 'AFTER_PE');
-  assert.strictEqual(Journey.start('afternoon', { ...full, memory: { subject: '과학' } }), 'AFTER_SCIENCE');
+  assert.strictEqual(Journey.start('afternoon', { ...full, memory: { subject: '수학' } }), 'AFTER_SUBJECT');
+  const step = Journey.subjectStep('수학', data);
+  assert.strictEqual(step.title, '아침에 고른 수학, 어땠어요?');
+  assert.deepStrictEqual(step.clips.map(clip => clip.replace(/^temp\//, '')), ['p_after_pick', 's_2', 'p_after_how']);
+  assert.deepStrictEqual(Journey.subjectStep('시민과 사회정의', data).clips, ['afternoon_welcome']);
   assert.strictEqual(Journey.start('afternoon', full), 'AFTER_EVENT');
 });
 
@@ -195,6 +243,13 @@ test('쉬고 싶다거나 다시 말해 달라는 말을 알아듣는다', () =>
   assert.strictEqual(Journey.interpret('PREP', '쉬고 싶어', '쉬고 싶어', []).kind, 'quiet');
   assert.strictEqual(Journey.interpret('AFTER_EVENT', '오늘은 피곤해', '오늘은 피곤해', []).kind, 'quiet');
   assert.strictEqual(Journey.interpret('PREP', '다시 말해줘', '다시 말해줘', []).kind, 'repeat');
+});
+
+test('후보 낱말 밖의 거절도 알아듣는다', () => {
+  assert.strictEqual(Journey.interpret('PREP', '<UNK>', '귀찮아', []).kind, 'quiet');
+  assert.strictEqual(Journey.interpret('AFTER_EVENT', '싫어요', '싫어요', []).kind, 'quiet');
+  assert.strictEqual(Journey.interpret('AFTER_EVENT', '말 안 해', '말 안 해', []).kind, 'quiet');
+  assert.strictEqual(Journey.interpret('AFTER_EVENT', '숙제 안 했 어', '숙제 안 했어', []).kind, 'answer');
 });
 
 test('속상한 이야기에는 더 묻지 않는다', () => {

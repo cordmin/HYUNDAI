@@ -989,6 +989,9 @@
     let micBroken = false; // 이번 대화에서 마이크를 열지 못함
     let noMicTimer = null;
     let doorTimer = null;
+    let closeTimer = null;
+    let routeStartedAt = 0;
+    let lastRefreshDay = '';
     let tripForDoor = null; // 내릴 때 한마디: 대화를 시작한 여정. 달렸는지와 주차 시각을 기억한다.
     let currentRule = null; // 이번 대화에 쓰는 교사 규칙
     let ruleMissing = false; // 규칙 대화에서 준비물을 못 챙겼다고 답함
@@ -1008,6 +1011,7 @@
     const LISTEN_PATIENCE_MS = 12000;
     const DOOR_WINDOW_MS = 5 * 60 * 1000;
     const TRIP_CAP_MS = 2 * 60 * 60 * 1000;
+    const ROUTE_SWAP_MS = 3000;
 
     // DAIT 공식 확정 캘리그래피 로고 (시안 2 커넥티드 리본 + i Dot)
     function getDaitLogoHtml() {
@@ -1141,6 +1145,7 @@
       const modeName = currentMode === 'morning' ? '등교' : '하교';
       const data = stage === 'NEXT_DAY' ? Journey.nextDayStep(schoolPlan(), currentRule, DAIT_RULES)
         : stage.startsWith('RULE') ? Journey.ruleStep(stage, currentRule, ruleMissing, DAIT_RULES.extras.rule_missing)
+        : stage === 'AFTER_SUBJECT' ? Journey.subjectStep((readStored(MEMORY_KEY) || {}).subject || '', DAIT_RULES)
         : (flow[stage] || flow.DONE);
 
       const subjectStages = ['SUBJECT', 'SUBJECT_MISSING', 'SUBJECT_TODAY'];
@@ -1207,7 +1212,7 @@
         hasPe: !!(plan && plan.hasPe),
         rule: currentRule,
         noQuestions: readStored(QUESTIONS_KEY) === false,
-        nextDay: !!school && Object.keys(schoolDays).length > 0 && !isClassDay(toYmd(new Date())),
+        nextDay: !!school && !!schoolDays[toYmd(new Date())] && !isClassDay(toYmd(new Date())),
         etaMinutes: currentTrip().known ? naviRemainMinutes() : demoMinutes,
         subjects: plan && plan.ymd === toYmd(new Date()) ? plan.subjects : [],
         memory: memory && memory.date === toYmd(new Date()) ? memory : {}
@@ -1370,7 +1375,11 @@
     }
 
     window.onDoorOpened = function() {
-      if (isDrivingMode || !tripForDoor || !tripForDoor.parkedAt) return;
+      if (!tripForDoor || !tripForDoor.drove) return;
+      // 교문 앞에서 기어 D로 세운 채 내릴 수 있으므로 도착 직전이면 주차 전이라도 말한다.
+      const stoppedAtEnd = isDrivingMode && Journey.tierFor(remainMinutes()) === 'arrive';
+      if (!stoppedAtEnd && (isDrivingMode || !tripForDoor.parkedAt)) return;
+      clearTimeout(closeTimer);
       tripForDoor = null;
       hasArrived = !!currentMode && !isParkedScreen(); // 아이가 내리는 순간이므로 말을 마치면 대화를 닫는다
       speak([DAIT_RULES.extras.p_door_bag].filter(Boolean), '');
@@ -1488,9 +1497,16 @@
         syncJourney();
         if (hasArrived) closeAfterArrival();
         else if (info.event === 'stopped') endWithoutSpeaking();
-        else advanceWithoutMic();
+        else if (!listenIfMicIsReady()) advanceWithoutMic();
       }
     };
+
+    // 첫 말을 하는 사이에 음성 모델이 준비되었으면 지금부터 듣는다.
+    function listenIfMicIsReady() {
+      if (!currentMode || isParkedScreen() || isDialogueDone() || !listenNow()) return false;
+      speak([], listenNow());
+      return true;
+    }
 
     // 음악이나 통화가 소리를 돌려주지 않으면 끼어들지 않고 대화를 마친다.
     function endWithoutSpeaking() {
@@ -1516,7 +1532,10 @@
       else if (result.kind === 'quiet') {
         rememberMorning({ rest: true });
         setStage('REST');
-      } else if (result.kind === 'sad') setStage('REST_SOFT');
+      } else if (result.kind === 'sad') {
+        rememberMorning({ rest: true }); // 「오늘은 질문 없이」라고 했으니 그날은 다시 묻지 않는다
+        setStage('REST_SOFT');
+      }
       else if (result.kind === 'repeat') render();
       else if (performance.now() - listenSince < LISTEN_PATIENCE_MS) speak([], listenNow()); // 잡음일 수 있으니 재촉하지 않고 더 듣는다
       else onUnclear();
@@ -1525,6 +1544,7 @@
     // 한 번 더 물어보고, 그래도 답이 없으면 재촉하지 않고 멈춘다 (기획안 ⑤)
     function onUnclear() {
       if (!currentMode || isParkedScreen() || isDialogueDone()) return;
+      if (stage === 'AFTER_DETAIL') { setStage('PARENT_BRIDGE'); return; } // 더 말하지 않아도 된다고 했으니 재촉하지 않는다
       unclearCount++;
       listenSince = 0;
       if (unclearCount >= 2) setStage('QUIET_END');
@@ -1535,12 +1555,13 @@
     function finishOnArrival() {
       if (!currentMode || isParkedScreen()) return;
       hasArrived = true;
-      if (!isDialogueDone()) setStage('DONE');
+      if (!isDialogueDone() || (currentMode === 'afternoon' && stage === 'ETA_SHORT')) setStage('DONE');
       if (speechPhase === 'idle') closeAfterArrival();
     }
 
     function closeAfterArrival() {
-      setTimeout(() => { if (hasArrived) goHome(); }, ARRIVAL_CLOSE_MS);
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => { if (hasArrived) goHome(); }, ARRIVAL_CLOSE_MS);
     }
 
     // ========================================================
@@ -1700,6 +1721,7 @@
         });
         if (school !== target) return;
         schoolDays = days;
+        lastRefreshDay = ymds[0];
         writeStored(DAYS_KEY, days);
         if (isIntroPlaying) homeStale = true;
         else if (!currentMode) render();
@@ -1710,10 +1732,16 @@
 
     // 시험 날은 시간표가 없을 수 있으므로 점심이나 학사일정이 있어도 수업일로 본다.
     function isClassDay(ymd) {
+      if (!Journey.isSchoolDay(ymd, schoolEvents)) return false;
       const day = schoolDays[ymd];
-      if (day && (day.subjects.length > 0 || day.meal)) return true;
-      return !!schoolEvents[ymd] && Journey.isSchoolDay(ymd, schoolEvents);
+      return !!(day && (day.subjects.length > 0 || day.meal)) || !!schoolEvents[ymd];
     }
+
+    // 앱을 다시 볼 때 날짜가 바뀌었으면 자료를 새로 받고 첫 화면도 지금 시각으로 다시 그린다.
+    window.onAppResumed = function() {
+      if (school && lastRefreshDay !== toYmd(new Date())) refreshSchoolDays();
+      refreshHomeIfIdle();
+    };
 
     function schoolPlan() {
       const today = toYmd(new Date());
@@ -1721,7 +1749,7 @@
         .find(key => key >= today && isClassDay(key));
       if (!school || !ymd) return null;
       const day = schoolDays[ymd];
-      return { ...day, ymd, weekday: fromYmd(ymd).getDay(), label: dayLabel(ymd), hasPe: day.subjects.includes('체육') };
+      return { ...day, ymd, weekday: fromYmd(ymd).getDay(), label: dayLabel(ymd), hasPe: day.subjects.some(subject => subject.replace(/[^가-힣]/g, '').startsWith('체육')) };
     }
 
     function schoolLevel() {
@@ -1806,12 +1834,12 @@
       const todayYmd = toYmd(now);
       const todayHasClass = isClassDay(todayYmd);
       const isWeekend = now.getDay() === 0 || now.getDay() === 6;
-      if (school && Object.keys(schoolDays).length && !todayHasClass) {
+      if (school && schoolDays[todayYmd] && !todayHasClass) {
         const plan = schoolPlan();
         const label = plan ? plan.label : '다음 수업일';
         return { mode: 'morning', kind: 'weekend', known: false, where: '', minutes: unknownMins, when: `${label} 준비`, figure: label.replace('요일', ''), figureUnit: label.endsWith('요일') ? '요일' : '' };
       }
-      if (!school && isWeekend) return { mode: 'morning', kind: 'weekend', known: false, where: '', minutes: unknownMins, when: '다음 수업일 준비', figure: '월', figureUnit: '요일' };
+      if ((!school || !schoolDays[todayYmd]) && isWeekend) return { mode: 'morning', kind: 'weekend', known: false, where: '', minutes: unknownMins, when: '다음 수업일 준비', figure: '월', figureUnit: '요일' };
       const afternoon = now.getHours() >= 12;
       const hhmm = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
       return { mode: afternoon ? 'afternoon' : 'morning', kind: afternoon ? 'afternoon' : 'morning', known: false, where: '', minutes: unknownMins, when: afternoon ? '오늘 오후' : '오늘 아침', figure: hhmm, figureUnit: '' };
@@ -1833,9 +1861,17 @@
       };
     }
 
+    // 오후에는 다음 수업일의 점심을 보여 준다.
+    function nextMeal() {
+      const today = toYmd(new Date());
+      const ymd = Object.keys(schoolDays).sort().find(key => key > today && isClassDay(key));
+      if (!ymd) return { mealLabel: '다음 점심', meal: '확인 필요', mealSub: '' };
+      return { mealLabel: `${dayLabel(ymd)} 점심`, meal: schoolDays[ymd].meal || '확인 필요', mealSub: '' };
+    }
+
     function plainHomeInfo(trip) {
       const plan = school ? schoolPlan() : null;
-      const dayWord = plan ? plan.label : '오늘';
+      const dayWord = plan ? plan.label : (school ? '다음 수업일' : '오늘');
       const memory = readStored(MEMORY_KEY);
       const morningSubject = memory && memory.date === toYmd(new Date()) ? memory.subject : null;
       const prepLine = !school ? { prep: '등록 필요', prepSub: '' }
@@ -1849,7 +1885,7 @@
       const question = Journey.pickQuestion(DAIT_RULES.rules, plan ? plan.subjects : [], schoolLevel());
       const otherMorning = trip.known
         ? { otherKicker: '하교 때 다시 물을 질문', otherChips: null, otherTitle: question, otherDesc: '아침에 답하면 집에 갈 때 이어서 물어요' }
-        : { otherKicker: '등교', otherChips: subjects.slice(0, 6), otherTitle: `${dayWord} 시간표`, otherDesc: subjects.length ? '' : '학교를 설정하면 보여 줘요' };
+        : { otherKicker: '등교', otherChips: subjects.slice(0, 6), otherTitle: `${dayWord} 시간표`, otherDesc: '' };
       const otherAfternoon = trip.known
         ? { otherKicker: '오늘의 질문', otherChips: subjects.slice(0, 6), otherTitle: question, otherDesc: '대답은 아이가 해요. 부모는 듣다가 끼어들면 돼요' }
         : { otherKicker: trip.kind === 'weekend' ? `${dayWord} 시간표` : '하교', otherChips: trip.kind === 'weekend' ? subjects.slice(0, 6) : null, otherTitle: trip.kind === 'weekend' ? '하교 대화는 집에 갈 때' : '오늘 이야기 들려주기', otherDesc: trip.kind === 'weekend' ? '아침 질문을 기억했다가 이어서 물어요' : '기억나는 장면 하나면 돼요' };
@@ -1868,14 +1904,14 @@
           title: morningSubject ? `아침에 고른 ${morningSubject}, 어땠나요?` : '오늘은 어땠나요?',
           desc: '기억나는 장면 하나만 들려줘요',
           prepLabel: '아침에 고른 수업', prep: morningSubject || '없음', prepSub: morningSubject ? '하교 대화에서 다시 물어요' : '등교 대화에서 고르면 여기 남아요',
-          mealLabel: `${dayWord === '오늘' ? '내일' : dayWord} 점심`, ...mealLine,
+          ...nextMeal(),
           ...otherMorning
         };
       }
       if (trip.kind === 'weekend') {
         return {
           title: `${dayWord} 준비 됐나요?`,
-          desc: plan ? (plan.hasPe ? '체육이 있어요. 체육복을 미리 챙겨요' : `${plan.subjects.slice(0, 3).join(' · ')}`) : '학교를 설정하면 시간표를 보여 줘요',
+          desc: plan ? (plan.hasPe ? '체육이 있어요. 체육복을 미리 챙겨요' : `${plan.subjects.slice(0, 3).join(' · ')}`) : '수업일이 다가오면 시간표를 보여 줘요',
           prepLabel: `${dayWord} 준비물`, ...prepLine,
           mealLabel: `${dayWord} 점심`, ...mealLine,
           ...otherAfternoon
@@ -2226,7 +2262,9 @@
       let info;
       try { info = JSON.parse(jsonText); } catch (e) { return; }
       if (info.event === 'places') learnFromNavi(info.places || []);
+      else if (info.event === 'routeEnded' && performance.now() - routeStartedAt < ROUTE_SWAP_MS) return; // 경로를 바꾸면 옛 경로의 종료 신호가 뒤따른다
       else if (info.event === 'destination' || info.event === 'routeStarted') {
+        if (info.event === 'routeStarted') routeStartedAt = performance.now();
         // 길 안내가 없을 때는 이름 없이 0으로 오므로 도착 직전과 구분한다.
         if (!info.name && !(Number(info.remainTime) > 0)) { const had = !!naviInfo; naviInfo = null; renderDemoPanel(); if (had) refreshHomeIfIdle(); return; }
         const changed = !naviInfo || naviInfo.name !== (info.name || '') || (currentMode === 'settings' && !document.querySelector('[onclick="saveHomeFromNavi()"]') && canSaveHomeFor(info));
@@ -2322,9 +2360,11 @@
     // 도착이 가까워지면 말하던 문장은 끝까지 하고, 다음 내비 응답 때 마무리로 넘어간다.
     function applyNaviEta() {
       renderDemoPanel();
-      if (!currentMode || isParkedScreen() || speechPhase === 'speaking' || speechPaused) return;
+      if (!currentMode || isParkedScreen() || speechPhase === 'speaking' || speechPaused || hasArrived) return;
       if (Journey.tierFor(remainMinutes()) !== 'arrive') return;
-      if (!isDialogueDone() || (currentMode === 'morning' && stage === 'REST')) setStage('ETA_SHORT');
+      if (stage === 'ETA_SHORT' || stage === 'PARENT_BRIDGE' || stage === 'NEXT_DAY') return; // 가족 대화는 끊지 않는다
+      // 대화를 일찍 마친 등교도 내리기 전 준비물 확인은 한 번 한다 (기획안 ④)
+      if (!isDialogueDone() || currentMode === 'morning') setStage('ETA_SHORT');
     }
 
     function renderDemoPanel() {

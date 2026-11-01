@@ -10,6 +10,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import org.json.JSONObject
 
 class MainActivity : Activity() {
     private lateinit var webView: WebView
@@ -18,6 +19,7 @@ class MainActivity : Activity() {
     private var resumed = false
     private var simulatedDriving = false
     private var isRestricted = false
+    private var navi: NaviBridge? = null
 
     private val restrictionListener = CarUxRestrictionsManager.OnUxRestrictionsChangedListener { value ->
         runOnUiThread { applyPlatformRestriction(value.isRequiresDistractionOptimization) }
@@ -40,7 +42,7 @@ class MainActivity : Activity() {
             webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
-                    applyPlatformRestriction(simulatedDriving || isRestricted)
+                    applyPlatformRestriction(isRestricted)
                 }
             }
             addJavascriptInterface(WebAppInterface(), "AndroidBridge")
@@ -48,6 +50,12 @@ class MainActivity : Activity() {
         }
 
         setContentView(webView)
+
+        navi = NaviBridge(this) { json ->
+            if (!isDestroyed) {
+                webView.evaluateJavascript("window.onNaviUpdate && window.onNaviUpdate(${JSONObject.quote(json.toString())});", null)
+            }
+        }.also { it.connect() }
     }
 
     override fun onStart() {
@@ -76,6 +84,8 @@ class MainActivity : Activity() {
     }
 
     override fun onDestroy() {
+        navi?.release()
+        navi = null
         webView.destroy()
         super.onDestroy()
     }
@@ -100,16 +110,16 @@ class MainActivity : Activity() {
                         restrictions = connectedCar.getCarManager(Car.CAR_UX_RESTRICTION_SERVICE) as CarUxRestrictionsManager
                         restrictions?.registerListener(restrictionListener)
                         val blocked = restrictions?.currentCarUxRestrictions?.isRequiresDistractionOptimization != false
-                        applyPlatformRestriction(blocked || simulatedDriving)
-                    } catch (_: Exception) { applyPlatformRestriction(simulatedDriving) }
+                        applyPlatformRestriction(blocked)
+                    } catch (_: Exception) { applyPlatformRestriction(false) }
                 }
             }
-        } catch (_: Exception) { applyPlatformRestriction(simulatedDriving) }
+        } catch (_: Exception) { applyPlatformRestriction(false) }
     }
 
     private fun applyPlatformRestriction(blocked: Boolean) {
+        isRestricted = blocked
         val effective = blocked || simulatedDriving
-        isRestricted = effective
         runOnUiThread {
             webView.evaluateJavascript("window.setDrivingMode && window.setDrivingMode($effective);", null)
         }
@@ -117,10 +127,23 @@ class MainActivity : Activity() {
 
     inner class WebAppInterface {
         @JavascriptInterface
+        fun neisGet(requestId: Int, service: String, query: String) {
+            Thread {
+                val body = try { NeisClient.fetch(service, query, BuildConfig.NEIS_API_KEY) } catch (_: Exception) { "" }
+                runOnUiThread {
+                    if (!isDestroyed) {
+                        webView.evaluateJavascript("window.onNeisResult && window.onNeisResult($requestId, ${JSONObject.quote(body)});", null)
+                    }
+                }
+            }.start()
+        }
+
+        @JavascriptInterface
         fun toggleDrivingSim() {
             runOnUiThread {
+                if (isRestricted) return@runOnUiThread
                 simulatedDriving = !simulatedDriving
-                applyPlatformRestriction(simulatedDriving)
+                applyPlatformRestriction(isRestricted)
             }
         }
     }

@@ -1,25 +1,34 @@
 package io.dait.app
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.car.Car
 import android.car.drivingstate.CarUxRestrictionsManager
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import org.json.JSONArray
 import org.json.JSONObject
 
 class MainActivity : Activity() {
     private lateinit var webView: WebView
     private var car: Car? = null
     private var restrictions: CarUxRestrictionsManager? = null
-    private var resumed = false
+    private var visible = false
     private var simulatedDriving = false
-    private var isRestricted = false
+    private var isRestricted = true // 차 상태를 받기 전에는 주행 중으로 둔다.
     private var navi: NaviBridge? = null
+    private var doors: DoorBridge? = null
+    private var voice: VoiceSession? = null
+    private var hasSpeechModel = false
+    private var speechInput: LocalVoiceInput? = null
+    private var journeyActive = false
 
     private val restrictionListener = CarUxRestrictionsManager.OnUxRestrictionsChangedListener { value ->
         runOnUiThread { applyPlatformRestriction(value.isRequiresDistractionOptimization) }
@@ -29,6 +38,7 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) WebView.setWebContentsDebuggingEnabled(true)
         webView = WebView(this).apply {
             settings.apply {
                 javaScriptEnabled = true
@@ -43,6 +53,7 @@ class MainActivity : Activity() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
                     applyPlatformRestriction(isRestricted)
+                    navi?.requestPlaces()
                 }
             }
             addJavascriptInterface(WebAppInterface(), "AndroidBridge")
@@ -51,41 +62,44 @@ class MainActivity : Activity() {
 
         setContentView(webView)
 
+        hasSpeechModel = !assets.list("model-ko").isNullOrEmpty()
+        speechInput = if (hasSpeechModel) LocalVoiceInput(this) {} else null
+        voice = VoiceSession(this, speechInput) { event ->
+            callPage("window.onSpeechEvent && window.onSpeechEvent(${JSONObject.quote(event.toString())});")
+        }
         navi = NaviBridge(this) { json ->
-            if (!isDestroyed) {
-                webView.evaluateJavascript("window.onNaviUpdate && window.onNaviUpdate(${JSONObject.quote(json.toString())});", null)
-            }
+            callPage("window.onNaviUpdate && window.onNaviUpdate(${JSONObject.quote(json.toString())});")
         }.also { it.connect() }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        resumed = true
+        doors = DoorBridge(this) { callPage("window.onDoorOpened && window.onDoorOpened();") }.also { it.connect() }
         connectCarService()
     }
 
     override fun onResume() {
         super.onResume()
+        visible = true
         webView.onResume()
+        callPage("window.onAppResumed && window.onAppResumed();")
     }
 
+    // 여정 중에는 내비가 앱을 덮어도 대화가 이어져야 하므로 웹 화면을 멈추지 않는다.
     override fun onPause() {
         super.onPause()
-        webView.onPause()
+        visible = false
+        if (!journeyActive) webView.onPause()
     }
 
-    override fun onStop() {
-        resumed = false
+    override fun onDestroy() {
+        JourneyService.stop(this)
+        voice?.release()
+        voice = null
+        navi?.release()
+        navi = null
+        doors?.release()
+        doors = null
         try { restrictions?.unregisterListener() } catch (_: Exception) {}
         restrictions = null
         car?.disconnect()
         car = null
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        navi?.release()
-        navi = null
         webView.destroy()
         super.onDestroy()
     }
@@ -100,41 +114,55 @@ class MainActivity : Activity() {
         }
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == MIC_REQUEST) callPage("window.onMicAnswered && window.onMicAnswered();")
+    }
+
+    // 내비가 앱을 덮은 채로 출발해도 주행 시작을 알 수 있게 앱이 살아 있는 동안 계속 듣는다.
     private fun connectCarService() {
         try {
             car = Car.createCar(this, null, Car.CAR_WAIT_TIMEOUT_DO_NOT_WAIT) { connectedCar, ready ->
                 runOnUiThread {
-                    if (!resumed) { connectedCar.disconnect(); return@runOnUiThread }
+                    if (isDestroyed) { connectedCar.disconnect(); return@runOnUiThread }
                     if (!ready) { applyPlatformRestriction(true); return@runOnUiThread }
                     try {
                         restrictions = connectedCar.getCarManager(Car.CAR_UX_RESTRICTION_SERVICE) as CarUxRestrictionsManager
                         restrictions?.registerListener(restrictionListener)
                         val blocked = restrictions?.currentCarUxRestrictions?.isRequiresDistractionOptimization != false
                         applyPlatformRestriction(blocked)
-                    } catch (_: Exception) { applyPlatformRestriction(false) }
+                    } catch (_: Exception) { applyPlatformRestriction(true) }
                 }
             }
-        } catch (_: Exception) { applyPlatformRestriction(false) }
+        } catch (_: Exception) { applyPlatformRestriction(true) }
     }
 
     private fun applyPlatformRestriction(blocked: Boolean) {
         isRestricted = blocked
         val effective = blocked || simulatedDriving
-        runOnUiThread {
-            webView.evaluateJavascript("window.setDrivingMode && window.setDrivingMode($effective);", null)
-        }
+        callPage("window.setDrivingMode && window.setDrivingMode($effective, $blocked);")
     }
+
+    private fun callPage(script: String) {
+        runOnUiThread { if (!isDestroyed) webView.evaluateJavascript(script, null) }
+    }
+
+    private fun micGranted() = checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
 
     inner class WebAppInterface {
         @JavascriptInterface
         fun neisGet(requestId: Int, service: String, query: String) {
             Thread {
                 val body = try { NeisClient.fetch(service, query) } catch (_: Exception) { "" }
-                runOnUiThread {
-                    if (!isDestroyed) {
-                        webView.evaluateJavascript("window.onNeisResult && window.onNeisResult($requestId, ${JSONObject.quote(body)});", null)
-                    }
-                }
+                callPage("window.onNeisResult && window.onNeisResult($requestId, ${JSONObject.quote(body)});")
+            }.start()
+        }
+
+        @JavascriptInterface
+        fun tourGet(requestId: Int, service: String, query: String) {
+            Thread {
+                val body = try { TourClient.fetch(service, query) } catch (_: Exception) { "" }
+                callPage("window.onTourResult && window.onTourResult($requestId, ${JSONObject.quote(body)});")
             }.start()
         }
 
@@ -146,5 +174,55 @@ class MainActivity : Activity() {
                 applyPlatformRestriction(isRestricted)
             }
         }
+
+        @JavascriptInterface
+        fun speak(clipsJson: String, listen: String, turn: Int) {
+            val array = JSONArray(clipsJson)
+            val clips = List(array.length()) { array.getString(it) }
+            runOnUiThread { voice?.speak(clips, listen, turn) }
+        }
+
+        @JavascriptInterface
+        fun startRoute(placeJson: String) {
+            val place = JSONObject(placeJson)
+            runOnUiThread { navi?.startRoute(place) }
+        }
+
+        @JavascriptInterface
+        fun stopSpeech() {
+            runOnUiThread { voice?.stop() }
+        }
+
+        // 'none'은 음성 인식 모델이 없음, 'ask'는 아직 마이크 허락을 받지 않음,
+        // 'loading'은 모델을 읽는 중, 'ready'는 들을 수 있음.
+        @JavascriptInterface
+        fun micState(): String = when {
+            !hasSpeechModel -> "none"
+            !micGranted() -> "ask"
+            speechInput?.ready == true -> "ready"
+            else -> "loading"
+        }
+
+        @JavascriptInterface
+        fun requestMic() {
+            runOnUiThread { requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), MIC_REQUEST) }
+        }
+
+        @JavascriptInterface
+        fun setJourneyActive(active: Boolean) {
+            runOnUiThread {
+                journeyActive = active
+                if (active) {
+                    JourneyService.start(this@MainActivity)
+                } else {
+                    JourneyService.stop(this@MainActivity)
+                    if (!visible) webView.onPause()
+                }
+            }
+        }
+    }
+
+    companion object {
+        private const val MIC_REQUEST = 1
     }
 }

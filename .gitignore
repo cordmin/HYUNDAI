@@ -18,3 +18,4 @@ __pycache__/
 current_api_key.txt
 *.jks
 *.keystore
+/android/keystore.properties

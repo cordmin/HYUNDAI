@@ -6,21 +6,16 @@
   <title>DAIT</title>
   <style>
     :root {
-      --surface: #F3F6F9;
-      --paper: #FFFFFF;
-      --accent: #004DA0;
-      --accent-hover: #003673;
-      --accent-soft: #E5EFFB;
-      --ink: #0E1B2A;
-      --muted: #5B6D82;
-      --outline: #D5DFEA;
-      --control: #E8EEF5;
-      --control-hover: #DCE5F0;
-      /* 큰 카드 색. 여정에 따라 바뀐다 */
-      --hero-a: #061B3D;
-      --hero-b: #0B3B7A;
-      --hero-glow: #22B8E8;
-      --hero-ink: #0B2A5B;
+      --bg-top: #3D3C70;
+      --bg-bottom: #171C38;
+      --glass: rgba(255, 255, 255, 0.08);
+      --glass-hover: rgba(255, 255, 255, 0.14);
+      --line: rgba(255, 255, 255, 0.10);
+      --ink: #FFFFFF;
+      --muted: rgba(255, 255, 255, 0.68);
+      --lilac: #B3A6F5;
+      --lilac-hover: #C6BCF8;
+      --on-lilac: #1B1E3D;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -33,18 +28,19 @@
       justify-content: center;
       min-height: 100vh;
       padding: 24px;
+      word-break: keep-all;
     }
+    button { font-family: inherit; }
 
-    /* Pleos Display */
+    /* Pleos Display. 앱 창 665×420을 기준으로 창 크기에 맞춰 함께 커진다 */
     .pleos-display {
+      --u: clamp(0.9px, min(100cqw / 665, 100cqh / 420), 1.7px);
+      container-type: size;
       width: 100%;
       max-width: 1060px;
       height: 600px;
-      background:
-        radial-gradient(80% 60% at 100% 100%, #E7EEF8 0%, transparent 60%),
-        var(--surface);
+      background: linear-gradient(170deg, var(--bg-top) 0%, var(--bg-bottom) 72%);
       border-radius: 28px;
-      border: 2px solid #C4CDD7;
       box-shadow: 0 24px 50px rgba(11, 26, 44, 0.16);
       display: flex;
       flex-direction: column;
@@ -55,7 +51,7 @@
 
     /* In-App Fullscreen Integration for Hyundai Pleos */
     body.in-app {
-      background: var(--surface);
+      background: var(--bg-bottom);
       padding: 0;
       margin: 0;
       min-height: 100vh;
@@ -64,70 +60,57 @@
     body.in-app .pleos-display {
       max-width: 100%;
       height: 100vh;
-      border: none;
       border-radius: 0;
       box-shadow: none;
-    }
-    body.in-app .stage-container {
-      padding: 30px 40px;
-    }
-
-    .restricted-message {
-      font-size: 38px;
-      font-weight: 800;
-      color: var(--ink);
-      letter-spacing: -0.6px;
     }
 
     /* Driving Simple Screen: 문장 하나와 큰 버튼 둘 */
     .drive-screen {
       position: absolute;
       inset: 0;
-      background: var(--surface);
+      background: linear-gradient(170deg, var(--bg-top) 0%, var(--bg-bottom) 72%);
       z-index: 9999;
       display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 28px;
-      padding: 40px 48px;
+      gap: calc(20 * var(--u));
+      padding: calc(24 * var(--u)) calc(32 * var(--u)) calc(36 * var(--u));
       text-align: center;
     }
     body.driving .drive-screen { display: flex; }
     .drive-sentence {
-      font-size: 38px;
+      font-size: calc(30 * var(--u));
       font-weight: 800;
       line-height: 1.3;
-      color: var(--ink);
       letter-spacing: -0.6px;
-      max-width: 900px;
+      max-width: 90%;
     }
     .drive-sub {
-      font-size: 18px;
+      font-size: calc(16 * var(--u));
       font-weight: 600;
       color: var(--muted);
     }
     .drive-actions {
       display: flex;
-      gap: 20px;
+      gap: calc(16 * var(--u));
     }
     .drive-btn {
-      min-width: 220px;
-      height: 76px;
-      padding: 0 32px;
-      border-radius: 24px;
-      border: 1px solid var(--outline);
-      background: var(--paper);
+      min-width: calc(180 * var(--u));
+      height: calc(64 * var(--u));
+      padding: 0 calc(24 * var(--u));
+      border-radius: calc(18 * var(--u));
+      border: 1px solid var(--line);
+      background: var(--glass);
       color: var(--ink);
-      font-family: inherit;
-      font-size: 24px;
+      font-size: calc(22 * var(--u));
       font-weight: 800;
       cursor: pointer;
     }
     .drive-btn.primary {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #FFFFFF;
+      background: var(--lilac);
+      border-color: var(--lilac);
+      color: var(--on-lilac);
     }
     .drive-btn:disabled {
       opacity: 0.35;
@@ -137,384 +120,305 @@
     /* Demo Panel (시연용) */
     .demo-panel {
       position: absolute;
-      right: 36px;
+      right: calc(20 * var(--u));
       bottom: 3px;
       display: flex;
       align-items: center;
       gap: 6px;
       z-index: 500;
     }
-    body.in-app .demo-panel { right: 40px; }
     body.driving .demo-panel { z-index: 10000; }
+    body.real-driving .demo-panel { display: none; } /* 실제 주행 중에는 문장 하나와 큰 버튼 둘만 */
     .demo-panel button {
       height: 24px;
       padding: 0 10px;
       border-radius: 12px;
-      background: var(--control);
-      border: 1px solid var(--outline);
+      background: var(--glass);
+      border: 1px solid var(--line);
       color: var(--muted);
-      font-family: inherit;
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
     }
-    .demo-panel button:hover { background: var(--control-hover); }
+    .demo-panel button:hover { background: var(--glass-hover); }
     .demo-panel button.on {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #FFFFFF;
+      background: var(--lilac);
+      border-color: var(--lilac);
+      color: var(--on-lilac);
     }
     .demo-panel button:disabled { cursor: default; opacity: 0.9; }
-
 
     /* Main Stage */
     .stage-container {
       flex: 1;
+      min-height: 0;
       display: flex;
       flex-direction: column;
-      padding: 30px 36px;
+      padding: calc(14 * var(--u)) calc(20 * var(--u)) calc(30 * var(--u));
       position: relative;
-      opacity: 1;
-      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     /* ========================================================
-       첫 화면: 여정 하나를 크게, 보조 정보는 얇게
-       왼쪽 큰 카드 = 지금 여정(어디로 · 몇 분 · 할 말 한 문장)
-       오른쪽 = 오늘 챙길 것 두 줄 + 다른 여정으로 가는 작은 길
+       첫 화면: 인사 두 줄, 그 아래 작은 카드 여섯 장
+       카드 한 장에는 이름 한 줄, 내용 한두 줄, 버튼 하나까지만 넣는다
        ======================================================== */
-    .bento-stage {
-      display: grid;
-      grid-template-columns: 1.45fr 1fr;
-      gap: 18px;
-      flex: 1;
-      min-height: 0;
-    }
-
-    /* 큰 카드 */
-    .bento-hero {
-      background:
-        radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--hero-glow) 55%, transparent) 0%, transparent 55%),
-        linear-gradient(160deg, var(--hero-b) 0%, var(--hero-a) 100%);
-      border-radius: 28px;
-      padding: 26px 30px 28px;
-      color: #FFFFFF;
-      display: flex;
-      flex-direction: column;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      min-height: 0;
-      box-shadow: 0 24px 48px -18px color-mix(in srgb, var(--hero-a) 70%, transparent);
-      transition: transform 0.18s ease;
-    }
-    .bento-hero.afternoon { --hero-a: #3B1033; --hero-b: #8A2E4F; --hero-glow: #FFA14A; --hero-ink: #5B1F3D; }
-    .bento-hero.weekend { --hero-a: #1C1F3A; --hero-b: #3C3F6E; --hero-glow: #9A8CFF; --hero-ink: #2A2D55; }
-    .bento-hero:hover { transform: translateY(-2px); }
-    /* 가는 격자: 차량 계기판의 결 */
-    .bento-hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.07) 1px, transparent 1.2px);
-      background-size: 22px 22px;
-      mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), transparent 70%);
-      -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), transparent 70%);
-      pointer-events: none;
-    }
-    .hero-top-meta {
+    .home-top {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      gap: calc(12 * var(--u));
+      margin-bottom: calc(10 * var(--u));
     }
     .dait-brand-badge {
+      flex-shrink: 0;
       display: inline-flex;
       align-items: center;
       cursor: pointer;
       user-select: none;
-      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.25));
     }
-    .school-setting-btn {
-      min-height: 48px;
-      padding: 8px 20px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.22);
-      color: #FFFFFF;
-      font-size: 17px;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
-      white-space: nowrap;
+    .dait-brand-badge svg {
+      width: calc(62 * var(--u));
+      height: calc(19 * var(--u));
     }
-    .school-setting-btn:hover { background: rgba(255,255,255,0.18); }
-
-    /* 여정 그림: 출발점에서 목적지까지 한 획. 차 위치 점이 남은 시간만큼 가 있다 */
-    .hero-figure {
+    .home-greeting {
       flex: 1;
-      min-height: 0;
-      display: flex;
-      align-items: center;
-      position: relative;
-      z-index: 1;
-    }
-    .hero-route {
-      width: 100%;
-      height: auto;
-      max-height: 100%;
-      overflow: visible;
-    }
-    .hero-route .route-path { stroke: rgba(255,255,255,0.22); stroke-width: 2.5; fill: none; stroke-linecap: round; }
-    .hero-route .route-done { stroke: #FFFFFF; stroke-width: 2.5; fill: none; stroke-linecap: round; }
-    .hero-route .route-dot { fill: #FFFFFF; }
-    .hero-route .route-dot-halo { fill: var(--hero-glow); opacity: 0.35; }
-    .hero-route .route-end { fill: none; stroke: #FFFFFF; stroke-width: 2.5; }
-    .hero-route .route-end-fill { fill: var(--hero-glow); }
-    .hero-route text { font-family: inherit; font-weight: 800; fill: #FFFFFF; }
-    .hero-route .route-figure { font-size: 34px; letter-spacing: -1.5px; }
-    .hero-route .route-unit { font-size: 15px; font-weight: 700; fill: rgba(255,255,255,0.75); letter-spacing: 0; }
-    .hero-route .route-label { font-size: 13px; font-weight: 700; fill: rgba(255,255,255,0.6); letter-spacing: 0.3px; }
-
-    /* 여정 줄: 어디로 · 몇 분 */
-    .hero-trip {
-      margin-top: 0;
-      display: flex;
-      align-items: baseline;
-      gap: 12px;
-      font-size: 17px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.72);
-      letter-spacing: 0.2px;
-      min-height: 24px;
-    }
-    .hero-trip strong {
-      color: #FFFFFF;
-      font-weight: 800;
-      font-variant-numeric: tabular-nums;
-    }
-    .hero-trip .trip-sep { opacity: 0.45; }
-
-    /* 한 문장 */
-    .hero-title {
-      margin-top: 8px;
-      font-size: 44px;
-      font-weight: 800;
-      line-height: 1.14;
-      letter-spacing: -1.4px;
-      text-wrap: balance;
-      position: relative;
-      z-index: 1;
-    }
-    .hero-desc {
-      margin-top: 10px;
-      font-size: 19px;
-      font-weight: 500;
-      line-height: 1.4;
-      color: rgba(255,255,255,0.78);
-      position: relative;
-      z-index: 1;
-    }
-    .hero-trip { position: relative; z-index: 1; }
-
-    /* 시작 버튼 */
-    .hero-cta {
-      margin-top: 22px;
-      position: relative;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #FFFFFF;
-      color: var(--hero-ink);
-      padding: 0 10px 0 24px;
-      height: 68px;
-      border-radius: 20px;
-      font-size: 21px;
-      font-weight: 800;
-      transition: transform 0.15s ease;
-    }
-    .hero-cta:hover { transform: translateX(2px); }
-    .hero-cta-plane {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      background: var(--hero-ink);
-      color: #FFFFFF;
-    }
-    .cta-left { display: flex; align-items: center; gap: 12px; }
-
-    /* 오른쪽 열 */
-    .bento-right-col {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      min-height: 0;
-    }
-    .info-dual-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-    .info-mini-tile {
-      background: rgba(255,255,255,0.72);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.9);
-      box-shadow: 0 8px 24px -14px rgba(11, 26, 44, 0.25);
-      border-radius: 20px;
-      padding: 18px 20px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      min-height: 118px;
       min-width: 0;
-    }
-    .tile-tint-prep { border-top: 4px solid var(--accent); }
-    .tile-tint-meal { border-top: 4px solid #C2410C; }
-    .mini-tile-label { display: flex; align-items: center; }
-    .mini-text-bold {
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-    }
-    .text-prep { color: var(--accent); }
-    .text-meal { color: #C2410C; }
-    .mini-tile-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-    .mini-tile-focus {
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--ink);
-      letter-spacing: -0.5px;
-      line-height: 1.25;
-      overflow-wrap: anywhere;
-    }
-    .mini-tile-sub {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--muted);
-    }
-
-    /* 오른쪽 큰 카드: 다른 여정으로 가는 길 */
-    .bento-wide-card {
-      flex: 1;
-      min-height: 0;
-      background: rgba(255,255,255,0.72);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.9);
-      box-shadow: 0 8px 24px -14px rgba(11, 26, 44, 0.25);
-      border-radius: 20px;
-      padding: 22px 24px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.15s ease;
-    }
-    .bento-wide-card:hover { border-color: var(--accent); }
-    .bento-wide-card.info {
-      cursor: default;
-      align-items: center;
-      border-left: 4px solid var(--accent);
-    }
-    .bento-wide-card.info:hover { border-color: rgba(255,255,255,0.9); border-left-color: var(--accent); }
-    .bento-wide-card.info .wide-card-title { font-size: 28px; line-height: 1.25; text-wrap: balance; }
-    .wide-card-text { display: flex; flex-direction: column; gap: 6px; position: relative; z-index: 2; min-width: 0; }
-    .wide-card-kicker {
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .wide-card-title {
-      font-size: 26px;
-      font-weight: 800;
-      color: var(--ink);
-      letter-spacing: -0.5px;
-      line-height: 1.2;
-    }
-    .wide-card-desc {
-      font-size: 17px;
-      color: var(--muted);
-      font-weight: 600;
-      line-height: 1.35;
-    }
-    .wide-card-arrow {
-      flex-shrink: 0;
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      border: 1px solid var(--outline);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--accent);
-    }
-    .subject-chips {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 4px;
+      align-items: baseline;
+      column-gap: calc(10 * var(--u));
     }
-    .subject-chip {
-      padding: 6px 12px;
-      border-radius: 12px;
-      background: var(--control);
+    .home-title {
+      font-size: calc(19 * var(--u));
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.4px;
+    }
+    .home-desc {
+      font-size: calc(14 * var(--u));
+      font-weight: 500;
+      line-height: 1.3;
+      color: var(--muted);
+    }
+    .home-tools { display: flex; gap: calc(8 * var(--u)); flex-shrink: 0; }
+    .icon-btn {
+      width: calc(44 * var(--u));
+      height: calc(44 * var(--u));
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--glass);
       color: var(--ink);
-      font-size: 16px;
-      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
     }
-    .subject-chip.pe { background: #E0F2FE; color: #0369A1; }
-    .subject-chip.art { background: #FDF2E9; color: #B45309; }
-    .subject-chip.sci { background: #ECFDF5; color: #047857; }
+    .icon-btn:hover { background: var(--glass-hover); }
+    .icon-btn svg { width: calc(20 * var(--u)); height: calc(20 * var(--u)); }
+
+    .home-grid {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: calc(10 * var(--u));
+    }
+    .home-card {
+      min-width: 0;
+      min-height: 0;
+      background: var(--glass);
+      border: 1px solid var(--line);
+      border-radius: calc(16 * var(--u));
+      padding: calc(12 * var(--u)) calc(14 * var(--u));
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .card-label {
+      font-size: calc(13 * var(--u));
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--muted);
+    }
+    .card-focus {
+      margin-top: calc(6 * var(--u));
+      font-size: calc(18 * var(--u));
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.3px;
+      overflow-wrap: anywhere;
+    }
+    .card-text {
+      margin-top: calc(6 * var(--u));
+      font-size: calc(14 * var(--u));
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    /* 카드의 핵심 단어. 글자 수가 많으면 작아진다 */
+    .card-big {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+      overflow-wrap: anywhere;
+    }
+    .card-big.size-1 { font-size: calc(34 * var(--u)); }
+    .card-big.size-2 { font-size: calc(26 * var(--u)); }
+    .card-big.size-3 { font-size: calc(20 * var(--u)); }
+    .card-big.size-4 { font-size: calc(17 * var(--u)); }
+    .card-big .card-sub { letter-spacing: 0; }
+    .card-ask {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: calc(15 * var(--u));
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .card-sub {
+      margin-top: calc(2 * var(--u));
+      font-size: calc(13 * var(--u));
+      font-weight: 500;
+      line-height: 1.3;
+      color: var(--muted);
+    }
+    .card-btn {
+      margin-top: auto;
+      width: 100%;
+      min-height: calc(44 * var(--u));
+      padding: 0 calc(8 * var(--u));
+      border: none;
+      border-radius: calc(12 * var(--u));
+      background: var(--lilac);
+      color: var(--on-lilac);
+      font-size: calc(14 * var(--u));
+      font-weight: 800;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .card-btn:hover { background: var(--lilac-hover); }
+    .card-btn.quiet { background: var(--glass-hover); color: var(--ink); }
+    .card-btn.quiet:hover { background: rgba(255, 255, 255, 0.2); }
+
+    /* 시작 카드. 여정에 따라 색이 바뀐다 */
+    .home-card.start {
+      background: linear-gradient(150deg, #4B6BE8 0%, #7D59D8 58%, #B85BB4 100%);
+      border-color: rgba(255, 255, 255, 0.18);
+      cursor: pointer;
+    }
+    .home-card.start.afternoon { background: linear-gradient(150deg, #E4835A 0%, #C2527F 58%, #7A4BB5 100%); }
+    .home-card.start.weekend { background: linear-gradient(150deg, #7C7FE0 0%, #6A55C8 58%, #4A3FA0 100%); }
+    .home-card.start .card-label { color: rgba(255, 255, 255, 0.85); }
+    .start-arrow {
+      margin-top: auto;
+      align-self: flex-end;
+      width: calc(36 * var(--u));
+      height: calc(36 * var(--u));
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.92);
+      color: #3A2F80;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .start-arrow svg { width: calc(18 * var(--u)); height: calc(18 * var(--u)); }
+
+    /* 어디로 카드: 네이버앱의 예약 카드처럼 왼쪽 세로줄 */
+    .place-mark {
+      margin-top: calc(6 * var(--u));
+      padding-left: calc(8 * var(--u));
+      border-left: calc(2 * var(--u)) solid #5FD6B4;
+    }
+    .place-mark .card-text {
+      margin-top: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .subject-grid {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-content: center;
+      justify-items: center;
+      row-gap: calc(8 * var(--u));
+      font-size: calc(22 * var(--u));
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+    }
+
+    /* 좁고 긴 창에서는 두 줄로 놓고 내려서 본다 */
+    @container (max-width: 520px) {
+      .home-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: none;
+        grid-auto-rows: calc(130 * var(--u));
+        overflow-y: auto;
+      }
+      .settings-grid { grid-template-columns: minmax(0, 1fr); overflow-y: auto; }
+      .place-list { grid-template-columns: minmax(0, 1fr); }
+    }
 
     /* Dialogue Screen */
     .dialogue-wrap {
       flex: 1;
+      min-height: 0;
       display: flex;
       flex-direction: column;
-      height: 100%;
     }
     .dialogue-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
+      gap: calc(8 * var(--u));
+      margin-bottom: calc(10 * var(--u));
+    }
+    .top-label {
+      font-size: calc(14 * var(--u));
+      font-weight: 700;
+      color: var(--muted);
     }
     .back-btn {
-      min-height: 48px;
-      padding: 8px 22px;
-      border-radius: 16px;
-      background: var(--control);
-      border: 1px solid var(--outline);
+      min-height: calc(44 * var(--u));
+      padding: 0 calc(16 * var(--u));
+      border-radius: calc(14 * var(--u));
+      background: var(--glass);
+      border: 1px solid var(--line);
       color: var(--ink);
-      font-size: 17px;
+      font-size: calc(14 * var(--u));
       font-weight: 700;
       cursor: pointer;
     }
-    .back-btn:hover { background: var(--control-hover); }
+    .back-btn:hover { background: var(--glass-hover); }
 
     .dialogue-card {
-      background: var(--paper);
-      border: 1px solid var(--outline);
-      border-radius: 32px;
-      padding: 40px 48px;
+      background: var(--glass);
+      border: 1px solid var(--line);
+      border-radius: calc(18 * var(--u));
+      padding: calc(14 * var(--u)) calc(20 * var(--u));
       flex: 1;
+      min-height: 0;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
       text-align: center;
-      box-shadow: 0 6px 20px rgba(28, 46, 42, 0.05);
     }
     .card-center {
       flex: 1;
+      min-height: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -524,122 +428,110 @@
 
     /* Dialogue Ambient Orb */
     .dialogue-orb {
-      width: 96px;
-      height: 96px;
+      width: calc(44 * var(--u));
+      height: calc(44 * var(--u));
+      flex-shrink: 0;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #00B4D8 0%, #0077B6 50%, #04244B 100%);
-      box-shadow: 0 0 35px rgba(0, 180, 216, 0.45), inset 0 0 14px rgba(255,255,255,0.25);
+      background: radial-gradient(circle at 35% 35%, #B3A6F5 0%, #7D59D8 55%, #3A2F80 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 20px;
+      margin-bottom: calc(10 * var(--u));
     }
 
     /* Voice Visualizer Wave */
     .voice-visualizer {
       display: flex;
-      gap: 6px;
+      gap: calc(3 * var(--u));
       align-items: center;
-      height: 32px;
-      margin-bottom: 24px;
     }
     .v-bar {
-      width: 4px;
-      height: 12px;
-      background: var(--accent);
-      border-radius: 4px;
-      transform: scaleY(0.8);
-      opacity: 0.9;
+      width: calc(2.5 * var(--u));
+      height: calc(7 * var(--u));
+      background: #FFFFFF;
+      border-radius: calc(2 * var(--u));
     }
-    .v-bar:nth-child(2) { animation-delay: 0.15s; height: 26px; }
-    .v-bar:nth-child(3) { animation-delay: 0.3s; height: 32px; }
-    .v-bar:nth-child(4) { animation-delay: 0.45s; height: 20px; }
-    .v-bar:nth-child(5) { animation-delay: 0.6s; height: 14px; }
+    .v-bar:nth-child(2) { height: calc(13 * var(--u)); }
+    .v-bar:nth-child(3) { height: calc(17 * var(--u)); }
+    .v-bar:nth-child(4) { height: calc(11 * var(--u)); }
 
     .main-question {
-      font-size: 38px;
+      font-size: calc(22 * var(--u));
       font-weight: 800;
-      color: var(--ink);
       line-height: 1.3;
-      max-width: 780px;
+      letter-spacing: -0.4px;
+      max-width: 90%;
     }
     .heard-bubble {
-      margin-top: 16px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-size: 16px;
+      margin-top: calc(8 * var(--u));
+      background: var(--glass-hover);
+      font-size: calc(14 * var(--u));
       font-weight: 700;
-      padding: 8px 20px;
-      border-radius: 16px;
+      padding: calc(4 * var(--u)) calc(14 * var(--u));
+      border-radius: calc(12 * var(--u));
       display: inline-block;
     }
+    .heard-bubble[hidden] { display: none; }
 
     /* Choice Chips */
     .options-row {
       display: flex;
-      gap: 14px;
+      gap: calc(10 * var(--u));
       width: 100%;
-      margin-top: 20px;
+      margin-top: calc(10 * var(--u));
       justify-content: center;
     }
     .choice-chip {
       flex: 1;
-      max-width: 240px;
-      height: 60px;
-      background: var(--control);
-      border: 1px solid var(--outline);
-      border-radius: 20px;
-      font-size: 18px;
+      max-width: calc(180 * var(--u));
+      min-height: calc(44 * var(--u));
+      background: var(--glass);
+      border: 1px solid var(--line);
+      border-radius: calc(12 * var(--u));
+      font-size: calc(15 * var(--u));
       font-weight: 700;
       color: var(--ink);
       cursor: pointer;
-      transition: all 0.15s ease;
     }
-    .choice-chip:hover {
-      background: var(--accent);
-      color: #FFFFFF;
-      border-color: var(--accent);
+    .choice-chip:hover,
+    .choice-chip[aria-pressed="true"] {
+      background: var(--lilac);
+      color: var(--on-lilac);
+      border-color: var(--lilac);
     }
 
     /* Primary Bottom Action */
     .bottom-bar {
-      margin-top: 16px;
+      margin-top: calc(10 * var(--u));
       display: flex;
       justify-content: center;
-      gap: 14px;
+      gap: calc(10 * var(--u));
     }
-    .primary-btn.secondary {
-      width: 200px;
-      background: var(--control);
-      color: var(--ink);
-      box-shadow: none;
-    }
-    .primary-btn.secondary:hover { background: var(--control-hover); }
     .primary-btn {
-      width: 280px;
-      height: 60px;
-      background: var(--accent);
-      color: #FFFFFF;
+      width: calc(190 * var(--u));
+      height: calc(44 * var(--u));
+      background: var(--lilac);
+      color: var(--on-lilac);
       border: none;
-      border-radius: 20px;
-      font-size: 19px;
-      font-weight: 700;
+      border-radius: calc(12 * var(--u));
+      font-size: calc(15 * var(--u));
+      font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 4px 16px rgba(0, 77, 160, 0.28);
     }
-    .primary-btn:hover { background: var(--accent-hover); }
+    .primary-btn:hover { background: var(--lilac-hover); }
+    .primary-btn.secondary {
+      width: calc(130 * var(--u));
+      background: var(--glass-hover);
+      color: var(--ink);
+    }
 
     /* ========================================================
        시그니처 인트로 스플래시 애니메이션 (Signature Splash Intro)
        ======================================================== */
     .splash-overlay {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 28px;
-      background: linear-gradient(145deg, #07172C 0%, #0E294E 50%, #153C70 100%);
+      inset: 0;
+      background: linear-gradient(170deg, var(--bg-top) 0%, var(--bg-bottom) 72%);
       z-index: 1000;
       display: flex;
       flex-direction: column;
@@ -648,22 +540,7 @@
       overflow: hidden;
       opacity: 1;
       visibility: visible;
-      box-shadow: 0 14px 34px rgba(7, 23, 44, 0.32);
-      transition: 
-        top 0.72s cubic-bezier(0.22, 1, 0.36, 1),
-        left 0.72s cubic-bezier(0.22, 1, 0.36, 1),
-        width 0.72s cubic-bezier(0.22, 1, 0.36, 1),
-        height 0.72s cubic-bezier(0.22, 1, 0.36, 1),
-        border-radius 0.72s cubic-bezier(0.22, 1, 0.36, 1),
-        box-shadow 0.72s cubic-bezier(0.22, 1, 0.36, 1),
-        opacity 0.22s ease,
-        visibility 0.22s ease;
       cursor: pointer;
-    }
-    .splash-overlay.fade-out {
-      opacity: 0;
-      pointer-events: none;
-      visibility: hidden;
     }
 
     /* Ambient Pulsing Aura behind the logo */
@@ -672,23 +549,13 @@
       width: 520px;
       height: 520px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(0, 180, 216, 0.28) 0%, rgba(0, 77, 160, 0.14) 42%, transparent 70%);
+      background: radial-gradient(circle, rgba(179, 166, 245, 0.28) 0%, rgba(125, 89, 216, 0.14) 42%, transparent 70%);
       filter: blur(36px);
       transform: scale(0.9);
       pointer-events: none;
     }
 
-    .splash-bg-decor {
-      position: absolute;
-      inset: 0;
-      background-image: 
-        radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.06) 1.2px, transparent 1.2px);
-      background-size: 30px 30px;
-      opacity: 0.5;
-      pointer-events: none;
-    }
-
-    /* Brand Container that will FLIP/glide to the top-left */
+    /* Brand Container that glides to the logo in the header */
     .splash-brand-container {
       position: relative;
       display: flex;
@@ -697,14 +564,12 @@
       justify-content: center;
       z-index: 2;
       transform-origin: center center;
-      transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
     }
 
     .splash-logo-svg {
-      width: 380px;
-      height: 130px;
+      width: calc(240 * var(--u));
+      height: calc(82 * var(--u));
       overflow: visible;
-      filter: drop-shadow(0 12px 32px rgba(0, 180, 216, 0.42));
     }
 
     .splash-ribbon-path {
@@ -739,7 +604,41 @@
       100% { r: 24px; stroke-width: 0.4px; opacity: 0; }
     }
 
-    /* School Settings */
+    /* School Settings: 왼쪽 학교 찾기, 오른쪽 설정 목록 */
+    .settings-grid {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      gap: calc(10 * var(--u));
+    }
+    .settings-grid .main-question { font-size: calc(18 * var(--u)); }
+    .settings-side {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: calc(6 * var(--u));
+      overflow-y: auto;
+    }
+    .setting-row {
+      min-height: calc(44 * var(--u));
+      padding: calc(4 * var(--u)) calc(14 * var(--u));
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: calc(8 * var(--u));
+      background: var(--glass);
+      border: 1px solid var(--line);
+      border-radius: calc(12 * var(--u));
+      color: var(--ink);
+      font-size: calc(14 * var(--u));
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+    }
+    .setting-row:hover { background: var(--glass-hover); }
+    .setting-state { flex-shrink: 0; color: var(--lilac); }
     .settings-center {
       flex: 1;
       min-height: 0;
@@ -751,103 +650,75 @@
     }
     .school-search-row {
       display: flex;
-      gap: 10px;
+      gap: calc(8 * var(--u));
       width: 100%;
-      max-width: 520px;
-      margin-top: 14px;
+      margin-top: calc(10 * var(--u));
     }
     .school-input {
       flex: 1;
       min-width: 0;
-      height: 52px;
-      padding: 0 18px;
-      border-radius: 16px;
-      border: 1px solid var(--outline);
-      background: var(--surface);
+      height: calc(44 * var(--u));
+      padding: 0 calc(14 * var(--u));
+      border-radius: calc(12 * var(--u));
+      border: 1px solid var(--line);
+      background: rgba(0, 0, 0, 0.18);
       color: var(--ink);
       font-family: inherit;
-      font-size: 18px;
+      font-size: calc(15 * var(--u));
       font-weight: 600;
       user-select: text;
     }
+    .school-input::placeholder { color: var(--muted); }
     .settings-message {
-      margin-top: 12px;
-      font-size: 17px;
+      margin-top: calc(8 * var(--u));
+      font-size: calc(14 * var(--u));
       font-weight: 600;
       color: var(--muted);
     }
     .settings-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: calc(8 * var(--u));
       justify-content: center;
       width: 100%;
       min-height: 0;
-      margin-top: 14px;
+      margin-top: calc(10 * var(--u));
       overflow-y: auto;
     }
     .settings-list .choice-chip {
       flex: 0 1 auto;
-      min-width: 72px;
+      min-width: calc(64 * var(--u));
       max-width: none;
-      padding: 0 18px;
+      padding: 0 calc(14 * var(--u));
     }
-    .school-search-row .choice-chip {
-      flex: 0 0 96px;
-      height: 52px;
+    .school-search-row .choice-chip { flex: 0 0 calc(72 * var(--u)); }
+
+    /* 가 볼 만한 곳 */
+    .places-body {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
     }
-
-    /* 작은 앱 창(Pleos 분할 화면 등): 잘리는 곳 없이 한 화면에 들어오도록 줄인다 */
-    @media (max-height: 540px), (max-width: 860px) {
-      .stage-container,
-      body.in-app .stage-container {
-        min-height: 0;
-        padding: 14px 20px 30px;
-      }
-      .demo-panel,
-      body.in-app .demo-panel { right: 20px; }
-      .drive-screen { gap: 18px; padding: 24px 28px 36px; }
-      .drive-sentence { font-size: 28px; }
-      .drive-btn { height: 60px; min-width: 170px; font-size: 20px; }
-      .back-btn, .school-setting-btn { min-height: 44px; }
-      .school-setting-btn { padding: 6px 14px; font-size: 16px; }
-
-      .bento-stage { gap: 12px; }
-      .bento-hero { padding: 18px 22px 20px; border-radius: 22px; }
-      .hero-title { font-size: 27px; letter-spacing: -0.8px; }
-      .hero-desc { font-size: 15px; }
-      .hero-route .route-figure { font-size: 26px; }
-      .hero-route .route-label { font-size: 12px; }
-      .subject-chip { font-size: 14px; padding: 4px 10px; }
-      .hero-trip { font-size: 15px; }
-      .hero-title { margin-top: 6px; }
-      .hero-desc { margin-top: 6px; }
-      .hero-cta { height: 54px; margin-top: 16px; font-size: 18px; padding: 0 6px 0 18px; }
-      .hero-cta-plane { width: 40px; height: 40px; }
-      .cta-left { gap: 8px; }
-
-      .bento-right-col { gap: 10px; }
-      .info-dual-row { gap: 10px; }
-      .info-mini-tile { padding: 12px 14px 12px; min-height: 92px; gap: 4px; }
-      .mini-text-bold { font-size: 13px; }
-      .mini-tile-focus { font-size: 20px; }
-      .mini-tile-sub { font-size: 15px; }
-      .bento-wide-card { padding: 14px 16px; }
-      .wide-card-title { font-size: 22px; }
-      .wide-card-desc { font-size: 15px; }
-      .wide-card-arrow { width: 38px; height: 38px; }
-
-      .dialogue-top { margin-bottom: 8px; }
-      .back-btn { padding: 6px 16px; }
-      .dialogue-card { padding: 12px 20px; border-radius: 24px; }
-      .dialogue-orb { width: 52px; height: 52px; margin-bottom: 8px; }
-      .main-question { font-size: 26px; }
-      .heard-bubble { margin-top: 6px; padding: 4px 14px; }
-      .options-row { margin-top: 10px; }
-      .choice-chip { height: 48px; font-size: 17px; }
-      .bottom-bar { margin-top: 8px; }
-      .primary-btn { height: 48px; font-size: 17px; }
+    .places-body .settings-list { justify-content: flex-start; margin-top: 0; flex-shrink: 0; }
+    .place-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-rows: min-content;
+      gap: calc(8 * var(--u));
+      flex: 1;
+      min-height: 0;
+      margin-top: calc(10 * var(--u));
+      overflow-y: auto;
     }
+    .place-row {
+      padding: calc(10 * var(--u)) calc(14 * var(--u));
+      border-radius: calc(12 * var(--u));
+      background: var(--glass);
+      border: 1px solid var(--line);
+    }
+    .place-name { font-size: calc(15 * var(--u)); font-weight: 700; line-height: 1.3; }
+    .place-address { margin-top: calc(2 * var(--u)); font-size: calc(13 * var(--u)); color: var(--muted); }
 
   </style>
 </head>
@@ -858,7 +729,6 @@
 
     <!-- Signature Splash Intro Overlay -->
     <div id="splashOverlay" class="splash-overlay" onclick="skipSplashIntro()">
-      <div class="splash-bg-decor"></div>
       <div class="splash-aura"></div>
       
       <div id="splashBrandContainer" class="splash-brand-container">
@@ -918,27 +788,62 @@
     <!-- Demo Panel: 시연용 주행 상태와 남은 시간 -->
     <div class="demo-panel">
       <button id="demoDrive" onclick="toggleDrivingDemo()">주행</button>
-      <button id="demoEtaLong" onclick="setEtaDemo('long')">8분 전</button>
-      <button id="demoEtaShort" onclick="setEtaDemo('short')">2분 전</button>
+      <button id="demoEtaLong" onclick="setEtaDemo(8)">8분 전</button>
+      <button id="demoEtaMid" onclick="setEtaDemo(4)">4분 전</button>
+      <button id="demoEtaShort" onclick="setEtaDemo(2)">2분 전</button>
       <button id="demoDest" onclick="cycleDestDemo()">목적지</button>
+      <button onclick="window.onDoorOpened()">문 열림</button>
     </div>
 
   </div>
 
   <audio id="audioPlayer" preload="none"></audio>
 
+  <script src="dait-rules.js"></script>
+  <script src="dait-journey.js"></script>
   <script>
     // State
     const voice = 'nika';
     let currentMode = null; // 'morning' | 'afternoon' | 'tour' | null
     let stage = '';
     let heard = '';
-    let isFinished = false;
-    let currentClip = '';
     let isDrivingMode = false;
     let currentChoices = [];
-    let etaState = 'unknown'; // 'unknown' | 'long' | 'short'
+    let demoMinutes = null; // 시연 조작으로 고른 남은 분
+    let speechPhase = 'idle'; // 'idle' | 'speaking' | 'listening'
+    let unclearCount = 0;
+    let listenSince = 0; // 이번 질문을 듣기 시작한 때
+    let speechSeq = 0; // 지난 말에 대한 늦은 알림을 가려내는 순번
+    let previewQueue = []; // 브라우저 미리보기에서 이어 틀 음원
+    let speechPaused = false; // 길 안내나 통화가 소리를 가져간 동안
+    let tripMuted = false; // 이번 대화는 소리를 내지 않음
+    let pendingIntro = []; // 첫 질문 앞에 붙일 말(남은 시간, 오늘 시간표)
+    let micBroken = false; // 이번 대화에서 마이크를 열지 못함
+    let noMicTimer = null;
+    let doorTimer = null;
+    let closeTimer = null;
+    let routeStartedAt = 0;
+    let lastRefreshDay = '';
+    let tripForDoor = null; // 내릴 때 한마디: 대화를 시작한 여정. 달렸는지와 주차 시각을 기억한다.
+    let currentRule = null; // 이번 대화에 쓰는 교사 규칙
+    let ruleMissing = false; // 규칙 대화에서 준비물을 못 챙겼다고 답함
+    let armed = null; // 출발하면 들려주기: { mode, timer }
+    let pendingStart = null; // 마이크 허락을 기다리는 동작
+    let micAsked = false;
+    let hasArrived = false;
+    let journeyActive = false;
     const MEMORY_KEY = 'dait.morningMemory';
+    const VOICE_KEY = 'dait.voiceAnswers';
+    const QUESTIONS_KEY = 'dait.questions';
+    const ROUTE_KEY = 'dait.routePlaces';
+    const HOME_CLEARED_KEY = 'dait.homeCleared'; // 보호자가 지운 집을 내비 즐겨찾기로 되살리지 않는다
+    const ARM_MS = 30 * 60 * 1000;
+    const ARRIVAL_CLOSE_MS = 4000;
+    const NO_MIC_WAIT_MS = 8000;
+    const LISTEN_PATIENCE_MS = 12000;
+    const DOOR_WINDOW_MS = 5 * 60 * 1000;
+    const TRIP_CAP_MS = 2 * 60 * 60 * 1000;
+    const ROUTE_SWAP_MS = 3000;
 
     // DAIT 공식 확정 캘리그래피 로고 (시안 2 커넥티드 리본 + i Dot)
     function getDaitLogoHtml() {
@@ -960,117 +865,12 @@
       `;
     }
 
-    // Dialogue Scenarios
-    const morningFlow = {
-      PREP: {
-        clip: 'talk_prepare',
-        title: '체육복 챙겼나요?',
-        choices: ['다 챙겼어', '깜빡했어', '가방에 있어']
-      },
-      SUBJECT: {
-        clip: 'talk_ready',
-        title: '어떤 수업이 기대돼요?',
-        choices: ['체육', '과학', '독서']
-      },
-      SUBJECT_MISSING: {
-        clip: 'talk_missing',
-        title: '어떤 수업이 기대돼요?',
-        choices: ['체육', '과학', '독서']
-      },
-      SUBJECT_TODAY: {
-        clip: 'morning_question',
-        title: '어떤 수업이 기대돼요?',
-        choices: ['체육', '과학', '독서']
-      },
-      SCIENCE_DETAIL: {
-        clip: 'school_science',
-        title: '무엇이 궁금해요?',
-        choices: ['우주가 궁금해', '실험이 기대돼', '다녀올게요']
-      },
-      READING_DETAIL: {
-        clip: 'school_reading',
-        title: '기억나는 이야기 있어?',
-        choices: ['주인공이 멋졌어', '마법 이야기', '다녀올게요']
-      },
-      ETA_SHORT: {
-        clip: 'arrival_bag',
-        title: '가방과 준비물을 챙겨요',
-        choices: []
-      },
-      DONE: {
-        clip: 'arrival_goodbye',
-        title: '잘 다녀와요!',
-        choices: []
-      }
-    };
-
-    const afternoonFlow = {
-      AFTER_EVENT: {
-        clip: 'afternoon_welcome',
-        title: '오늘은 어땠어요?',
-        choices: ['친구랑 피구 했어', '그림 그렸어', '쉬고 싶어']
-      },
-      AFTER_PE: {
-        clip: 'afternoon_pe',
-        title: '아침에 기대한 체육, 어땠어요?',
-        choices: ['재밌었어', '시간표랑 달랐어', '쉬고 싶어']
-      },
-      AFTER_SCIENCE: {
-        clip: 'afternoon_welcome',
-        title: '아침에 궁금해한 과학, 어땠어요?',
-        choices: ['재밌었어', '시간표랑 달랐어', '쉬고 싶어']
-      },
-      AFTER_DETAIL: {
-        clip: 'listen_ack',
-        title: '조금 더 들려줄래요?',
-        choices: ['재밌었어', '시간표랑 달랐어', '가족에게 물어볼래']
-      },
-      AFTER_CHANGED: {
-        clip: 'afternoon_changed',
-        title: '시간표와 달랐군요',
-        choices: ['만들기 했어', '책 읽었어', '가족에게 물어볼래']
-      },
-      PARENT_BRIDGE: {
-        clip: 'listen_parent',
-        title: '가족의 하루도 들어볼까요?',
-        choices: ['오늘도 수고했어']
-      },
-      REST: {
-        clip: 'rest_tired',
-        title: '편하게 쉬어요',
-        choices: []
-      },
-      ETA_SHORT: {
-        clip: 'eta_short',
-        title: '곧 도착해요',
-        choices: []
-      },
-      DONE: {
-        clip: 'arrival_home',
-        title: '집에 도착했어요!',
-        choices: []
-      }
-    };
-
-    const tourFlow = {
-      STEP1: {
-        clip: 'school_science',
-        title: '오늘 탐방지에서 무엇이 제일 기대돼요?',
-        choices: ['역사 이야기', '과학 체험', '풍경 구경']
-      },
-      STEP2: {
-        clip: 'school_reading',
-        title: '도착 전 알고 싶은 퀴즈가 있나요?',
-        choices: ['퀴즈 내줘', '설명해 줘', '음악 들을래']
-      },
-      DONE: {
-        clip: 'arrival_goodbye',
-        title: '즐겁게 탐방하고 와요!',
-        choices: []
-      }
-    };
-
     function render() {
+      renderStage();
+      syncJourney();
+    }
+
+    function renderStage() {
       const stageArea = document.getElementById('stageArea');
 
       // 1. Home Screen (단일 완성형 스마트 벤토)
@@ -1085,93 +885,137 @@
         return;
       }
 
-      // 3. Dialogue Flow
+      // 3. Places to visit
+      if (currentMode === 'places') {
+        renderPlaces(stageArea);
+        return;
+      }
+
+      // 4. Dialogue Flow
       renderDialogueFlow(stageArea);
     }
 
-    // --- 스마트 벤토: 완성형 레이아웃 ---
+    // --- 첫 화면: 인사 두 줄과 작은 카드 여섯 장 ---
     function renderHome(container) {
       const trip = currentTrip();
       const info = homeInfo(trip);
       const isMorning = trip.mode === 'morning';
       const other = isMorning ? 'afternoon' : 'morning';
-      const heroClass = trip.kind === 'weekend' ? 'weekend' : (isMorning ? '' : 'afternoon');
+      const startClass = trip.kind === 'weekend' ? ' weekend' : (isMorning ? '' : ' afternoon');
+      const startLabel = !school ? '학교 등록하기'
+        : trip.kind === 'weekend' ? `${(schoolPlan() || { label: '다음 수업일' }).label} 준비 듣기`
+        : `${isMorning ? '등교' : '하교'} 대화 시작하기`;
+      const now = new Date();
       container.innerHTML = `
-        <div class="bento-stage">
-          <div class="bento-hero ${heroClass}" onclick="startFlow('${trip.mode}')">
-            <div class="hero-top-meta">
-              ${getDaitLogoHtml()}
-              <button class="school-setting-btn" onclick="event.stopPropagation(); openSettings();">학교 설정</button>
-            </div>
+        <div class="home-top">
+          ${getDaitLogoHtml()}
+          <div class="home-greeting">
+            <div class="home-title">${escapeHtml(info.title)}</div>
+            <div class="home-desc">${escapeHtml(info.desc)}</div>
+          </div>
+          <div class="home-tools">
+            <button class="icon-btn" aria-label="가 볼 만한 곳" onclick="openPlaces()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+            </button>
+            <button class="icon-btn" aria-label="학교 설정" onclick="openSettings()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.82 1.17V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-2.82-1.17l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0-1.17-2.82H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.17-2.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 2.82-1.17V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 2.82 1.17l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0 1.17 2.82H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1"/></svg>
+            </button>
+          </div>
+        </div>
 
-            <div class="hero-figure">${routeSvg(trip)}</div>
-            <div class="hero-trip">${trip.where ? `<strong>${escapeHtml(trip.where)}</strong>` : ''}${trip.where && trip.minutes !== null ? '<span class="trip-sep">·</span>' : ''}${trip.minutes !== null ? `<strong>${trip.minutes}분</strong><span>남음</span>` : ''}${!trip.where && trip.minutes === null ? `<span>${escapeHtml(trip.when)}</span>` : ''}</div>
-            <div class="hero-title">${escapeHtml(info.title)}</div>
-            <div class="hero-desc">${escapeHtml(info.desc)}</div>
-
-            <div class="hero-cta">
-              <div class="cta-left"><span>${isMorning ? '등교' : '하교'} 대화 시작하기</span></div>
-              <div class="hero-cta-plane">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
-              </div>
+        <div class="home-grid">
+          <div class="home-card start${startClass}" onclick="${school ? `startFlow('${trip.mode}')` : 'openSettings()'}">
+            <div class="card-label">${now.getMonth() + 1}월 ${now.getDate()}일 ${WEEKDAYS[now.getDay()]}</div>
+            <div class="card-focus">${escapeHtml(startLabel)}</div>
+            <div class="start-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
             </div>
           </div>
 
-          <div class="bento-right-col">
-            <div class="info-dual-row">
-              <div class="info-mini-tile tile-tint-prep">
-                <div class="mini-tile-label"><span class="mini-text-bold text-prep">${escapeHtml(info.prepLabel)}</span></div>
-                <div class="mini-tile-body">
-                  <div class="mini-tile-focus">${escapeHtml(info.prep)}</div>
-                  ${info.prepSub ? `<div class="mini-tile-sub">${escapeHtml(info.prepSub)}</div>` : ''}
-                </div>
-              </div>
-              <div class="info-mini-tile tile-tint-meal">
-                <div class="mini-tile-label"><span class="mini-text-bold text-meal">${escapeHtml(info.mealLabel)}</span></div>
-                <div class="mini-tile-body">
-                  <div class="mini-tile-focus">${escapeHtml(info.meal)}</div>
-                  ${info.mealSub ? `<div class="mini-tile-sub">${escapeHtml(info.mealSub)}</div>` : ''}
-                </div>
-              </div>
-            </div>
+          ${tripCardHtml(trip)}
 
-            <div class="bento-wide-card${trip.known ? ' info' : ''}"${trip.known ? '' : ` onclick="startFlow('${other}')"`}>
-              <div class="wide-card-text">
-                <div class="wide-card-kicker">${info.otherKicker}</div>
-                ${info.otherChips ? `<div class="subject-chips">${info.otherChips.map(c => `<span class="subject-chip${chipClass(c)}">${escapeHtml(c)}</span>`).join('')}</div>` : ''}
-                <div class="wide-card-title">${escapeHtml(info.otherTitle)}</div>
-                ${info.otherDesc ? `<div class="wide-card-desc">${escapeHtml(info.otherDesc)}</div>` : ''}
-              </div>
-              ${trip.known ? '' : `<div class="wide-card-arrow">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
-              </div>`}
-            </div>
+          <div class="home-card">
+            <div class="card-label">${escapeHtml(info.prepLabel)}</div>
+            ${bigWordHtml(info.prep, info.prepSub)}
+          </div>
+
+          <div class="home-card">
+            <div class="card-label">${escapeHtml(info.scheduleLabel)}</div>
+            ${info.subjects.length > 0
+              ? `<div class="subject-grid">${[...new Set(info.subjects.map(shortSubject))].map(c => `<span>${escapeHtml(c)}</span>`).join('')}</div>`
+              : bigWordHtml(school ? '확인 필요' : '등록 필요')}
+          </div>
+
+          <div class="home-card">
+            <div class="card-label">${escapeHtml(info.mealLabel)}</div>
+            ${bigWordHtml(info.meal)}
+          </div>
+
+          <div class="home-card">
+            <div class="card-label">오늘의 질문</div>
+            <div class="card-ask">${escapeHtml(info.question)}</div>
+            ${trip.known || Journey.start(other, { ...journeyContext(), rule: ruleFor(other) }) === 'SILENT' ? '' : `<button class="card-btn quiet" onclick="startFlow('${other}')">${other === 'morning' ? '등교' : '하교'} 대화</button>`}
           </div>
         </div>
       `;
-      placeRouteDot();
+    }
+
+    function bigWordHtml(word, sub) {
+      const size = word.length <= 4 ? 1 : word.length <= 6 ? 2 : word.length <= 10 ? 3 : 4;
+      return `<div class="card-big size-${size}"><span>${escapeHtml(word)}</span>${sub ? `<div class="card-sub">${escapeHtml(sub)}</div>` : ''}</div>`;
+    }
+
+    // 시간표 카드에는 두 글자로 줄여 넣는다. 한 글자로 줄이면 국수, 도미처럼 다른 낱말로 읽힌다.
+    function shortSubject(name) {
+      return name.split(/[·\s]/)[0].slice(0, 2);
+    }
+
+    // 어디로 카드. 네이버앱의 예약 카드처럼 장소 한 줄, 시간 한 줄, 버튼 하나.
+    function tripCardHtml(trip) {
+      if (!school) {
+        return `<div class="home-card">
+          <div class="card-label">학교</div>
+          <div class="card-focus">등록 전</div>
+          <button class="card-btn" onclick="startFlow('${trip.mode}')">예시로 듣기</button>
+        </div>`;
+      }
+      if (trip.kind === 'weekend') {
+        return `<div class="home-card">
+          <div class="card-label">쉬는 날</div>
+          <div class="card-focus">가 볼 만한 곳</div>
+          <button class="card-btn" onclick="openPlaces()">찾아보기</button>
+        </div>`;
+      }
+      const place = trip.mode === 'morning' ? school.name : '집';
+      return `<div class="home-card">
+        <div class="card-label">어디로</div>
+        <div class="place-mark">
+          <div class="card-text">${escapeHtml(place)}</div>
+          ${trip.minutes !== null ? `<div class="card-sub">${trip.minutes}분 남음</div>` : ''}
+        </div>
+        <button class="card-btn${armed ? ' quiet' : ''}" onclick="toggleArm('${trip.mode}')">${armLabel(trip)}</button>
+      </div>`;
+    }
+
+    function armLabel(trip) {
+      if (armed) return '출발하면 들려줄게요';
+      if (routePlaceFor(trip.mode) && !naviInfo) return trip.mode === 'morning' ? '학교로 안내' : '집으로 안내';
+      return '출발하면 듣기';
     }
 
     function renderDialogueFlow(container) {
-      let flow, modeName;
-      if (currentMode === 'morning') {
-        flow = morningFlow;
-        modeName = '등교';
-      } else if (currentMode === 'afternoon') {
-        flow = afternoonFlow;
-        modeName = '하교';
-      } else {
-        flow = tourFlow;
-        modeName = '주말탐방';
-      }
-
-      const data = flow[stage] || flow.DONE;
-
-      playAudio(data.clip);
+      const flow = Journey.flows[currentMode];
+      const modeName = currentMode === 'morning' ? '등교' : '하교';
+      const data = stage === 'NEXT_DAY' ? Journey.nextDayStep(schoolPlan(), currentRule, DAIT_RULES)
+        : stage.startsWith('RULE') ? Journey.ruleStep(stage, currentRule, ruleMissing, DAIT_RULES.extras.rule_missing)
+        : stage === 'AFTER_SUBJECT' ? Journey.subjectStep((readStored(MEMORY_KEY) || {}).subject || '', DAIT_RULES)
+        : (flow[stage] || flow.DONE);
 
       const subjectStages = ['SUBJECT', 'SUBJECT_MISSING', 'SUBJECT_TODAY'];
       const todayChoices = currentMode === 'morning' && subjectStages.includes(stage) ? subjectChoices() : null;
       currentChoices = todayChoices || data.choices || [];
+
+      speakStage(data.clips || [data.clip]);
       updateDriveScreen(data.title);
 
       let optionsHtml = '';
@@ -1190,22 +1034,22 @@
         <div class="dialogue-wrap">
           <div class="dialogue-top">
             <button class="back-btn" onclick="goHome()">처음으로</button>
-            <span style="font-size:17px; font-weight:700; color:var(--muted);">${modeName}</span>
+            <span class="top-label">${modeName}</span>
           </div>
 
           <div class="dialogue-card">
             <div class="card-center">
               <div class="dialogue-orb">
-                <div class="voice-visualizer" style="height:26px; margin:0;">
-                  <div class="v-bar" style="background:#fff;"></div>
-                  <div class="v-bar" style="background:#fff;"></div>
-                  <div class="v-bar" style="background:#fff;"></div>
-                  <div class="v-bar" style="background:#fff;"></div>
-                  <div class="v-bar" style="background:#fff;"></div>
+                <div class="voice-visualizer">
+                  <div class="v-bar"></div>
+                  <div class="v-bar"></div>
+                  <div class="v-bar"></div>
+                  <div class="v-bar"></div>
+                  <div class="v-bar"></div>
                 </div>
               </div>
-              <div class="main-question">${data.title}</div>
-              ${heard ? `<div class="heard-bubble">“${escapeHtml(heard)}”</div>` : ''}
+              <div class="main-question">${escapeHtml(data.title)}</div>
+              <div id="heardLine" class="heard-bubble"${heard || speechPhase === 'listening' ? '' : ' hidden'}>${escapeHtml(heardLineText())}</div>
             </div>
 
             ${optionsHtml}
@@ -1221,95 +1065,85 @@
       `;
     }
 
+    function journeyContext() {
+      const plan = schoolPlan();
+      const memory = readStored(MEMORY_KEY);
+      return {
+        tier: Journey.tierFor(remainMinutes()),
+        driving: isDrivingMode,
+        school: !!school,
+        hasPe: !!(plan && plan.hasPe),
+        rule: currentRule,
+        noQuestions: readStored(QUESTIONS_KEY) === false,
+        nextDay: !!school && !!schoolDays[toYmd(new Date())] && !isClassDay(toYmd(new Date())),
+        etaMinutes: currentTrip().known ? naviRemainMinutes() : demoMinutes,
+        subjects: plan && plan.ymd === toYmd(new Date()) ? plan.subjects : [],
+        memory: memory && memory.date === toYmd(new Date()) ? memory : {}
+      };
+    }
+
+    function remainMinutes() {
+      const live = naviRemainMinutes();
+      return live === null ? demoMinutes : live;
+    }
+
     function startFlow(mode) {
+      if (askMicFirst(() => startFlow(mode))) return;
+      disarm();
       currentMode = mode;
       heard = '';
-      isFinished = false;
-
-      if (mode === 'morning') {
-        const plan = schoolPlan();
-        stage = school && !(plan && plan.hasPe) ? 'SUBJECT_TODAY' : 'PREP';
-      } else if (mode === 'afternoon') {
-        const memory = readStored(MEMORY_KEY);
-        const fresh = memory && memory.date === toYmd(new Date());
-        if (fresh && memory.rest) stage = 'REST';
-        else if (fresh && memory.subject === '체육') stage = 'AFTER_PE';
-        else if (fresh && memory.subject === '과학') stage = 'AFTER_SCIENCE';
-        else stage = 'AFTER_EVENT';
-      } else if (mode === 'tour') {
-        stage = 'STEP1';
-      }
-      if (etaState === 'short' && stage !== 'REST') stage = 'ETA_SHORT';
+      unclearCount = 0;
+      listenSince = 0;
+      hasArrived = false;
+      micBroken = false;
+      tripMuted = false;
+      currentRule = ruleFor(mode);
+      ruleMissing = false;
+      const context = journeyContext();
+      stage = Journey.start(mode, context);
+      pendingIntro = stage === 'NEXT_DAY' ? [] : Journey.intro(mode, context, DAIT_RULES);
+      const trip = { drove: isDrivingMode, parkedAt: 0 };
+      tripForDoor = trip;
+      setTimeout(() => endDoorTrip(trip), TRIP_CAP_MS); // 차 상태가 멈춰도 앞쪽 작업이 끝없이 남지 않게 한다
       render();
     }
 
     function goHome() {
-      document.getElementById('audioPlayer').pause();
+      stopSpeech();
+      if (tripForDoor && !tripForDoor.drove) tripForDoor = null; // 주차 중에 들어 본 대화는 여정이 아니다
       currentMode = null;
       stage = '';
       heard = '';
-      isFinished = false;
+      hasArrived = false;
       render();
       updateDriveScreen();
     }
 
-    function handleAnswer(ans) {
-      heard = ans;
-      if (currentMode === 'morning') {
-        if (stage === 'PREP') stage = ans === '깜빡했어' ? 'SUBJECT_MISSING' : 'SUBJECT';
-        else if (stage === 'SUBJECT' || stage === 'SUBJECT_MISSING' || stage === 'SUBJECT_TODAY') {
-          rememberMorning({ subject: ans });
-          if (ans === '과학') stage = 'SCIENCE_DETAIL';
-          else if (ans === '독서' || ans === '국어') stage = 'READING_DETAIL';
-          else stage = 'DONE';
-        } else if (stage === 'SCIENCE_DETAIL' || stage === 'READING_DETAIL') {
-          stage = 'DONE';
-          isFinished = true;
-        }
-      } else if (currentMode === 'afternoon') {
-        if (ans === '쉬고 싶어') {
-          rememberMorning({ rest: true });
-          stage = 'REST';
-        } else if (stage === 'AFTER_EVENT' || stage === 'AFTER_PE' || stage === 'AFTER_SCIENCE') {
-          stage = ans === '시간표랑 달랐어' ? 'AFTER_CHANGED' : 'AFTER_DETAIL';
-        } else if (stage === 'AFTER_DETAIL') stage = ans === '시간표랑 달랐어' ? 'AFTER_CHANGED' : 'PARENT_BRIDGE';
-        else if (stage === 'AFTER_CHANGED') stage = 'PARENT_BRIDGE';
-        else if (stage === 'PARENT_BRIDGE') {
-          stage = 'DONE';
-          isFinished = true;
-        }
-      } else if (currentMode === 'tour') {
-        if (stage === 'STEP1') stage = 'STEP2';
-        else if (stage === 'STEP2') {
-          stage = 'DONE';
-          isFinished = true;
-        }
-      }
-      // 도착이 가까우면 새 질문 대신 마무리 (기획안 ④)
-      if (etaState === 'short' && !isDialogueDone()) stage = 'ETA_SHORT';
+    function setStage(nextStage) {
+      stage = nextStage;
+      unclearCount = 0;
+      listenSince = 0;
       render();
     }
 
+    function handleAnswer(ans, shown = ans) {
+      if (isDialogueDone()) return;
+      heard = shown;
+      const result = Journey.next(currentMode, stage, ans, journeyContext());
+      if (result.remember) rememberMorning(result.remember);
+      ruleMissing = !!result.missing;
+      setStage(result.stage);
+    }
+
     function isDialogueDone() {
-      return isFinished || stage === 'DONE' || stage === 'REST' || stage === 'ETA_SHORT';
+      return Journey.isDone(stage);
     }
 
     // 질문을 건너뛴다. 답을 지어내지 않고 다음 단계로만 넘어간다.
     function skipQuestion() {
-      if (!currentMode || currentMode === 'settings' || isDialogueDone()) return;
+      if (!currentMode || isParkedScreen() || isDialogueDone()) return;
       heard = '';
-      if (currentMode === 'morning') {
-        if (stage === 'PREP') stage = 'SUBJECT_TODAY';
-        else stage = 'DONE';
-      } else if (currentMode === 'afternoon') {
-        if (stage === 'AFTER_EVENT' || stage === 'AFTER_PE' || stage === 'AFTER_SCIENCE') stage = 'PARENT_BRIDGE';
-        else stage = 'DONE';
-      } else {
-        stage = 'DONE';
-      }
-      if (stage === 'DONE') isFinished = true;
-      if (etaState === 'short' && !isDialogueDone()) stage = 'ETA_SHORT';
-      render();
+      setStage(Journey.skip(currentMode, stage, journeyContext()));
     }
 
     // 아침에 고른 과목과 쉬기 여부를 기기에 남겨 하교 때 다시 꺼낸다 (기획안 ③⑤)
@@ -1324,8 +1158,273 @@
       if (isDialogueDone()) {
         goHome();
       } else {
-        playAudio(currentClip);
+        render();
       }
+    }
+
+    // ========================================================
+    // 출발하면 들려주기
+    // 시동만으로 말을 시작하지 않는다. 주차 중에 보호자가 고른 여정만 출발할 때 시작한다.
+    // ========================================================
+    function toggleArm(mode) {
+      if (armed) { disarm(); render(); return; }
+      if (askMicFirst(() => toggleArm(mode))) return;
+      armed = { mode, timer: setTimeout(() => { disarm(); refreshHomeIfIdle(); }, ARM_MS) };
+      render();
+      const place = routePlaceFor(mode);
+      if (place && !naviInfo && window.AndroidBridge) window.AndroidBridge.startRoute(JSON.stringify(place));
+    }
+
+    // 내비에서 알아 둔 학교와 집의 좌표. 있으면 첫 화면에서 바로 길 안내를 시작할 수 있다.
+    function routePlaceFor(mode) {
+      return routePlaces[mode === 'morning' ? 'school' : 'home'] || null;
+    }
+
+    function learnRoutePlace(kind, place) {
+      if (!Number.isFinite(place.lat) || !place.lat) return;
+      const known = routePlaces[kind];
+      if (known && known.lat === place.lat && known.lng === place.lng) return;
+      routePlaces[kind] = { name: place.name || '', address: place.address || '', lat: place.lat, lng: place.lng, poiId: place.poiId || '', poiSubId: place.poiSubId || '', poiProvider: place.poiProvider || '' };
+      writeStored(ROUTE_KEY, routePlaces);
+      refreshHomeIfIdle();
+    }
+
+    // 내비 즐겨찾기와 최근 목적지에서 학교를 찾고, '집' 즐겨찾기는 집으로 등록한다.
+    function learnFromNavi(places) {
+      places.filter(place => place.name && place.lat).forEach(place => {
+        if (school && isSamePlace(place, school)) learnRoutePlace('school', place);
+        if (place.category === 'HOME' && !homePlace && readStored(HOME_CLEARED_KEY) !== true) {
+          homePlace = { name: place.name, address: place.address || '' };
+          writeStored(HOME_KEY, homePlace);
+        }
+        if (homePlace && isSamePlace(place, homePlace)) learnRoutePlace('home', place);
+      });
+    }
+
+    function disarm() {
+      if (armed) clearTimeout(armed.timer);
+      armed = null;
+    }
+
+    // 여정 동안에는 내비가 앱을 덮어도 말하고 들을 수 있게 앱을 유지한다.
+    // 달리는 중에 내려놓으면 내비 뒤에서 다시 올릴 수 없으므로 주차하거나 대화를 닫을 때까지 둔다.
+    function syncJourney() {
+      const inDialogue = !!currentMode && !isParkedScreen();
+      const finishedParked = isDialogueDone() && speechPhase === 'idle' && !isDrivingMode;
+      const active = !!armed || (inDialogue && !finishedParked) || !!(tripForDoor && tripForDoor.drove);
+      if (active === journeyActive) return;
+      journeyActive = active;
+      if (window.AndroidBridge) window.AndroidBridge.setJourneyActive(active);
+    }
+
+    // 실제로 달린 여정 뒤 주차한 상태에서 아이 쪽 문이 처음 열릴 때 한 번만 말한다 (기획안 ④)
+    function trackDoorTrip(isDriving) {
+      if (!tripForDoor) return;
+      if (isDriving) {
+        tripForDoor.drove = true;
+        tripForDoor.parkedAt = 0;
+        clearTimeout(doorTimer);
+      } else if (tripForDoor.drove && !tripForDoor.parkedAt) {
+        const parked = tripForDoor;
+        parked.parkedAt = Date.now();
+        doorTimer = setTimeout(() => endDoorTrip(parked), DOOR_WINDOW_MS);
+      }
+    }
+
+    function endDoorTrip(trip) {
+      if (tripForDoor !== trip) return;
+      tripForDoor = null;
+      syncJourney();
+    }
+
+    window.onDoorOpened = function() {
+      if (!tripForDoor || !tripForDoor.drove) return;
+      // 교문 앞에서 기어 D로 세운 채 내릴 수 있으므로 도착 직전이면 주차 전이라도 말한다.
+      const stoppedAtEnd = isDrivingMode && Journey.tierFor(remainMinutes()) === 'arrive';
+      if (!stoppedAtEnd && (isDrivingMode || !tripForDoor.parkedAt)) return;
+      clearTimeout(closeTimer);
+      tripForDoor = null;
+      hasArrived = !!currentMode && !isParkedScreen(); // 아이가 내리는 순간이므로 말을 마치면 대화를 닫는다
+      speak([DAIT_RULES.extras.p_door_bag].filter(Boolean), '');
+      syncJourney();
+    };
+
+    // ========================================================
+    // 말하기와 듣기
+    // 앱에서는 VoiceSession이, 브라우저 미리보기에서는 audio 태그가 소리를 낸다.
+    // ========================================================
+    function micState() {
+      return window.AndroidBridge ? window.AndroidBridge.micState() : 'none';
+    }
+
+    // 처음 대화를 시작할 때 주차 중에만 마이크 허락을 묻는다.
+    function askMicFirst(action) {
+      if (micAsked || isDrivingMode || micState() !== 'ask' || readStored(VOICE_KEY) === false) return false;
+      micAsked = true;
+      pendingStart = action;
+      window.AndroidBridge.requestMic();
+      return true;
+    }
+
+    window.onMicAnswered = function() {
+      const action = pendingStart;
+      pendingStart = null;
+      if (action) action();
+    };
+
+    function canListen() {
+      return !micBroken && micState() === 'ready' && readStored(VOICE_KEY) !== false;
+    }
+
+    function speakStage(clips) {
+      listenSince = 0;
+      const intro = pendingIntro;
+      pendingIntro = [];
+      if (tripMuted) stopSpeech();
+      else speak([...intro, ...clips].filter(Boolean), listenNow());
+    }
+
+    function listenNow() {
+      return canListen() ? Journey.listenSpec(currentMode, stage, currentChoices, currentRule) : '';
+    }
+
+    function speak(clips, listen) {
+      clearTimeout(noMicTimer);
+      speechPhase = 'speaking';
+      speechPaused = false;
+      speechSeq++;
+      if (window.AndroidBridge) {
+        window.AndroidBridge.speak(JSON.stringify(clips), listen, speechSeq);
+        return;
+      }
+      previewQueue = clips.slice();
+      playPreviewClip();
+    }
+
+    // 브라우저 미리보기: 음원을 차례로 튼다. temp/로 시작하는 것은 임시 음성이다.
+    function playPreviewClip() {
+      const clip = previewQueue.shift();
+      if (!clip) {
+        window.onSpeechEvent(JSON.stringify({ event: 'ended', seq: speechSeq }));
+        return;
+      }
+      const player = document.getElementById('audioPlayer');
+      player.src = clip.includes('/') ? `voices/${clip}.wav` : `voices/${voice}/${clip}.wav`;
+      player.play().catch(e => {
+        console.log('Audio error:', e);
+        window.onSpeechEvent(JSON.stringify({ event: 'ended', seq: speechSeq }));
+      });
+    }
+
+    function stopSpeech() {
+      clearTimeout(noMicTimer);
+      speechPhase = 'idle';
+      speechPaused = false;
+      speechSeq++;
+      if (window.AndroidBridge) window.AndroidBridge.stopSpeech();
+      else document.getElementById('audioPlayer').pause();
+    }
+
+    function heardLineText() {
+      if (speechPhase === 'listening') return '듣고 있어요';
+      return heard ? `“${heard}”` : '';
+    }
+
+    function showHeardLine() {
+      const line = document.getElementById('heardLine');
+      if (line) {
+        line.textContent = heardLineText();
+        line.hidden = !line.textContent;
+      }
+      updateDriveScreen();
+    }
+
+    window.onSpeechEvent = function(jsonText) {
+      const info = JSON.parse(jsonText);
+      if (info.seq !== speechSeq) return; // 지난 말에 대한 늦은 알림
+      if (info.event === 'paused' || info.event === 'resumed') {
+        speechPaused = info.event === 'paused';
+        return;
+      }
+      speechPhase = info.event === 'listening' ? 'listening' : 'idle';
+      showHeardLine();
+      if (info.event === 'heard') onHeard(info.text, info.reference);
+      else if (info.event === 'silence') onUnclear();
+      else if (info.event === 'listening') {
+        listenSince = listenSince || performance.now();
+        applyNaviEta();
+      }
+      else {
+        if (info.event === 'micFailed') micBroken = true;
+        applyNaviEta();
+        syncJourney();
+        if (hasArrived) closeAfterArrival();
+        else if (info.event === 'stopped') endWithoutSpeaking();
+        else if (!listenIfMicIsReady()) advanceWithoutMic();
+      }
+    };
+
+    // 첫 말을 하는 사이에 음성 모델이 준비되었으면 지금부터 듣는다.
+    function listenIfMicIsReady() {
+      if (!currentMode || isParkedScreen() || isDialogueDone() || !listenNow()) return false;
+      speak([], listenNow());
+      return true;
+    }
+
+    // 음악이나 통화가 소리를 돌려주지 않으면 끼어들지 않고 대화를 마친다.
+    function endWithoutSpeaking() {
+      if (!currentMode || isParkedScreen() || isDialogueDone()) return;
+      tripMuted = true;
+      setStage('QUIET_END');
+    }
+
+    // 마이크를 쓸 수 없는 차에서는 달리는 동안 답을 받을 길이 없다.
+    // 가족이 이야기할 틈을 둔 뒤 다음 단계로 넘어가, 질문 하나에서 멈춰 있지 않게 한다.
+    function advanceWithoutMic() {
+      if (!isDrivingMode || canListen() || !currentMode || isParkedScreen() || isDialogueDone() || stage === 'PARENT_BRIDGE') return;
+      clearTimeout(noMicTimer);
+      noMicTimer = setTimeout(() => {
+        if (speechPhase === 'idle' && isDrivingMode) skipQuestion();
+      }, NO_MIC_WAIT_MS);
+    }
+
+    function onHeard(text, reference) {
+      if (!currentMode || isParkedScreen() || isDialogueDone()) return;
+      const result = Journey.interpret(stage, text, reference, currentChoices, currentRule);
+      if (result.kind === 'answer') handleAnswer(result.answer, result.heard);
+      else if (result.kind === 'quiet') {
+        rememberMorning({ rest: true });
+        setStage('REST');
+      } else if (result.kind === 'sad') {
+        rememberMorning({ rest: true }); // 「오늘은 질문 없이」라고 했으니 그날은 다시 묻지 않는다
+        setStage('REST_SOFT');
+      }
+      else if (result.kind === 'repeat') render();
+      else if (performance.now() - listenSince < LISTEN_PATIENCE_MS) speak([], listenNow()); // 잡음일 수 있으니 재촉하지 않고 더 듣는다
+      else onUnclear();
+    }
+
+    // 한 번 더 물어보고, 그래도 답이 없으면 재촉하지 않고 멈춘다 (기획안 ⑤)
+    function onUnclear() {
+      if (!currentMode || isParkedScreen() || isDialogueDone()) return;
+      if (stage === 'AFTER_DETAIL') { setStage('PARENT_BRIDGE'); return; } // 더 말하지 않아도 된다고 했으니 재촉하지 않는다
+      unclearCount++;
+      listenSince = 0;
+      if (unclearCount >= 2) setStage('QUIET_END');
+      else speak(['error_repeat'], listenNow());
+    }
+
+    // 도착하면 진행 중이던 질문을 마치고 인사한 뒤 첫 화면으로 돌아간다.
+    function finishOnArrival() {
+      if (!currentMode || isParkedScreen()) return;
+      hasArrived = true;
+      if (!isDialogueDone() || (currentMode === 'afternoon' && stage === 'ETA_SHORT')) setStage('DONE');
+      if (speechPhase === 'idle') closeAfterArrival();
+    }
+
+    function closeAfterArrival() {
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => { if (hasArrived) goHome(); }, ARRIVAL_CLOSE_MS);
     }
 
     // ========================================================
@@ -1335,10 +1434,14 @@
     const SCHOOL_KEY = 'dait.school';
     const DAYS_KEY = 'dait.schoolDays';
     const DAYS_AHEAD = 7;
+    const EVENTS_KEY = 'dait.schoolEvents';
+    const EVENT_DAYS_AHEAD = 45;
+    const GRADE_FIELDS = ['ONE', 'TW', 'THREE', 'FR', 'FIV', 'SIX'];
     const WEEKDAYS = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
 
     let school = readStored(SCHOOL_KEY);
     let schoolDays = readStored(DAYS_KEY) || {};
+    let schoolEvents = readStored(EVENTS_KEY) || {};
     let settings = {};
     let neisSeq = 0;
     let homeStale = false;
@@ -1424,10 +1527,39 @@
       return (SCHOOL_KINDS[target.kind] || SCHOOL_KINDS['초등학교']).service;
     }
 
+    // 학사일정에서 우리 학년 일정만 날짜별로 모은다. 토요휴업일은 뺀다.
+    function eventsByDay(rows, grade) {
+      const days = {};
+      rows.forEach(row => {
+        if (row.EVENT_NM.includes('토요휴업')) return;
+        const marks = GRADE_FIELDS.map(field => row[`${field}_GRADE_EVENT_YN`]);
+        if (marks.includes('Y') && marks[Number(grade) - 1] !== 'Y') return;
+        (days[row.AA_YMD] = days[row.AA_YMD] || []).push({ name: row.EVENT_NM, off: row.SBTR_DD_SC_NM !== '해당없음' });
+      });
+      return days;
+    }
+
+    async function refreshSchoolEvents(target) {
+      const today = toYmd(new Date());
+      try {
+        const rows = await neisRows('SchoolSchedule', {
+          ATPT_OFCDC_SC_CODE: target.office, SD_SCHUL_CODE: target.code, AA_FROM_YMD: today, AA_TO_YMD: toYmd(new Date(fromYmd(today).getTime() + EVENT_DAYS_AHEAD * 86400000))
+        });
+        if (school !== target) return;
+        schoolEvents = eventsByDay(rows, target.grade);
+        writeStored(EVENTS_KEY, schoolEvents);
+        if (isIntroPlaying) homeStale = true;
+        else if (!currentMode) render();
+      } catch (e) {
+        console.log('School events error:', e);
+      }
+    }
+
     // 시간표는 하루씩 받는다.
     async function refreshSchoolDays() {
       if (!school) return;
       const target = school;
+      refreshSchoolEvents(target);
       const dates = upcomingDates();
       const ymds = dates.map(toYmd);
       const base = { ATPT_OFCDC_SC_CODE: target.office, SD_SCHUL_CODE: target.code };
@@ -1452,6 +1584,7 @@
         });
         if (school !== target) return;
         schoolDays = days;
+        lastRefreshDay = ymds[0];
         writeStored(DAYS_KEY, days);
         if (isIntroPlaying) homeStale = true;
         else if (!currentMode) render();
@@ -1460,13 +1593,38 @@
       }
     }
 
+    // 시험 날은 시간표가 없을 수 있으므로 점심이나 학사일정이 있어도 수업일로 본다.
+    function isClassDay(ymd) {
+      if (!Journey.isSchoolDay(ymd, schoolEvents)) return false;
+      const day = schoolDays[ymd];
+      return !!(day && (day.subjects.length > 0 || day.meal)) || !!schoolEvents[ymd];
+    }
+
+    // 앱을 다시 볼 때 날짜가 바뀌었으면 자료를 새로 받고 첫 화면도 지금 시각으로 다시 그린다.
+    window.onAppResumed = function() {
+      if (school && lastRefreshDay !== toYmd(new Date())) refreshSchoolDays();
+      refreshHomeIfIdle();
+    };
+
     function schoolPlan() {
       const today = toYmd(new Date());
       const ymd = Object.keys(schoolDays).sort()
-        .find(key => key >= today && (schoolDays[key].subjects.length > 0 || schoolDays[key].meal));
+        .find(key => key >= today && isClassDay(key));
       if (!school || !ymd) return null;
       const day = schoolDays[ymd];
-      return { ...day, label: dayLabel(ymd), hasPe: day.subjects.includes('체육') };
+      return { ...day, ymd, weekday: fromYmd(ymd).getDay(), label: dayLabel(ymd), hasPe: day.subjects.some(subject => subject.replace(/[^가-힣]/g, '').startsWith('체육')) };
+    }
+
+    function schoolLevel() {
+      return school ? school.kind.charAt(0) : '초';
+    }
+
+    // 지금 여정에 맞는 교사 규칙. 하교는 오늘, 등교는 다가오는 수업일을 기준으로 본다.
+    function ruleFor(mode) {
+      if (!school) return null;
+      const plan = schoolPlan();
+      const ymd = mode === 'afternoon' || !plan ? toYmd(new Date()) : plan.ymd;
+      return Journey.pickRule(DAIT_RULES.rules, { mode, level: schoolLevel(), ymd, events: schoolEvents });
     }
 
     function subjectChoices() {
@@ -1474,53 +1632,6 @@
       if (!plan || plan.subjects.length === 0) return null;
       const preferred = ['체육', '과학', '국어'].filter(subject => plan.subjects.includes(subject));
       return [...new Set([...preferred, ...plan.subjects])].slice(0, 3);
-    }
-
-    function chipClass(subject) {
-      if (subject === '체육') return ' pe';
-      if (/미술|음악|체육/.test(subject)) return ' art';
-      if (/과학|수학/.test(subject)) return ' sci';
-      return '';
-    }
-
-    // 여정 그림. 출발점에서 목적지까지 한 획, 그 위에 차 위치. 남은 시간이 없으면 선만 그린다.
-    function routeSvg(trip) {
-      const total = trip.kind === 'school' || trip.kind === 'home' ? 20 : null; // 기준 20분 여정
-      const remain = trip.minutes;
-      const progress = total && remain !== null ? Math.min(0.92, Math.max(0.08, 1 - remain / total)) : null;
-      const W = 420, H = 140;
-      const path = `M 24 ${H - 30} C 120 ${H - 30}, 170 34, 250 34 S ${W - 40} ${H - 70}, ${W - 24} 44`;
-      const figure = trip.figure || '';
-      const unit = trip.figureUnit || '';
-      const endLabel = trip.kind === 'school' ? '학교' : trip.kind === 'home' ? '집' : (trip.kind === 'weekend' ? '다음 수업일' : (trip.mode === 'afternoon' ? '집' : '학교'));
-      const startLabel = trip.kind === 'school' ? '집' : trip.kind === 'home' ? '학교' : '지금';
-      let dot = '';
-      if (progress !== null) {
-        dot = `<path class="route-done" d="${path}" pathLength="1" stroke-dasharray="${progress} 1"/>
-          <g id="routeDot"><circle class="route-dot-halo" r="14"/><circle class="route-dot" r="6"/></g>`;
-      }
-      return `<svg class="hero-route" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <path class="route-path" d="${path}"/>
-        ${dot}
-        <circle class="route-dot" cx="24" cy="${H - 30}" r="4"/>
-        <text class="route-label" x="24" y="${H - 8}" text-anchor="start">${escapeHtml(startLabel)}</text>
-        <circle class="route-end-fill" cx="${W - 24}" cy="44" r="9"/>
-        <circle class="route-end" cx="${W - 24}" cy="44" r="9"/>
-        <text class="route-label" x="${W - 24}" y="22" text-anchor="end">${escapeHtml(endLabel)}</text>
-        <text class="route-figure" x="${W / 2}" y="${H - 14}" text-anchor="middle">${escapeHtml(figure)}<tspan class="route-unit" dx="4">${escapeHtml(unit)}</tspan></text>
-      </svg>`;
-    }
-
-    // 그린 뒤 차 위치 점을 선 위로 옮긴다 (pathLength 비율 → 실제 좌표)
-    function placeRouteDot() {
-      const svg = document.querySelector('.hero-route');
-      const dot = svg && svg.querySelector('#routeDot');
-      const done = svg && svg.querySelector('.route-done');
-      if (!svg || !dot || !done) return;
-      const ratio = parseFloat(done.getAttribute('stroke-dasharray'));
-      const len = done.getTotalLength();
-      const pt = done.getPointAtLength(len * ratio);
-      dot.setAttribute('transform', `translate(${pt.x} ${pt.y})`);
     }
 
     // 지금 여정을 한 곳에서 정한다. 첫 화면·칸·대화 시작이 모두 이것을 따른다.
@@ -1537,60 +1648,87 @@
       // 여기부터는 목적지가 학교도 집도 아니거나 없다. 남은 시간은 쓰지 않는다
       const unknownMins = null;
       const todayYmd = toYmd(now);
-      const todayHasClass = !!(schoolDays[todayYmd] && schoolDays[todayYmd].subjects.length);
+      const todayHasClass = isClassDay(todayYmd);
       const isWeekend = now.getDay() === 0 || now.getDay() === 6;
-      if (school && Object.keys(schoolDays).length && !todayHasClass) {
+      if (school && schoolDays[todayYmd] && !todayHasClass) {
         const plan = schoolPlan();
         const label = plan ? plan.label : '다음 수업일';
         return { mode: 'morning', kind: 'weekend', known: false, where: '', minutes: unknownMins, when: `${label} 준비`, figure: label.replace('요일', ''), figureUnit: label.endsWith('요일') ? '요일' : '' };
       }
-      if (!school && isWeekend) return { mode: 'morning', kind: 'weekend', known: false, where: '', minutes: unknownMins, when: '다음 수업일 준비', figure: '월', figureUnit: '요일' };
+      if ((!school || !schoolDays[todayYmd]) && isWeekend) return { mode: 'morning', kind: 'weekend', known: false, where: '', minutes: unknownMins, when: '다음 수업일 준비', figure: '월', figureUnit: '요일' };
       const afternoon = now.getHours() >= 12;
       const hhmm = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
       return { mode: afternoon ? 'afternoon' : 'morning', kind: afternoon ? 'afternoon' : 'morning', known: false, where: '', minutes: unknownMins, when: afternoon ? '오늘 오후' : '오늘 아침', figure: hhmm, figureUnit: '' };
     }
 
+    // 교사 규칙이 있는 날은 첫 화면의 말도 규칙을 따른다.
     function homeInfo(trip) {
+      const info = plainHomeInfo(trip);
+      const rule = ruleFor(trip.mode);
+      if (!rule) return info;
+      const plan = schoolPlan();
+      const ahead = !!plan && plan.ymd !== toYmd(new Date());
+      if (ahead && rule.eventYmd !== plan.ymd) return info; // 다음 수업일의 일정이 아니면 미리 말하지 않는다
+      return {
+        ...info,
+        title: ahead ? `${plan.label} ${rule.eventName}` : rule.title,
+        desc: rule.desc,
+        ...(rule.prep ? { prepLabel: '준비물', prep: rule.prep, prepSub: '학교 안내 확인' } : {})
+      };
+    }
+
+    // 오후에는 다음 수업일의 점심을 보여 준다.
+    function nextMeal() {
+      const today = toYmd(new Date());
+      const ymd = Object.keys(schoolDays).sort().find(key => key > today && isClassDay(key));
+      if (!ymd) return { mealLabel: '다음 점심', meal: '확인 필요', mealSub: '' };
+      return { mealLabel: `${dayLabel(ymd)} 점심`, meal: schoolDays[ymd].meal || '확인 필요', mealSub: '' };
+    }
+
+    function plainHomeInfo(trip) {
       const plan = school ? schoolPlan() : null;
-      const dayWord = plan ? plan.label : '오늘';
+      const dayWord = plan ? plan.label : (school ? '다음 수업일' : '오늘');
       const memory = readStored(MEMORY_KEY);
       const morningSubject = memory && memory.date === toYmd(new Date()) ? memory.subject : null;
-      const prepLine = !school ? { prep: '체육복', prepSub: '예시' }
+      const prepLine = !school ? { prep: '등록 필요', prepSub: '' }
         : !plan ? { prep: '확인 필요', prepSub: '' }
         : plan.hasPe ? { prep: '체육복', prepSub: '시간표 기준' }
-        : { prep: '학교 안내 확인', prepSub: plan.subjects.slice(0, 2).join(' · ') };
-      const mealLine = !school ? { meal: '떡갈비구이', mealSub: '예시' } : { meal: plan && plan.meal ? plan.meal : '확인 필요', mealSub: '' };
+        : { prep: '학교 안내 확인', prepSub: '' };
+      const mealLine = !school ? { meal: '등록 필요', mealSub: '' } : { meal: plan && plan.meal ? plan.meal : '확인 필요', mealSub: '' };
 
-      const subjects = plan ? plan.subjects : (!school ? ['체육', '국어', '수학', '과학'] : []);
+      const subjects = plan ? plan.subjects : [];
       // 오늘의 질문: 시간표에서 고른다. 기획안 교사 규칙표의 과목별 질문
-      const question = plan && plan.subjects.includes('과학') ? '오늘 과학 시간엔 뭐가 궁금해?'
-        : plan && plan.hasPe ? '체육 시간에 해 보고 싶은 게 있어?'
-        : plan && plan.subjects.includes('미술') ? '오늘은 뭘 그리고 싶어?'
-        : plan && plan.subjects.includes('국어') ? '기억나는 이야기 하나 있어?'
-        : '오늘 가장 기대되는 시간은 언제야?';
-      const otherMorning = trip.known
-        ? { otherKicker: '하교 때 다시 물을 질문', otherChips: null, otherTitle: question, otherDesc: '아침에 답하면 집에 갈 때 이어서 물어요' }
-        : { otherKicker: '등교', otherChips: subjects.slice(0, 6), otherTitle: `${dayWord} 시간표`, otherDesc: subjects.length ? '' : '학교를 설정하면 보여 줘요' };
-      const otherAfternoon = trip.known
-        ? { otherKicker: '오늘의 질문', otherChips: subjects.slice(0, 6), otherTitle: question, otherDesc: '대답은 아이가 해요. 부모는 듣다가 끼어들면 돼요' }
-        : { otherKicker: trip.kind === 'weekend' ? `${dayWord} 시간표` : '하교', otherChips: trip.kind === 'weekend' ? subjects.slice(0, 6) : null, otherTitle: trip.kind === 'weekend' ? '하교 대화는 집에 갈 때' : '오늘 이야기 들려주기', otherDesc: trip.kind === 'weekend' ? '아침 질문을 기억했다가 이어서 물어요' : '기억나는 장면 하나면 돼요' };
+      const common = {
+        question: Journey.pickQuestion(DAIT_RULES.rules, subjects, schoolLevel()),
+        scheduleLabel: `${dayWord} 시간표`,
+        subjects: subjects.slice(0, 6)
+      };
 
+      if (!school) {
+        return {
+          title: '학교를 등록해 주세요',
+          desc: '시간표와 점심으로 이야기를 시작해요',
+          prepLabel: '준비물', ...prepLine,
+          mealLabel: '점심', ...mealLine,
+          ...common
+        };
+      }
       if (trip.mode === 'afternoon') {
         return {
           title: morningSubject ? `아침에 고른 ${morningSubject}, 어땠나요?` : '오늘은 어땠나요?',
           desc: '기억나는 장면 하나만 들려줘요',
-          prepLabel: '아침에 고른 수업', prep: morningSubject || '없음', prepSub: morningSubject ? '하교 대화에서 다시 물어요' : '등교 대화에서 고르면 여기 남아요',
-          mealLabel: `${dayWord === '오늘' ? '내일' : dayWord} 점심`, ...mealLine,
-          ...otherMorning
+          prepLabel: '아침에 고른 수업', prep: morningSubject || '없음', prepSub: '',
+          ...nextMeal(),
+          ...common
         };
       }
       if (trip.kind === 'weekend') {
         return {
           title: `${dayWord} 준비 됐나요?`,
-          desc: plan ? (plan.hasPe ? '체육이 있어요. 체육복을 미리 챙겨요' : `${plan.subjects.slice(0, 3).join(' · ')}`) : '학교를 설정하면 시간표를 보여 줘요',
+          desc: plan ? (plan.hasPe ? '체육이 있어요. 체육복을 미리 챙겨요' : `${plan.subjects.slice(0, 3).join(' · ')}`) : '수업일이 다가오면 시간표를 보여 줘요',
           prepLabel: `${dayWord} 준비물`, ...prepLine,
           mealLabel: `${dayWord} 점심`, ...mealLine,
-          ...otherAfternoon
+          ...common
         };
       }
       return {
@@ -1598,12 +1736,127 @@
         desc: !school ? '체육복을 함께 확인해요' : !plan ? '학교 정보를 확인하지 못했어요' : (plan.hasPe ? '체육복을 함께 확인해요' : (plan.subjects.slice(0, 3).join(' · ') || '학교 안내를 확인해요')),
         prepLabel: '준비물', ...prepLine,
         mealLabel: `${dayWord} 점심`, ...mealLine,
-        ...otherAfternoon
+        ...common
       };
     }
 
+    // ========================================================
+    // 가 볼 만한 곳 (공공데이터포털 한국관광공사 국문 관광정보)
+    // 브라우저 미리보기에서는 예시를 보여 준다.
+    // ========================================================
+    const PLACE_TOPICS = ['과학관', '박물관', '유적지', '체험관'];
+    const PLACE_LIMIT = 8;
+    const PLACE_TYPES = ['12', '14', '28']; // 관광지, 문화시설, 레포츠. 숙박·식당·쇼핑은 뺀다.
+    const REGIONS = [
+      ['서울', '11', '서울'], ['부산', '26', '부산'], ['대구', '27', '대구'], ['인천', '28', '인천'],
+      ['광주', '29', '광주'], ['대전', '30', '대전'], ['울산', '31', '울산'], ['세종', '36', '세종'],
+      ['경기', '41', '경기'], ['강원', '51', '강원'], ['충북', '43', '충북'], ['충청북', '43', '충북'],
+      ['충남', '44', '충남'], ['충청남', '44', '충남'], ['전북', '52', '전북'], ['전라북', '52', '전북'],
+      ['전남', '46', '전남'], ['전라남', '46', '전남'], ['경북', '47', '경북'], ['경상북', '47', '경북'],
+      ['경남', '48', '경남'], ['경상남', '48', '경남'], ['제주', '50', '제주']
+    ];
+    const SAMPLE_PLACES = {
+      '과학관': [['국립과천과학관', '경기도 과천시'], ['국립중앙과학관', '대전광역시 유성구']],
+      '박물관': [['국립중앙박물관', '서울특별시 용산구'], ['국립경주박물관', '경상북도 경주시']],
+      '유적지': [['경주 불국사', '경상북도 경주시'], ['수원 화성', '경기도 수원시']],
+      '체험관': [['한국잡월드', '경기도 성남시'], ['국립어린이과학관', '서울특별시 종로구']]
+    };
+
+    let places = {};
+    let tourSeq = 0;
+    const tourWaiting = {};
+
+    window.onTourResult = function(requestId, body) {
+      const resolve = tourWaiting[requestId];
+      delete tourWaiting[requestId];
+      if (resolve) resolve(body);
+    };
+
+    function schoolRegion() {
+      const address = school ? school.address : '';
+      const found = REGIONS.find(row => address.startsWith(row[0]));
+      return found ? { code: found[1], name: found[2] } : null;
+    }
+
+    function tourBody(query) {
+      return new Promise(resolve => {
+        const requestId = ++tourSeq;
+        tourWaiting[requestId] = resolve;
+        window.AndroidBridge.tourGet(requestId, 'searchKeyword2', query);
+      });
+    }
+
+    function tourRows(data) {
+      const header = data.response.header;
+      if (header.resultCode !== '0000') throw new Error(header.resultCode);
+      const items = data.response.body.items;
+      const rows = items && items.item ? [].concat(items.item) : [];
+      return rows
+        .filter(row => PLACE_TYPES.includes(String(row.contenttypeid)))
+        .slice(0, PLACE_LIMIT)
+        .map(row => ({ name: row.title, address: row.addr1 || '' }));
+    }
+
+    async function searchPlaces(topic) {
+      places = { topic, rows: [], sample: false, message: '찾는 중이에요' };
+      render();
+      if (!window.AndroidBridge) {
+        places = { topic, rows: SAMPLE_PLACES[topic].map(row => ({ name: row[0], address: row[1] })), sample: true, message: '' };
+        render();
+        return;
+      }
+      const region = schoolRegion();
+      const query = new URLSearchParams({
+        numOfRows: '30', pageNo: '1', MobileOS: 'AND', MobileApp: 'DAIT', _type: 'json', arrange: 'A', keyword: topic,
+        ...(region ? { lDongRegnCd: region.code } : {})
+      }).toString();
+      let next;
+      try {
+        const rows = tourRows(JSON.parse(await tourBody(query)));
+        next = { topic, rows, sample: false, message: rows.length > 0 ? '' : '찾는 곳이 없어요' };
+      } catch (e) {
+        next = { topic, rows: [], sample: false, message: '지금은 찾을 수 없어요' };
+      }
+      // 기다리는 사이 다른 주제를 골랐거나 화면을 나갔으면 이 결과는 버린다.
+      if (currentMode !== 'places' || places.topic !== topic) return;
+      places = next;
+      render();
+    }
+
+    function openPlaces() {
+      stopSpeech();
+      currentMode = 'places';
+      searchPlaces(PLACE_TOPICS[0]);
+    }
+
+    function renderPlaces(container) {
+      const region = schoolRegion();
+      container.innerHTML = `
+        <div class="dialogue-wrap">
+          <div class="dialogue-top">
+            <button class="back-btn" onclick="goHome()">처음으로</button>
+            <span class="top-label">${region ? `${escapeHtml(region.name)}에서 ` : ''}가 볼 만한 곳</span>
+            <span class="top-label">${places.rows.length > 0 ? (places.sample ? '예시' : '자료: 한국관광공사') : ''}</span>
+          </div>
+          <div class="places-body">
+            <div class="settings-list">
+              ${PLACE_TOPICS.map(topic => `<button class="choice-chip" onclick="searchPlaces('${topic}')"${topic === places.topic ? ' aria-pressed="true"' : ''}>${topic}</button>`).join('')}
+            </div>
+            ${places.message ? `<div class="settings-message">${escapeHtml(places.message)}</div>` : ''}
+            <div class="place-list">
+              ${places.rows.map(row => `<div class="place-row"><div class="place-name">${escapeHtml(row.name)}</div><div class="place-address">${escapeHtml(row.address)}</div></div>`).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function isParkedScreen() {
+      return currentMode === 'settings' || currentMode === 'places';
+    }
+
     function openSettings() {
-      document.getElementById('audioPlayer').pause();
+      stopSpeech();
       currentMode = 'settings';
       settings = { step: 'search', query: '', results: [], classes: [], message: '' };
       render();
@@ -1638,22 +1891,39 @@
         `;
       }
 
+      const onOff = key => `<span class="setting-state">${readStored(key) === false ? '꺼짐' : '켜짐'}</span>`;
       container.innerHTML = `
         <div class="dialogue-wrap">
           <div class="dialogue-top">
             <button class="back-btn" onclick="goHome()">처음으로</button>
-            ${school ? '<button class="back-btn" onclick="clearSchool()">학교 지우기</button>' : ''}
-            ${homePlace ? `<button class="back-btn" onclick="clearHome()">집 지우기 (${escapeHtml(homePlace.name)})</button>` : ''}
-            ${canSaveHome() ? `<button class="back-btn" onclick="saveHomeFromNavi()">지금 목적지를 집으로</button>` : ''}
           </div>
-          <div class="dialogue-card">
-            <div class="settings-center">
-              <div class="main-question">${escapeHtml(title)}</div>
-              ${body}
+          <div class="settings-grid">
+            <div class="dialogue-card">
+              <div class="settings-center">
+                <div class="main-question">${escapeHtml(title)}</div>
+                ${body}
+              </div>
+            </div>
+            <div class="settings-side">
+              <button class="setting-row" onclick="toggleQuestions()"><span>질문</span>${onOff(QUESTIONS_KEY)}</button>
+              ${micState() === 'none' ? '' : `<button class="setting-row" onclick="toggleVoiceAnswers()"><span>말로 답하기</span>${onOff(VOICE_KEY)}</button>`}
+              ${canSaveHome() ? '<button class="setting-row" onclick="saveHomeFromNavi()"><span>지금 목적지를 집으로</span></button>' : ''}
+              ${homePlace ? `<button class="setting-row" onclick="clearHome()"><span>집 지우기 (${escapeHtml(homePlace.name)})</span></button>` : ''}
+              ${school ? '<button class="setting-row" onclick="clearSchool()"><span>학교 지우기</span></button>' : ''}
             </div>
           </div>
         </div>
       `;
+    }
+
+    function toggleQuestions() {
+      writeStored(QUESTIONS_KEY, readStored(QUESTIONS_KEY) === false);
+      render();
+    }
+
+    function toggleVoiceAnswers() {
+      writeStored(VOICE_KEY, readStored(VOICE_KEY) === false);
+      render();
     }
 
     async function searchSchools() {
@@ -1716,6 +1986,10 @@
       schoolDays = {};
       writeStored(SCHOOL_KEY, school);
       writeStored(DAYS_KEY, schoolDays);
+      schoolEvents = {};
+      writeStored(EVENTS_KEY, schoolEvents);
+      delete routePlaces.school;
+      writeStored(ROUTE_KEY, routePlaces);
       goHome();
       refreshSchoolDays();
     }
@@ -1723,27 +1997,20 @@
     function clearSchool() {
       school = null;
       schoolDays = {};
+      schoolEvents = {};
+      delete routePlaces.school;
+      writeStored(ROUTE_KEY, routePlaces);
       try {
         localStorage.removeItem(SCHOOL_KEY);
         localStorage.removeItem(DAYS_KEY);
+        localStorage.removeItem(EVENTS_KEY);
       } catch (e) {
         console.log('Storage error:', e);
       }
       goHome();
     }
 
-    function playAudio(clipId) {
-      currentClip = clipId;
-      // 음원은 '오늘' 기준으로 녹음되어 있어, 수업이 없는 날에는 틀지 않는다. 음원 조각 작업에서 요일별로 바꾼다.
-      if (currentTrip().kind === 'weekend') return;
-      const player = document.getElementById('audioPlayer');
-      const isAndroidAsset = window.location.href.includes('android_asset');
-      const src = isAndroidAsset 
-        ? `voices/${voice.toLowerCase()}/${clipId}.wav` 
-        : `../android/app/src/main/assets/voices/${voice.toLowerCase()}/${clipId}.wav`;
-      player.src = src;
-      player.play().catch(e => console.log('Audio error:', e));
-    }
+    document.getElementById('audioPlayer').addEventListener('ended', playPreviewClip);
 
     // In-App Detection & Driving Restriction API
     if (window.location.href.includes('android_asset') || navigator.userAgent.includes('Android')) {
@@ -1752,31 +2019,46 @@
 
     // 주행 중: 상세 화면을 닫고 문장 하나와 큰 버튼 둘만 보여 준다. 재생 중인 음성은 이어 간다.
     // 대화 중이 아니면(첫 화면·설정) 조작할 것이 없으므로 "주차 후 이어갈게요"만 보여 준다.
-    window.setDrivingMode = function(isDriving) {
+    window.setDrivingMode = function(isDriving, isRealDriving) {
+      const departing = isDriving && !isDrivingMode;
       isDrivingMode = isDriving;
       document.body.classList.toggle('driving', isDriving);
+      document.body.classList.toggle('real-driving', !!isRealDriving);
+      trackDoorTrip(isDriving);
       document.getElementById('demoDrive').classList.toggle('on', isDriving);
-      if (isDriving && currentMode === 'settings') goHome();
+      if (isDriving && isParkedScreen()) goHome();
+      if (departing && armed) startFlow(armed.mode);
+      else if (departing && speechPhase === 'idle') advanceWithoutMic();
       updateDriveScreen();
+      syncJourney();
     };
 
     function updateDriveScreen(sentence) {
-      const inDialogue = currentMode && currentMode !== 'settings';
-      const text = inDialogue ? (sentence || document.querySelector('.main-question')?.textContent || '') : '주차 후 이어갈게요';
+      const inDialogue = currentMode && !isParkedScreen();
+      const trip = inDialogue ? null : currentTrip();
+      const canStart = !inDialogue && trip.kind !== 'weekend';
+      const text = inDialogue ? (sentence || document.querySelector('.main-question')?.textContent || '')
+        : canStart ? `${trip.mode === 'morning' ? '등교' : '하교'} 이야기를 들을까요?` : '주차 후 이어갈게요';
       document.getElementById('driveSentence').textContent = text;
-      document.getElementById('driveSub').textContent = inDialogue && heard ? `“${heard}”` : (inDialogue ? '' : '설정과 자세한 내용은 주차한 뒤 열어요');
+      document.getElementById('driveSub').textContent = inDialogue ? heardLineText() : (canStart ? '' : '설정과 자세한 내용은 주차한 뒤 열어요');
       const done = inDialogue && isDialogueDone();
-      document.getElementById('driveReplay').disabled = !inDialogue;
-      document.getElementById('driveNext').textContent = done ? '마치기' : '넘기기';
-      document.getElementById('driveNext').disabled = !inDialogue;
+      const replay = document.getElementById('driveReplay');
+      replay.disabled = !inDialogue;
+      replay.hidden = canStart;
+      const next = document.getElementById('driveNext');
+      next.textContent = canStart ? '듣기' : (done ? '마치기' : '넘기기');
+      next.disabled = !inDialogue && !canStart;
     }
 
     function driveReplay() {
-      if (currentMode && currentMode !== 'settings') playAudio(currentClip);
+      if (currentMode && !isParkedScreen()) render();
     }
 
     function driveNext() {
-      if (isDialogueDone()) goHome();
+      if (!currentMode || isParkedScreen()) {
+        const trip = currentTrip();
+        if (trip.kind !== 'weekend') startFlow(trip.mode);
+      } else if (isDialogueDone()) goHome();
       else skipQuestion();
       updateDriveScreen();
     }
@@ -1790,26 +2072,30 @@
     }
 
     // 차가 보내는 목적지와 남은 시간. 앱의 NaviBridge가 부른다.
-    // 실제 값이 오면 시연 조작(8분 전·2분 전)보다 우선한다.
+    // 실제 값이 오면 시연 조작(8분 전·4분 전·2분 전)보다 우선한다.
     let naviInfo = null;
-    const ETA_SHORT_MIN = 2;
 
     window.onNaviUpdate = function(jsonText) {
       let info;
       try { info = JSON.parse(jsonText); } catch (e) { return; }
-      console.log('Navi:', jsonText);
-      if (info.event === 'destination' || info.event === 'routeStarted') {
+      if (info.event === 'places') learnFromNavi(info.places || []);
+      else if (info.event === 'routeEnded' && performance.now() - routeStartedAt < ROUTE_SWAP_MS) return; // 경로를 바꾸면 옛 경로의 종료 신호가 뒤따른다
+      else if (info.event === 'destination' || info.event === 'routeStarted') {
+        if (info.event === 'routeStarted') routeStartedAt = performance.now();
         // 길 안내가 없을 때는 이름 없이 0으로 오므로 도착 직전과 구분한다.
         if (!info.name && !(Number(info.remainTime) > 0)) { const had = !!naviInfo; naviInfo = null; renderDemoPanel(); if (had) refreshHomeIfIdle(); return; }
         const changed = !naviInfo || naviInfo.name !== (info.name || '') || (currentMode === 'settings' && !document.querySelector('[onclick="saveHomeFromNavi()"]') && canSaveHomeFor(info));
         naviInfo = { name: info.name || '', address: info.address || '', remainTime: Number(info.remainTime), remainDistance: Number(info.remainDistance), at: Date.now() };
+        learnFromNavi([info]);
         applyNaviEta();
         if (changed) refreshHomeIfIdle();
       } else if (info.event === 'routeCancelled' || info.event === 'routeEnded' || info.event === 'arrived' || info.event === 'unavailable') {
-        if (info.event === 'arrived' && naviInfo) { naviInfo.remainTime = 0; applyNaviEta(); }
+        // 내비에 따라 도착 신호 없이 안내 종료만 올 수 있으므로, 거의 다 온 때의 종료도 도착으로 본다.
+        const reached = info.event === 'arrived' || (info.event === 'routeEnded' && Journey.tierFor(naviRemainMinutes()) === 'arrive');
         naviInfo = null;
         renderDemoPanel();
         refreshHomeIfIdle();
+        if (reached) finishOnArrival();
       } else if (info.event === 'status' && info.status !== 'ROUTE_DRIVE') {
         naviInfo = null;
         renderDemoPanel();
@@ -1829,6 +2115,7 @@
     // ========================================================
     const HOME_KEY = 'dait.home';
     let homePlace = readStored(HOME_KEY);
+    let routePlaces = readStored(ROUTE_KEY) || {}; // 내비에서 알아 둔 학교와 집의 좌표
 
     function normalizePlace(text) {
       return String(text || '').replace(/\s+/g, '').replace(/[()·,.]/g, '');
@@ -1843,9 +2130,20 @@
     function placeMatches(dest, place) {
       if (!dest || !place) return false;
       const destName = normalizePlace(dest.name), placeName = normalizePlace(place.name);
-      if (destName && placeName && (destName === placeName || destName.includes(placeName) || placeName.includes(destName))) return true;
+      // '집'처럼 짧은 이름은 '피자집'에도 들어가므로 네 글자가 넘을 때만 일부 일치를 인정한다.
+      const longEnough = Math.min(destName.length, placeName.length) >= 4;
+      if (destName && placeName && (destName === placeName || (longEnough && (destName.includes(placeName) || placeName.includes(destName))))) return true;
       const destRoad = roadPart(dest.address), placeRoad = roadPart(place.address);
       return !!(destRoad && placeRoad && destRoad === placeRoad);
+    }
+
+    // 좌표를 배우면 실제 길 안내로 이어지므로, 이름이 같고 주소도 어긋나지 않을 때만 같은 곳으로 본다.
+    function isSamePlace(found, target) {
+      const foundRoad = roadPart(found.address), targetRoad = roadPart(target.address);
+      if (foundRoad && targetRoad) return foundRoad === targetRoad;
+      if (normalizePlace(found.name) !== normalizePlace(target.name)) return false;
+      if (!found.address || !target.address) return true;
+      return found.address.split(/\s+/).some(word => word.length >= 2 && target.address.includes(word));
     }
 
     function canSaveHome() { return canSaveHomeFor(naviInfo); }
@@ -1857,11 +2155,15 @@
       if (!canSaveHome()) return;
       homePlace = { name: naviInfo.name, address: naviInfo.address || '' };
       writeStored(HOME_KEY, homePlace);
+      writeStored(HOME_CLEARED_KEY, false);
       goHome();
     }
 
     function clearHome() {
       homePlace = null;
+      writeStored(HOME_CLEARED_KEY, true);
+      delete routePlaces.home;
+      writeStored(ROUTE_KEY, routePlaces);
       try { localStorage.removeItem(HOME_KEY); } catch (e) { console.log('Storage error:', e); }
       render();
     }
@@ -1872,25 +2174,28 @@
       return naviInfo.remainTime / 60;
     }
 
+    // 도착이 가까워지면 말하던 문장은 끝까지 하고, 다음 내비 응답 때 마무리로 넘어간다.
     function applyNaviEta() {
-      const minutes = naviRemainMinutes();
-      if (minutes === null) return;
-      etaState = minutes <= ETA_SHORT_MIN ? 'short' : 'long';
       renderDemoPanel();
-      if (etaState === 'short' && currentMode && currentMode !== 'settings' && !isDialogueDone()) {
-        stage = 'ETA_SHORT';
-        render();
-      }
+      if (!currentMode || isParkedScreen() || speechPhase === 'speaking' || speechPaused || hasArrived) return;
+      if (Journey.tierFor(remainMinutes()) !== 'arrive') return;
+      if (stage === 'ETA_SHORT' || stage === 'PARENT_BRIDGE' || stage === 'NEXT_DAY') return; // 가족 대화는 끊지 않는다
+      // 대화를 일찍 마친 등교도 내리기 전 준비물 확인은 한 번 한다 (기획안 ④)
+      if (!isDialogueDone() || currentMode === 'morning') setStage('ETA_SHORT');
     }
 
     function renderDemoPanel() {
       const minutes = naviRemainMinutes();
       const live = minutes !== null;
-      document.getElementById('demoEtaLong').classList.toggle('on', etaState === 'long');
-      document.getElementById('demoEtaShort').classList.toggle('on', etaState === 'short');
+      const shown = remainMinutes();
+      const buttons = [['demoEtaLong', 8], ['demoEtaMid', 4], ['demoEtaShort', 2]];
+      buttons.forEach(([id, value]) => {
+        const button = document.getElementById(id);
+        button.classList.toggle('on', !live && shown === value);
+        button.disabled = live;
+      });
       document.getElementById('demoEtaLong').textContent = live ? `${Math.max(1, Math.round(minutes))}분 전` : '8분 전';
-      document.getElementById('demoEtaLong').disabled = live;
-      document.getElementById('demoEtaShort').disabled = live;
+      document.getElementById('demoEtaLong').classList.toggle('on', live || shown === 8);
     }
 
     // 시연용 목적지. 차에서 실제 값이 오면(앱 안) 쓰지 않는다. 없음 → 학교 → 집 → 없음 순으로 돈다.
@@ -1907,14 +2212,10 @@
     }
 
     // 시연용 남은 시간. 차에서 실제 값이 오면 쓰지 않는다.
-    function setEtaDemo(state) {
+    function setEtaDemo(minutes) {
       if (naviRemainMinutes() !== null) return;
-      etaState = etaState === state ? 'unknown' : state;
-      renderDemoPanel();
-      if (etaState === 'short' && currentMode && currentMode !== 'settings' && !isDialogueDone()) {
-        stage = 'ETA_SHORT';
-        render();
-      }
+      demoMinutes = demoMinutes === minutes ? null : minutes;
+      applyNaviEta();
     }
 
     // ========================================================
@@ -1971,13 +2272,6 @@
 
       // 오버레이 및 브랜드 상태 초기화 (전체 화면 상태로 리셋)
       overlay.style.transition = 'none';
-      overlay.style.top = '0px';
-      overlay.style.left = '0px';
-      overlay.style.width = '100%';
-      overlay.style.height = '100%';
-      overlay.style.borderRadius = '28px';
-      overlay.style.boxShadow = 'none';
-      overlay.classList.remove('fade-out');
       overlay.style.display = 'flex';
       overlay.style.opacity = '1';
       overlay.style.visibility = 'visible';
@@ -1994,11 +2288,11 @@
       if (dotGroup) dotGroup.classList.remove('pop');
       if (dotRipple) dotRipple.classList.remove('expand');
 
-      // 우측 메뉴 카드 초기화 (오른쪽에서 당겨져 들어올 준비)
-      const rightCards = document.querySelectorAll('.bento-right-col > *');
-      rightCards.forEach((card) => {
+      // 카드 초기화 (오른쪽에서 당겨져 들어올 준비)
+      const cards = document.querySelectorAll('.home-card');
+      cards.forEach((card) => {
         card.style.transition = 'none';
-        card.style.transform = 'translateX(65px)';
+        card.style.transform = 'translateX(30px)';
         card.style.opacity = '0';
       });
 
@@ -2035,76 +2329,46 @@
         playChimeSound();
       }, 1120));
 
-      // 4. 파란색 화면 전체가 hero 카드 크기로 함께 줄어들면서, 로고도 좌측 상단으로 같이 빨려들어가는 모션 (1.62s)
+      // 4. 로고가 작아지며 화면 위쪽 제자리로 미끄러져 간다 (1.62s)
       introTimers.push(setTimeout(() => {
-        const hero = document.querySelector('.bento-hero');
-        const display = document.querySelector('.pleos-display');
         const targetBadge = document.querySelector('.dait-brand-badge');
-
-        if (hero && display && targetBadge) {
-          const hRect = hero.getBoundingClientRect();
-          const dRect = display.getBoundingClientRect();
-          const targetTop = hRect.top - dRect.top;
-          const targetLeft = hRect.left - dRect.left;
-          const targetWidth = hRect.width;
-          const targetHeight = hRect.height;
-
-          // (1) 전체 파란색 화면이 hero 카드 위치와 크기로 함께 수축 (빨려들어가기)
-          overlay.style.transition = 'top 0.72s cubic-bezier(0.22, 1, 0.36, 1), left 0.72s cubic-bezier(0.22, 1, 0.36, 1), width 0.72s cubic-bezier(0.22, 1, 0.36, 1), height 0.72s cubic-bezier(0.22, 1, 0.36, 1), border-radius 0.72s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.72s cubic-bezier(0.22, 1, 0.36, 1)';
-          overlay.style.top = `${targetTop}px`;
-          overlay.style.left = `${targetLeft}px`;
-          overlay.style.width = `${targetWidth}px`;
-          overlay.style.height = `${targetHeight}px`;
-          overlay.style.borderRadius = '22px';
-          overlay.style.boxShadow = '0 14px 34px rgba(7, 23, 44, 0.32)';
-
-          // (2) 로고도 수축하는 파란색 화면 내부에서 좌측 상단으로 정확히 이동
-          // 축소된 카드 내부 기준: padding-left 28px, padding-top 24px
-          const targetX = 28 + (targetBadge.offsetWidth / 2) - (targetWidth / 2);
-          const targetY = 24 + (targetBadge.offsetHeight / 2) - (targetHeight / 2);
-          const scale = targetBadge.offsetWidth / brand.offsetWidth;
-
-          brand.style.transition = 'transform 0.72s cubic-bezier(0.22, 1, 0.36, 1)';
-          brand.style.transform = `translate(${targetX}px, ${targetY}px) scale(${scale})`;
-
-          // (3) 오버레이 내부 발광 아우라는 수축하면서 은은하게 소멸
-          if (aura) {
-            aura.style.transition = 'opacity 0.55s ease';
-            aura.style.opacity = '0';
-          }
+        if (targetBadge) {
+          const from = brand.getBoundingClientRect();
+          const to = targetBadge.getBoundingClientRect();
+          const moveX = to.left + to.width / 2 - from.left - from.width / 2;
+          const moveY = to.top + to.height / 2 - from.top - from.height / 2;
+          brand.style.transition = 'transform 0.58s cubic-bezier(0.22, 1, 0.36, 1)';
+          brand.style.transform = `translate(${moveX}px, ${moveY}px) scale(${to.width / from.width})`;
         }
-
-        // (4) 우측 메뉴 카드들이 왼쪽 수축 모션에 이끌리듯 오른쪽에서 화면 안으로 부드럽게 당겨져 들어옴 (스태거 캐스케이드)
-        rightCards.forEach((card, idx) => {
-          const delay = idx * 65; // 상단 2분할(0ms) -> 하교 대화(65ms) 순차 진입
-          introTimers.push(setTimeout(() => {
-            card.style.transition = 'transform 0.68s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.48s ease-out';
-            card.style.transform = 'translateX(0)';
-            card.style.opacity = '1';
-          }, delay));
-        });
+        if (aura) {
+          aura.style.transition = 'opacity 0.5s ease';
+          aura.style.opacity = '0';
+        }
       }, 1620));
 
-      // 5. 수축 완료 시점 (2.36s) - 파란색 화면이 hero 카드와 완전히 포개졌으므로 부드럽게 핸드오버
+      // 5. 로고가 닿으면 덮개를 걷고 카드가 차례로 들어온다 (2.2s)
       introTimers.push(setTimeout(() => {
-        overlay.style.transition = 'opacity 0.2s ease';
+        overlay.style.transition = 'opacity 0.25s ease';
         overlay.style.opacity = '0';
-      }, 2360));
+        cards.forEach((card, idx) => {
+          introTimers.push(setTimeout(() => {
+            card.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.36s ease-out';
+            card.style.transform = 'translateX(0)';
+            card.style.opacity = '1';
+          }, idx * 45));
+        });
+      }, 2200));
 
-      // 5.5 우측 메뉴 카드 스타일 정리 (2.46s - 도착 완료 후 기본 CSS 호버 효과 정상화)
+      // 6. 카드 스타일과 스플래시 정리 (3s)
       introTimers.push(setTimeout(() => {
-        rightCards.forEach((card) => {
+        cards.forEach((card) => {
           card.style.transition = '';
           card.style.transform = '';
           card.style.opacity = '';
         });
-      }, 2460));
-
-      // 6. 스플래시 완전 정리 (2.58s)
-      introTimers.push(setTimeout(() => {
         overlay.style.display = 'none';
         finishIntro();
-      }, 2580));
+      }, 3000));
     }
 
     function finishIntro() {
@@ -2116,8 +2380,8 @@
     function skipSplashIntro() {
       clearIntroTimers();
       const overlay = document.getElementById('splashOverlay');
-      const rightCards = document.querySelectorAll('.bento-right-col > *');
-      rightCards.forEach((card) => {
+      const cards = document.querySelectorAll('.home-card');
+      cards.forEach((card) => {
         card.style.transition = 'opacity 0.2s ease';
         card.style.transform = '';
         card.style.opacity = '1';

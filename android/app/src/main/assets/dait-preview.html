@@ -613,6 +613,35 @@
       gap: calc(10 * var(--u));
     }
     .settings-grid .main-question { font-size: calc(18 * var(--u)); }
+    .lesson-pick {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      gap: calc(16 * var(--u));
+    }
+    .lesson-main, .lesson-side {
+      min-height: 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: calc(8 * var(--u));
+    }
+    .lesson-main .main-question { font-size: calc(18 * var(--u)); text-align: left; }
+    .lesson-main { padding-right: calc(8 * var(--u)); } /* 스크롤 막대가 버튼을 덮지 않게 한다 */
+    .lesson-times, .lesson-subjects { display: flex; flex-wrap: wrap; gap: calc(6 * var(--u)); flex-shrink: 0; }
+    .lesson-times .choice-chip, .lesson-subjects .choice-chip { min-width: 0; font-size: calc(14 * var(--u)); padding: 0 calc(4 * var(--u)); }
+    .lesson-row { display: flex; gap: calc(6 * var(--u)); flex-shrink: 0; }
+    .lesson-row .choice-chip {
+      min-width: 0;
+      max-width: none;
+      padding: calc(4 * var(--u)) calc(10 * var(--u));
+      text-align: left;
+    }
+    .lesson-row .card-btn { width: auto; flex: 0 0 calc(98 * var(--u)); margin-top: 0; font-size: calc(13 * var(--u)); }
+    .lesson-title { display: block; font-size: calc(14 * var(--u)); line-height: 1.3; }
+    .lesson-meta { display: block; font-size: calc(13 * var(--u)); font-weight: 500; opacity: 0.75; }
+    .lesson-side .card-btn { margin-top: 0; flex-shrink: 0; }
     .settings-side {
       min-height: 0;
       display: flex;
@@ -801,6 +830,8 @@
 
   <script src="dait-rules.js"></script>
   <script src="dait-journey.js"></script>
+  <script src="dait-lesson.js"></script>
+  <script src="dait-lessons.js"></script>
   <script>
     // State
     const voice = 'nika';
@@ -827,7 +858,7 @@
     let tripForDoor = null; // 내릴 때 한마디: 대화를 시작한 여정. 달렸는지와 주차 시각을 기억한다.
     let currentRule = null; // 이번 대화에 쓰는 교사 규칙
     let ruleMissing = false; // 규칙 대화에서 준비물을 못 챙겼다고 답함
-    let armed = null; // 출발하면 들려주기: { mode, timer }
+    let armed = null; // 출발하면 들려주기: { mode, timer }. 수업이면 mode는 'lesson'이고 lesson과 minutes를 함께 둔다
     let pendingStart = null; // 마이크 허락을 기다리는 동작
     let micAsked = false;
     let hasArrived = false;
@@ -891,7 +922,17 @@
         return;
       }
 
-      // 4. Dialogue Flow
+      // 4. Lessons
+      if (currentMode === 'lessonPick') {
+        renderLessonPick(stageArea);
+        return;
+      }
+      if (currentMode === 'lesson') {
+        renderLesson(stageArea);
+        return;
+      }
+
+      // 5. Dialogue Flow
       renderDialogueFlow(stageArea);
     }
 
@@ -914,6 +955,7 @@
             <div class="home-desc">${escapeHtml(info.desc)}</div>
           </div>
           <div class="home-tools">
+            <button class="card-btn" onclick="openLessons()">${armed && armed.lesson ? '수업 예약' : '수업 듣기'}</button>
             <button class="icon-btn" aria-label="가 볼 만한 곳" onclick="openPlaces()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
             </button>
@@ -998,7 +1040,7 @@
     }
 
     function armLabel(trip) {
-      if (armed) return '출발하면 들려줄게요';
+      if (armed) return armed.lesson ? '수업 예약 취소' : '출발하면 들려줄게요';
       if (routePlaceFor(trip.mode) && !naviInfo) return trip.mode === 'morning' ? '학교로 안내' : '집으로 안내';
       return '출발하면 듣기';
     }
@@ -1110,6 +1152,7 @@
     }
 
     function goHome() {
+      if (currentMode === 'lesson') closeLesson();
       stopSpeech();
       if (tripForDoor && !tripForDoor.drove) tripForDoor = null; // 주차 중에 들어 본 대화는 여정이 아니다
       currentMode = null;
@@ -1137,12 +1180,14 @@
     }
 
     function isDialogueDone() {
+      if (currentMode === 'lesson') return !!lessonRun && lessonRun.done;
       return Journey.isDone(stage);
     }
 
     // 질문을 건너뛴다. 답을 지어내지 않고 다음 단계로만 넘어간다.
     function skipQuestion() {
       if (!currentMode || isParkedScreen() || isDialogueDone()) return;
+      if (currentMode === 'lesson') { nextLessonPiece(); return; }
       heard = '';
       setStage(Journey.skip(currentMode, stage, journeyContext()));
     }
@@ -1158,6 +1203,8 @@
     function handlePrimaryAction() {
       if (isDialogueDone()) {
         goHome();
+      } else if (currentMode === 'lesson') {
+        if (!isLessonResting()) playLessonPiece();
       } else {
         render();
       }
@@ -1170,10 +1217,30 @@
     function toggleArm(mode) {
       if (armed) { disarm(); render(); return; }
       if (askMicFirst(() => toggleArm(mode))) return;
-      armed = { mode, timer: setTimeout(() => { disarm(); refreshHomeIfIdle(); }, ARM_MS) };
+      arm({ mode });
       render();
       const place = routePlaceFor(mode);
       if (place && !naviInfo && window.AndroidBridge) window.AndroidBridge.startRoute(JSON.stringify(place));
+    }
+
+    function arm(choice) {
+      armed = { ...choice, timer: setTimeout(() => {
+        disarm();
+        refreshHomeIfIdle();
+        if (currentMode === 'lessonPick') render();
+      }, ARM_MS) };
+    }
+
+    // 고른 대로 출발할 때 시작한다. 수업은 출발할 때 아는 남은 시간을 먼저 쓴다.
+    // 그 시간에 들어가지 않는 수업이면 말을 시작하지 않고 예약만 지운다.
+    function startArmed() {
+      const { mode, lesson, minutes } = armed;
+      disarm();
+      if (mode !== 'lesson') { startFlow(mode); return; }
+      const eta = remainMinutes();
+      lessonMinutes = eta !== null ? Lesson.minutesFor(eta) : minutes;
+      startLesson(lesson);
+      refreshHomeIfIdle(); // 시간이 모자라 시작하지 못했으면 예약이 사라진 것을 보여 준다
     }
 
     // 내비에서 알아 둔 학교와 집의 좌표. 있으면 첫 화면에서 바로 길 안내를 시작할 수 있다.
@@ -1312,7 +1379,7 @@
         return;
       }
       const player = document.getElementById('audioPlayer');
-      player.src = clip.includes('/') ? `voices/${clip}.wav` : `voices/${voice}/${clip}.wav`;
+      player.src = clip.startsWith('lesson/') ? `voices/${clip}.m4a` : clip.includes('/') ? `voices/${clip}.wav` : `voices/${voice}/${clip}.wav`;
       player.play().catch(e => {
         console.log('Audio error:', e);
         window.onSpeechEvent(JSON.stringify({ event: 'ended', seq: speechSeq }));
@@ -1351,6 +1418,7 @@
       }
       speechPhase = info.event === 'listening' ? 'listening' : 'idle';
       showHeardLine();
+      if (currentMode === 'lesson') { onLessonSpeech(info); return; }
       if (info.event === 'heard') onHeard(info.text, info.reference);
       else if (info.event === 'silence') onUnclear();
       else if (info.event === 'listening') {
@@ -1384,7 +1452,7 @@
     // 마이크를 쓸 수 없는 차에서는 달리는 동안 답을 받을 길이 없다.
     // 가족이 이야기할 틈을 둔 뒤 다음 단계로 넘어가, 질문 하나에서 멈춰 있지 않게 한다.
     function advanceWithoutMic() {
-      if (!isDrivingMode || canListen() || !currentMode || isParkedScreen() || isDialogueDone() || stage === 'PARENT_BRIDGE') return;
+      if (currentMode === 'lesson' || !isDrivingMode || canListen() || !currentMode || isParkedScreen() || isDialogueDone() || stage === 'PARENT_BRIDGE') return;
       clearTimeout(noMicTimer);
       noMicTimer = setTimeout(() => {
         if (speechPhase === 'idle' && isDrivingMode) skipQuestion();
@@ -1420,6 +1488,13 @@
     // 도착하면 진행 중이던 질문을 마치고 인사한 뒤 첫 화면으로 돌아간다.
     function finishOnArrival() {
       if (!currentMode || isParkedScreen()) return;
+      if (currentMode === 'lesson') {
+        hasArrived = true;
+        if (lessonRun.done) closeAfterArrival();
+        else if (lessonRun.stopped) endLesson();
+        else fitLessonToEta(0);
+        return;
+      }
       hasArrived = true;
       if (!isDialogueDone() || (currentMode === 'afternoon' && stage === 'ETA_SHORT')) setStage('DONE');
       if (speechPhase === 'idle') closeAfterArrival();
@@ -1428,6 +1503,349 @@
     function closeAfterArrival() {
       clearTimeout(closeTimer);
       closeTimer = setTimeout(() => { if (hasArrived) goHome(); }, ARRIVAL_CLOSE_MS);
+    }
+
+    // ========================================================
+    // 시간 맞춤 수업 (11.01 회의)
+    // 조립과 판단은 dait-lesson.js가 맡고, 여기는 수업을 틀고 화면을 그린다.
+    // 답을 말하라고 요구하지 않는다. 기록을 켠 사람의 답만 이 기기에 글로 남긴다.
+    // ========================================================
+    const LESSON_KEY = 'dait.lessonProgress';
+    const LESSON_RECORD_KEY = 'dait.lessonRecord';
+    let lessonRun = null; // 지금 듣는 교시: { lesson, trip, pieces, index, heard, answers, reachedEnd, done, finished, stopped, saved }
+    let lessonMinutes = Lesson.DEFAULT_MINUTES;
+    let lessonSubject = ''; // 고르는 화면의 과목 칩. 빈 값은 전체
+    let lessonTimer = null;
+    const TOP_SPEED_MPS = 50; // 이보다 빨리 줄어든 남은 거리는 달린 것이 아니라 목적지를 바꾼 것이다
+
+    function lessonProgress() {
+      return Lesson.normalize(readStored(LESSON_KEY));
+    }
+
+    function lessonRecordOn() {
+      return readStored(LESSON_RECORD_KEY) === true;
+    }
+
+    function canRecordAnswer() {
+      return lessonRecordOn() && canListen();
+    }
+
+    function openLessons() {
+      if (isDrivingMode) return;
+      const eta = remainMinutes();
+      lessonMinutes = eta !== null ? Lesson.minutesFor(eta) : Lesson.DEFAULT_MINUTES;
+      lessonSubject = '';
+      currentMode = 'lessonPick';
+      render();
+    }
+
+    function pickLessonTime(minutes) {
+      lessonMinutes = minutes;
+      if (armed && armed.lesson) armed.minutes = minutes;
+      render();
+    }
+
+    function pickLessonSubject(subject) {
+      lessonSubject = subject;
+      render();
+    }
+
+    // 긴 이동이면 교시를 짜고, 아니면 고른 수업 하나로 교시 하나를 짠다.
+    function lessonTripFor(lessonId) {
+      const lesson = DAIT_LESSONS.find(item => item.id === lessonId);
+      const order = Lesson.isLongTrip(lessonMinutes) ? Lesson.tripOrder(DAIT_LESSONS, lessonProgress().records, lessonId) : [lesson];
+      return Lesson.planTrip(order, lessonMinutes);
+    }
+
+    // 출발하면 들려주기를 수업에도 쓴다. 마이크는 답을 남기기로 한 사람에게만 묻는다.
+    function toggleLessonArm(lessonId) {
+      if (isDrivingMode) return;
+      if (armed && armed.lesson === lessonId) { disarm(); render(); return; }
+      if (lessonRecordOn() && askMicFirst(() => toggleLessonArm(lessonId))) return;
+      disarm();
+      arm({ mode: 'lesson', lesson: lessonId, minutes: lessonMinutes });
+      render();
+    }
+
+    function toggleLessonRecord() {
+      const on = !lessonRecordOn();
+      writeStored(LESSON_RECORD_KEY, on);
+      if (on) micAsked = false; // 답을 남기겠다고 고른 지금 마이크 허락을 묻는다
+      if (!on || !askMicFirst(render)) render();
+    }
+
+    function lessonRecordLabel() {
+      if (!lessonRecordOn()) return '꺼짐';
+      return canListen() || micState() === 'loading' ? '켜짐' : '켜짐, 마이크를 쓸 수 없어요';
+    }
+
+    function doneHomework() {
+      writeStored(LESSON_KEY, Lesson.finishHomework(lessonProgress()));
+      render();
+    }
+
+    function forgetLessonAnswers() {
+      writeStored(LESSON_KEY, Lesson.forgetAnswers(lessonProgress()));
+      render();
+    }
+
+    function renderLessonPick(container) {
+      const progress = lessonProgress();
+      const eta = remainMinutes();
+      const choices = eta !== null ? [Lesson.minutesFor(eta)] : [...Lesson.TIME_CHOICES, ...Lesson.LONG_CHOICES];
+      if (!choices.includes(lessonMinutes)) lessonMinutes = eta !== null ? choices[0] : Lesson.DEFAULT_MINUTES;
+      const trip = Lesson.planTrip(Lesson.tripOrder(DAIT_LESSONS, progress.records, armed && armed.lesson), lessonMinutes);
+      const periods = trip.lesson ? Lesson.periods(trip) : [];
+      const lessons = Lesson.recommend(DAIT_LESSONS, trip.minutes, progress.records);
+      const subjects = Lesson.subjects(DAIT_LESSONS.filter(lesson => lessons.includes(lesson)));
+      if (!subjects.includes(lessonSubject)) lessonSubject = '';
+      const reserved = armed && armed.lesson ? DAIT_LESSONS.find(lesson => lesson.id === armed.lesson) : null;
+      const scrolled = document.querySelector('.lesson-main')?.scrollTop || 0;
+      const km = Math.round(progress.km[Lesson.monthOf(toYmd(new Date()))] || 0);
+      const answers = progress.records.flatMap(record => record.answers).slice(-3).reverse();
+      const mileage = km ? `이번 달 ${km}km ${Lesson.mileageLine(km)}`.trim() : '';
+      container.innerHTML = `
+        <div class="dialogue-wrap">
+          <div class="dialogue-top">
+            <button class="back-btn" onclick="goHome()">처음으로</button>
+            <span class="top-label">수업</span>
+          </div>
+          <div class="lesson-pick">
+            <div class="lesson-main">
+              <div class="main-question">${eta === null ? '몇 분 수업을 들을까요?' : `도착까지 ${Lesson.minutesFor(eta)}분, ${periods.length > 1 ? `${periods.length}교시로 들어요` : '이 수업을 들어요'}`}</div>
+              <div class="lesson-times">
+                ${choices.map(minutes => `<button class="choice-chip" aria-pressed="${minutes === lessonMinutes}" onclick="pickLessonTime(${minutes})">${minutes}분</button>`).join('')}
+              </div>
+              ${periods.length > 1 ? `<div class="card-sub">${periods.map((lesson, i) => `${i + 1}교시 ${escapeHtml(lesson.subject)}`).join(' · ')} · 쉬는 시간 ${Lesson.BREAK_MINUTES}분</div>` : ''}
+              ${subjects.length > 1 ? `<div class="lesson-subjects">
+                ${['', ...subjects].map(subject => `<button class="choice-chip" aria-pressed="${subject === lessonSubject}" data-subject="${escapeHtml(subject)}" onclick="pickLessonSubject(this.dataset.subject)">${escapeHtml(subject || '전체')}</button>`).join('')}
+              </div>` : ''}
+              ${reserved ? `<div class="card-sub">출발하면 들려줄게요: ${escapeHtml(reserved.title)}</div>` : ''}
+              ${lessons.length === 0 ? '<div class="settings-message">이 시간에 맞는 수업이 아직 없어요</div>' : ''}
+              ${Lesson.bySubject(lessons, lessonSubject).map(lesson => `<div class="lesson-row">
+                <button class="choice-chip" onclick="startLesson('${lesson.id}')">
+                  <span class="lesson-title">${escapeHtml(lesson.title)}</span>
+                  <span class="lesson-meta">${escapeHtml(lesson.subject)} · ${escapeHtml(lesson.field)} · 약 ${Math.round(Lesson.totalSeconds(Lesson.assemble(lesson, trip.minutes)) / 60)}분</span>
+                </button>
+                <button class="card-btn quiet" onclick="toggleLessonArm('${lesson.id}')">${reserved === lesson ? '예약 취소' : '출발하면 듣기'}</button>
+              </div>`).join('')}
+            </div>
+            <div class="lesson-side">
+              <div class="card-label">배움과 이어진 수</div>
+              <div class="card-focus">이음 ${progress.ieum}</div>
+              ${mileage ? `<div class="card-sub">${escapeHtml(mileage)}</div>` : ''}
+              ${progress.homework ? `<div class="card-label">숙제</div><div class="card-sub">${escapeHtml(progress.homework.title)}</div><button class="card-btn" onclick="doneHomework()">했어요</button>` : ''}
+              <button class="card-btn quiet" onclick="toggleLessonRecord()">내 답 글로 남기기: ${lessonRecordLabel()}</button>
+              <div class="card-sub">켜면 발문에 말한 답을 이 차 안에만 글로 남겨요. 녹음 파일은 만들지 않고 서버로 보내지 않아요.</div>
+              ${answers.map(answer => `<div class="card-sub">${escapeHtml(answer.question)}: “${escapeHtml(answer.text)}”</div>`).join('')}
+              ${answers.length ? '<button class="card-btn quiet" onclick="forgetLessonAnswers()">남긴 답 지우기</button>' : ''}
+            </div>
+          </div>
+        </div>
+      `;
+      const main = document.querySelector('.lesson-main');
+      if (main) main.scrollTop = scrolled; // 예약을 눌러도 보던 자리에 머문다
+    }
+
+    function renderLesson(container) {
+      const run = lessonRun;
+      const piece = run.pieces[run.index];
+      const resting = !run.done && Lesson.isBreak(piece);
+      const title = run.done ? lessonDoneLine(run) : run.stopped ? '수업을 잠시 멈췄어요' : piece.line;
+      const replay = `<button class="primary-btn" onclick="handlePrimaryAction()">${run.stopped ? '이어 듣기' : '다시 듣기'}</button>`;
+      const buttons = run.done ? '<button class="primary-btn" onclick="handlePrimaryAction()">마치기</button>'
+        : `${resting ? '' : replay}<button class="primary-btn secondary" onclick="skipQuestion()">넘기기</button>`;
+      container.innerHTML = `
+        <div class="dialogue-wrap">
+          <div class="dialogue-top">
+            <button class="back-btn" onclick="goHome()">처음으로</button>
+            <span class="top-label">${escapeHtml(lessonLabel(run, resting))}</span>
+          </div>
+          <div class="dialogue-card">
+            <div class="card-center">
+              <div class="main-question">${escapeHtml(title)}</div>
+              ${run.done || resting || piece.voiced ? '' : '<div class="card-sub">음원 준비 중</div>'}
+              <div id="heardLine" class="heard-bubble"${heard || speechPhase === 'listening' ? '' : ' hidden'}>${escapeHtml(heardLineText())}</div>
+            </div>
+          </div>
+          <div class="bottom-bar">${buttons}</div>
+        </div>
+      `;
+    }
+
+    function lessonLabel(run, resting) {
+      const { number, count } = run.trip;
+      if (resting) return `${number}교시 마침`;
+      return number > 1 || count > 0 ? `${number}교시 ${run.lesson.subject}` : `${run.lesson.subject} 수업`;
+    }
+
+    function lessonDoneLine(run) {
+      return run.trip.earned ? `배움과 이어졌어요, 이음 +${run.trip.earned}` : '수업을 멈췄어요. 다음에 이어 가요';
+    }
+
+    function isLessonResting() {
+      return !!lessonRun && !lessonRun.done && Lesson.isBreak(lessonRun.pieces[lessonRun.index]);
+    }
+
+    function startLesson(lessonId) {
+      const trip = lessonTripFor(lessonId);
+      if (!trip.lesson || !Lesson.fits(trip.lesson, trip.minutes)) return;
+      if (lessonRecordOn() && askMicFirst(() => startLesson(lessonId))) return;
+      disarm();
+      tripForDoor = null; // 내릴 때 한마디가 수업을 끊고 지나가지 않게 한다
+      clearTimeout(doorTimer);
+      currentMode = 'lesson';
+      stage = '';
+      hasArrived = false;
+      micBroken = false;
+      startPeriod({ ...trip, earned: 0, endsAt: Date.now() + lessonMinutes * 60 * 1000 });
+      syncJourney();
+    }
+
+    // 교시마다 기록을 따로 남기려고 교시마다 새로 시작한다. 앞 교시를 마쳤으면 그 복습이 앞에 붙는다.
+    function startPeriod(trip) {
+      const pieces = Lesson.plan(trip.lesson, DAIT_LESSONS, trip.minutes, lessonProgress().records);
+      const run = {
+        lesson: trip.lesson, trip, pieces: Lesson.withBreak(pieces, trip), plannedSeconds: Lesson.lessonSeconds(pieces),
+        index: 0, heard: [], answers: [], meters: 0, lastMeters: null, lastMetersAt: 0,
+        reachedEnd: false, done: false, finished: false, stopped: false, saved: false
+      };
+      lessonRun = run;
+      setTimeout(() => { if (lessonRun === run) endLesson(); }, TRIP_CAP_MS); // 차 상태가 멈춰도 앞쪽 작업이 끝없이 남지 않게 한다
+      heard = '';
+      noteLessonNavi();
+      fitLessonToEta(remainMinutes());
+      playLessonPiece();
+    }
+
+    // 길 안내가 있으면 남은 시간을, 없으면 고른 시간에서 지난 만큼 뺀 시간을 뒤 교시에 나눈다.
+    function tripSeconds(trip) {
+      const eta = remainMinutes();
+      return eta !== null ? eta * 60 : (trip.endsAt - Date.now()) / 1000;
+    }
+
+    function playLessonPiece() {
+      const run = lessonRun;
+      if (!run || run.done) return;
+      clearTimeout(lessonTimer);
+      run.stopped = false;
+      const piece = run.pieces[run.index];
+      if (Lesson.isClosing(piece)) run.reachedEnd = true;
+      if (Lesson.isBreak(piece)) {
+        saveLesson(run); // 마친 교시는 쉬는 시간이 시작될 때 바로 남긴다
+        run.restedFrom = Date.now();
+      }
+      heard = '';
+      speakLessonPiece(piece);
+      renderStage();
+      updateDriveScreen(piece.line);
+    }
+
+    // 음원이 오기 전에는 대사 길이만큼 소리 없이 기다려, 흐름과 시간 맞춤을 그대로 시험한다.
+    function speakLessonPiece(piece) {
+      if (piece.voiced) {
+        speak([piece.clip], Lesson.isQuestion(piece) && canRecordAnswer() ? 'free' : '');
+        return;
+      }
+      stopSpeech();
+      speechPhase = 'speaking';
+      const seq = speechSeq;
+      lessonTimer = setTimeout(() => window.onSpeechEvent(JSON.stringify({ event: 'ended', seq })), Lesson.speechSeconds(piece) * 1000);
+    }
+
+    function nextLessonPiece() {
+      const run = lessonRun;
+      if (!run || run.done) return;
+      clearTimeout(lessonTimer);
+      const rested = Lesson.isBreak(run.pieces[run.index]);
+      run.index++;
+      if (rested) startPeriod(Lesson.nextPeriod(run.trip, tripSeconds(run.trip)));
+      else if (run.index >= run.pieces.length) endLesson();
+      else playLessonPiece();
+    }
+
+    function onLessonSpeech(info) {
+      const run = lessonRun;
+      if (!run || run.done || info.event === 'listening') return;
+      const piece = run.pieces[run.index];
+      if (Lesson.isBreak(piece) && !isDrivingMode) { endLesson(); return; } // 쉬는 시간이 끝났을 때 주차 중이면 사람 없는 차에서 말을 시작하지 않는다
+      if (info.event === 'stopped') {
+        run.stopped = true; // 음악이나 통화가 소리를 돌려주지 않으면 사람이 이어 듣기를 누를 때까지 멈춘다
+        renderStage();
+        updateDriveScreen();
+        return;
+      }
+      if (Lesson.isBreak(piece)) { nextLessonPiece(); return; }
+      if (!run.heard.includes(piece)) run.heard.push(piece);
+      if (info.event === 'heard') {
+        if (info.text.length <= 12 && Journey.isQuiet(info.text)) { endLesson(); return; }
+        run.answers.push({ level: piece.level, question: piece.line, text: info.text });
+        nextLessonPiece();
+      } else if (info.event === 'silence') nextLessonPiece(); // 답하지 않아도 재촉하지 않는다
+      else if (Lesson.isQuestion(piece)) {
+        if (info.event === 'micFailed') micBroken = true;
+        lessonTimer = setTimeout(nextLessonPiece, piece.wait * 1000); // 생각할 틈
+      } else nextLessonPiece();
+    }
+
+    // 내비의 남은 거리로 이번 수업에서 달린 거리를 잰다. 길 안내가 없으면 거리를 더하지 않는다.
+    function noteLessonNavi() {
+      const run = lessonRun;
+      if (!run || !naviInfo || !Number.isFinite(naviInfo.remainDistance)) return;
+      const now = Date.now();
+      if (run.lastMeters !== null) {
+        const reachable = TOP_SPEED_MPS * (now - run.lastMetersAt) / 1000;
+        run.meters += Math.min(Math.max(0, run.lastMeters - naviInfo.remainDistance), reachable);
+      }
+      run.lastMeters = naviInfo.remainDistance;
+      run.lastMetersAt = now;
+    }
+
+    function fitLessonToEta(minutes) {
+      const run = lessonRun;
+      if (!run || run.done || minutes === null) return;
+      // 쉬는 시간을 지낸 만큼은 앞으로 쉴 시간이 아니므로 남은 시간에 도로 더해 맞춘다.
+      const rested = isLessonResting() ? (Date.now() - run.restedFrom) / 1000 : 0;
+      const fitted = Lesson.fitTrip(run.pieces, run.index, minutes * 60 + rested, run.lesson, run.trip);
+      run.pieces = fitted.pieces;
+      run.trip.count = fitted.count;
+      if (run.index >= run.pieces.length) endLesson(); // 쉬는 시간에 뒤 교시가 다 빠졌다
+    }
+
+    function endLesson() {
+      const run = lessonRun;
+      if (!run || run.done) return;
+      clearTimeout(lessonTimer);
+      stopSpeech();
+      run.done = true;
+      saveLesson(run);
+      heard = '';
+      render();
+      updateDriveScreen();
+      if (hasArrived) closeAfterArrival();
+    }
+
+    // 교시마다 한 번만 남긴다. 마친 교시는 저마다 이음과 숙제가 된다.
+    function saveLesson(run) {
+      if (run.saved) return;
+      run.saved = true;
+      run.finished = Lesson.countsAsFinished(run);
+      if (run.finished) run.trip.earned++;
+      if (run.heard.length > 0) {
+        writeStored(LESSON_KEY, Lesson.finishLesson(lessonProgress(), run.lesson, toYmd(new Date()), run.finished, run.meters / 1000, run.answers));
+      }
+    }
+
+    // 처음으로 돌아갈 때 듣던 수업을 정리한다.
+    function closeLesson() {
+      endLesson();
+      lessonRun = null;
+    }
+
+    // 주행 중에는 고르는 화면을 열지 않고, 가는 길에 들어갈 수업 하나를 버튼 하나로 제안한다.
+    function lessonOffer(trip) {
+      if (trip.kind !== 'weekend' && !(naviInfo && !trip.known)) return null;
+      return Lesson.recommend(DAIT_LESSONS, Lesson.minutesFor(remainMinutes()), lessonProgress().records)[0] || null;
     }
 
     // ========================================================
@@ -1857,7 +2275,7 @@
     }
 
     function isParkedScreen() {
-      return currentMode === 'settings' || currentMode === 'places';
+      return currentMode === 'settings' || currentMode === 'places' || currentMode === 'lessonPick';
     }
 
     function openSettings() {
@@ -2045,9 +2463,10 @@
       document.body.classList.toggle('real-driving', !!isRealDriving);
       trackDoorTrip(isDriving);
       document.getElementById('demoDrive').classList.toggle('on', isDriving);
-      if (isDriving && isParkedScreen()) goHome();
+      if (isDriving && (isParkedScreen() || (departing && currentMode === 'lesson' && isDialogueDone()))) goHome();
       trackTrip(isDriving);
-      if (departing && armed) startFlow(armed.mode);
+      if (!isDriving && isLessonResting()) endLesson(); // 쉬는 시간에 주차하면 내린 것으로 보고 수업을 닫는다
+      if (departing && armed) startArmed();
       else if (departing && speechPhase === 'idle') advanceWithoutMic();
       updateDriveScreen();
       syncJourney();
@@ -2056,14 +2475,16 @@
     function updateDriveScreen(sentence) {
       const inDialogue = currentMode && !isParkedScreen();
       const trip = inDialogue ? null : currentTrip();
-      const canStart = !inDialogue && trip.kind !== 'weekend';
+      const offer = inDialogue ? null : lessonOffer(trip);
+      const canStart = !inDialogue && (!!offer || trip.kind !== 'weekend');
       const text = inDialogue ? (sentence || document.querySelector('.main-question')?.textContent || '')
+        : offer ? `${offer.subject} 수업을 들을까요?`
         : canStart ? `${trip.mode === 'morning' ? '등교' : '하교'} 이야기를 들을까요?` : '주차 후 이어갈게요';
       document.getElementById('driveSentence').textContent = text;
-      document.getElementById('driveSub').textContent = inDialogue ? heardLineText() : (canStart ? '' : '설정과 자세한 내용은 주차한 뒤 열어요');
+      document.getElementById('driveSub').textContent = inDialogue ? heardLineText() : offer ? offer.title : (canStart ? '' : '설정과 자세한 내용은 주차한 뒤 열어요');
       const done = inDialogue && isDialogueDone();
       const replay = document.getElementById('driveReplay');
-      replay.disabled = !inDialogue;
+      replay.disabled = !inDialogue || isLessonResting();
       replay.hidden = canStart;
       const next = document.getElementById('driveNext');
       next.textContent = canStart ? '듣기' : (done ? '마치기' : '넘기기');
@@ -2071,13 +2492,16 @@
     }
 
     function driveReplay() {
-      if (currentMode && !isParkedScreen()) render();
+      if (currentMode === 'lesson') { if (!isDialogueDone() && !isLessonResting()) playLessonPiece(); }
+      else if (currentMode && !isParkedScreen()) render();
     }
 
     function driveNext() {
       if (!currentMode || isParkedScreen()) {
         const trip = currentTrip();
-        if (trip.kind !== 'weekend') startFlow(trip.mode);
+        const offer = lessonOffer(trip);
+        if (offer) { lessonMinutes = Lesson.minutesFor(remainMinutes()); startLesson(offer.id); }
+        else if (trip.kind !== 'weekend') startFlow(trip.mode);
       } else if (isDialogueDone()) goHome();
       else skipQuestion();
       updateDriveScreen();
@@ -2443,6 +2867,7 @@
     // 도착이 가까워지면 말하던 문장은 끝까지 하고, 다음 내비 응답 때 마무리로 넘어간다.
     function applyNaviEta() {
       renderDemoPanel();
+      if (currentMode === 'lesson') { noteLessonNavi(); fitLessonToEta(hasArrived ? 0 : remainMinutes()); return; } // 도착한 뒤 늦게 온 남은 시간으로 교시를 되살리지 않는다
       if (!currentMode || isParkedScreen() || speechPhase === 'speaking' || speechPaused || hasArrived) return;
       if (Journey.tierFor(remainMinutes()) !== 'arrive') return;
       if (stage === 'ETA_SHORT' || stage === 'PARENT_BRIDGE' || stage === 'NEXT_DAY') return; // 가족 대화는 끊지 않는다

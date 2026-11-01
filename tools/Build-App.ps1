@@ -14,13 +14,20 @@ if (Test-Path -LiteralPath $socketFallback) { throw 'Expected the fallback socke
 $env:JAVA_TOOL_OPTIONS = "-Djdk.net.unixdomain.tmpdir=$socketFallback"
 & node (Join-Path $PSScriptRoot 'build-rules.js')
 if ($LASTEXITCODE -ne 0) { throw 'Teacher rule table has a problem.' }
+& node (Join-Path $PSScriptRoot 'build-lessons.js')
+if ($LASTEXITCODE -ne 0) { throw 'Lesson script table has a problem.' }
+# Debug builds run silently without lesson audio. A release must not.
+if ($Release) {
+    & node (Join-Path $PSScriptRoot 'check-lesson-voices.js')
+    if ($LASTEXITCODE -ne 0) { throw 'Release stopped: some lesson pieces have no audio yet. See the list above.' }
+}
 Push-Location (Join-Path $taskRoot 'android')
 try {
     $sdkRoot = $sdkHome.Replace('\', '/')
     "sdk.dir=$sdkRoot" | Set-Content -LiteralPath 'local.properties' -Encoding ascii
     & '.\gradlew.bat' ':app:assembleDebug' ':app:testDebugUnitTest' ':app:lintDebug' "-PdaitBuildRoot=$($buildRoot.Replace('\','/'))" '--no-daemon' '--console' 'plain'
     if ($LASTEXITCODE -ne 0) { throw 'Build or checks failed.' }
-    & node --test 'app\src\test\js\journey.test.js'
+    & node --test 'app\src\test\js\journey.test.js' 'app\src\test\js\lesson.test.js'
     if ($LASTEXITCODE -ne 0) { throw 'Journey rule tests failed.' }
     if (-not (Test-Path -LiteralPath 'app\src\main\assets\model-ko\uuid')) { Write-Warning 'Speech model is missing: the app builds, but answers work by touch only. Run tools\Setup-Voice-Model.py.' }
     $apk =Join-Path $taskRoot 'apk\DAIT-dialogue-debug.apk'

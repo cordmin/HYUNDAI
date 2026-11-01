@@ -39,7 +39,7 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = '17' }
-    androidResources { noCompress += 'wav' }
+    androidResources { noCompress += ['wav', 'm4a'] }
 }
 dependencies {
     implementation 'net.java.dev.jna:jna:5.18.1@aar'

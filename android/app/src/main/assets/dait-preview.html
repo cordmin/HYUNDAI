@@ -249,6 +249,7 @@
       white-space: nowrap;
     }
     .school-setting-btn:hover { background: rgba(255,255,255,0.18); }
+    .hero-top-actions { display: flex; gap: 8px; }
 
     /* 여정 그림: 출발점에서 목적지까지 한 획. 차 위치 점이 남은 시간만큼 가 있다 */
     .hero-figure {
@@ -595,7 +596,8 @@
       cursor: pointer;
       transition: all 0.15s ease;
     }
-    .choice-chip:hover {
+    .choice-chip:hover,
+    .choice-chip[aria-pressed="true"] {
       background: var(--accent);
       color: #FFFFFF;
       border-color: var(--accent);
@@ -770,6 +772,24 @@
       font-weight: 600;
       user-select: text;
     }
+    .place-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+      min-height: 0;
+      margin-top: 14px;
+      overflow-y: auto;
+    }
+    .place-row {
+      padding: 12px 16px;
+      border-radius: 16px;
+      background: rgba(127,127,127,0.10);
+      text-align: left;
+    }
+    .place-name { font-size: 18px; font-weight: 700; }
+    .place-address { margin-top: 2px; font-size: 16px; color: var(--muted); }
+    .place-source { margin-top: 10px; font-size: 16px; color: var(--muted); }
     .settings-message {
       margin-top: 12px;
       font-size: 17px;
@@ -1085,7 +1105,13 @@
         return;
       }
 
-      // 3. Dialogue Flow
+      // 3. Places to visit
+      if (currentMode === 'places') {
+        renderPlaces(stageArea);
+        return;
+      }
+
+      // 4. Dialogue Flow
       renderDialogueFlow(stageArea);
     }
 
@@ -1101,7 +1127,10 @@
           <div class="bento-hero ${heroClass}" onclick="startFlow('${trip.mode}')">
             <div class="hero-top-meta">
               ${getDaitLogoHtml()}
-              <button class="school-setting-btn" onclick="event.stopPropagation(); openSettings();">학교 설정</button>
+              <div class="hero-top-actions">
+                <button class="school-setting-btn" onclick="event.stopPropagation(); openPlaces();">가 볼 만한 곳</button>
+                <button class="school-setting-btn" onclick="event.stopPropagation(); openSettings();">학교 설정</button>
+              </div>
             </div>
 
             <div class="hero-figure">${routeSvg(trip)}</div>
@@ -1296,7 +1325,7 @@
 
     // 질문을 건너뛴다. 답을 지어내지 않고 다음 단계로만 넘어간다.
     function skipQuestion() {
-      if (!currentMode || currentMode === 'settings' || isDialogueDone()) return;
+      if (!currentMode || isParkedScreen() || isDialogueDone()) return;
       heard = '';
       if (currentMode === 'morning') {
         if (stage === 'PREP') stage = 'SUBJECT_TODAY';
@@ -1602,6 +1631,123 @@
       };
     }
 
+    // ========================================================
+    // 가 볼 만한 곳 (공공데이터포털 한국관광공사 국문 관광정보)
+    // 브라우저 미리보기에서는 예시를 보여 준다.
+    // ========================================================
+    const PLACE_TOPICS = ['과학관', '박물관', '유적지', '체험관'];
+    const PLACE_LIMIT = 8;
+    const PLACE_TYPES = ['12', '14', '28']; // 관광지, 문화시설, 레포츠. 숙박·식당·쇼핑은 뺀다.
+    const REGIONS = [
+      ['서울', '11', '서울'], ['부산', '26', '부산'], ['대구', '27', '대구'], ['인천', '28', '인천'],
+      ['광주', '29', '광주'], ['대전', '30', '대전'], ['울산', '31', '울산'], ['세종', '36', '세종'],
+      ['경기', '41', '경기'], ['강원', '51', '강원'], ['충북', '43', '충북'], ['충청북', '43', '충북'],
+      ['충남', '44', '충남'], ['충청남', '44', '충남'], ['전북', '52', '전북'], ['전라북', '52', '전북'],
+      ['전남', '46', '전남'], ['전라남', '46', '전남'], ['경북', '47', '경북'], ['경상북', '47', '경북'],
+      ['경남', '48', '경남'], ['경상남', '48', '경남'], ['제주', '50', '제주']
+    ];
+    const SAMPLE_PLACES = {
+      '과학관': [['국립과천과학관', '경기도 과천시'], ['국립중앙과학관', '대전광역시 유성구']],
+      '박물관': [['국립중앙박물관', '서울특별시 용산구'], ['국립경주박물관', '경상북도 경주시']],
+      '유적지': [['경주 불국사', '경상북도 경주시'], ['수원 화성', '경기도 수원시']],
+      '체험관': [['한국잡월드', '경기도 성남시'], ['국립어린이과학관', '서울특별시 종로구']]
+    };
+
+    let places = {};
+    let tourSeq = 0;
+    const tourWaiting = {};
+
+    window.onTourResult = function(requestId, body) {
+      const resolve = tourWaiting[requestId];
+      delete tourWaiting[requestId];
+      if (resolve) resolve(body);
+    };
+
+    function schoolRegion() {
+      const address = school ? school.address : '';
+      const found = REGIONS.find(row => address.startsWith(row[0]));
+      return found ? { code: found[1], name: found[2] } : null;
+    }
+
+    function tourBody(query) {
+      return new Promise(resolve => {
+        const requestId = ++tourSeq;
+        tourWaiting[requestId] = resolve;
+        window.AndroidBridge.tourGet(requestId, 'searchKeyword2', query);
+      });
+    }
+
+    function tourRows(data) {
+      const header = data.response.header;
+      if (header.resultCode !== '0000') throw new Error(header.resultCode);
+      const items = data.response.body.items;
+      const rows = items && items.item ? [].concat(items.item) : [];
+      return rows
+        .filter(row => PLACE_TYPES.includes(String(row.contenttypeid)))
+        .slice(0, PLACE_LIMIT)
+        .map(row => ({ name: row.title, address: row.addr1 || '' }));
+    }
+
+    async function searchPlaces(topic) {
+      places = { topic, rows: [], sample: false, message: '찾는 중이에요' };
+      render();
+      if (!window.AndroidBridge) {
+        places = { topic, rows: SAMPLE_PLACES[topic].map(row => ({ name: row[0], address: row[1] })), sample: true, message: '' };
+        render();
+        return;
+      }
+      const region = schoolRegion();
+      const query = new URLSearchParams({
+        numOfRows: '30', pageNo: '1', MobileOS: 'AND', MobileApp: 'DAIT', _type: 'json', arrange: 'A', keyword: topic,
+        ...(region ? { lDongRegnCd: region.code } : {})
+      }).toString();
+      let next;
+      try {
+        const rows = tourRows(JSON.parse(await tourBody(query)));
+        next = { topic, rows, sample: false, message: rows.length > 0 ? '' : '찾는 곳이 없어요' };
+      } catch (e) {
+        next = { topic, rows: [], sample: false, message: '지금은 찾을 수 없어요' };
+      }
+      // 기다리는 사이 다른 주제를 골랐거나 화면을 나갔으면 이 결과는 버린다.
+      if (currentMode !== 'places' || places.topic !== topic) return;
+      places = next;
+      render();
+    }
+
+    function openPlaces() {
+      document.getElementById('audioPlayer').pause();
+      currentMode = 'places';
+      searchPlaces(PLACE_TOPICS[0]);
+    }
+
+    function renderPlaces(container) {
+      const region = schoolRegion();
+      container.innerHTML = `
+        <div class="dialogue-wrap">
+          <div class="dialogue-top">
+            <button class="back-btn" onclick="goHome()">처음으로</button>
+          </div>
+          <div class="dialogue-card">
+            <div class="settings-center">
+              <div class="main-question">${region ? `${escapeHtml(region.name)}에서 ` : ''}가 볼 만한 곳</div>
+              <div class="settings-list">
+                ${PLACE_TOPICS.map(topic => `<button class="choice-chip" onclick="searchPlaces('${topic}')"${topic === places.topic ? ' aria-pressed="true"' : ''}>${topic}</button>`).join('')}
+              </div>
+              ${places.message ? `<div class="settings-message">${escapeHtml(places.message)}</div>` : ''}
+              <div class="place-list">
+                ${places.rows.map(row => `<div class="place-row"><div class="place-name">${escapeHtml(row.name)}</div><div class="place-address">${escapeHtml(row.address)}</div></div>`).join('')}
+              </div>
+              ${places.rows.length > 0 ? `<div class="place-source">${places.sample ? '예시' : '자료: 한국관광공사'}</div>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function isParkedScreen() {
+      return currentMode === 'settings' || currentMode === 'places';
+    }
+
     function openSettings() {
       document.getElementById('audioPlayer').pause();
       currentMode = 'settings';
@@ -1756,12 +1902,12 @@
       isDrivingMode = isDriving;
       document.body.classList.toggle('driving', isDriving);
       document.getElementById('demoDrive').classList.toggle('on', isDriving);
-      if (isDriving && currentMode === 'settings') goHome();
+      if (isDriving && isParkedScreen()) goHome();
       updateDriveScreen();
     };
 
     function updateDriveScreen(sentence) {
-      const inDialogue = currentMode && currentMode !== 'settings';
+      const inDialogue = currentMode && !isParkedScreen();
       const text = inDialogue ? (sentence || document.querySelector('.main-question')?.textContent || '') : '주차 후 이어갈게요';
       document.getElementById('driveSentence').textContent = text;
       document.getElementById('driveSub').textContent = inDialogue && heard ? `“${heard}”` : (inDialogue ? '' : '설정과 자세한 내용은 주차한 뒤 열어요');
@@ -1772,7 +1918,7 @@
     }
 
     function driveReplay() {
-      if (currentMode && currentMode !== 'settings') playAudio(currentClip);
+      if (currentMode && !isParkedScreen()) playAudio(currentClip);
     }
 
     function driveNext() {
@@ -1877,7 +2023,7 @@
       if (minutes === null) return;
       etaState = minutes <= ETA_SHORT_MIN ? 'short' : 'long';
       renderDemoPanel();
-      if (etaState === 'short' && currentMode && currentMode !== 'settings' && !isDialogueDone()) {
+      if (etaState === 'short' && currentMode && !isParkedScreen() && !isDialogueDone()) {
         stage = 'ETA_SHORT';
         render();
       }
@@ -1911,7 +2057,7 @@
       if (naviRemainMinutes() !== null) return;
       etaState = etaState === state ? 'unknown' : state;
       renderDemoPanel();
-      if (etaState === 'short' && currentMode && currentMode !== 'settings' && !isDialogueDone()) {
+      if (etaState === 'short' && currentMode && !isParkedScreen() && !isDialogueDone()) {
         stage = 'ETA_SHORT';
         render();
       }

@@ -1,5 +1,6 @@
 # Hyundai Pleos Emulator Launcher
 $emulator = Join-Path $env:LOCALAPPDATA 'Android\Sdk\emulator\emulator.exe'
+if (-not (Test-Path $emulator)) { $emulator = 'D:\Android\Sdk\emulator\emulator.exe' }
 if (-not (Test-Path $emulator)) {
     throw "Emulator not found at: $emulator"
 }

@@ -17,6 +17,7 @@
 | 음성 안내 | 시연 | 사전 제작 음원 51개(`assets/voices/nika`). Pleos TextToSpeech SDK는 현재 '준비 중' |
 | 음성 인식 | 시험 | 오픈소스 Vosk 기반 기기 내 인식 클래스 `LocalVoiceInput.kt`. 모델 파일은 저장소에 없고 화면과 연결되지 않음. Pleos SpeechToText SDK는 현재 '준비 중' |
 | 학교 정보(나이스) | 구현(일부) | 주차 중 '학교 설정'에서 학교·학년·반을 고르면 앞으로 7일의 시간표와 점심을 받아 기기에 저장하고, 통신이 끊기면 저장본을 씀. 초등·중·고 모두 검색되며 학교급에 맞는 시간표 창구(`elsTimetable`·`misTimetable`·`hisTimetable`)를 씀. 앱을 열 때만 받음. 학교를 설정하기 전에는 예시를 표시 |
+| 가 볼 만한 곳(한국관광공사) | 구현(인증키 대기) | 주차 중 첫 화면의 '가 볼 만한 곳'에서 과학관·박물관·유적지·체험관을 고르면 학교가 있는 시도에서 찾음. 학교가 없으면 전국에서 찾음. 숙박·식당·쇼핑은 뺌. 실제 응답은 인증키를 넣은 뒤 확인해야 함. 브라우저 미리보기는 예시를 보여 줌 |
 | 준비물 | 시연 | 나이스에 준비물 항목이 없음. 시간표에 체육이 있으면 체육복 확인을 안내하고, 없으면 학교 안내를 확인하라고 표시 |
 | 목적지·남은 시간(NaviHelper) | 구현(일부) | `NaviBridge`가 Pleos NaviHelper SDK 3.0.5에 연결해 길 안내 중 10초마다 목적지 이름과 남은 시간(초)·거리(m)를 받음. 남은 시간이 2분 이하면 새 질문 없이 준비물 확인으로 마무리. 목적지 이름이나 도로명 주소가 등록한 학교와 같으면 첫 화면이 등교 여정으로, 보호자가 학교 설정의 '지금 목적지를 집으로'로 등록한 곳이면 하교 여정으로 바뀜(자동 시작은 하지 않음). 이 버튼은 길 안내 중 학교가 아닌 목적지가 있을 때만 보이며, 설정 화면을 먼저 열어 두었다면 다음 내비 응답(최대 10초) 뒤에 나타남. 실제 값이 오면 시연 조작(8분 전·2분 전·목적지)은 잠김. 길 안내가 없을 때는 시연 조작을 씀 |
 
@@ -52,6 +53,7 @@ powershell -ExecutionPolicy Bypass -File .\tools\Build-App.ps1 -Install
 | 패키지명 | `io.dait.app` |
 | 마이크 | 음성 인식을 시험하려면 Virtual Console에서 마이크 접근을 허용 |
 | 인증키 | 앱과 브라우저 미리보기는 중계 서버 `https://relay-khaki-omega.vercel.app`을 거쳐 자료를 받으므로 팀원과 이용자에게 키가 필요 없음. 키는 Vercel의 `relay` 프로젝트 환경 변수(`NEIS_API_KEY`, `TOUR_API_KEY`)에만 두고, 바꾼 뒤에는 `npx.cmd vercel deploy --prod --yes --cwd relay`로 다시 올림 |
+| 관광공사 인증키 | [공공데이터포털](https://www.data.go.kr/data/15101578/openapi.do)에서 활용신청 후 받은 일반 인증키를 위 환경 변수에 넣음. 키가 없으면 앱은 '지금은 찾을 수 없어요'를 표시 |
 | 음성 인식 모델(선택) | Vosk 한국어 모델을 `android/app/src/main/assets/model-ko/`에 둠 (용량 때문에 저장소에서 제외) |
 
 설치 과정과 점검 결과는 [`개발환경-점검.md`](개발환경-점검.md)에 있습니다.
@@ -68,6 +70,7 @@ powershell -ExecutionPolicy Bypass -File .\tools\Build-App.ps1 -Install
 | `DAIT-기획안.md` | 공모전 기획서(접수양식 1~8번 순서) |
 | `android/app/src/main/java/io/dait/app/MainActivity.kt` | 앱 진입점, 주행 제한 연동, 웹 화면 표시 |
 | `android/app/src/main/java/io/dait/app/NeisClient.kt` | 나이스 공개 데이터 호출 |
+| `android/app/src/main/java/io/dait/app/TourClient.kt` | 한국관광공사 관광정보 호출 |
 | `android/app/src/main/java/io/dait/app/NaviBridge.kt` | Pleos NaviHelper 연결, 남은 시간 전달 |
 | `android/app/src/main/java/io/dait/app/Conversation.kt` | 등교·하교 대화 규칙 엔진 |
 | `android/app/src/main/java/io/dait/app/LocalVoiceInput.kt` | 기기 내 음성 인식 시험 코드 |

@@ -139,6 +139,18 @@ class MainActivity : Activity() {
         }
 
         @JavascriptInterface
+        fun tourGet(requestId: Int, service: String, query: String) {
+            Thread {
+                val body = try { TourClient.fetch(service, query) } catch (_: Exception) { "" }
+                runOnUiThread {
+                    if (!isDestroyed) {
+                        webView.evaluateJavascript("window.onTourResult && window.onTourResult($requestId, ${JSONObject.quote(body)});", null)
+                    }
+                }
+            }.start()
+        }
+
+        @JavascriptInterface
         fun toggleDrivingSim() {
             runOnUiThread {
                 if (isRestricted) return@runOnUiThread

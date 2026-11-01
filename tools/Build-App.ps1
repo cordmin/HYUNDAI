@@ -3,6 +3,10 @@ $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path $PSScriptRoot -Parent
 $env:JAVA_HOME = Join-Path $env:USERPROFILE '.jdks\jbr-21.0.11'
 $buildRoot = Join-Path $env:LOCALAPPDATA 'DAIT\build'
+# The SDK may live on another drive, so use the first folder that exists.
+$sdkHome = @($env:ANDROID_HOME, (Join-Path $env:LOCALAPPDATA 'Android\Sdk'), 'D:\Android\Sdk') |
+    Where-Object { $_ -and (Test-Path -LiteralPath $_) } | Select-Object -First 1
+if (-not $sdkHome) { throw 'Android SDK folder not found.' }
 # Windows AF_UNIX connects fail on this host. A nonexistent socket directory lets
 # the JDK use its normal TCP loopback fallback, scoped only to this process tree.
 $socketFallback = Join-Path $env:LOCALAPPDATA 'DAIT\no-unix-sockets'
@@ -10,7 +14,7 @@ if (Test-Path -LiteralPath $socketFallback) { throw 'Expected the fallback socke
 $env:JAVA_TOOL_OPTIONS = "-Djdk.net.unixdomain.tmpdir=$socketFallback"
 Push-Location (Join-Path $taskRoot 'android')
 try {
-    $sdkRoot = (Join-Path $env:LOCALAPPDATA 'Android\Sdk').Replace('\', '/')
+    $sdkRoot = $sdkHome.Replace('\', '/')
     "sdk.dir=$sdkRoot" | Set-Content -LiteralPath 'local.properties' -Encoding ascii
     & '.\gradlew.bat' ':app:assembleDebug' ':app:testDebugUnitTest' ':app:lintDebug' "-PdaitBuildRoot=$($buildRoot.Replace('\','/'))" '--no-daemon' '--console' 'plain'
     if ($LASTEXITCODE -ne 0) { throw 'Build or checks failed.' }
@@ -18,7 +22,7 @@ try {
     New-Item -ItemType Directory -Path (Split-Path $apk -Parent) -Force | Out-Null
     Copy-Item -LiteralPath (Join-Path $buildRoot 'app\outputs\apk\debug\app-debug.apk') -Destination $apk -Force
     if ($Install) {
-        $adb = Join-Path $env:LOCALAPPDATA 'Android\Sdk\platform-tools\adb.exe'
+        $adb = Join-Path $sdkHome 'platform-tools\adb.exe'
         $avd = & $adb '-s' 'emulator-5554' 'emu' 'avd' 'name'
         if ($avd -notcontains 'DAIT_Pleos_2_1') { throw 'Expected the DAIT Pleos emulator on emulator-5554.' }
         & $adb '-s' 'emulator-5554' 'install' '-r' $apk

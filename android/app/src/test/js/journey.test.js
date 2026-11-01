@@ -58,6 +58,14 @@ test('아침에 쉬겠다고 한 날은 하교에 묻지 않고, 등교는 준�
   assert.strictEqual(Journey.start('morning', { ...full, memory: { rest: true } }), 'BRIEF');
 });
 
+test('가족 설정에서 질문을 끄면 준비 안내만 하고 하교에는 조용히 간다', () => {
+  const off = { ...full, noQuestions: true };
+  assert.strictEqual(Journey.start('morning', off), 'BRIEF');
+  assert.strictEqual(Journey.start('afternoon', off), 'SILENT');
+  assert.ok(Journey.isDone('SILENT'));
+  assert.deepStrictEqual(Journey.intro('morning', { ...off, etaMinutes: 12, subjects: ['국어'] }, data), []);
+});
+
 test('아침에 고른 과목으로 하교 대화를 시작한다', () => {
   assert.strictEqual(Journey.start('afternoon', { ...full, memory: { subject: '체육' } }), 'AFTER_PE');
   assert.strictEqual(Journey.start('afternoon', { ...full, memory: { subject: '과학' } }), 'AFTER_SCIENCE');
@@ -281,7 +289,7 @@ test('수업이 없는 날은 다음 수업일을 알려 주고 묻지 않는다
 test('모든 단계의 음원과 문구가 비어 있지 않다', () => {
   for (const mode of ['morning', 'afternoon']) {
     for (const [name, step] of Object.entries(Journey.flows[mode])) {
-      assert.ok(step.clip && step.title, `${mode}.${name}`);
+      assert.ok(step.title && (step.clip || name === 'SILENT'), `${mode}.${name}`);
       assert.strictEqual(Journey.isDone(name), step.choices.length === 0, `${mode}.${name}`);
     }
   }

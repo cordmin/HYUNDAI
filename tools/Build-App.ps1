@@ -1,4 +1,4 @@
-param([switch]$Install, [switch]$DeviceChecks)
+param([switch]$Install, [switch]$DeviceChecks, [switch]$Release, [string]$TeamName = 'DAIT')
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path $PSScriptRoot -Parent
 $env:JAVA_HOME = Join-Path $env:USERPROFILE '.jdks\jbr-21.0.11'
@@ -34,6 +34,16 @@ try {
         if ($LASTEXITCODE -ne 0) { throw 'Install failed.' }
         & $adb '-s' 'emulator-5554' 'shell' 'am' 'start' '-W' '-n' 'io.dait.app/.MainActivity'
         if ($LASTEXITCODE -ne 0) { throw 'Launch failed.' }
+    }
+    if ($Release) {
+        if (-not (Test-Path -LiteralPath 'keystore.properties')) { throw 'android/keystore.properties is missing. Run tools\Make-Release-Key.ps1 once.' }
+        & '.\gradlew.bat' ':app:assembleRelease' "-PdaitBuildRoot=$($buildRoot.Replace('\','/'))" '--no-daemon' '--console' 'plain'
+        if ($LASTEXITCODE -ne 0) { throw 'Release build failed.' }
+        # The contest wants team_app_release.apk. The app name is written by code point to keep this script ASCII.
+        $appName = "$([char]0xB2E4)$([char]0xC787)"
+        $releaseApk = Join-Path $taskRoot "apk\$($TeamName)_$($appName)_release.apk"
+        Copy-Item -LiteralPath (Join-Path $buildRoot 'app\outputs\apk\release\app-release.apk') -Destination $releaseApk -Force
+        Write-Output $releaseApk
     }
     if ($DeviceChecks) {
         $adb = Join-Path $sdkHome 'platform-tools\adb.exe'

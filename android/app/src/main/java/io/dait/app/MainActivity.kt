@@ -134,7 +134,7 @@ class MainActivity : Activity() {
     private fun applyPlatformRestriction(blocked: Boolean) {
         isRestricted = blocked
         val effective = blocked || simulatedDriving
-        callPage("window.setDrivingMode && window.setDrivingMode($effective);")
+        callPage("window.setDrivingMode && window.setDrivingMode($effective, $blocked);")
     }
 
     private fun callPage(script: String) {

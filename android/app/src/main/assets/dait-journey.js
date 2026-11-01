@@ -30,12 +30,13 @@
       REST: { clip: 'rest_tired', title: '편하게 쉬어요', choices: [] },
       REST_SOFT: { clip: 'rest_skip', title: '편하게 쉬어가요', choices: [] },
       QUIET_END: { clip: 'rest_later', title: '원할 때 이어가요', choices: [] },
+      SILENT: { clip: '', title: '조용히 함께 가요', choices: [] },
       STOPPED: { clip: 'control_stop', title: '안내를 멈출게요', choices: [] },
       DONE: { clip: 'arrival_home', title: '집에 도착했어요!', choices: [] }
     }
   };
 
-  const FINAL_STAGES = ['DONE', 'REST', 'REST_SOFT', 'ETA_SHORT', 'BRIEF', 'BRIEF_BAG', 'QUIET_END', 'STOPPED', 'RULE_ONLY', 'RULE_END', 'NEXT_DAY'];
+  const FINAL_STAGES = ['DONE', 'REST', 'REST_SOFT', 'ETA_SHORT', 'BRIEF', 'BRIEF_BAG', 'QUIET_END', 'STOPPED', 'RULE_ONLY', 'RULE_END', 'NEXT_DAY', 'SILENT'];
   const QUESTION_STAGES_AFTER = ['AFTER_EVENT', 'AFTER_PE', 'AFTER_SCIENCE'];
   const QUIET_WORDS = ['그만', '쉬고', '쉴래', '쉬자', '피곤', '말하기싫', '하기싫', '귀찮', '안할래'];
   const SAD_WORDS = ['속상', '슬퍼', '슬펐', '싸웠', '싫었', '힘들'];
@@ -154,7 +155,7 @@
 
   // 첫 질문 앞에 붙이는 말: 남은 시간과 오늘 시간표. 조각이 하나라도 없으면 그 말은 하지 않는다.
   function intro(mode, ctx, data) {
-    if (ctx.tier === 'arrive' || ctx.tier === 'brief' || (ctx.memory && ctx.memory.rest)) return [];
+    if (ctx.noQuestions || ctx.tier === 'arrive' || ctx.tier === 'brief' || (ctx.memory && ctx.memory.rest)) return [];
     const eta = etaClips(mode, ctx.etaMinutes, data);
     if (mode !== 'morning' || ctx.tier !== 'full' || ctx.rule || !ctx.subjects) return eta;
     const subjects = subjectClips(ctx.subjects, data);
@@ -174,7 +175,9 @@
   }
 
   function start(mode, ctx) {
-    const memory = ctx.memory || {};
+    if (ctx.noQuestions && mode === 'afternoon') return 'SILENT';
+    // 가족 설정에서 질문을 끄면 아이가 쉬겠다고 한 날처럼 준비 안내만 한다.
+    const memory = ctx.noQuestions ? { ...ctx.memory, rest: true } : ctx.memory || {};
     if (ctx.nextDay && mode === 'morning') return 'NEXT_DAY';
     if (ctx.rule) {
       if (ctx.tier === 'arrive') return 'ETA_SHORT';

@@ -25,6 +25,7 @@ class MainActivity : Activity() {
     private var isRestricted = true // 차 상태를 받기 전에는 주행 중으로 둔다.
     private var navi: NaviBridge? = null
     private var doors: DoorBridge? = null
+    private var location: LocationBridge? = null
     private var voice: VoiceSession? = null
     private var hasSpeechModel = false
     private var speechInput: LocalVoiceInput? = null
@@ -71,6 +72,7 @@ class MainActivity : Activity() {
             callPage("window.onNaviUpdate && window.onNaviUpdate(${JSONObject.quote(json.toString())});")
         }.also { it.connect() }
         doors = DoorBridge(this) { callPage("window.onDoorOpened && window.onDoorOpened();") }.also { it.connect() }
+        location = LocationBridge(this) { lat, lng -> callPage("window.onCarLocation && window.onCarLocation($lat, $lng);") }
         connectCarService()
     }
 
@@ -96,6 +98,8 @@ class MainActivity : Activity() {
         navi = null
         doors?.release()
         doors = null
+        location?.stop()
+        location = null
         try { restrictions?.unregisterListener() } catch (_: Exception) {}
         restrictions = null
         car?.disconnect()
@@ -117,6 +121,7 @@ class MainActivity : Activity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == MIC_REQUEST) callPage("window.onMicAnswered && window.onMicAnswered();")
+        if (requestCode == LOCATION_REQUEST) callPage("window.onLocationAnswered && window.onLocationAnswered();")
     }
 
     // 내비가 앱을 덮은 채로 출발해도 주행 시작을 알 수 있게 앱이 살아 있는 동안 계속 듣는다.
@@ -148,6 +153,9 @@ class MainActivity : Activity() {
     }
 
     private fun micGranted() = checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+
+    // 대략적인 위치로는 집과 학교를 나눌 수 없으므로 정확한 위치를 허락받아야 쓴다.
+    private fun locationGranted() = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
     inner class WebAppInterface {
         @JavascriptInterface
@@ -209,6 +217,24 @@ class MainActivity : Activity() {
         }
 
         @JavascriptInterface
+        fun locationState(): String = when {
+            location?.available != true -> "none"
+            locationGranted() -> "ready"
+            else -> "ask"
+        }
+
+        @JavascriptInterface
+        fun requestLocation() {
+            val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+            runOnUiThread { requestPermissions(permissions, LOCATION_REQUEST) }
+        }
+
+        @JavascriptInterface
+        fun setLocationOn(on: Boolean) {
+            runOnUiThread { if (on && locationGranted()) location?.start() else location?.stop() }
+        }
+
+        @JavascriptInterface
         fun setJourneyActive(active: Boolean) {
             runOnUiThread {
                 journeyActive = active
@@ -224,5 +250,6 @@ class MainActivity : Activity() {
 
     companion object {
         private const val MIC_REQUEST = 1
+        private const val LOCATION_REQUEST = 2
     }
 }

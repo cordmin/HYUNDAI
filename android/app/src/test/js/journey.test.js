@@ -482,3 +482,212 @@ test('모든 단계의 음원과 문구가 비어 있지 않다', () => {
     }
   }
 });
+
+// ---- 다니는 길 기억 ----
+const openTrip = patch => ({ ymd: '20261102', day: 1, min: 500, end: 515, from: 'home', last: 'school', door: true, chosen: '', ...patch });
+const trip = patch => ({ ymd: '20261026', day: 1, min: 490, end: 510, from: 'home', to: 'school', door: true, kind: 'go', ...patch });
+
+test('좌표를 집·학교·그 밖으로만 나눈다', () => {
+  const spots = { home: { lat: 37.5, lng: 127 }, school: { lat: 37.52, lng: 127 } };
+  assert.strictEqual(Journey.placeLabel({ lat: 37.501, lng: 127 }, spots), 'home');
+  assert.strictEqual(Journey.placeLabel({ lat: 37.519, lng: 127 }, spots), 'school');
+  assert.strictEqual(Journey.placeLabel({ lat: 37.51, lng: 127 }, spots), 'other');
+  assert.strictEqual(Journey.placeLabel(null, spots), '');
+  assert.strictEqual(Journey.placeLabel({ lat: 37.5, lng: 127 }, {}), 'other');
+});
+
+test('가까운 집과 학교는 더 가까운 쪽으로 본다', () => {
+  const spots = { home: { lat: 37.5, lng: 127 }, school: { lat: 37.502, lng: 127 } };
+  assert.strictEqual(Journey.placeLabel({ lat: 37.5001, lng: 127 }, spots), 'home');
+  assert.strictEqual(Journey.placeLabel({ lat: 37.5019, lng: 127 }, spots), 'school');
+});
+
+test('기록에는 구분과 10분 단위 시간만 남고 좌표는 없다', () => {
+  const record = Journey.finishTrip(openTrip({ min: 503, end: 517 }));
+  assert.deepStrictEqual(Object.keys(record).sort(), ['day', 'door', 'end', 'from', 'kind', 'min', 'to', 'ymd']);
+  assert.strictEqual(record.min, 500);
+  assert.strictEqual(record.end, 520);
+  assert.strictEqual(record.kind, 'go');
+});
+
+test('출발지를 모르거나 제자리인 여정은 남기지 않는다', () => {
+  assert.strictEqual(Journey.finishTrip(openTrip({ from: '' })), null);
+  assert.strictEqual(Journey.finishTrip(openTrip({ last: '' })), null);
+  assert.strictEqual(Journey.finishTrip(openTrip({ last: 'home' })), null);
+});
+
+test('아침에 학교에서 아이 쪽 문이 열려야 등교로 기록한다', () => {
+  assert.strictEqual(Journey.finishTrip(openTrip({ door: false })).kind, '');
+  assert.strictEqual(Journey.finishTrip(openTrip({ min: 800 })).kind, '');
+});
+
+test('내려 준 직후 학교를 떠나는 길은 하교가 아니고, 데리러 갔다 나오는 길은 하교다', () => {
+  const dropped = { ymd: '20261102', end: 510, kind: 'go' };
+  assert.strictEqual(Journey.finishTrip(openTrip({ min: 520, from: 'school', last: 'other' }), dropped).kind, '');
+  assert.strictEqual(Journey.finishTrip(openTrip({ min: 870, from: 'school', last: 'other' }), dropped).kind, 'back');
+  const pickup = { ymd: '20261102', end: 860, kind: '' };
+  assert.strictEqual(Journey.finishTrip(openTrip({ min: 870, from: 'school', last: 'home' }), pickup).kind, 'back');
+});
+
+test('보호자가 고른 대화가 장소 판단보다 먼저다', () => {
+  assert.strictEqual(Journey.finishTrip(openTrip({ from: 'other', last: 'home', chosen: 'afternoon' })).kind, 'back');
+  assert.strictEqual(Journey.finishTrip(openTrip({ from: 'home', last: 'other', door: false, chosen: 'morning' })).kind, 'go');
+});
+
+test('같은 요일 비슷한 시간에 세 번 이상 반복되면 패턴으로 본다', () => {
+  const now = { from: 'home', day: 1, min: 500 };
+  assert.strictEqual(Journey.patternFor([trip(), trip()], now), null);
+  assert.strictEqual(Journey.patternFor([trip(), trip(), trip()], now), 'morning');
+  assert.strictEqual(Journey.patternFor([trip(), trip(), trip()], { ...now, min: 600 }), null);
+  assert.strictEqual(Journey.patternFor([trip(), trip(), trip()], { ...now, from: 'other' }), null);
+});
+
+test('요일마다 다르면 그 요일 기록을 따른다', () => {
+  const tuesdays = [1, 2, 3].map(() => trip({ day: 2, to: 'other', door: false, kind: '' }));
+  const mondays = [1, 2, 3].map(() => trip());
+  assert.strictEqual(Journey.patternFor([...tuesdays, ...mondays], { from: 'home', day: 1, min: 500 }), 'morning');
+  assert.strictEqual(Journey.patternFor([...tuesdays, ...mondays], { from: 'home', day: 2, min: 500 }), null);
+});
+
+test('같은 요일 기록이 적으면 요일을 합쳐 다섯 번 이상일 때 본다', () => {
+  const mixed = [1, 2, 3, 4].map(day => trip({ day }));
+  assert.strictEqual(Journey.patternFor(mixed, { from: 'home', day: 5, min: 500 }), null);
+  assert.strictEqual(Journey.patternFor([...mixed, trip({ day: 4 })], { from: 'home', day: 5, min: 500 }), 'morning');
+});
+
+test('등교와 다른 길이 섞여 뚜렷하지 않으면 판단하지 않는다', () => {
+  const half = [trip(), trip(), trip({ to: 'other', door: false, kind: '' }), trip({ to: 'other', door: false, kind: '' })];
+  assert.strictEqual(Journey.patternFor(half, { from: 'home', day: 1, min: 500 }), null);
+});
+
+test('학교 앞이면 오전에 일찍 끝나도 하교로 보고, 막 내려 준 뒤에는 판단하지 않는다', () => {
+  const base = { place: 'school', trips: [], ymd: '20261102', day: 1, min: 690 };
+  assert.strictEqual(Journey.guessMode(base), 'afternoon');
+  const dropped = { ymd: '20261102', end: 510, kind: 'go' };
+  assert.strictEqual(Journey.guessMode({ ...base, min: 520, last: dropped }), null);
+  assert.strictEqual(Journey.guessMode({ ...base, min: 690, last: dropped }), 'afternoon');
+  assert.strictEqual(Journey.guessMode({ ...base, place: '' }), null);
+});
+
+test('아침 등교 시간에는 학교에 있어도 학교에서 나와도 하교로 보지 않는다', () => {
+  const base = { place: 'school', trips: [], ymd: '20261102', day: 1 };
+  assert.strictEqual(Journey.guessMode({ ...base, min: 495 }), null);
+  assert.strictEqual(Journey.guessMode({ ...base, min: 505 }), null);
+  assert.strictEqual(Journey.finishTrip(openTrip({ min: 500, from: 'school', last: 'other', door: false })).kind, '');
+});
+
+test('지각해 내려 준 직후는 하교가 아니다', () => {
+  const dropped = { ymd: '20261102', end: 590, kind: 'go' };
+  assert.strictEqual(Journey.guessMode({ place: 'school', trips: [], ymd: '20261102', day: 1, min: 600, last: dropped }), null);
+  assert.strictEqual(Journey.finishTrip(openTrip({ min: 600, from: 'school', last: 'other' }), dropped).kind, '');
+});
+
+test('오전 늦게 데리러 가서 문이 열려도 등교가 아니고, 그 뒤 나오는 길은 하교다', () => {
+  const pickup = Journey.finishTrip(openTrip({ min: 640, end: 660, from: 'other', last: 'school' }));
+  assert.strictEqual(pickup.kind, '');
+  assert.strictEqual(Journey.guessMode({ place: 'school', trips: [pickup], last: pickup, ymd: '20261102', day: 1, min: 665 }), 'afternoon');
+  assert.strictEqual(Journey.finishTrip(openTrip({ min: 665, from: 'school', last: 'home' }), pickup).kind, 'back');
+});
+
+test('켜지 않으면 달려도 아무것도 기록하지 않고 시간대로 판단한다', () => {
+  page(`forgetTrips(); localStorage.removeItem(TRIP_MEMORY_KEY); window.onCarLocation(37.5, 127); window.setDrivingMode(true); window.setDrivingMode(false);`);
+  assert.strictEqual(page('tripOpen'), null);
+  assert.strictEqual(page('trips.length'), 0);
+  assert.strictEqual(page('tripGuess(new Date())'), null);
+});
+
+test('집에서 학교까지 달리고 문이 열리면 등교로 기록하고 좌표는 저장하지 않는다', () => {
+  page(`writeStored(TRIP_MEMORY_KEY, true);
+    tripSpots = { home: { lat: 37.5, lng: 127 }, school: { lat: 37.52, lng: 127 } };
+    window.onCarLocation(37.5, 127); window.setDrivingMode(true);
+    tripOpen.min = 490; window.onCarLocation(37.52, 127); window.setDrivingMode(false); window.onDoorOpened();`);
+  assert.strictEqual(page('trips.length'), 1);
+  assert.strictEqual(page('trips[0].kind'), 'go');
+  assert.strictEqual(page('tripOpen'), null);
+  const stored = page(`localStorage.getItem(TRIPS_KEY)`);
+  assert.ok(!stored.includes('37.5') && !stored.includes('127'));
+});
+
+test('교문 앞에서 주차하지 않고 내려도 등교를 마감하고 다음 여정을 학교에서 시작한다', () => {
+  page(`forgetTrips(); window.onCarLocation(37.5, 127); window.setDrivingMode(true); tripOpen.min = 490;
+    window.onCarLocation(37.52, 127); window.onDoorOpened();`);
+  assert.strictEqual(page('trips[0].kind'), 'go');
+  assert.strictEqual(page('tripOpen.from'), 'school');
+  assert.strictEqual(page('tripOpen.chosen'), '');
+});
+
+test('신호 대기는 같은 여정으로 이어지고 오래 멈추면 다음 출발 때 마감한다', () => {
+  page(`forgetTrips(); window.setDrivingMode(false); window.onCarLocation(37.5, 127); window.setDrivingMode(true); window.onCarLocation(37.51, 127);
+    window.setDrivingMode(false); window.setDrivingMode(true);`);
+  assert.strictEqual(page('tripOpen.from'), 'home');
+  assert.strictEqual(page('trips.length'), 0);
+  page(`window.setDrivingMode(false); tripOpen.parkedAt = Date.now() - STOP_GAP_MS - 1; window.setDrivingMode(true);`);
+  assert.strictEqual(page('trips.length'), 1);
+  assert.strictEqual(page('tripOpen.from'), 'other');
+});
+
+test('위치가 끊기면 옛 위치를 지금 위치로 믿지 않는다', () => {
+  page(`forgetTrips(); window.setDrivingMode(false); window.onCarLocation(37.5, 127); window.setDrivingMode(true); carFixAt = 1;`);
+  assert.strictEqual(page('freshPlace()'), '');
+  page(`window.onDoorOpened(); window.setDrivingMode(false); tripOpen.parkedAt = 1; window.setDrivingMode(true);`);
+  assert.strictEqual(page('tripOpen.from'), '');
+  assert.strictEqual(page('trips.length'), 0);
+  page(`startedOld = tripOpen.startedAt = 1; window.onCarLocation(37.51, 127);`.replace('startedOld = ', ''));
+  assert.strictEqual(page('tripOpen.from'), '');
+  page(`window.setDrivingMode(false); forgetTrips();`);
+});
+
+test('내비가 앱을 덮어 위치가 끊겨도 도착 신호와 문 열림으로 등교를 마감한다', () => {
+  page(`window.onCarLocation(37.5, 127); school = { name: '다잇초등학교', address: '서울 산정로 171', kind: '초등학교' };
+    window.onNaviUpdate(JSON.stringify({ event: 'destination', name: '다잇초등학교', address: '서울 산정로 171', remainTime: 300, remainDistance: 2000 }));
+    window.setDrivingMode(true); tripOpen.min = 490; carFixAt = 1;
+    window.onNaviUpdate(JSON.stringify({ event: 'status', status: 'IDLE' }));
+    window.onNaviUpdate(JSON.stringify({ event: 'arrived', name: '다잇초등학교' }));
+    window.onDoorOpened();`);
+  assert.strictEqual(page('trips[0].kind'), 'go');
+  assert.strictEqual(page('trips[0].to'), 'school');
+  assert.strictEqual(page('tripOpen.from'), 'school');
+  page(`window.setDrivingMode(false); forgetTrips(); school = null; naviInfo = null; goHome();`);
+});
+
+test('달리는 동안에는 시간이 지나도 판단이 바뀌지 않는다', () => {
+  page(`forgetTrips(); window.onCarLocation(37.52, 127); window.setDrivingMode(true); tripOpen.min = 505; tripOpen.from = 'school';`);
+  assert.strictEqual(page(`tripGuess(new Date(2026, 10, 2, 9, 5))`), null);
+  assert.strictEqual(page(`tripGuess(new Date(2026, 10, 2, 10, 0))`), null);
+  page(`window.setDrivingMode(false); forgetTrips();`);
+});
+
+test('집을 새 목적지로 바꾸면 옛 위치와 기록을 지운다', () => {
+  page(`homePlace = null; tripSpots.home = { lat: 1, lng: 1 }; trips = [{ ymd: '20261102' }];
+    naviInfo = { name: '새집아파트', address: '서울 새집로 1' }; saveHomeFromNavi();`);
+  assert.strictEqual(page('tripSpots.home === undefined'), true);
+  assert.strictEqual(page('trips.length'), 0);
+  assert.strictEqual(page('homePlace.name'), '새집아파트');
+  page(`clearHome(); naviInfo = null; writeStored(HOME_CLEARED_KEY, false); tripSpots = { home: { lat: 37.5, lng: 127 }, school: { lat: 37.52, lng: 127 } }; goHome();`);
+});
+
+test('켜기 전에 무엇을 남기는지 먼저 보여 주고, 취소하면 켜지지 않는다', () => {
+  page(`writeStored(TRIP_MEMORY_KEY, false); openSettings(); toggleTripMemory();`);
+  assert.strictEqual(page('settings.step'), 'memory');
+  assert.strictEqual(page('tripMemoryOn()'), false);
+  page(`cancelTripMemory();`);
+  assert.strictEqual(page('tripMemoryOn()'), false);
+  page(`toggleTripMemory(); confirmTripMemory();`);
+  assert.strictEqual(page('tripMemoryOn()'), true);
+  page(`goHome();`);
+});
+
+test('기억을 끄면 기록과 지정한 위치를 모두 지운다', () => {
+  page(`writeStored(TRIPS_KEY, [{ ymd: '20261102' }]); trips = readStored(TRIPS_KEY); settings = {}; toggleTripMemory();`);
+  assert.strictEqual(page('tripMemoryOn()'), false);
+  assert.strictEqual(page('trips.length'), 0);
+  assert.strictEqual(page('Object.keys(tripSpots).length'), 0);
+  assert.strictEqual(page('carSpot'), null);
+  page(`window.setDrivingMode(false); goHome();`);
+});
+
+test('앱을 켠 직후 고른 대화도 출발한 여정의 답으로 남는다', () => {
+  page(`writeStored(TRIP_MEMORY_KEY, true); forgetTrips(); window.setDrivingMode(true); window.setDrivingMode(false); startFlow('morning'); window.setDrivingMode(true);`);
+  assert.strictEqual(page('tripOpen.chosen'), 'morning');
+  page(`window.setDrivingMode(false); goHome(); writeStored(TRIP_MEMORY_KEY, false); forgetTrips();`);
+});

@@ -29,12 +29,9 @@ class JourneyService : Service() {
             .setContentIntent(open)
             .setOngoing(true)
             .build()
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) startForeground(NOTIFICATION_ID, notification, foregroundTypes())
-            else startForeground(NOTIFICATION_ID, notification)
-        } catch (_: RuntimeException) {
-            stopSelf()
-        }
+        // 위치 때문에 거부되면 위치만 빼고 다시 시도해 음성은 이어 가게 한다.
+        val types = foregroundTypes()
+        if (!runInFront(notification, types) && !runInFront(notification, types and ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION.inv())) stopSelf()
         starting = false
         if (stopWhenStarted) {
             stopWhenStarted = false
@@ -43,10 +40,20 @@ class JourneyService : Service() {
         return START_NOT_STICKY
     }
 
+    private fun runInFront(notification: Notification, types: Int): Boolean = try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) startForeground(NOTIFICATION_ID, notification, types)
+        else startForeground(NOTIFICATION_ID, notification)
+        true
+    } catch (_: RuntimeException) {
+        false
+    }
+
     private fun foregroundTypes(): Int {
         val mic = checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
         val media = ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
-        return if (mic && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) media or ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE else media
+        val sound = if (mic && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) media or ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE else media
+        // 내비가 앱을 덮어도 도착한 곳을 알 수 있게 한다. 보호자가 켰을 때만 위치 작업으로 올린다.
+        return if (LocationBridge.running) sound or ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION else sound
     }
 
     companion object {

@@ -315,7 +315,73 @@
     return value.length >= 2 ? { kind: 'answer', answer: value, heard: '' } : { kind: 'unclear' };
   }
 
-  const Journey = { flows: FLOWS, tierFor, isDone, isQuiet, start, next, skip, listenSpec, interpret, pickRule, pickQuestion, ruleStep, nextSchoolDay, isSchoolDay, intro, nextDayStep, subjectClips, subjectStep };
+  // ---- 다니는 길 기억 ----
+  // 좌표는 판단하는 순간에만 쓰고, 기록에는 요일·시간대와 '집·학교·그 밖' 구분만 남긴다.
+  const PLACE_RADIUS_M = 400;
+  const GO_LIMIT_MIN = 9 * 60 + 30; // 이보다 이른 시간의 학교는 등교로 보고, 늦은 시간에 학교로 가는 길은 데리러 가는 길로 본다
+  const DROP_GAP_MIN = 40; // 지각해 내려 준 뒤 이만큼 안에 학교를 떠나는 것은 하교가 아니다
+  const NEAR_MIN = 40; // 평소와 비슷한 시간으로 보는 범위
+  const SAME_DAY_TRIPS = 3; // 같은 요일 기록이 이만큼 있으면 그 요일만 본다
+  const ANY_DAY_TRIPS = 5;
+  const PATTERN_SHARE = 0.7;
+
+  function distanceM(a, b) {
+    const rad = Math.PI / 180;
+    const x = (b.lng - a.lng) * rad * Math.cos((a.lat + b.lat) / 2 * rad);
+    const y = (b.lat - a.lat) * rad;
+    return Math.hypot(x, y) * 6371000;
+  }
+
+  function placeLabel(spot, spots) {
+    if (!spot) return '';
+    const near = ['home', 'school'].filter(kind => spots[kind])
+      .map(kind => ({ kind, meters: distanceM(spot, spots[kind]) }))
+      .filter(place => place.meters <= PLACE_RADIUS_M)
+      .sort((a, b) => a.meters - b.meters)[0];
+    return near ? near.kind : 'other';
+  }
+
+  // 보호자가 고른 대화가 가장 믿을 만한 답이다. 고르지 않았으면 장소와 시간, 문으로 판단한다.
+  function tripKind(trip, previous) {
+    if (trip.chosen) return trip.chosen === 'morning' ? 'go' : 'back';
+    if (trip.to === 'school' && trip.min < GO_LIMIT_MIN && trip.door) return 'go';
+    if (trip.from !== 'school' || trip.min < GO_LIMIT_MIN) return '';
+    const justDropped = previous && previous.kind === 'go' && previous.ymd === trip.ymd && trip.min - previous.end <= DROP_GAP_MIN;
+    return justDropped ? '' : 'back';
+  }
+
+  // 여정을 기록으로 바꾼다. 어디서 출발했는지 모르거나 제자리인 여정은 남기지 않는다.
+  function finishTrip(open, previous) {
+    if (!open.from || !open.last || (open.from === open.last && !open.chosen)) return null;
+    const tenMinutes = minute => Math.round(minute / 10) * 10;
+    const trip = { ymd: open.ymd, day: open.day, min: tenMinutes(open.min), end: tenMinutes(open.end === null ? open.min : open.end), from: open.from, to: open.last, door: open.door };
+    return { ...trip, kind: tripKind({ ...trip, chosen: open.chosen }, previous) };
+  }
+
+  // 같은 곳에서 비슷한 시간에 출발한 기록 가운데 등교나 하교가 뚜렷하면 그 답을 낸다.
+  function patternFor(trips, ctx) {
+    const near = trips.filter(trip => trip.from === ctx.from && Math.abs(trip.min - ctx.min) <= NEAR_MIN);
+    const sameDay = near.filter(trip => trip.day === ctx.day);
+    const group = sameDay.length >= SAME_DAY_TRIPS ? sameDay : near.length >= ANY_DAY_TRIPS ? near : [];
+    if (!group.length) return null;
+    const share = kind => group.filter(trip => trip.kind === kind).length / group.length;
+    if (share('go') >= PATTERN_SHARE) return 'morning';
+    return share('back') >= PATTERN_SHARE ? 'afternoon' : null;
+  }
+
+  // 지금이 등교인지 하교인지 판단한다. 모르면 null을 돌려 시간대 판단에 맡긴다.
+  function guessMode(ctx) {
+    if (!ctx.place) return null;
+    if (ctx.place === 'school') {
+      if (ctx.min < GO_LIMIT_MIN) return null;
+      const { last } = ctx;
+      const justDropped = last && last.kind === 'go' && last.ymd === ctx.ymd && ctx.min - last.end <= DROP_GAP_MIN;
+      return justDropped ? null : 'afternoon';
+    }
+    return patternFor(ctx.trips, { from: ctx.place, day: ctx.day, min: ctx.min });
+  }
+
+  const Journey = { flows: FLOWS, tierFor, isDone, isQuiet, start, next, skip, listenSpec, interpret, pickRule, pickQuestion, ruleStep, nextSchoolDay, isSchoolDay, intro, nextDayStep, subjectClips, subjectStep, placeLabel, finishTrip, patternFor, guessMode };
   root.Journey = Journey;
   if (typeof module !== 'undefined') module.exports = Journey;
 })(typeof window !== 'undefined' ? window : globalThis);

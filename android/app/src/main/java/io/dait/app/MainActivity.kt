@@ -4,12 +4,17 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.car.Car
 import android.car.drivingstate.CarUxRestrictionsManager
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import java.util.Locale
 import org.json.JSONObject
 
 class MainActivity : Activity() {
@@ -20,6 +25,7 @@ class MainActivity : Activity() {
     private var simulatedDriving = false
     private var isRestricted = false
     private var navi: NaviBridge? = null
+    private var tts: TextToSpeech? = null
 
     private val restrictionListener = CarUxRestrictionsManager.OnUxRestrictionsChangedListener { value ->
         runOnUiThread { applyPlatformRestriction(value.isRequiresDistractionOptimization) }
@@ -56,6 +62,11 @@ class MainActivity : Activity() {
                 webView.evaluateJavascript("window.onNaviUpdate && window.onNaviUpdate(${JSONObject.quote(json.toString())});", null)
             }
         }.also { it.connect() }
+
+        // 주말 진로 체험의 기사 낭독용 (니카 녹음 음원이 없는 실시간 기사)
+        tts = TextToSpeech(this) { status ->
+            if (status == TextToSpeech.SUCCESS) tts?.language = Locale.KOREAN
+        }
     }
 
     override fun onStart() {
@@ -86,6 +97,8 @@ class MainActivity : Activity() {
     override fun onDestroy() {
         navi?.release()
         navi = null
+        tts?.shutdown()
+        tts = null
         webView.destroy()
         super.onDestroy()
     }
@@ -145,6 +158,24 @@ class MainActivity : Activity() {
                 simulatedDriving = !simulatedDriving
                 applyPlatformRestriction(isRestricted)
             }
+        }
+
+        @JavascriptInterface
+        fun openUrl(url: String) {
+            if (!url.startsWith("https://")) return
+            runOnUiThread {
+                try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))) } catch (_: ActivityNotFoundException) {}
+            }
+        }
+
+        @JavascriptInterface
+        fun speak(text: String) {
+            tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "dait-news")
+        }
+
+        @JavascriptInterface
+        fun stopSpeaking() {
+            tts?.stop()
         }
     }
 }

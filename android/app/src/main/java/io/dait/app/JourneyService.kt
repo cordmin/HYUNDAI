@@ -35,6 +35,11 @@ class JourneyService : Service() {
         } catch (_: RuntimeException) {
             stopSelf()
         }
+        starting = false
+        if (stopWhenStarted) {
+            stopWhenStarted = false
+            stopSelf()
+        }
         return START_NOT_STICKY
     }
 
@@ -47,14 +52,22 @@ class JourneyService : Service() {
     companion object {
         private const val CHANNEL = "journey"
         private const val NOTIFICATION_ID = 1
+        private var starting = false
+        private var stopWhenStarted = false
 
         // 뒤에서 처음 시작하는 것은 안드로이드가 막는다. 그때는 앱이 앞에 있는 동안만 말하고 듣는다.
         fun start(context: Context) {
+            stopWhenStarted = false
             try {
                 context.startForegroundService(Intent(context, JourneyService::class.java))
+                starting = true
             } catch (_: IllegalStateException) {}
         }
 
-        fun stop(context: Context) = context.stopService(Intent(context, JourneyService::class.java))
+        // 앞쪽 작업이 되기 전에 멈추면 안드로이드가 앱을 닫으므로, 그 사이의 요청은 시작을 마친 뒤 처리한다.
+        fun stop(context: Context) {
+            if (starting) stopWhenStarted = true
+            else context.stopService(Intent(context, JourneyService::class.java))
+        }
     }
 }

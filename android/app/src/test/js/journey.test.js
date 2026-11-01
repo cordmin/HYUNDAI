@@ -127,6 +127,25 @@ test('일정 이름에 든 꺾쇠를 그대로 화면에 넣지 않는다', () =
   assert.ok(!stageText.includes('<b>시험'));
 });
 
+test('쉬는 날에는 할 말이 없는 하교 대화 버튼을 보여 주지 않는다', () => {
+  const shown = page(`
+    school = { name: 'A', kind: '중학교', grade: '1' };
+    schoolDays = { [toYmd(new Date())]: { subjects: [], meal: '' } }; schoolEvents = {};
+    goHome();
+    const html = document.getElementById('stageArea').innerHTML;
+    school = null; schoolDays = {};
+    html`);
+  assert.ok(shown.includes('가 볼 만한 곳'));
+  assert.ok(!shown.includes('하교 대화'));
+});
+
+test('시간표 카드의 과목 이름은 두 글자로 줄인다', () => {
+  assert.strictEqual(page(`shortSubject('국어')`), '국어');
+  assert.strictEqual(page(`shortSubject('기술·가정')`), '기술');
+  assert.strictEqual(page(`shortSubject('자율·자치활동')`), '자율');
+  assert.strictEqual(page(`shortSubject('진로와 직업')`), '진로');
+});
+
 test('남은 시간을 기획안 표의 네 구간으로 나눈다', () => {
   assert.deepStrictEqual([null, 12, 10, 9.9, 5, 4.9, 2.1, 2, 0].map(Journey.tierFor),
     ['full', 'full', 'full', 'medium', 'medium', 'brief', 'brief', 'arrive', 'arrive']);

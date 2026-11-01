@@ -960,6 +960,7 @@
       <button id="demoEtaMid" onclick="setEtaDemo(4)">4분 전</button>
       <button id="demoEtaShort" onclick="setEtaDemo(2)">2분 전</button>
       <button id="demoDest" onclick="cycleDestDemo()">목적지</button>
+      <button onclick="window.onDoorOpened()">문 열림</button>
     </div>
 
   </div>
@@ -987,6 +988,7 @@
     let pendingIntro = []; // 첫 질문 앞에 붙일 말(남은 시간, 오늘 시간표)
     let micBroken = false; // 이번 대화에서 마이크를 열지 못함
     let noMicTimer = null;
+    let tripForDoor = null; // 내릴 때 한마디: 대화를 시작한 여정. 달렸는지와 주차 시각을 기억한다.
     let currentRule = null; // 이번 대화에 쓰는 교사 규칙
     let ruleMissing = false; // 규칙 대화에서 준비물을 못 챙겼다고 답함
     let armed = null; // 출발하면 들려주기: { mode, timer }
@@ -997,10 +999,12 @@
     const MEMORY_KEY = 'dait.morningMemory';
     const VOICE_KEY = 'dait.voiceAnswers';
     const QUESTIONS_KEY = 'dait.questions';
+    const ROUTE_KEY = 'dait.routePlaces';
     const ARM_MS = 30 * 60 * 1000;
     const ARRIVAL_CLOSE_MS = 4000;
     const NO_MIC_WAIT_MS = 8000;
     const LISTEN_PATIENCE_MS = 12000;
+    const DOOR_WINDOW_MS = 5 * 60 * 1000;
 
     // DAIT 공식 확정 캘리그래피 로고 (시안 2 커넥티드 리본 + i Dot)
     function getDaitLogoHtml() {
@@ -1062,7 +1066,7 @@
       const ctaLabel = !school ? '학교 등록' : (trip.kind === 'weekend' ? `${(schoolPlan() || { label: '다음 수업일' }).label} 준비 듣기` : '지금 시작');
       const ctaSide = !school ? `<button class="cta-arm" onclick="event.stopPropagation(); startFlow('${trip.mode}')">예시로 듣기</button>`
         : trip.kind === 'weekend' ? ''
-        : `<button class="cta-arm${armed ? ' on' : ''}" onclick="event.stopPropagation(); toggleArm('${trip.mode}')">${armed ? '출발하면 들려줄게요' : '출발하면 듣기'}</button>`;
+        : `<button class="cta-arm${armed ? ' on' : ''}" onclick="event.stopPropagation(); toggleArm('${trip.mode}')">${armLabel(trip)}</button>`;
       container.innerHTML = `
         <div class="bento-stage">
           <div class="bento-hero ${heroClass}" onclick="${school ? `startFlow('${trip.mode}')` : 'openSettings()'}">
@@ -1121,6 +1125,12 @@
         </div>
       `;
       placeRouteDot();
+    }
+
+    function armLabel(trip) {
+      if (armed) return '출발하면 들려줄게요';
+      if (routePlaceFor(trip.mode) && !naviInfo) return trip.mode === 'morning' ? '학교로 안내' : '집으로 안내';
+      return '출발하면 듣기';
     }
 
     function renderDialogueFlow(container) {
@@ -1221,6 +1231,7 @@
       const context = journeyContext();
       stage = Journey.start(mode, context);
       pendingIntro = stage === 'NEXT_DAY' ? [] : Journey.intro(mode, context, DAIT_RULES);
+      tripForDoor = { drove: isDrivingMode, parkedAt: 0 };
       render();
     }
 
@@ -1286,6 +1297,36 @@
       if (askMicFirst(() => toggleArm(mode))) return;
       armed = { mode, timer: setTimeout(() => { disarm(); refreshHomeIfIdle(); }, ARM_MS) };
       render();
+      const place = routePlaceFor(mode);
+      if (place && !naviInfo && window.AndroidBridge) window.AndroidBridge.startRoute(JSON.stringify(place));
+    }
+
+    // 내비에서 알아 둔 학교와 집의 좌표. 있으면 첫 화면에서 바로 길 안내를 시작할 수 있다.
+    function routePlaceFor(mode) {
+      return routePlaces[mode === 'morning' ? 'school' : 'home'] || null;
+    }
+
+    function learnRoutePlace(kind, place) {
+      if (!Number.isFinite(place.lat) || !place.lat) return;
+      const known = routePlaces[kind];
+      if (known && known.lat === place.lat && known.lng === place.lng) return;
+      routePlaces[kind] = { name: place.name || '', address: place.address || '', lat: place.lat, lng: place.lng, poiId: place.poiId || '', poiSubId: place.poiSubId || '', poiProvider: place.poiProvider || '' };
+      writeStored(ROUTE_KEY, routePlaces);
+      refreshHomeIfIdle();
+    }
+
+    // 내비 즐겨찾기와 최근 목적지에서 학교를 찾고, '집' 즐겨찾기는 집으로 등록한다.
+    function learnFromNavi(places) {
+      places.filter(place => place.name && place.lat).forEach(place => {
+        if (school && placeMatches(place, school)) learnRoutePlace('school', place);
+        if (place.category === 'HOME') {
+          if (!homePlace) {
+            homePlace = { name: place.name, address: place.address || '' };
+            writeStored(HOME_KEY, homePlace);
+          }
+          learnRoutePlace('home', place);
+        } else if (homePlace && placeMatches(place, homePlace)) learnRoutePlace('home', place);
+      });
     }
 
     function disarm() {
@@ -1298,11 +1339,32 @@
     function syncJourney() {
       const inDialogue = !!currentMode && !isParkedScreen();
       const finishedParked = isDialogueDone() && speechPhase === 'idle' && !isDrivingMode;
-      const active = !!armed || (inDialogue && !finishedParked);
+      const active = !!armed || (inDialogue && !finishedParked) || !!(tripForDoor && tripForDoor.drove);
       if (active === journeyActive) return;
       journeyActive = active;
       if (window.AndroidBridge) window.AndroidBridge.setJourneyActive(active);
     }
+
+    // 실제로 달린 여정 뒤 주차한 상태에서 아이 쪽 문이 처음 열릴 때 한 번만 말한다 (기획안 ④)
+    function trackDoorTrip(isDriving) {
+      if (!tripForDoor) return;
+      if (isDriving) tripForDoor.drove = true;
+      else if (tripForDoor.drove && !tripForDoor.parkedAt) {
+        const parked = tripForDoor;
+        parked.parkedAt = Date.now();
+        setTimeout(() => {
+          if (tripForDoor === parked) { tripForDoor = null; syncJourney(); }
+        }, DOOR_WINDOW_MS);
+      }
+    }
+
+    window.onDoorOpened = function() {
+      if (isDrivingMode || !tripForDoor || !tripForDoor.parkedAt) return;
+      tripForDoor = null;
+      hasArrived = !!currentMode && !isParkedScreen(); // 아이가 내리는 순간이므로 말을 마치면 대화를 닫는다
+      speak([DAIT_RULES.extras.p_door_bag].filter(Boolean), '');
+      syncJourney();
+    };
 
     // ========================================================
     // 말하기와 듣기
@@ -2061,6 +2123,8 @@
       writeStored(DAYS_KEY, schoolDays);
       schoolEvents = {};
       writeStored(EVENTS_KEY, schoolEvents);
+      delete routePlaces.school;
+      writeStored(ROUTE_KEY, routePlaces);
       goHome();
       refreshSchoolDays();
     }
@@ -2069,6 +2133,8 @@
       school = null;
       schoolDays = {};
       schoolEvents = {};
+      delete routePlaces.school;
+      writeStored(ROUTE_KEY, routePlaces);
       try {
         localStorage.removeItem(SCHOOL_KEY);
         localStorage.removeItem(DAYS_KEY);
@@ -2093,6 +2159,7 @@
       isDrivingMode = isDriving;
       document.body.classList.toggle('driving', isDriving);
       document.body.classList.toggle('real-driving', !!isRealDriving);
+      trackDoorTrip(isDriving);
       document.getElementById('demoDrive').classList.toggle('on', isDriving);
       if (isDriving && isParkedScreen()) goHome();
       if (departing && armed) startFlow(armed.mode);
@@ -2147,11 +2214,13 @@
       let info;
       try { info = JSON.parse(jsonText); } catch (e) { return; }
       console.log('Navi:', jsonText);
-      if (info.event === 'destination' || info.event === 'routeStarted') {
+      if (info.event === 'places') learnFromNavi(info.places || []);
+      else if (info.event === 'destination' || info.event === 'routeStarted') {
         // 길 안내가 없을 때는 이름 없이 0으로 오므로 도착 직전과 구분한다.
         if (!info.name && !(Number(info.remainTime) > 0)) { const had = !!naviInfo; naviInfo = null; renderDemoPanel(); if (had) refreshHomeIfIdle(); return; }
         const changed = !naviInfo || naviInfo.name !== (info.name || '') || (currentMode === 'settings' && !document.querySelector('[onclick="saveHomeFromNavi()"]') && canSaveHomeFor(info));
         naviInfo = { name: info.name || '', address: info.address || '', remainTime: Number(info.remainTime), remainDistance: Number(info.remainDistance), at: Date.now() };
+        learnFromNavi([info]);
         applyNaviEta();
         if (changed) refreshHomeIfIdle();
       } else if (info.event === 'routeCancelled' || info.event === 'routeEnded' || info.event === 'arrived' || info.event === 'unavailable') {
@@ -2180,6 +2249,7 @@
     // ========================================================
     const HOME_KEY = 'dait.home';
     let homePlace = readStored(HOME_KEY);
+    let routePlaces = readStored(ROUTE_KEY) || {}; // 내비에서 알아 둔 학교와 집의 좌표
 
     function normalizePlace(text) {
       return String(text || '').replace(/\s+/g, '').replace(/[()·,.]/g, '');
@@ -2213,6 +2283,8 @@
 
     function clearHome() {
       homePlace = null;
+      delete routePlaces.home;
+      writeStored(ROUTE_KEY, routePlaces);
       try { localStorage.removeItem(HOME_KEY); } catch (e) { console.log('Storage error:', e); }
       render();
     }

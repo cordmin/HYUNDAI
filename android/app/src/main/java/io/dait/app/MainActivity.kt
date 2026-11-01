@@ -24,6 +24,7 @@ class MainActivity : Activity() {
     private var simulatedDriving = false
     private var isRestricted = true // 차 상태를 받기 전에는 주행 중으로 둔다.
     private var navi: NaviBridge? = null
+    private var doors: DoorBridge? = null
     private var voice: VoiceSession? = null
     private var hasSpeechModel = false
     private var speechInput: LocalVoiceInput? = null
@@ -68,6 +69,7 @@ class MainActivity : Activity() {
         navi = NaviBridge(this) { json ->
             callPage("window.onNaviUpdate && window.onNaviUpdate(${JSONObject.quote(json.toString())});")
         }.also { it.connect() }
+        doors = DoorBridge(this) { callPage("window.onDoorOpened && window.onDoorOpened();") }.also { it.connect() }
         connectCarService()
     }
 
@@ -90,6 +92,8 @@ class MainActivity : Activity() {
         voice = null
         navi?.release()
         navi = null
+        doors?.release()
+        doors = null
         try { restrictions?.unregisterListener() } catch (_: Exception) {}
         restrictions = null
         car?.disconnect()
@@ -174,6 +178,12 @@ class MainActivity : Activity() {
             val array = JSONArray(clipsJson)
             val clips = List(array.length()) { array.getString(it) }
             runOnUiThread { voice?.speak(clips, listen, turn) }
+        }
+
+        @JavascriptInterface
+        fun startRoute(placeJson: String) {
+            val place = JSONObject(placeJson)
+            runOnUiThread { navi?.startRoute(place) }
         }
 
         @JavascriptInterface

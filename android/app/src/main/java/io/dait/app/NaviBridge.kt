@@ -3,11 +3,15 @@ package io.dait.app
 import android.content.Context
 import ai.pleos.playground.navi.constants.NaviErrorCode
 import ai.pleos.playground.navi.constants.NavigationStatus
+import ai.pleos.playground.navi.data.BookmarkInfo
 import ai.pleos.playground.navi.data.DestinationArrivedInfo
 import ai.pleos.playground.navi.data.DestinationInfo
+import ai.pleos.playground.navi.data.RecentDestinationInfo
+import ai.pleos.playground.navi.data.RouteInfo
 import ai.pleos.playground.navi.data.RouteStartInfo
 import ai.pleos.playground.navi.helper.NaviHelper
 import ai.pleos.playground.navi.helper.listener.NaviHelperEventListener
+import org.json.JSONArray
 import org.json.JSONObject
 
 // Pleos NaviHelper에서 목적지와 남은 시간을 받아 화면으로 넘긴다.
@@ -41,9 +45,22 @@ class NaviBridge(context: Context, private val onUpdate: (JSONObject) -> Unit) {
         }
 
         override fun onDestinationInfo(destinationInfo: DestinationInfo) {
-            emit(JSONObject().put("event", "destination")
-                .put("name", destinationInfo.name).put("address", destinationInfo.address)
+            emit(place(destinationInfo.name, destinationInfo.address, destinationInfo.latitude, destinationInfo.longitude,
+                destinationInfo.poiId, destinationInfo.poiSubId, destinationInfo.poiProvider)
+                .put("event", "destination")
                 .put("remainTime", destinationInfo.remainTime).put("remainDistance", destinationInfo.remainDistance))
+        }
+
+        override fun onBookmarkInfo(bookmarkInfo: List<BookmarkInfo>) {
+            emitPlaces(bookmarkInfo.map {
+                place(it.name, it.address, it.latitude, it.longitude, it.poiId, it.poiSubId, it.poiProvider).put("category", it.category?.name)
+            })
+        }
+
+        override fun onRecentDestinationInfo(recentDestinationInfo: List<RecentDestinationInfo>) {
+            emitPlaces(recentDestinationInfo.map {
+                place(it.name, it.address, it.latitude, it.longitude, it.poiId, it.poiSubId, it.poiProvider)
+            })
         }
 
         override fun onError(errorCode: NaviErrorCode) { emit(JSONObject().put("event", "error").put("code", errorCode.name)) }
@@ -65,6 +82,8 @@ class NaviBridge(context: Context, private val onUpdate: (JSONObject) -> Unit) {
                     try {
                         helper.addListener(listener)
                         helper.getDestinationInfo()
+                        helper.getBookmarkInfo()
+                        helper.getRecentDestinationInfo()
                     } catch (_: Exception) {}
                     emit(JSONObject().put("event", "connected"))
                     // 이미 길 안내 중일 수 있으니 묻기 시작한다. 안내가 없으면 빈 값이 와서 화면이 무시한다.
@@ -86,6 +105,30 @@ class NaviBridge(context: Context, private val onUpdate: (JSONObject) -> Unit) {
             try { helper.release() } catch (_: Exception) {}
         }
         connected = false
+    }
+
+    // 화면이 기억해 둔 학교나 집으로 길 안내를 시작한다.
+    fun startRoute(place: JSONObject) {
+        if (!connected) return
+        try {
+            helper.requestRoute(RouteInfo(
+                latitude = place.getDouble("lat"),
+                longitude = place.getDouble("lng"),
+                poiName = place.optString("name"),
+                poiId = place.optString("poiId"),
+                address = place.optString("address"),
+                poiSubId = place.optString("poiSubId"),
+                poiProvider = place.optString("poiProvider"),
+            ))
+        } catch (_: Exception) { emit(JSONObject().put("event", "routeFailed")) }
+    }
+
+    private fun place(name: String?, address: String?, lat: Double, lng: Double, poiId: String?, poiSubId: String?, poiProvider: String?) =
+        JSONObject().put("name", name).put("address", address).put("lat", lat).put("lng", lng)
+            .put("poiId", poiId).put("poiSubId", poiSubId).put("poiProvider", poiProvider)
+
+    private fun emitPlaces(places: List<JSONObject>) {
+        emit(JSONObject().put("event", "places").put("places", JSONArray(places)))
     }
 
     private fun startPolling() {

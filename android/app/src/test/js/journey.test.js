@@ -1,10 +1,45 @@
 const test = require('node:test');
 const assert = require('node:assert');
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
 const Journey = require('../../main/assets/dait-journey.js');
 const data = require('../../main/assets/dait-rules.js');
 const { rules } = data;
 
 const full = { tier: 'full', school: true, hasPe: true, memory: {} };
+
+// 무엇을 불러도 빈 값을 돌려주는 가짜 화면 요소
+function fakeElement() {
+  const target = function () { return element; };
+  const element = new Proxy(target, {
+    get: (_, key) => (key === Symbol.toPrimitive ? () => '' : key === 'length' ? 0 : element),
+    set: () => true,
+    has: () => true
+  });
+  return element;
+}
+
+test('화면 코드가 끝까지 실행되고 시작 화면을 그린다', () => {
+  const html = fs.readFileSync(path.join(__dirname, '../../main/assets/dait-preview.html'), 'utf8');
+  const code = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(match => match[1]).join('\n');
+  const element = fakeElement();
+  const stage = { innerHTML: '' };
+  const sandbox = {
+    Journey, DAIT_RULES: data, console: { log() {} }, URLSearchParams, performance,
+    setTimeout: () => 0, clearTimeout: () => {}, fetch: () => new Promise(() => {}),
+    localStorage: { getItem: () => null, setItem() {}, removeItem() {} },
+    navigator: { userAgent: '' },
+    document: {
+      getElementById: id => (id === 'stageArea' ? stage : element),
+      querySelector: () => null, querySelectorAll: () => [], body: element
+    }
+  };
+  sandbox.window = Object.assign(sandbox, { location: { href: 'http://localhost/' } });
+  vm.runInNewContext(code, sandbox);
+  assert.ok(stage.innerHTML.includes('학교를 등록해 주세요'));
+  assert.strictEqual(typeof sandbox.setDrivingMode, 'function');
+});
 
 test('남은 시간을 기획안 표의 네 구간으로 나눈다', () => {
   assert.deepStrictEqual([null, 12, 10, 9.9, 5, 4.9, 2.1, 2, 0].map(Journey.tierFor),

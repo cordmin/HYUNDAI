@@ -45,5 +45,6 @@ dependencies {
     implementation 'net.java.dev.jna:jna:5.18.1@aar'
     implementation 'com.alphacephei:vosk-android:0.3.75@aar'
     implementation 'ai.pleos.playground:NaviHelper:3.0.5'
+    implementation 'ai.pleos.playground:Vehicle:2.3.2'
     testImplementation 'junit:junit:4.13.2'
 }

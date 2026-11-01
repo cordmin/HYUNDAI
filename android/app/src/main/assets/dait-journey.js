@@ -10,6 +10,7 @@
       SCIENCE_DETAIL: { clip: 'school_science', title: '무엇이 궁금해요?', choices: ['우주가 궁금해', '실험이 기대돼', '다녀올게요'], listen: 'free' },
       READING_DETAIL: { clip: 'school_reading', title: '기억나는 이야기 있어?', choices: ['주인공이 멋졌어', '마법 이야기', '다녀올게요'], listen: 'free' },
       BRIEF: { clip: 'morning_short', title: '체육복을 확인해요', choices: [] },
+      REST_SOFT: { clip: 'rest_skip', title: '편하게 쉬어가요', choices: [] },
       BRIEF_BAG: { clip: 'arrival_bag', title: '가방과 준비물을 챙겨요', choices: [] },
       ETA_SHORT: { clip: 'arrival_bag', title: '가방과 준비물을 챙겨요', choices: [] },
       REST: { clip: 'rest_tired', title: '편하게 쉬어요', choices: [] },
@@ -33,7 +34,7 @@
     }
   };
 
-  const FINAL_STAGES = ['DONE', 'REST', 'REST_SOFT', 'ETA_SHORT', 'BRIEF', 'BRIEF_BAG', 'QUIET_END', 'STOPPED'];
+  const FINAL_STAGES = ['DONE', 'REST', 'REST_SOFT', 'ETA_SHORT', 'BRIEF', 'BRIEF_BAG', 'QUIET_END', 'STOPPED', 'RULE_ONLY', 'RULE_END'];
   const QUESTION_STAGES_AFTER = ['AFTER_EVENT', 'AFTER_PE', 'AFTER_SCIENCE'];
   const QUIET_WORDS = ['그만', '쉬고', '쉴래', '쉬자', '피곤', '말하기싫', '하기싫', '귀찮', '안할래'];
   const SAD_WORDS = ['속상', '슬퍼', '슬펐', '싸웠', '싫었', '힘들'];
@@ -68,8 +69,79 @@
     return hasAny(compact(text), QUIET_WORDS);
   }
 
+  function addDays(ymd, days) {
+    const date = new Date(Number(ymd.slice(0, 4)), Number(ymd.slice(4, 6)) - 1, Number(ymd.slice(6, 8)) + days);
+    return `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`;
+  }
+
+  function isSchoolDay(ymd, events) {
+    const date = new Date(Number(ymd.slice(0, 4)), Number(ymd.slice(4, 6)) - 1, Number(ymd.slice(6, 8)));
+    if (date.getDay() === 0 || date.getDay() === 6) return false;
+    return !(events[ymd] || []).some(event => event.off);
+  }
+
+  function nextSchoolDay(ymd, events) {
+    let next = addDays(ymd, 1);
+    for (let i = 0; i < 14 && !isSchoolDay(next, events); i++) next = addDays(next, 1);
+    return next;
+  }
+
+  // 그날이 학사일정 낱말에 맞는 일정에서 어떤 시점인지 찾는다.
+  function eventTimings(words, ymd, events) {
+    const has = day => (events[day] || []).find(event => hasAny(event.name, words));
+    const today = has(ymd);
+    const tomorrow = has(nextSchoolDay(ymd, events));
+    if (today) return { name: today.name, timings: tomorrow ? ['당일'] : ['마지막날', '당일'] };
+    if (tomorrow) return { name: tomorrow.name, timings: ['전날'] };
+    for (let i = 2; i <= 7; i++) {
+      const soon = has(addDays(ymd, i));
+      if (soon) return { name: soon.name, timings: ['앞둔 기간'] };
+    }
+    return null;
+  }
+
+  // 교사 규칙표에서 지금 맞는 규칙 하나를 고른다. 순위 숫자가 작을수록 먼저다.
+  function pickRule(rules, ctx) {
+    const candidates = rules
+      .filter(rule => rule.type !== 'question' && rule.levels.includes(ctx.level) && (rule.mode === 'both' || rule.mode === ctx.mode))
+      .sort((a, b) => a.rank - b.rank || a.id - b.id);
+    for (const rule of candidates) {
+      const found = eventTimings(rule.words, ctx.ymd, ctx.events);
+      if (found && found.timings.includes(rule.when)) return { ...rule, eventName: found.name };
+    }
+    return null;
+  }
+
+  function pickQuestion(rules, subjects, level) {
+    const found = rules
+      .filter(rule => rule.type === 'question' && rule.levels.includes(level) && subjects.includes(rule.subject))
+      .sort((a, b) => a.rank - b.rank || a.id - b.id)[0];
+    return found ? found.title : '오늘 가장 기대되는 시간은 언제야?';
+  }
+
+  // 규칙 대화의 단계. 말이 표에서 오므로 FLOWS에 적지 않고 규칙으로 만든다.
+  function ruleStep(stage, rule, missing, missingClip) {
+    const firstSentence = rule.last.split(/(?<=[.?!])\s/)[0];
+    if (stage === 'RULE_END') return { clips: [...(missing ? [missingClip] : []), rule.lastClip], title: firstSentence || rule.title, choices: [] };
+    if (stage === 'RULE_ONLY') return { clips: rule.type === 'notice' ? [rule.firstClip, rule.lastClip] : [rule.firstClip], title: rule.title, choices: [] };
+    if (rule.type === 'confirm') return { clips: [rule.firstClip], title: rule.title, choices: ['다 챙겼어', '깜빡했어'], listen: 'grammar' };
+    return { clips: [rule.firstClip], title: rule.title, choices: ['다 말했어', '쉬고 싶어'], listen: 'free' };
+  }
+
   function start(mode, ctx) {
     const memory = ctx.memory || {};
+    if (ctx.rule) {
+      if (ctx.tier === 'arrive') return 'ETA_SHORT';
+      if (mode === 'afternoon' && memory.rest) return 'REST';
+      if (ctx.rule.type === 'notice') return 'RULE_ONLY';
+      const story = ctx.rule.type === 'story';
+      if (ctx.tier === 'brief' || memory.rest) {
+        if (!story) return 'RULE_ONLY';
+        if (mode === 'afternoon') return 'ETA_SHORT';
+        return !ctx.school || ctx.hasPe ? 'BRIEF' : 'BRIEF_BAG';
+      }
+      return 'RULE_FIRST';
+    }
     if (mode === 'afternoon') {
       if (memory.rest) return 'REST';
       if (ctx.tier === 'arrive' || ctx.tier === 'brief') return 'ETA_SHORT';
@@ -120,29 +192,35 @@
   }
 
   function next(mode, stage, answer, ctx) {
+    if (stage === 'RULE_FIRST') {
+      if (answer === '쉬고 싶어') return { stage: 'REST', remember: { rest: true } };
+      return { stage: 'RULE_END', missing: answer === '깜빡했어' };
+    }
     const result = mode === 'morning' ? nextMorning(stage, answer, ctx) : nextAfternoon(stage, answer, ctx);
     return { ...result, stage: clamp(mode, result.stage, ctx) };
   }
 
   // 질문을 건너뛴다. 답을 지어내지 않고 다음 단계로만 넘어간다.
   function skip(mode, stage, ctx) {
+    if (stage === 'RULE_FIRST') return 'RULE_END';
     if (mode === 'morning') return clamp(mode, stage === 'PREP' ? 'SUBJECT_TODAY' : 'DONE', ctx);
     return clamp(mode, stage === 'PARENT_BRIDGE' ? afternoonEnd(ctx) : 'PARENT_BRIDGE', ctx);
   }
 
   // 듣기 방식: ''은 듣지 않음, 'free'는 자유 인식, 그 외는 인식 후보 목록(JSON).
-  function listenSpec(mode, stage, choices) {
-    const step = FLOWS[mode] && FLOWS[mode][stage];
+  function listenSpec(mode, stage, choices, rule) {
+    const step = stage === 'RULE_FIRST' ? { listen: rule.type === 'confirm' ? 'grammar' : 'free' } : FLOWS[mode] && FLOWS[mode][stage];
     if (!step || !step.listen) return '';
     if (step.listen === 'free') return 'free';
-    const words = stage === 'PREP' ? PREP_WORDS
+    const words = stage === 'PREP' || stage === 'RULE_FIRST' ? PREP_WORDS
       : [...choices, ...choices.map(choice => `${choice} 이 기대 돼`), '책'];
     return JSON.stringify([...new Set([...words, ...COMMON_WORDS])]);
   }
 
   // 인식 결과를 대화의 답으로 바꾼다. reference는 후보 없이 자유롭게 들은 결과로,
   // 엉뚱한 말이 후보에 억지로 끼워 맞춰지지 않았는지 확인하는 데 쓴다.
-  function interpret(stage, text, reference, choices) {
+  function interpret(givenStage, text, reference, choices, rule) {
+    const stage = givenStage === 'RULE_FIRST' ? (rule.type === 'confirm' ? 'PREP' : 'AFTER_EVENT') : givenStage;
     const value = compact(text);
     const free = compact(reference);
     if (!value || value.includes('<UNK>')) return { kind: 'unclear' };
@@ -170,7 +248,7 @@
     return value.length >= 2 ? { kind: 'answer', answer: value, heard: '' } : { kind: 'unclear' };
   }
 
-  const Journey = { flows: FLOWS, tierFor, isDone, isQuiet, start, next, skip, listenSpec, interpret };
+  const Journey = { flows: FLOWS, tierFor, isDone, isQuiet, start, next, skip, listenSpec, interpret, pickRule, pickQuestion, ruleStep, nextSchoolDay, isSchoolDay };
   root.Journey = Journey;
   if (typeof module !== 'undefined') module.exports = Journey;
 })(typeof window !== 'undefined' ? window : globalThis);

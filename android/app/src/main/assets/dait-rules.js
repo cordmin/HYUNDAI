@@ -1,0 +1,825 @@
+// tools/build-rules.js가 rules/교사규칙표.csv에서 만든 파일이다. 직접 고치지 않는다.
+(function (root) {
+  const data = {
+  "rules": [
+    {
+      "id": 1,
+      "rank": 10,
+      "name": "시험 당일 등교",
+      "mode": "morning",
+      "levels": [
+        "중",
+        "고"
+      ],
+      "words": [
+        "시험",
+        "고사",
+        "지필"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "오늘은 시험 보는 날",
+      "desc": "사인펜과 시계를 확인해요",
+      "prep": "컴퓨터용 사인펜",
+      "type": "confirm",
+      "first": "오늘은 시험 보는 날이에요. 컴퓨터용 사인펜 챙겼어요? 시계는 디지털시계 말고 바늘 시계로 챙겨요.",
+      "last": "지금까지 준비한 만큼만 보여 주면 충분해요. 잘 다녀와요.",
+      "firstClip": "temp/r1_1",
+      "lastClip": "temp/r1_2"
+    },
+    {
+      "id": 2,
+      "rank": 10,
+      "name": "시험 당일 등교(초등)",
+      "mode": "morning",
+      "levels": [
+        "초"
+      ],
+      "words": [
+        "시험",
+        "고사",
+        "평가"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "오늘은 시험 보는 날",
+      "desc": "필통을 확인해요",
+      "prep": "필통",
+      "type": "confirm",
+      "first": "오늘은 시험이 있는 날이에요. 필통 챙겼어요?",
+      "last": "아는 만큼 차분히 풀면 돼요. 잘 다녀와요.",
+      "firstClip": "temp/r2_1",
+      "lastClip": "temp/r2_2"
+    },
+    {
+      "id": 3,
+      "rank": 11,
+      "name": "시험 끝나는 날 하교",
+      "mode": "afternoon",
+      "levels": [
+        "중",
+        "고"
+      ],
+      "words": [
+        "시험",
+        "고사",
+        "지필"
+      ],
+      "when": "마지막날",
+      "subject": "",
+      "title": "시험 끝, 수고했어요",
+      "desc": "오늘은 시험 얘기 말고 쉬어요",
+      "prep": "",
+      "type": "story",
+      "first": "시험 끝났네요. 정말 수고했어요. 오늘은 시험 얘기 말고, 제일 하고 싶은 거 하나만 말해 줄래요?",
+      "last": "좋아요. 오늘은 푹 쉬어요.",
+      "firstClip": "temp/r3_1",
+      "lastClip": "temp/r3_2"
+    },
+    {
+      "id": 4,
+      "rank": 12,
+      "name": "시험 기간 하교",
+      "mode": "afternoon",
+      "levels": [
+        "중",
+        "고"
+      ],
+      "words": [
+        "시험",
+        "고사",
+        "지필"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "오늘도 수고했어요",
+      "desc": "시험 이야기는 안 해도 괜찮아요",
+      "prep": "",
+      "type": "notice",
+      "first": "오늘도 수고했어요. 시험 이야기는 안 해도 괜찮아요.",
+      "last": "집에 가서 잠깐 쉬고 시작해요.",
+      "firstClip": "temp/r4_1",
+      "lastClip": "temp/r4_2"
+    },
+    {
+      "id": 5,
+      "rank": 13,
+      "name": "시험 전날 하교",
+      "mode": "afternoon",
+      "levels": [
+        "중",
+        "고"
+      ],
+      "words": [
+        "시험",
+        "고사",
+        "지필"
+      ],
+      "when": "전날",
+      "subject": "",
+      "title": "곧 시험이에요",
+      "desc": "오늘은 일찍 자는 게 좋아요",
+      "prep": "컴퓨터용 사인펜",
+      "type": "confirm",
+      "first": "곧 시험이네요. 컴퓨터용 사인펜이랑 바늘 시계 챙겨 뒀어요?",
+      "last": "오늘 밤에는 일찍 자는 게 제일 좋은 공부예요.",
+      "firstClip": "temp/r5_1",
+      "lastClip": "temp/r5_2"
+    },
+    {
+      "id": 6,
+      "rank": 14,
+      "name": "시험 전날 등교",
+      "mode": "morning",
+      "levels": [
+        "중",
+        "고"
+      ],
+      "words": [
+        "시험",
+        "고사",
+        "지필"
+      ],
+      "when": "전날",
+      "subject": "",
+      "title": "곧 시험이에요",
+      "desc": "아는 것을 한 번 더 봐요",
+      "prep": "",
+      "type": "notice",
+      "first": "곧 시험이네요. 오늘은 새로운 것보다 아는 것을 한 번 더 봐요.",
+      "last": "",
+      "firstClip": "temp/r6_1",
+      "lastClip": ""
+    },
+    {
+      "id": 7,
+      "rank": 15,
+      "name": "시험 앞둔 기간 등교",
+      "mode": "morning",
+      "levels": [
+        "중",
+        "고"
+      ],
+      "words": [
+        "시험",
+        "고사",
+        "지필"
+      ],
+      "when": "앞둔 기간",
+      "subject": "",
+      "title": "시험이 가까워졌어요",
+      "desc": "마음 쓰이는 과목을 나눠요",
+      "prep": "",
+      "type": "story",
+      "first": "시험이 가까워졌네요. 요즘 제일 마음 쓰이는 과목이 있어요? 말 안 해도 괜찮아요.",
+      "last": "말해 줘서 고마워요. 오늘 하나씩만 해 봐요.",
+      "firstClip": "temp/r7_1",
+      "lastClip": "temp/r7_2"
+    },
+    {
+      "id": 8,
+      "rank": 15,
+      "name": "시험 앞둔 기간 하교",
+      "mode": "afternoon",
+      "levels": [
+        "중",
+        "고"
+      ],
+      "words": [
+        "시험",
+        "고사",
+        "지필"
+      ],
+      "when": "앞둔 기간",
+      "subject": "",
+      "title": "오늘도 수고했어요",
+      "desc": "쉬는 시간도 준비예요",
+      "prep": "",
+      "type": "story",
+      "first": "오늘도 수고했어요. 시험 준비하다 쉴 때 뭐 하고 싶어요?",
+      "last": "좋아요. 쉬는 것도 준비예요.",
+      "firstClip": "temp/r8_1",
+      "lastClip": "temp/r8_2"
+    },
+    {
+      "id": 9,
+      "rank": 20,
+      "name": "현장체험학습 전날 하교",
+      "mode": "afternoon",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [
+        "체험학습",
+        "현장학습",
+        "수학여행",
+        "수련",
+        "소풍"
+      ],
+      "when": "전날",
+      "subject": "",
+      "title": "곧 체험학습이에요",
+      "desc": "가정통신문 준비물을 확인해요",
+      "prep": "가정통신문 확인",
+      "type": "notice",
+      "first": "곧 현장체험학습이에요. 가정통신문의 준비물을 오늘 저녁에 함께 확인해요.",
+      "last": "",
+      "firstClip": "temp/r9_1",
+      "lastClip": ""
+    },
+    {
+      "id": 10,
+      "rank": 20,
+      "name": "현장체험학습 당일 등교",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [
+        "체험학습",
+        "현장학습",
+        "수학여행",
+        "수련",
+        "소풍"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "오늘은 밖에서 배우는 날",
+      "desc": "가장 기대되는 것을 나눠요",
+      "prep": "가정통신문 확인",
+      "type": "story",
+      "first": "오늘은 밖에서 배우는 날이에요. 제일 기대되는 게 뭐예요?",
+      "last": "재미있게 다녀와요. 돌아오는 길에 들려줘요.",
+      "firstClip": "temp/r10_1",
+      "lastClip": "temp/r10_2"
+    },
+    {
+      "id": 11,
+      "rank": 20,
+      "name": "현장체험학습 당일 하교",
+      "mode": "afternoon",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [
+        "체험학습",
+        "현장학습",
+        "수학여행",
+        "수련",
+        "소풍"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "오늘 어땠어요?",
+      "desc": "기억나는 장면 하나면 돼요",
+      "prep": "",
+      "type": "story",
+      "first": "오늘 체험학습 어땠어요? 제일 기억나는 장면 하나만 들려줘요.",
+      "last": "들려줘서 고마워요. 오늘은 편하게 쉬어요.",
+      "firstClip": "temp/r11_1",
+      "lastClip": "temp/r11_2"
+    },
+    {
+      "id": 12,
+      "rank": 25,
+      "name": "체육대회 전날 하교",
+      "mode": "afternoon",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [
+        "체육대회",
+        "운동회",
+        "체육한마당",
+        "스포츠"
+      ],
+      "when": "전날",
+      "subject": "",
+      "title": "곧 체육대회예요",
+      "desc": "체육복을 미리 챙겨요",
+      "prep": "체육복",
+      "type": "notice",
+      "first": "곧 체육대회네요. 체육복은 오늘 저녁에 미리 챙겨 둬요.",
+      "last": "",
+      "firstClip": "temp/r12_1",
+      "lastClip": ""
+    },
+    {
+      "id": 13,
+      "rank": 25,
+      "name": "체육대회 당일 등교",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [
+        "체육대회",
+        "운동회",
+        "체육한마당",
+        "스포츠"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "오늘은 체육대회",
+      "desc": "체육복과 물을 확인해요",
+      "prep": "체육복",
+      "type": "confirm",
+      "first": "오늘은 체육대회 날이에요. 체육복이랑 물 챙겼어요?",
+      "last": "신나게 하고 와요. 다치지 않게 조심해요.",
+      "firstClip": "temp/r13_1",
+      "lastClip": "temp/r13_2"
+    },
+    {
+      "id": 14,
+      "rank": 25,
+      "name": "체육대회 당일 하교",
+      "mode": "afternoon",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [
+        "체육대회",
+        "운동회",
+        "체육한마당",
+        "스포츠"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "오늘 어땠어요?",
+      "desc": "가장 신났던 순간을 나눠요",
+      "prep": "",
+      "type": "story",
+      "first": "오늘 체육대회 어땠어요? 제일 신났던 순간 하나만 들려줘요.",
+      "last": "들려줘서 고마워요. 오늘 많이 움직였으니 푹 쉬어요.",
+      "firstClip": "temp/r14_1",
+      "lastClip": "temp/r14_2"
+    },
+    {
+      "id": 15,
+      "rank": 30,
+      "name": "축제 당일 등교",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [
+        "축제",
+        "학예",
+        "발표회",
+        "합창"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "오늘은 축제 날",
+      "desc": "기대되는 무대를 나눠요",
+      "prep": "",
+      "type": "story",
+      "first": "오늘은 학교 축제 날이에요. 제일 기대되는 게 뭐예요?",
+      "last": "즐겁게 보내고 와요.",
+      "firstClip": "temp/r15_1",
+      "lastClip": "temp/r15_2"
+    },
+    {
+      "id": 16,
+      "rank": 30,
+      "name": "축제 당일 하교",
+      "mode": "afternoon",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [
+        "축제",
+        "학예",
+        "발표회",
+        "합창"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "오늘 어땠어요?",
+      "desc": "기억나는 장면 하나면 돼요",
+      "prep": "",
+      "type": "story",
+      "first": "오늘 축제 어땠어요? 제일 기억나는 장면 하나만 들려줘요.",
+      "last": "들려줘서 고마워요.",
+      "firstClip": "temp/r16_1",
+      "lastClip": "temp/r16_2"
+    },
+    {
+      "id": 17,
+      "rank": 35,
+      "name": "방학식 등교",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [
+        "방학식",
+        "방학선언",
+        "종업식"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "오늘은 방학식",
+      "desc": "짐을 챙겨 올 수 있어요",
+      "prep": "빈 가방",
+      "type": "notice",
+      "first": "오늘은 방학식이에요. 사물함 짐을 가져올 수 있으니 가방을 넉넉하게 챙겨요.",
+      "last": "",
+      "firstClip": "temp/r17_1",
+      "lastClip": ""
+    },
+    {
+      "id": 18,
+      "rank": 35,
+      "name": "방학식 하교",
+      "mode": "afternoon",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [
+        "방학식",
+        "방학선언",
+        "종업식"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "한 학기 수고했어요",
+      "desc": "방학에 하고 싶은 것을 나눠요",
+      "prep": "",
+      "type": "story",
+      "first": "한 학기 정말 수고했어요. 방학에 제일 하고 싶은 게 뭐예요?",
+      "last": "좋아요. 꼭 해 봐요.",
+      "firstClip": "temp/r18_1",
+      "lastClip": "temp/r18_2"
+    },
+    {
+      "id": 19,
+      "rank": 35,
+      "name": "개학 등교",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [
+        "개학"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "오랜만에 학교 가는 날",
+      "desc": "반가운 얼굴을 떠올려요",
+      "prep": "",
+      "type": "story",
+      "first": "오랜만에 학교 가는 날이네요. 제일 보고 싶은 친구가 있어요?",
+      "last": "즐거운 하루 보내요.",
+      "firstClip": "temp/r19_1",
+      "lastClip": "temp/r19_2"
+    },
+    {
+      "id": 20,
+      "rank": 40,
+      "name": "입학식 등교",
+      "mode": "morning",
+      "levels": [
+        "초"
+      ],
+      "words": [
+        "입학식"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "오늘은 입학식",
+      "desc": "설레는 마음을 나눠요",
+      "prep": "",
+      "type": "story",
+      "first": "오늘은 입학식이에요. 지금 마음이 어때요?",
+      "last": "씩씩하게 다녀와요.",
+      "firstClip": "temp/r20_1",
+      "lastClip": "temp/r20_2"
+    },
+    {
+      "id": 21,
+      "rank": 40,
+      "name": "졸업식 등교",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [
+        "졸업식"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "오늘은 졸업식",
+      "desc": "축하해요",
+      "prep": "",
+      "type": "notice",
+      "first": "오늘은 졸업식이에요. 정말 축하해요.",
+      "last": "오늘 하루 충분히 즐겨요.",
+      "firstClip": "temp/r21_1",
+      "lastClip": "temp/r21_2"
+    },
+    {
+      "id": 22,
+      "rank": 45,
+      "name": "공개수업 등교",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [
+        "공개수업",
+        "참관수업"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "오늘은 공개수업",
+      "desc": "평소처럼 하면 돼요",
+      "prep": "",
+      "type": "notice",
+      "first": "오늘은 공개수업이 있어요. 평소처럼 하면 돼요.",
+      "last": "",
+      "firstClip": "temp/r22_1",
+      "lastClip": ""
+    },
+    {
+      "id": 23,
+      "rank": 45,
+      "name": "건강검진 등교",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [
+        "건강검진",
+        "신체검사"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "오늘은 건강검진",
+      "desc": "학교 안내를 확인해요",
+      "prep": "학교 안내 확인",
+      "type": "notice",
+      "first": "오늘은 건강검진이 있어요. 필요한 준비는 학교 안내를 확인해요.",
+      "last": "",
+      "firstClip": "temp/r23_1",
+      "lastClip": ""
+    },
+    {
+      "id": 24,
+      "rank": 45,
+      "name": "진로체험 등교",
+      "mode": "morning",
+      "levels": [
+        "중",
+        "고"
+      ],
+      "words": [
+        "진로"
+      ],
+      "when": "당일",
+      "subject": "",
+      "title": "오늘은 진로 활동",
+      "desc": "궁금한 것을 나눠요",
+      "prep": "",
+      "type": "story",
+      "first": "오늘은 진로 활동이 있어요. 뭐가 궁금해요?",
+      "last": "돌아오는 길에 들려줘요.",
+      "firstClip": "temp/r24_1",
+      "lastClip": "temp/r24_2"
+    },
+    {
+      "id": 31,
+      "rank": 90,
+      "name": "오늘의 질문 과학",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [],
+      "when": "",
+      "subject": "과학",
+      "title": "오늘 과학 시간엔 뭐가 궁금해?",
+      "desc": "",
+      "prep": "",
+      "type": "question",
+      "first": "",
+      "last": ""
+    },
+    {
+      "id": 32,
+      "rank": 90,
+      "name": "오늘의 질문 체육",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [],
+      "when": "",
+      "subject": "체육",
+      "title": "체육 시간에 해 보고 싶은 게 있어?",
+      "desc": "",
+      "prep": "",
+      "type": "question",
+      "first": "",
+      "last": ""
+    },
+    {
+      "id": 33,
+      "rank": 91,
+      "name": "오늘의 질문 미술",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [],
+      "when": "",
+      "subject": "미술",
+      "title": "오늘은 뭘 그리고 싶어?",
+      "desc": "",
+      "prep": "",
+      "type": "question",
+      "first": "",
+      "last": ""
+    },
+    {
+      "id": 34,
+      "rank": 91,
+      "name": "오늘의 질문 음악",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [],
+      "when": "",
+      "subject": "음악",
+      "title": "오늘 부르고 싶은 노래 있어?",
+      "desc": "",
+      "prep": "",
+      "type": "question",
+      "first": "",
+      "last": ""
+    },
+    {
+      "id": 35,
+      "rank": 92,
+      "name": "오늘의 질문 국어",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [],
+      "when": "",
+      "subject": "국어",
+      "title": "기억나는 이야기 하나 있어?",
+      "desc": "",
+      "prep": "",
+      "type": "question",
+      "first": "",
+      "last": ""
+    },
+    {
+      "id": 36,
+      "rank": 92,
+      "name": "오늘의 질문 영어",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [],
+      "when": "",
+      "subject": "영어",
+      "title": "요즘 입에 맴도는 영어 단어 있어?",
+      "desc": "",
+      "prep": "",
+      "type": "question",
+      "first": "",
+      "last": ""
+    },
+    {
+      "id": 37,
+      "rank": 93,
+      "name": "오늘의 질문 수학",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [],
+      "when": "",
+      "subject": "수학",
+      "title": "오늘 수학에서 해 보고 싶은 문제 있어?",
+      "desc": "",
+      "prep": "",
+      "type": "question",
+      "first": "",
+      "last": ""
+    },
+    {
+      "id": 38,
+      "rank": 93,
+      "name": "오늘의 질문 사회",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [],
+      "when": "",
+      "subject": "사회",
+      "title": "요즘 궁금한 세상 이야기 있어?",
+      "desc": "",
+      "prep": "",
+      "type": "question",
+      "first": "",
+      "last": ""
+    },
+    {
+      "id": 39,
+      "rank": 94,
+      "name": "오늘의 질문 도덕",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [],
+      "when": "",
+      "subject": "도덕",
+      "title": "요즘 친구들과 자주 나누는 이야기가 뭐야?",
+      "desc": "",
+      "prep": "",
+      "type": "question",
+      "first": "",
+      "last": ""
+    },
+    {
+      "id": 40,
+      "rank": 94,
+      "name": "오늘의 질문 역사",
+      "mode": "morning",
+      "levels": [
+        "초",
+        "중",
+        "고"
+      ],
+      "words": [],
+      "when": "",
+      "subject": "역사",
+      "title": "만나 보고 싶은 옛날 사람 있어?",
+      "desc": "",
+      "prep": "",
+      "type": "question",
+      "first": "",
+      "last": ""
+    }
+  ],
+  "extras": {
+    "rule_missing": "temp/rule_missing"
+  }
+};
+  root.DAIT_RULES = data;
+  if (typeof module !== 'undefined') module.exports = data;
+})(typeof window !== 'undefined' ? window : globalThis);

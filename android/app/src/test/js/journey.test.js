@@ -1,6 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert');
 const Journey = require('../../main/assets/dait-journey.js');
+const { rules } = require('../../main/assets/dait-rules.js');
 
 const full = { tier: 'full', school: true, hasPe: true, memory: {} };
 
@@ -123,6 +124,119 @@ test('단계별로 듣는 방식을 고른다', () => {
   assert.strictEqual(Journey.listenSpec('afternoon', 'AFTER_EVENT', []), 'free');
   const words = JSON.parse(Journey.listenSpec('morning', 'SUBJECT_TODAY', ['수학', '미술']));
   assert.ok(words.includes('수학') && words.includes('미술 이 기대 돼') && words.includes('<UNK>') && words.includes('그만'));
+});
+
+// 목포유달중 2026학년도 실제 학사일정의 일부
+const exam = { name: '2차 시험', off: false };
+const events = {
+  20261107: [{ name: '토요휴업일', off: true }],
+  20261202: [exam], 20261203: [exam], 20261204: [exam],
+  20261223: [{ name: '유달축제', off: false }],
+  20261225: [{ name: '성탄절', off: true }]
+};
+const pick = (mode, ymd, level = '중') => Journey.pickRule(rules, { mode, level, ymd, events });
+
+test('시험 날 아침에는 사인펜과 시계를 확인한다', () => {
+  const rule = pick('morning', '20261202');
+  assert.strictEqual(rule.name, '시험 당일 등교');
+  assert.ok(rule.first.includes('컴퓨터용 사인펜') && rule.first.includes('디지털시계'));
+  assert.strictEqual(rule.prep, '컴퓨터용 사인펜');
+  assert.strictEqual(rule.eventName, '2차 시험');
+});
+
+test('시험 기간의 날마다 말이 달라진다', () => {
+  assert.strictEqual(pick('afternoon', '20261202').name, '시험 기간 하교');
+  assert.strictEqual(pick('afternoon', '20261204').name, '시험 끝나는 날 하교');
+  assert.strictEqual(pick('morning', '20261204').name, '시험 당일 등교');
+  assert.strictEqual(pick('afternoon', '20261201').name, '시험 전날 하교');
+  assert.strictEqual(pick('morning', '20261201').name, '시험 전날 등교');
+  assert.strictEqual(pick('morning', '20261127').name, '시험 앞둔 기간 등교');
+  assert.strictEqual(pick('afternoon', '20261126').name, '시험 앞둔 기간 하교');
+});
+
+test('시험과 먼 날에는 시험 규칙이 나오지 않는다', () => {
+  assert.strictEqual(pick('morning', '20261110'), null);
+  assert.strictEqual(pick('morning', '20261207'), null);
+});
+
+test('금요일에는 다음 수업일인 월요일 일정을 전날로 본다', () => {
+  const monday = { 20261207: [exam] };
+  assert.strictEqual(Journey.pickRule(rules, { mode: 'afternoon', level: '중', ymd: '20261204', events: monday }).name, '시험 전날 하교');
+});
+
+test('쉬는 날을 건너뛰고 다음 수업일을 찾는다', () => {
+  assert.strictEqual(Journey.nextSchoolDay('20261224', events), '20261228');
+  assert.strictEqual(Journey.isSchoolDay('20261225', events), false);
+  assert.strictEqual(Journey.isSchoolDay('20261202', events), true);
+});
+
+test('학교급에 맞는 규칙만 고른다', () => {
+  assert.strictEqual(pick('morning', '20261202', '초').name, '시험 당일 등교(초등)');
+  assert.strictEqual(Journey.pickRule(rules, { mode: 'afternoon', level: '초', ymd: '20261204', events }), null);
+  assert.strictEqual(pick('morning', '20261223').name, '축제 당일 등교');
+});
+
+test('체험학습처럼 시험이 아닌 일정도 고른다', () => {
+  const trip = { 20261110: [{ name: '2학년 현장체험학습', off: false }] };
+  const at = (mode, ymd) => Journey.pickRule(rules, { mode, level: '초', ymd, events: trip }).name;
+  assert.strictEqual(at('afternoon', '20261109'), '현장체험학습 전날 하교');
+  assert.strictEqual(at('morning', '20261110'), '현장체험학습 당일 등교');
+  assert.strictEqual(at('afternoon', '20261110'), '현장체험학습 당일 하교');
+});
+
+test('시험 날 대화: 확인 → 격려로 끝나고 수업 질문을 하지 않는다', () => {
+  const rule = pick('morning', '20261202');
+  const ctx = { ...full, rule };
+  assert.strictEqual(Journey.start('morning', ctx), 'RULE_FIRST');
+  const end = Journey.next('morning', 'RULE_FIRST', '다 챙겼어', ctx);
+  assert.deepStrictEqual([end.stage, end.missing], ['RULE_END', false]);
+  assert.ok(Journey.isDone('RULE_END'));
+  assert.strictEqual(Journey.next('morning', 'RULE_FIRST', '깜빡했어', ctx).missing, true);
+  const step = Journey.ruleStep('RULE_END', rule, true, 'rule_missing');
+  assert.strictEqual(step.clips[0], 'rule_missing');
+  assert.strictEqual(step.title, '지금까지 준비한 만큼만 보여 주면 충분해요.');
+});
+
+test('규칙 대화도 남은 시간과 쉬기를 따른다', () => {
+  const rule = pick('morning', '20261202');
+  assert.strictEqual(Journey.start('morning', { ...full, rule, tier: 'brief' }), 'RULE_ONLY');
+  assert.strictEqual(Journey.start('morning', { ...full, rule, tier: 'arrive' }), 'ETA_SHORT');
+  assert.strictEqual(Journey.start('morning', { ...full, rule, memory: { rest: true } }), 'RULE_ONLY');
+  const story = pick('afternoon', '20261204');
+  assert.strictEqual(Journey.start('afternoon', { ...full, rule: story, tier: 'brief' }), 'ETA_SHORT');
+  assert.strictEqual(Journey.start('afternoon', { ...full, rule: story, memory: { rest: true } }), 'REST');
+  const notice = pick('afternoon', '20261202');
+  assert.strictEqual(Journey.start('afternoon', { ...full, rule: notice }), 'RULE_ONLY');
+});
+
+test('학교마다 다른 일정 이름도 규칙이 잡는다', () => {
+  const closing = { 20261231: [{ name: '겨울방학선언', off: false }] };
+  const at = mode => Journey.pickRule(rules, { mode, level: '중', ymd: '20261231', events: closing }).name;
+  assert.strictEqual(at('morning'), '방학식 등교');
+  assert.strictEqual(at('afternoon'), '방학식 하교');
+});
+
+test('규칙 대화의 답을 말로 알아듣는다', () => {
+  const confirm = pick('morning', '20261202');
+  assert.strictEqual(Journey.interpret('RULE_FIRST', '챙겼 어', '챙겼어', [], confirm).answer, '다 챙겼어');
+  assert.strictEqual(Journey.interpret('RULE_FIRST', '아직', '아직', [], confirm).answer, '깜빡했어');
+  const story = pick('afternoon', '20261204');
+  assert.strictEqual(Journey.interpret('RULE_FIRST', '게임 하고 싶어', '게임 하고 싶어', [], story).kind, 'answer');
+  assert.strictEqual(Journey.interpret('RULE_FIRST', '시험 망쳐서 속상 해', '시험 망쳐서 속상해', [], story).kind, 'sad');
+  assert.strictEqual(Journey.listenSpec('morning', 'RULE_FIRST', [], story), 'free');
+  assert.ok(JSON.parse(Journey.listenSpec('morning', 'RULE_FIRST', [], confirm)).includes('챙겼 어'));
+});
+
+test('오늘의 질문은 규칙표에서 고른다', () => {
+  assert.strictEqual(Journey.pickQuestion(rules, ['국어', '과학'], '중'), '오늘 과학 시간엔 뭐가 궁금해?');
+  assert.strictEqual(Journey.pickQuestion(rules, ['기술·가정'], '중'), '오늘 가장 기대되는 시간은 언제야?');
+});
+
+test('규칙표의 모든 대화 규칙에 음성이 있다', () => {
+  rules.filter(rule => rule.type !== 'question').forEach(rule => {
+    assert.ok(rule.firstClip, rule.name);
+    if (rule.last) assert.ok(rule.lastClip, rule.name);
+  });
 });
 
 test('모든 단계의 음원과 문구가 비어 있지 않다', () => {

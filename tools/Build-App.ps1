@@ -12,6 +12,8 @@ if (-not $sdkHome) { throw 'Android SDK folder not found.' }
 $socketFallback = Join-Path $env:LOCALAPPDATA 'DAIT\no-unix-sockets'
 if (Test-Path -LiteralPath $socketFallback) { throw 'Expected the fallback socket directory to be absent.' }
 $env:JAVA_TOOL_OPTIONS = "-Djdk.net.unixdomain.tmpdir=$socketFallback"
+& node (Join-Path $PSScriptRoot 'build-rules.js')
+if ($LASTEXITCODE -ne 0) { throw 'Teacher rule table has a problem.' }
 Push-Location (Join-Path $taskRoot 'android')
 try {
     $sdkRoot = $sdkHome.Replace('\', '/')

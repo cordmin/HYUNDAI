@@ -68,7 +68,7 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
 
     private fun playCurrent() {
         try {
-            appContext.assets.openFd("voices/nika/${clips[index]}.wav").use { file ->
+            appContext.assets.openFd(assetPath(clips[index])).use { file ->
                 player = MediaPlayer().apply {
                     setAudioAttributes(attributes)
                     setDataSource(file.fileDescriptor, file.startOffset, file.length)
@@ -80,6 +80,9 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
             }
         } catch (_: Exception) { onClipDone() }
     }
+
+    // 'temp/...'처럼 폴더가 붙은 것은 임시 음성이고, 나머지는 팀 음원이다.
+    private fun assetPath(clip: String) = if ('/' in clip) "voices/$clip.wav" else "voices/nika/$clip.wav"
 
     private fun onClipDone() {
         releasePlayer()

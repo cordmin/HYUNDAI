@@ -817,8 +817,285 @@
     }
   ],
   "extras": {
-    "rule_missing": "temp/rule_missing"
-  }
+    "rule_missing": "temp/rule_missing",
+    "p_today": "temp/p_today",
+    "p_have": "temp/p_have",
+    "p_to_school": "temp/p_to_school",
+    "p_to_home": "temp/p_to_home",
+    "p_left": "temp/p_left",
+    "p_day_1": "temp/p_day_1",
+    "p_day_2": "temp/p_day_2",
+    "p_day_3": "temp/p_day_3",
+    "p_day_4": "temp/p_day_4",
+    "p_day_5": "temp/p_day_5",
+    "p_event": "temp/p_event",
+    "p_pe_ready": "temp/p_pe_ready",
+    "p_check": "temp/p_check",
+    "p_nodata": "temp/p_nodata",
+    "s_1": "temp/s_1",
+    "s_2": "temp/s_2",
+    "s_3": "temp/s_3",
+    "s_4": "temp/s_4",
+    "s_5": "temp/s_5",
+    "s_6": "temp/s_6",
+    "s_7": "temp/s_7",
+    "s_8": "temp/s_8",
+    "s_9": "temp/s_9",
+    "s_10": "temp/s_10",
+    "s_11": "temp/s_11",
+    "s_12": "temp/s_12",
+    "s_13": "temp/s_13",
+    "s_14": "temp/s_14",
+    "s_15": "temp/s_15",
+    "s_16": "temp/s_16",
+    "s_17": "temp/s_17",
+    "s_18": "temp/s_18",
+    "s_19": "temp/s_19",
+    "s_20": "temp/s_20",
+    "s_21": "temp/s_21",
+    "s_22": "temp/s_22",
+    "s_23": "temp/s_23",
+    "s_24": "temp/s_24",
+    "s_25": "temp/s_25",
+    "s_26": "temp/s_26",
+    "s_27": "temp/s_27",
+    "s_28": "temp/s_28",
+    "s_29": "temp/s_29",
+    "s_30": "temp/s_30",
+    "s_31": "temp/s_31",
+    "s_32": "temp/s_32",
+    "s_33": "temp/s_33",
+    "s_34": "temp/s_34",
+    "s_35": "temp/s_35",
+    "s_36": "temp/s_36",
+    "s_37": "temp/s_37",
+    "s_38": "temp/s_38",
+    "s_39": "temp/s_39",
+    "s_40": "temp/s_40",
+    "s_41": "temp/s_41",
+    "s_42": "temp/s_42",
+    "s_43": "temp/s_43",
+    "s_44": "temp/s_44",
+    "s_45": "temp/s_45",
+    "n_1": "temp/n_1",
+    "n_2": "temp/n_2",
+    "n_3": "temp/n_3",
+    "n_4": "temp/n_4",
+    "n_5": "temp/n_5",
+    "n_6": "temp/n_6",
+    "n_7": "temp/n_7",
+    "n_8": "temp/n_8",
+    "n_9": "temp/n_9",
+    "n_10": "temp/n_10",
+    "n_11": "temp/n_11",
+    "n_12": "temp/n_12",
+    "n_13": "temp/n_13",
+    "n_14": "temp/n_14",
+    "n_15": "temp/n_15",
+    "n_16": "temp/n_16",
+    "n_17": "temp/n_17",
+    "n_18": "temp/n_18",
+    "n_19": "temp/n_19",
+    "n_20": "temp/n_20",
+    "n_21": "temp/n_21",
+    "n_22": "temp/n_22",
+    "n_23": "temp/n_23",
+    "n_24": "temp/n_24",
+    "n_25": "temp/n_25",
+    "n_26": "temp/n_26",
+    "n_27": "temp/n_27",
+    "n_28": "temp/n_28",
+    "n_29": "temp/n_29",
+    "n_30": "temp/n_30",
+    "n_35": "temp/n_35",
+    "n_40": "temp/n_40",
+    "n_45": "temp/n_45",
+    "n_50": "temp/n_50",
+    "n_55": "temp/n_55",
+    "n_60": "temp/n_60"
+  },
+  "subjects": [
+    {
+      "word": "국어",
+      "clip": "temp/s_1"
+    },
+    {
+      "word": "수학",
+      "clip": "temp/s_2"
+    },
+    {
+      "word": "영어",
+      "clip": "temp/s_3"
+    },
+    {
+      "word": "사회",
+      "clip": "temp/s_4"
+    },
+    {
+      "word": "과학",
+      "clip": "temp/s_5"
+    },
+    {
+      "word": "체육",
+      "clip": "temp/s_6"
+    },
+    {
+      "word": "음악",
+      "clip": "temp/s_7"
+    },
+    {
+      "word": "미술",
+      "clip": "temp/s_8"
+    },
+    {
+      "word": "도덕",
+      "clip": "temp/s_9"
+    },
+    {
+      "word": "역사",
+      "clip": "temp/s_10"
+    },
+    {
+      "word": "기술가정",
+      "clip": "temp/s_11"
+    },
+    {
+      "word": "정보",
+      "clip": "temp/s_12"
+    },
+    {
+      "word": "한문",
+      "clip": "temp/s_13"
+    },
+    {
+      "word": "진로",
+      "clip": "temp/s_14"
+    },
+    {
+      "word": "실과",
+      "clip": "temp/s_15"
+    },
+    {
+      "word": "창의적체험활동",
+      "clip": "temp/s_16"
+    },
+    {
+      "word": "창체",
+      "clip": "temp/s_17"
+    },
+    {
+      "word": "자율",
+      "clip": "temp/s_18"
+    },
+    {
+      "word": "동아리",
+      "clip": "temp/s_19"
+    },
+    {
+      "word": "봉사",
+      "clip": "temp/s_20"
+    },
+    {
+      "word": "바른생활",
+      "clip": "temp/s_21"
+    },
+    {
+      "word": "슬기로운생활",
+      "clip": "temp/s_22"
+    },
+    {
+      "word": "즐거운생활",
+      "clip": "temp/s_23"
+    },
+    {
+      "word": "안전한생활",
+      "clip": "temp/s_24"
+    },
+    {
+      "word": "스포츠",
+      "clip": "temp/s_25"
+    },
+    {
+      "word": "독서",
+      "clip": "temp/s_26"
+    },
+    {
+      "word": "한국사",
+      "clip": "temp/s_27"
+    },
+    {
+      "word": "통합사회",
+      "clip": "temp/s_28"
+    },
+    {
+      "word": "통합과학",
+      "clip": "temp/s_29"
+    },
+    {
+      "word": "공통국어",
+      "clip": "temp/s_30"
+    },
+    {
+      "word": "공통수학",
+      "clip": "temp/s_31"
+    },
+    {
+      "word": "공통영어",
+      "clip": "temp/s_32"
+    },
+    {
+      "word": "문학",
+      "clip": "temp/s_33"
+    },
+    {
+      "word": "미적분",
+      "clip": "temp/s_34"
+    },
+    {
+      "word": "확률과통계",
+      "clip": "temp/s_35"
+    },
+    {
+      "word": "세계사",
+      "clip": "temp/s_36"
+    },
+    {
+      "word": "지리",
+      "clip": "temp/s_37"
+    },
+    {
+      "word": "물리",
+      "clip": "temp/s_38"
+    },
+    {
+      "word": "화학",
+      "clip": "temp/s_39"
+    },
+    {
+      "word": "생명과학",
+      "clip": "temp/s_40"
+    },
+    {
+      "word": "지구과학",
+      "clip": "temp/s_41"
+    },
+    {
+      "word": "일본어",
+      "clip": "temp/s_42"
+    },
+    {
+      "word": "중국어",
+      "clip": "temp/s_43"
+    },
+    {
+      "word": "화법",
+      "clip": "temp/s_44"
+    },
+    {
+      "word": "언어",
+      "clip": "temp/s_45"
+    }
+  ]
 };
   root.DAIT_RULES = data;
   if (typeof module !== 'undefined') module.exports = data;

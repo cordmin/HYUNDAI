@@ -10,6 +10,7 @@
       SCIENCE_DETAIL: { clip: 'school_science', title: '무엇이 궁금해요?', choices: ['우주가 궁금해', '실험이 기대돼', '다녀올게요'], listen: 'free' },
       READING_DETAIL: { clip: 'school_reading', title: '기억나는 이야기 있어?', choices: ['주인공이 멋졌어', '마법 이야기', '다녀올게요'], listen: 'free' },
       BRIEF: { clip: 'morning_short', title: '체육복을 확인해요', choices: [] },
+      NEXT_DAY: { clip: 'p_nodata', title: '다음 수업일 준비', choices: [] },
       REST_SOFT: { clip: 'rest_skip', title: '편하게 쉬어가요', choices: [] },
       BRIEF_BAG: { clip: 'arrival_bag', title: '가방과 준비물을 챙겨요', choices: [] },
       ETA_SHORT: { clip: 'arrival_bag', title: '가방과 준비물을 챙겨요', choices: [] },
@@ -34,7 +35,7 @@
     }
   };
 
-  const FINAL_STAGES = ['DONE', 'REST', 'REST_SOFT', 'ETA_SHORT', 'BRIEF', 'BRIEF_BAG', 'QUIET_END', 'STOPPED', 'RULE_ONLY', 'RULE_END'];
+  const FINAL_STAGES = ['DONE', 'REST', 'REST_SOFT', 'ETA_SHORT', 'BRIEF', 'BRIEF_BAG', 'QUIET_END', 'STOPPED', 'RULE_ONLY', 'RULE_END', 'NEXT_DAY'];
   const QUESTION_STAGES_AFTER = ['AFTER_EVENT', 'AFTER_PE', 'AFTER_SCIENCE'];
   const QUIET_WORDS = ['그만', '쉬고', '쉴래', '쉬자', '피곤', '말하기싫', '하기싫', '귀찮', '안할래'];
   const SAD_WORDS = ['속상', '슬퍼', '슬펐', '싸웠', '싫었', '힘들'];
@@ -128,8 +129,53 @@
     return { clips: [rule.firstClip], title: rule.title, choices: ['다 말했어', '쉬고 싶어'], listen: 'free' };
   }
 
+  // 시간표 과목 이름을 조각 음원으로 바꾼다. 음원이 없는 과목은 건너뛴다. 길어지지 않게 넷까지만 말한다.
+  function subjectClips(subjects, data) {
+    const clips = subjects.map(subject => {
+      const name = subject.replace(/[^가-힣]/g, '');
+      const found = data.subjects.find(item => name.startsWith(item.word));
+      return found ? found.clip : '';
+    }).filter(Boolean);
+    return [...new Set(clips)].slice(0, 4);
+  }
+
+  function spokenMinutes(minutes) {
+    const whole = Math.max(1, Math.round(minutes));
+    if (whole <= 30) return whole;
+    return whole <= 60 ? Math.round(whole / 5) * 5 : null;
+  }
+
+  function etaClips(mode, minutes, data) {
+    const spoken = minutes === null || minutes === undefined ? null : spokenMinutes(minutes);
+    if (!spoken) return [];
+    const parts = [data.extras[mode === 'morning' ? 'p_to_school' : 'p_to_home'], data.extras[`n_${spoken}`], data.extras.p_left];
+    return parts.every(Boolean) ? parts : [];
+  }
+
+  // 첫 질문 앞에 붙이는 말: 남은 시간과 오늘 시간표. 조각이 하나라도 없으면 그 말은 하지 않는다.
+  function intro(mode, ctx, data) {
+    if (ctx.tier === 'arrive' || ctx.tier === 'brief' || (ctx.memory && ctx.memory.rest)) return [];
+    const eta = etaClips(mode, ctx.etaMinutes, data);
+    if (mode !== 'morning' || ctx.tier !== 'full' || ctx.rule || !ctx.subjects) return eta;
+    const subjects = subjectClips(ctx.subjects, data);
+    const { p_today: today, p_have: have } = data.extras;
+    return subjects.length && today && have ? [...eta, today, ...subjects, have] : eta;
+  }
+
+  // 수업이 없는 날: 다음 수업일을 미리 알려 주고 묻지는 않는다.
+  function nextDayStep(plan, rule, data) {
+    const { extras } = data;
+    if (!plan) return { clips: [extras.p_nodata], title: '학교 정보를 확인해요', choices: [] };
+    const day = extras[`p_day_${plan.weekday}`];
+    if (rule) return { clips: [day, extras.p_event, extras.p_check], title: `${plan.label} ${rule.eventName}`, choices: [] };
+    const subjects = subjectClips(plan.subjects, data);
+    const lesson = subjects.length ? [...subjects, extras.p_have] : [];
+    return { clips: [day, ...lesson, plan.hasPe ? extras.p_pe_ready : '', extras.p_check], title: `${plan.label} 준비`, choices: [] };
+  }
+
   function start(mode, ctx) {
     const memory = ctx.memory || {};
+    if (ctx.nextDay && mode === 'morning') return 'NEXT_DAY';
     if (ctx.rule) {
       if (ctx.tier === 'arrive') return 'ETA_SHORT';
       if (mode === 'afternoon' && memory.rest) return 'REST';
@@ -248,7 +294,7 @@
     return value.length >= 2 ? { kind: 'answer', answer: value, heard: '' } : { kind: 'unclear' };
   }
 
-  const Journey = { flows: FLOWS, tierFor, isDone, isQuiet, start, next, skip, listenSpec, interpret, pickRule, pickQuestion, ruleStep, nextSchoolDay, isSchoolDay };
+  const Journey = { flows: FLOWS, tierFor, isDone, isQuiet, start, next, skip, listenSpec, interpret, pickRule, pickQuestion, ruleStep, nextSchoolDay, isSchoolDay, intro, nextDayStep, subjectClips };
   root.Journey = Journey;
   if (typeof module !== 'undefined') module.exports = Journey;
 })(typeof window !== 'undefined' ? window : globalThis);

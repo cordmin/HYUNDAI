@@ -5,6 +5,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const TABLE = path.join(ROOT, 'rules', '교사규칙표.csv');
+const PIECES = path.join(ROOT, 'rules', '음원조각.csv');
 const VOICES = path.join(ROOT, 'android', 'app', 'src', 'main', 'assets', 'voices');
 const OUTPUT = path.join(ROOT, 'android', 'app', 'src', 'main', 'assets', 'dait-rules.js');
 const SCRIPT = path.join(ROOT, 'voice', '규칙-대본.csv');
@@ -14,6 +15,7 @@ const TYPES = { 확인: 'confirm', 이야기: 'story', 안내: 'notice', 질문:
 const TIMINGS = ['당일', '마지막날', '전날', '앞둔 기간', ''];
 const LEVELS = { 전체: ['초', '중', '고'], 초: ['초'], 중: ['중'], 고: ['고'], 중고: ['중', '고'] };
 const EXTRA_LINES = [{ id: 'rule_missing', text: '아직 못 챙겼군요. 주차한 뒤 보호자와 확인해요.', use: '준비물을 못 챙겼다고 답했을 때' }];
+const MINUTES = [...Array.from({ length: 30 }, (_, i) => i + 1), 35, 40, 45, 50, 55, 60];
 
 function parseCsv(text) {
   const rows = [];
@@ -31,6 +33,19 @@ function parseCsv(text) {
   }
   if (cell || row.length) { row.push(cell); rows.push(row); }
   return rows.filter(cells => cells.some(value => value.trim()));
+}
+
+// 조각 음원: 시간표와 남은 시간을 이어 붙여 말할 때 쓴다. 분 조각은 숫자만 달라서 여기서 만든다.
+function readPieces() {
+  const rows = parseCsv(fs.readFileSync(PIECES, 'utf8').replace(/^\uFEFF/, ''));
+  const header = rows[0];
+  const lines = rows.slice(1).map(cells => ({
+    id: cells[header.indexOf('음원 이름')].trim(),
+    text: cells[header.indexOf('대사')].trim(),
+    subject: (cells[header.indexOf('과목')] || '').trim(),
+    use: (cells[header.indexOf('쓰이는 곳')] || '').trim()
+  }));
+  return [...lines, ...MINUTES.map(n => ({ id: `n_${n}`, text: `${n}분`, subject: '', use: '남은 시간' }))];
 }
 
 function fail(line, message) {
@@ -91,11 +106,13 @@ const rules = readTable().map(rule => {
   if (rule.type === 'question') return rule;
   return { ...rule, firstClip: clipPath(`r${rule.id}_1`), lastClip: rule.last ? clipPath(`r${rule.id}_2`) : '' };
 });
-const extras = Object.fromEntries(EXTRA_LINES.map(line => [line.id, clipPath(line.id)]));
+const pieces = readPieces();
+const extras = Object.fromEntries([...EXTRA_LINES, ...pieces].map(line => [line.id, clipPath(line.id)]));
+const subjects = pieces.filter(line => line.subject).map(line => ({ word: line.subject, clip: extras[line.id] }));
 
 fs.writeFileSync(OUTPUT, `// tools/build-rules.js가 rules/교사규칙표.csv에서 만든 파일이다. 직접 고치지 않는다.
 (function (root) {
-  const data = ${JSON.stringify({ rules, extras }, null, 2)};
+  const data = ${JSON.stringify({ rules, extras, subjects }, null, 2)};
   root.DAIT_RULES = data;
   if (typeof module !== 'undefined') module.exports = data;
 })(typeof window !== 'undefined' ? window : globalThis);
@@ -106,7 +123,7 @@ rules.filter(rule => rule.type !== 'question').forEach(rule => {
   lines.push([`r${rule.id}_1`, rule.first, rule.name, clipState(rule.firstClip)]);
   if (rule.last) lines.push([`r${rule.id}_2`, rule.last, rule.name, clipState(rule.lastClip)]);
 });
-EXTRA_LINES.forEach(line => lines.push([line.id, line.text, line.use, clipState(extras[line.id])]));
+[...EXTRA_LINES, ...pieces].forEach(line => lines.push([line.id, line.text, line.use, clipState(extras[line.id])]));
 const quote = value => `"${String(value).replace(/"/g, '""')}"`;
 const csv = ['음원 이름,대사,쓰이는 곳,상태', ...lines.map(cells => cells.map(quote).join(','))].join('\r\n');
 fs.writeFileSync(SCRIPT, `﻿${csv}\r\n`);

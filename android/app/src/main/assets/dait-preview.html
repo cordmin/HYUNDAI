@@ -983,6 +983,7 @@
     let previewQueue = []; // 브라우저 미리보기에서 이어 틀 음원
     let speechPaused = false; // 길 안내나 통화가 소리를 가져간 동안
     let tripMuted = false; // 이번 대화는 소리를 내지 않음
+    let pendingIntro = []; // 첫 질문 앞에 붙일 말(남은 시간, 오늘 시간표)
     let micBroken = false; // 이번 대화에서 마이크를 열지 못함
     let noMicTimer = null;
     let currentRule = null; // 이번 대화에 쓰는 교사 규칙
@@ -1056,7 +1057,7 @@
       const isMorning = trip.mode === 'morning';
       const other = isMorning ? 'afternoon' : 'morning';
       const heroClass = trip.kind === 'weekend' ? 'weekend' : (isMorning ? '' : 'afternoon');
-      const ctaLabel = !school ? '학교 등록' : (trip.kind === 'weekend' ? `${isMorning ? '등교' : '하교'} 대화 시작하기` : '지금 시작');
+      const ctaLabel = !school ? '학교 등록' : (trip.kind === 'weekend' ? `${(schoolPlan() || { label: '다음 수업일' }).label} 준비 듣기` : '지금 시작');
       const ctaSide = !school ? `<button class="cta-arm" onclick="event.stopPropagation(); startFlow('${trip.mode}')">예시로 듣기</button>`
         : trip.kind === 'weekend' ? ''
         : `<button class="cta-arm${armed ? ' on' : ''}" onclick="event.stopPropagation(); toggleArm('${trip.mode}')">${armed ? '출발하면 들려줄게요' : '출발하면 듣기'}</button>`;
@@ -1123,7 +1124,9 @@
     function renderDialogueFlow(container) {
       const flow = Journey.flows[currentMode];
       const modeName = currentMode === 'morning' ? '등교' : '하교';
-      const data = stage.startsWith('RULE') ? Journey.ruleStep(stage, currentRule, ruleMissing, DAIT_RULES.extras.rule_missing) : (flow[stage] || flow.DONE);
+      const data = stage === 'NEXT_DAY' ? Journey.nextDayStep(schoolPlan(), currentRule, DAIT_RULES)
+        : stage.startsWith('RULE') ? Journey.ruleStep(stage, currentRule, ruleMissing, DAIT_RULES.extras.rule_missing)
+        : (flow[stage] || flow.DONE);
 
       const subjectStages = ['SUBJECT', 'SUBJECT_MISSING', 'SUBJECT_TODAY'];
       const todayChoices = currentMode === 'morning' && subjectStages.includes(stage) ? subjectChoices() : null;
@@ -1188,6 +1191,9 @@
         school: !!school,
         hasPe: !!(plan && plan.hasPe),
         rule: currentRule,
+        nextDay: !!school && currentTrip().kind === 'weekend',
+        etaMinutes: currentTrip().known ? naviRemainMinutes() : demoMinutes,
+        subjects: plan && plan.ymd === toYmd(new Date()) ? plan.subjects : [],
         memory: memory && memory.date === toYmd(new Date()) ? memory : {}
       };
     }
@@ -1206,11 +1212,12 @@
       listenSince = 0;
       hasArrived = false;
       micBroken = false;
-      // 음원은 '오늘' 기준으로 녹음되어 있어, 수업이 없는 날에는 틀지 않는다. 음원 조각 작업에서 요일별로 바꾼다.
-      tripMuted = !!school && currentTrip().kind === 'weekend';
+      tripMuted = false;
       currentRule = ruleFor(mode);
       ruleMissing = false;
-      stage = Journey.start(mode, journeyContext());
+      const context = journeyContext();
+      stage = Journey.start(mode, context);
+      pendingIntro = stage === 'NEXT_DAY' ? [] : Journey.intro(mode, context, DAIT_RULES);
       render();
     }
 
@@ -1323,8 +1330,10 @@
 
     function speakStage(clips) {
       listenSince = 0;
+      const intro = pendingIntro;
+      pendingIntro = [];
       if (tripMuted) stopSpeech();
-      else speak(clips.filter(Boolean), listenNow());
+      else speak([...intro, ...clips].filter(Boolean), listenNow());
     }
 
     function listenNow() {
@@ -1636,7 +1645,7 @@
         .find(key => key >= today && isClassDay(key));
       if (!school || !ymd) return null;
       const day = schoolDays[ymd];
-      return { ...day, ymd, label: dayLabel(ymd), hasPe: day.subjects.includes('체육') };
+      return { ...day, ymd, weekday: fromYmd(ymd).getDay(), label: dayLabel(ymd), hasPe: day.subjects.includes('체육') };
     }
 
     function schoolLevel() {

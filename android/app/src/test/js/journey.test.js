@@ -1,7 +1,8 @@
 const test = require('node:test');
 const assert = require('node:assert');
 const Journey = require('../../main/assets/dait-journey.js');
-const { rules } = require('../../main/assets/dait-rules.js');
+const data = require('../../main/assets/dait-rules.js');
+const { rules } = data;
 
 const full = { tier: 'full', school: true, hasPe: true, memory: {} };
 
@@ -237,6 +238,44 @@ test('규칙표의 모든 대화 규칙에 음성이 있다', () => {
     assert.ok(rule.firstClip, rule.name);
     if (rule.last) assert.ok(rule.lastClip, rule.name);
   });
+});
+
+const clipName = clip => clip.replace(/^temp\//, '');
+
+test('실제 시간표의 과목 이름을 조각 음원으로 바꾼다', () => {
+  const names = data.subjects.reduce((all, item) => ({ ...all, [clipName(item.clip)]: item.word }), {});
+  const spoken = Journey.subjectClips(['도덕', '기술·가정', '역사①', '시민과 사회정의', '수학Ⅰ', '진로와 직업'], data).map(clip => names[clipName(clip)]);
+  assert.deepStrictEqual(spoken, ['도덕', '기술가정', '역사', '수학']);
+});
+
+test('같은 과목이 두 시간 있어도 한 번만 말한다', () => {
+  assert.strictEqual(Journey.subjectClips(['수학', '수학', '국어'], data).length, 2);
+});
+
+test('아침 첫 말에 남은 시간과 오늘 시간표를 붙인다', () => {
+  const words = clips => clips.map(clipName);
+  const ctx = { ...full, etaMinutes: 11.6, subjects: ['국어', '체육'] };
+  assert.deepStrictEqual(words(Journey.intro('morning', ctx, data)), ['p_to_school', 'n_12', 'p_left', 'p_today', 's_1', 's_6', 'p_have']);
+  assert.deepStrictEqual(words(Journey.intro('morning', { ...ctx, tier: 'medium' }, data)), ['p_to_school', 'n_12', 'p_left']);
+  assert.deepStrictEqual(Journey.intro('morning', { ...ctx, tier: 'brief' }, data), []);
+  assert.deepStrictEqual(words(Journey.intro('afternoon', ctx, data)), ['p_to_home', 'n_12', 'p_left']);
+  assert.deepStrictEqual(words(Journey.intro('morning', { ...ctx, etaMinutes: null }, data)), ['p_today', 's_1', 's_6', 'p_have']);
+  assert.deepStrictEqual(words(Journey.intro('morning', { ...ctx, etaMinutes: 37 }, data)).slice(0, 2), ['p_to_school', 'n_35']);
+  assert.deepStrictEqual(words(Journey.intro('morning', { ...ctx, etaMinutes: 90, subjects: [] }, data)), []);
+  assert.deepStrictEqual(words(Journey.intro('morning', { ...ctx, rule: { type: 'confirm' } }, data)), ['p_to_school', 'n_12', 'p_left']);
+  assert.deepStrictEqual(Journey.intro('morning', { ...ctx, memory: { rest: true } }, data), []);
+});
+
+test('수업이 없는 날은 다음 수업일을 알려 주고 묻지 않는다', () => {
+  assert.strictEqual(Journey.start('morning', { ...full, nextDay: true }), 'NEXT_DAY');
+  assert.ok(Journey.isDone('NEXT_DAY'));
+  const plan = { weekday: 1, label: '월요일', subjects: ['국어', '체육'], hasPe: true };
+  const words = Journey.nextDayStep(plan, null, data).clips.map(clipName);
+  assert.deepStrictEqual(words, ['p_day_1', 's_1', 's_6', 'p_have', 'p_pe_ready', 'p_check']);
+  const exam = Journey.nextDayStep(plan, { eventName: '2차 시험' }, data);
+  assert.strictEqual(exam.title, '월요일 2차 시험');
+  assert.deepStrictEqual(exam.clips.map(clipName), ['p_day_1', 'p_event', 'p_check']);
+  assert.deepStrictEqual(Journey.nextDayStep(null, null, data).clips.map(clipName), ['p_nodata']);
 });
 
 test('모든 단계의 음원과 문구가 비어 있지 않다', () => {

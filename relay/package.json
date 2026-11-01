@@ -1,0 +1,7 @@
+{
+  "name": "dait-relay",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

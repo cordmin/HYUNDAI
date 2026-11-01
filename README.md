@@ -51,7 +51,7 @@ powershell -ExecutionPolicy Bypass -File .\tools\Build-App.ps1 -Install
 | 빌드 스크립트 전제 | `Build-App.ps1`은 JDK를 `%USERPROFILE%\.jdks\jbr-21.0.11`에서 찾고, 에뮬레이터를 `emulator-5554`로 가정함. 다른 PC에서는 이 두 값을 맞춤 |
 | 패키지명 | `io.dait.app` |
 | 마이크 | 음성 인식을 시험하려면 Virtual Console에서 마이크 접근을 허용 |
-| 나이스 인증키 | `.env.example`을 `.env`로 복사해 `NEIS_API_KEY`에 넣고 빌드. 키가 없어도 동작하지만 응답이 5건으로 제한되어 6교시와 일부 반이 빠질 수 있음. 브라우저 미리보기는 키 없이 동작. `.env`는 저장소에 올리지 않음 |
+| 인증키 | 앱과 브라우저 미리보기는 중계 서버 `https://relay-khaki-omega.vercel.app`을 거쳐 자료를 받으므로 팀원과 이용자에게 키가 필요 없음. 키는 Vercel의 `relay` 프로젝트 환경 변수(`NEIS_API_KEY`, `TOUR_API_KEY`)에만 두고, 바꾼 뒤에는 `npx.cmd vercel deploy --prod --yes --cwd relay`로 다시 올림 |
 | 음성 인식 모델(선택) | Vosk 한국어 모델을 `android/app/src/main/assets/model-ko/`에 둠 (용량 때문에 저장소에서 제외) |
 
 설치 과정과 점검 결과는 [`개발환경-점검.md`](개발환경-점검.md)에 있습니다.
@@ -71,6 +71,7 @@ powershell -ExecutionPolicy Bypass -File .\tools\Build-App.ps1 -Install
 | `android/app/src/main/java/io/dait/app/NaviBridge.kt` | Pleos NaviHelper 연결, 남은 시간 전달 |
 | `android/app/src/main/java/io/dait/app/Conversation.kt` | 등교·하교 대화 규칙 엔진 |
 | `android/app/src/main/java/io/dait/app/LocalVoiceInput.kt` | 기기 내 음성 인식 시험 코드 |
+| `relay/` | 인증키를 보관하고 허용한 나이스·관광공사 요청만 넘기는 중계 서버(Vercel). 시험은 이 폴더에서 `npm test` |
 | `android/app/src/main/assets/dait-preview.html` | 현재 앱 화면(웹) |
 | `android/app/src/main/assets/conversation-grammar.json` | 단계별 음성 인식 후보 단어 |
 | `voice/` | 시연 음원 대본과 제작 도구 안내 |

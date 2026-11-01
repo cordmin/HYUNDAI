@@ -6,21 +6,17 @@ import org.junit.Test
 
 class NeisClientTest {
     @Test
-    fun keyIsAddedOnlyWhenPresent() {
+    fun requestGoesToRelayWithoutKey() {
         assertEquals(
-            "https://open.neis.go.kr/hub/schoolInfo?Type=json",
-            NeisClient.requestUrl("schoolInfo", "Type=json", ""),
-        )
-        assertEquals(
-            "https://open.neis.go.kr/hub/schoolInfo?Type=json&KEY=a%2Bb",
-            NeisClient.requestUrl("schoolInfo", "Type=json", "a+b"),
+            "https://relay-khaki-omega.vercel.app/neis/schoolInfo?Type=json",
+            NeisClient.requestUrl("schoolInfo", "Type=json"),
         )
     }
 
     @Test
     fun unknownServiceIsRejected() {
         assertThrows(IllegalArgumentException::class.java) {
-            NeisClient.requestUrl("../other", "Type=json", "")
+            NeisClient.requestUrl("../other", "Type=json")
         }
     }
 }

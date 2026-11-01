@@ -2,21 +2,20 @@ package io.dait.app
 
 import java.net.HttpURLConnection
 import java.net.URL
-import java.net.URLEncoder
 
+// 인증키는 중계 서버(relay/)에만 둔다. 앱은 나이스 대신 중계 서버에 묻는다.
 object NeisClient {
-    private const val BASE_URL = "https://open.neis.go.kr/hub/"
+    private const val BASE_URL = "https://relay-khaki-omega.vercel.app/neis/"
     private const val TIMEOUT_MS = 10_000
     private val allowedServices = setOf("schoolInfo", "classInfo", "elsTimetable", "misTimetable", "hisTimetable", "mealServiceDietInfo", "SchoolSchedule")
 
-    fun requestUrl(service: String, query: String, apiKey: String): String {
+    fun requestUrl(service: String, query: String): String {
         require(service in allowedServices) { "Unknown service: $service" }
-        val url = "$BASE_URL$service?$query"
-        return if (apiKey.isEmpty()) url else "$url&KEY=${URLEncoder.encode(apiKey, "UTF-8")}"
+        return "$BASE_URL$service?$query"
     }
 
-    fun fetch(service: String, query: String, apiKey: String): String {
-        val connection = URL(requestUrl(service, query, apiKey)).openConnection() as HttpURLConnection
+    fun fetch(service: String, query: String): String {
+        val connection = URL(requestUrl(service, query)).openConnection() as HttpURLConnection
         try {
             connection.connectTimeout = TIMEOUT_MS
             connection.readTimeout = TIMEOUT_MS

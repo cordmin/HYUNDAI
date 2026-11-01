@@ -82,9 +82,8 @@ class NaviBridge(context: Context, private val onUpdate: (JSONObject) -> Unit) {
                     try {
                         helper.addListener(listener)
                         helper.getDestinationInfo()
-                        helper.getBookmarkInfo()
-                        helper.getRecentDestinationInfo()
                     } catch (_: Exception) {}
+                    requestPlaces()
                     emit(JSONObject().put("event", "connected"))
                     // 이미 길 안내 중일 수 있으니 묻기 시작한다. 안내가 없으면 빈 값이 와서 화면이 무시한다.
                     guiding = true
@@ -105,6 +104,15 @@ class NaviBridge(context: Context, private val onUpdate: (JSONObject) -> Unit) {
             try { helper.release() } catch (_: Exception) {}
         }
         connected = false
+    }
+
+    // 즐겨찾기와 최근 목적지를 묻는다. 화면이 뜨기 전에 온 답은 사라지므로 화면이 뜬 뒤에도 부른다.
+    fun requestPlaces() {
+        if (!connected) return
+        try {
+            helper.getBookmarkInfo()
+            helper.getRecentDestinationInfo()
+        } catch (_: Exception) {}
     }
 
     // 화면이 기억해 둔 학교나 집으로 길 안내를 시작한다.

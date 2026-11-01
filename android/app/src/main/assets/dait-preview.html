@@ -988,6 +988,7 @@
     let pendingIntro = []; // 첫 질문 앞에 붙일 말(남은 시간, 오늘 시간표)
     let micBroken = false; // 이번 대화에서 마이크를 열지 못함
     let noMicTimer = null;
+    let doorTimer = null;
     let tripForDoor = null; // 내릴 때 한마디: 대화를 시작한 여정. 달렸는지와 주차 시각을 기억한다.
     let currentRule = null; // 이번 대화에 쓰는 교사 규칙
     let ruleMissing = false; // 규칙 대화에서 준비물을 못 챙겼다고 답함
@@ -1000,11 +1001,13 @@
     const VOICE_KEY = 'dait.voiceAnswers';
     const QUESTIONS_KEY = 'dait.questions';
     const ROUTE_KEY = 'dait.routePlaces';
+    const HOME_CLEARED_KEY = 'dait.homeCleared'; // 보호자가 지운 집을 내비 즐겨찾기로 되살리지 않는다
     const ARM_MS = 30 * 60 * 1000;
     const ARRIVAL_CLOSE_MS = 4000;
     const NO_MIC_WAIT_MS = 8000;
     const LISTEN_PATIENCE_MS = 12000;
     const DOOR_WINDOW_MS = 5 * 60 * 1000;
+    const TRIP_CAP_MS = 2 * 60 * 60 * 1000;
 
     // DAIT 공식 확정 캘리그래피 로고 (시안 2 커넥티드 리본 + i Dot)
     function getDaitLogoHtml() {
@@ -1177,7 +1180,7 @@
                   <div class="v-bar" style="background:#fff;"></div>
                 </div>
               </div>
-              <div class="main-question">${data.title}</div>
+              <div class="main-question">${escapeHtml(data.title)}</div>
               <div id="heardLine" class="heard-bubble"${heard || speechPhase === 'listening' ? '' : ' hidden'}>${escapeHtml(heardLineText())}</div>
             </div>
 
@@ -1204,7 +1207,7 @@
         hasPe: !!(plan && plan.hasPe),
         rule: currentRule,
         noQuestions: readStored(QUESTIONS_KEY) === false,
-        nextDay: !!school && currentTrip().kind === 'weekend',
+        nextDay: !!school && Object.keys(schoolDays).length > 0 && !isClassDay(toYmd(new Date())),
         etaMinutes: currentTrip().known ? naviRemainMinutes() : demoMinutes,
         subjects: plan && plan.ymd === toYmd(new Date()) ? plan.subjects : [],
         memory: memory && memory.date === toYmd(new Date()) ? memory : {}
@@ -1231,12 +1234,15 @@
       const context = journeyContext();
       stage = Journey.start(mode, context);
       pendingIntro = stage === 'NEXT_DAY' ? [] : Journey.intro(mode, context, DAIT_RULES);
-      tripForDoor = { drove: isDrivingMode, parkedAt: 0 };
+      const trip = { drove: isDrivingMode, parkedAt: 0 };
+      tripForDoor = trip;
+      setTimeout(() => endDoorTrip(trip), TRIP_CAP_MS); // 차 상태가 멈춰도 앞쪽 작업이 끝없이 남지 않게 한다
       render();
     }
 
     function goHome() {
       stopSpeech();
+      if (tripForDoor && !tripForDoor.drove) tripForDoor = null; // 주차 중에 들어 본 대화는 여정이 아니다
       currentMode = null;
       stage = '';
       heard = '';
@@ -1318,14 +1324,12 @@
     // 내비 즐겨찾기와 최근 목적지에서 학교를 찾고, '집' 즐겨찾기는 집으로 등록한다.
     function learnFromNavi(places) {
       places.filter(place => place.name && place.lat).forEach(place => {
-        if (school && placeMatches(place, school)) learnRoutePlace('school', place);
-        if (place.category === 'HOME') {
-          if (!homePlace) {
-            homePlace = { name: place.name, address: place.address || '' };
-            writeStored(HOME_KEY, homePlace);
-          }
-          learnRoutePlace('home', place);
-        } else if (homePlace && placeMatches(place, homePlace)) learnRoutePlace('home', place);
+        if (school && isSamePlace(place, school)) learnRoutePlace('school', place);
+        if (place.category === 'HOME' && !homePlace && readStored(HOME_CLEARED_KEY) !== true) {
+          homePlace = { name: place.name, address: place.address || '' };
+          writeStored(HOME_KEY, homePlace);
+        }
+        if (homePlace && isSamePlace(place, homePlace)) learnRoutePlace('home', place);
       });
     }
 
@@ -1348,14 +1352,21 @@
     // 실제로 달린 여정 뒤 주차한 상태에서 아이 쪽 문이 처음 열릴 때 한 번만 말한다 (기획안 ④)
     function trackDoorTrip(isDriving) {
       if (!tripForDoor) return;
-      if (isDriving) tripForDoor.drove = true;
-      else if (tripForDoor.drove && !tripForDoor.parkedAt) {
+      if (isDriving) {
+        tripForDoor.drove = true;
+        tripForDoor.parkedAt = 0;
+        clearTimeout(doorTimer);
+      } else if (tripForDoor.drove && !tripForDoor.parkedAt) {
         const parked = tripForDoor;
         parked.parkedAt = Date.now();
-        setTimeout(() => {
-          if (tripForDoor === parked) { tripForDoor = null; syncJourney(); }
-        }, DOOR_WINDOW_MS);
+        doorTimer = setTimeout(() => endDoorTrip(parked), DOOR_WINDOW_MS);
       }
+    }
+
+    function endDoorTrip(trip) {
+      if (tripForDoor !== trip) return;
+      tripForDoor = null;
+      syncJourney();
     }
 
     window.onDoorOpened = function() {
@@ -1812,10 +1823,11 @@
       const rule = ruleFor(trip.mode);
       if (!rule) return info;
       const plan = schoolPlan();
-      const upcoming = trip.kind === 'weekend' && plan ? `${plan.label} ${rule.eventName}` : '';
+      const ahead = !!plan && plan.ymd !== toYmd(new Date());
+      if (ahead && rule.eventYmd !== plan.ymd) return info; // 다음 수업일의 일정이 아니면 미리 말하지 않는다
       return {
         ...info,
-        title: upcoming || rule.title,
+        title: ahead ? `${plan.label} ${rule.eventName}` : rule.title,
         desc: rule.desc,
         ...(rule.prep ? { prepLabel: '준비물', prep: rule.prep, prepSub: '학교 안내 확인' } : {})
       };
@@ -2213,7 +2225,6 @@
     window.onNaviUpdate = function(jsonText) {
       let info;
       try { info = JSON.parse(jsonText); } catch (e) { return; }
-      console.log('Navi:', jsonText);
       if (info.event === 'places') learnFromNavi(info.places || []);
       else if (info.event === 'destination' || info.event === 'routeStarted') {
         // 길 안내가 없을 때는 이름 없이 0으로 오므로 도착 직전과 구분한다.
@@ -2264,9 +2275,20 @@
     function placeMatches(dest, place) {
       if (!dest || !place) return false;
       const destName = normalizePlace(dest.name), placeName = normalizePlace(place.name);
-      if (destName && placeName && (destName === placeName || destName.includes(placeName) || placeName.includes(destName))) return true;
+      // '집'처럼 짧은 이름은 '피자집'에도 들어가므로 네 글자가 넘을 때만 일부 일치를 인정한다.
+      const longEnough = Math.min(destName.length, placeName.length) >= 4;
+      if (destName && placeName && (destName === placeName || (longEnough && (destName.includes(placeName) || placeName.includes(destName))))) return true;
       const destRoad = roadPart(dest.address), placeRoad = roadPart(place.address);
       return !!(destRoad && placeRoad && destRoad === placeRoad);
+    }
+
+    // 좌표를 배우면 실제 길 안내로 이어지므로, 이름이 같고 주소도 어긋나지 않을 때만 같은 곳으로 본다.
+    function isSamePlace(found, target) {
+      const foundRoad = roadPart(found.address), targetRoad = roadPart(target.address);
+      if (foundRoad && targetRoad) return foundRoad === targetRoad;
+      if (normalizePlace(found.name) !== normalizePlace(target.name)) return false;
+      if (!found.address || !target.address) return true;
+      return found.address.split(/\s+/).some(word => word.length >= 2 && target.address.includes(word));
     }
 
     function canSaveHome() { return canSaveHomeFor(naviInfo); }
@@ -2278,11 +2300,13 @@
       if (!canSaveHome()) return;
       homePlace = { name: naviInfo.name, address: naviInfo.address || '' };
       writeStored(HOME_KEY, homePlace);
+      writeStored(HOME_CLEARED_KEY, false);
       goHome();
     }
 
     function clearHome() {
       homePlace = null;
+      writeStored(HOME_CLEARED_KEY, true);
       delete routePlaces.home;
       writeStored(ROUTE_KEY, routePlaces);
       try { localStorage.removeItem(HOME_KEY); } catch (e) { console.log('Storage error:', e); }

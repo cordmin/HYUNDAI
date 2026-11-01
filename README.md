@@ -101,6 +101,7 @@ powershell -ExecutionPolicy Bypass -File .\tools\Build-App.ps1 -Install -DeviceC
 | `voice/` | 시연 음원 대본과 제작 도구 안내 |
 | `design/` | 화면 시안과 검증 기록 |
 | `시연-각본.md` | 시연 영상 각본과 내레이션 대본(초안) |
+| `가정-시험-안내.md` | 3~5가정 일주일 시험의 동의 안내, 기록지, 설문(초안) |
 | `GEMINI.md` | 화면 문구·차량 UX 작성 규칙 |
 
 ## 검증

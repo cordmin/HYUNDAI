@@ -90,14 +90,20 @@
 
   // 그날이 학사일정 낱말에 맞는 일정에서 어떤 시점인지 찾는다.
   function eventTimings(words, ymd, events) {
-    const has = day => (events[day] || []).find(event => hasAny(event.name, words));
+    const has = day => (events[day] || []).find(event => hasAny(compact(event.name), words.map(compact)));
     const today = has(ymd);
-    const tomorrow = has(nextSchoolDay(ymd, events));
-    if (today) return { name: today.name, timings: tomorrow ? ['당일'] : ['마지막날', '당일'] };
-    if (tomorrow) return { name: tomorrow.name, timings: ['전날'] };
+    const nextDay = nextSchoolDay(ymd, events);
+    const tomorrow = has(nextDay);
+    if (today) {
+      // 시험이 하루 걸러 이어져도 끝났다고 말하지 않도록 며칠 앞까지 본다.
+      const moreSoon = [1, 2, 3, 4, 5].some(days => has(addDays(ymd, days)));
+      return { name: today.name, ymd, timings: moreSoon ? ['당일'] : ['마지막날', '당일'] };
+    }
+    if (tomorrow) return { name: tomorrow.name, ymd: nextDay, timings: ['전날'] };
     for (let i = 2; i <= 7; i++) {
-      const soon = has(addDays(ymd, i));
-      if (soon) return { name: soon.name, timings: ['앞둔 기간'] };
+      const day = addDays(ymd, i);
+      const soon = has(day);
+      if (soon) return { name: soon.name, ymd: day, timings: ['앞둔 기간'] };
     }
     return null;
   }
@@ -109,7 +115,7 @@
       .sort((a, b) => a.rank - b.rank || a.id - b.id);
     for (const rule of candidates) {
       const found = eventTimings(rule.words, ctx.ymd, ctx.events);
-      if (found && found.timings.includes(rule.when)) return { ...rule, eventName: found.name };
+      if (found && found.timings.includes(rule.when)) return { ...rule, eventName: found.name, eventYmd: found.ymd };
     }
     return null;
   }
@@ -168,7 +174,8 @@
     const { extras } = data;
     if (!plan) return { clips: [extras.p_nodata], title: '학교 정보를 확인해요', choices: [] };
     const day = extras[`p_day_${plan.weekday}`];
-    if (rule) return { clips: [day, extras.p_event, extras.p_check], title: `${plan.label} ${rule.eventName}`, choices: [] };
+    // 다음 수업일 당일의 일정이 아니면 그날 일정처럼 말하지 않는다.
+    if (rule && rule.eventYmd === plan.ymd) return { clips: [day, extras.p_event, extras.p_check], title: `${plan.label} ${rule.eventName}`, choices: [] };
     const subjects = subjectClips(plan.subjects, data);
     const lesson = subjects.length ? [...subjects, extras.p_have] : [];
     return { clips: [day, ...lesson, plan.hasPe ? extras.p_pe_ready : '', extras.p_check], title: `${plan.label} 준비`, choices: [] };

@@ -12,33 +12,50 @@ import android.os.Looper
 // Pleos Vehicle SDK에서 아이가 내리는 문이 열리는 순간을 받아 화면으로 넘긴다.
 // 운전석 문은 보호자가 먼저 내릴 수 있으므로 보지 않는다.
 class DoorBridge(context: Context, private val onOpened: () -> Unit) {
-    private val vehicle = Vehicle(context.applicationContext)
+    private val appContext = context.applicationContext
     private val handler = Handler(Looper.getMainLooper())
     private val areas = listOf(DoorValue.ROW_1_RIGHT, DoorValue.ROW_2_LEFT, DoorValue.ROW_2_RIGHT).map { DoorArea(it) }
     private val listeners = mutableMapOf<DoorArea, DoorPositionListener>()
+    private var vehicle: Vehicle? = null
     private var door: Door? = null
+    private var retries = 0
 
+    // Vehicle 서비스가 없는 차에서도 앱은 동작해야 하므로 실패하면 이 기능만 쉰다.
     fun connect() {
         try {
-            vehicle.initialize()
-            door = vehicle.getDoor()
-            handler.postDelayed({ register() }, CONNECT_DELAY_MS)
+            vehicle = Vehicle(appContext).also {
+                it.initialize()
+                door = it.getDoor()
+            }
+            scheduleRegister()
         } catch (_: Throwable) {}
+    }
+
+    // initialize는 연결 결과를 알려 주지 않으므로 시간을 두고 등록하고, 실패하면 몇 번 더 해 본다.
+    private fun scheduleRegister() {
+        handler.postDelayed({ register() }, RETRY_MS)
     }
 
     private fun register() {
         val connected = door ?: return
-        areas.forEach { area ->
-            val listener = watch()
+        areas.filterNot { it in listeners }.forEach { area ->
+            val listener = watch(area)
             try {
                 connected.registerDoorPosition(area, listener)
                 listeners[area] = listener
-            } catch (_: Exception) {}
+            } catch (_: Exception) {
+                retryLater(area)
+            }
         }
     }
 
+    private fun retryLater(area: DoorArea) {
+        listeners.remove(area)
+        if (retries++ < MAX_RETRIES) scheduleRegister()
+    }
+
     // 처음 오는 값은 현재 상태이므로 기록만 하고, 닫혀 있다가 열릴 때만 알린다.
-    private fun watch() = object : DoorPositionListener {
+    private fun watch(area: DoorArea) = object : DoorPositionListener {
         private var wasOpen: Boolean? = null
 
         override fun onPositionUpdated(pos: Int?) {
@@ -47,7 +64,9 @@ class DoorBridge(context: Context, private val onOpened: () -> Unit) {
             wasOpen = open
         }
 
-        override fun onFailed(e: Exception) {}
+        override fun onFailed(e: Exception) {
+            handler.post { retryLater(area) }
+        }
     }
 
     fun release() {
@@ -56,10 +75,11 @@ class DoorBridge(context: Context, private val onOpened: () -> Unit) {
             try { door?.unregisterDoorPosition(area, listener) } catch (_: Exception) {}
         }
         listeners.clear()
-        try { vehicle.release() } catch (_: Throwable) {}
+        try { vehicle?.release() } catch (_: Throwable) {}
     }
 
     companion object {
-        private const val CONNECT_DELAY_MS = 1500L // initialize는 결과를 알려 주지 않으므로 연결될 시간을 둔다.
+        private const val RETRY_MS = 1500L
+        private const val MAX_RETRIES = 5
     }
 }

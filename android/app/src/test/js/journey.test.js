@@ -8,6 +8,7 @@ const data = require('../../main/assets/dait-rules.js');
 const { rules } = data;
 
 const full = { tier: 'full', school: true, hasPe: true, memory: {} };
+let page; // 화면 코드 안에서 식을 계산한다. 아래 '끝까지 실행' 시험이 준비한다.
 
 // 무엇을 불러도 빈 값을 돌려주는 가짜 화면 요소
 function fakeElement() {
@@ -28,7 +29,12 @@ test('화면 코드가 끝까지 실행되고 시작 화면을 그린다', () =>
   const sandbox = {
     Journey, DAIT_RULES: data, console: { log() {} }, URLSearchParams, performance,
     setTimeout: () => 0, clearTimeout: () => {}, fetch: () => new Promise(() => {}),
-    localStorage: { getItem: () => null, setItem() {}, removeItem() {} },
+    localStorage: {
+      values: new Map(),
+      getItem(key) { return this.values.has(key) ? this.values.get(key) : null; },
+      setItem(key, value) { this.values.set(key, value); },
+      removeItem(key) { this.values.delete(key); }
+    },
     navigator: { userAgent: '' },
     document: {
       getElementById: id => (id === 'stageArea' ? stage : element),
@@ -36,9 +42,58 @@ test('화면 코드가 끝까지 실행되고 시작 화면을 그린다', () =>
     }
   };
   sandbox.window = Object.assign(sandbox, { location: { href: 'http://localhost/' } });
-  vm.runInNewContext(code, sandbox);
+  vm.createContext(sandbox);
+  vm.runInContext(code, sandbox);
+  page = source => vm.runInContext(source, sandbox);
   assert.ok(stage.innerHTML.includes('학교를 등록해 주세요'));
   assert.strictEqual(typeof sandbox.setDrivingMode, 'function');
+});
+
+test('주차 중에 들어 본 대화는 나중의 다른 주행에 문 열림 말을 남기지 않는다', () => {
+  page(`startFlow('morning'); goHome(); window.setDrivingMode(true); window.setDrivingMode(false);`);
+  assert.strictEqual(page('tripForDoor'), null);
+  page(`syncJourney();`);
+  assert.strictEqual(page('journeyActive'), false);
+});
+
+test('신호 대기로 잠깐 멈췄다 다시 달리면 주차 시각을 지운다', () => {
+  page(`startFlow('morning'); window.setDrivingMode(true); window.setDrivingMode(false);`);
+  assert.ok(page('tripForDoor.parkedAt') > 0);
+  page(`window.setDrivingMode(true);`);
+  assert.strictEqual(page('tripForDoor.parkedAt'), 0);
+  page(`window.setDrivingMode(false); window.onDoorOpened();`);
+  assert.strictEqual(page('tripForDoor'), null);
+  page(`goHome();`);
+});
+
+test('좌표를 배울 때는 이름만 비슷한 곳을 같은 곳으로 보지 않는다', () => {
+  assert.strictEqual(page(`isSamePlace({ name: '피자집', address: '' }, { name: '집', address: '' })`), false);
+  assert.strictEqual(page(`isSamePlace({ name: '중앙초등학교', address: '부산 동구 초량동' }, { name: '중앙초등학교', address: '서울특별시 중구 정동길 1' })`), false);
+  assert.strictEqual(page(`isSamePlace({ name: '중앙초등학교', address: '중구 정동' }, { name: '중앙초등학교', address: '서울특별시 중구 정동길 1' })`), true);
+  assert.strictEqual(page(`placeMatches({ name: '피자집', address: '' }, { name: '집', address: '' })`), false);
+  assert.strictEqual(page(`placeMatches({ name: '목포유달중학교 정문', address: '' }, { name: '목포유달중학교', address: '' })`), true);
+});
+
+test('이름 없는 집 즐겨찾기는 쓰지 않고, 지운 집은 되살리지 않는다', () => {
+  page(`learnFromNavi([{ name: '', address: '', lat: 0, lng: 0, category: 'HOME' }]);`);
+  assert.strictEqual(page('homePlace'), null);
+  page(`learnFromNavi([{ name: '우리집', address: '', lat: 37.5, lng: 127, category: 'HOME' }]);`);
+  assert.strictEqual(page('homePlace.name'), '우리집');
+  page(`clearHome(); learnFromNavi([{ name: '우리집', address: '', lat: 37.5, lng: 127, category: 'HOME' }]);`);
+  assert.strictEqual(page('homePlace'), null);
+});
+
+test('일정 이름에 든 꺾쇠를 그대로 화면에 넣지 않는다', () => {
+  const stageText = page(`
+    schoolDays = {}; school = { name: 'A', kind: '중학교', grade: '1' };
+    const when = toYmd(new Date());
+    schoolDays[when] = { subjects: ['국어'], meal: '' };
+    schoolEvents = { [when]: [{ name: '<b>시험', off: false }] };
+    startFlow('morning');
+    const shown = document.getElementById('stageArea').innerHTML;
+    goHome(); school = null; schoolDays = {}; schoolEvents = {};
+    shown`);
+  assert.ok(!stageText.includes('<b>시험'));
 });
 
 test('남은 시간을 기획안 표의 네 구간으로 나눈다', () => {
@@ -253,6 +308,27 @@ test('규칙 대화도 남은 시간과 쉬기를 따른다', () => {
   assert.strictEqual(Journey.start('afternoon', { ...full, rule: notice }), 'RULE_ONLY');
 });
 
+test('토요일에 목요일 시험을 월요일 일정으로 말하지 않는다', () => {
+  const finals = { 20261210: [{ name: '2학기 기말고사', off: false }] };
+  const rule = Journey.pickRule(rules, { mode: 'morning', level: '중', ymd: '20261207', events: finals });
+  assert.strictEqual(rule.when, '앞둔 기간');
+  assert.strictEqual(rule.eventYmd, '20261210');
+});
+
+test('시험이 하루 걸러 이어지면 끝났다고 말하지 않는다', () => {
+  const split = { 20261207: [exam], 20261209: [exam] };
+  const at = ymd => Journey.pickRule(rules, { mode: 'afternoon', level: '중', ymd, events: split }).name;
+  assert.strictEqual(at('20261207'), '시험 기간 하교');
+  assert.strictEqual(at('20261209'), '시험 끝나는 날 하교');
+});
+
+test('일정 이름의 띄어쓰기가 달라도 찾고, 학교평가는 시험이 아니다', () => {
+  const sports = { 20261110: [{ name: '체육 대회', off: false }] };
+  assert.strictEqual(Journey.pickRule(rules, { mode: 'morning', level: '초', ymd: '20261110', events: sports }).name, '체육대회 당일 등교');
+  const evaluation = { 20261110: [{ name: '학교평가', off: false }] };
+  assert.strictEqual(Journey.pickRule(rules, { mode: 'morning', level: '초', ymd: '20261110', events: evaluation }), null);
+});
+
 test('학교마다 다른 일정 이름도 규칙이 잡는다', () => {
   const closing = { 20261231: [{ name: '겨울방학선언', off: false }] };
   const at = mode => Journey.pickRule(rules, { mode, level: '중', ymd: '20261231', events: closing }).name;
@@ -315,9 +391,12 @@ test('수업이 없는 날은 다음 수업일을 알려 주고 묻지 않는다
   const plan = { weekday: 1, label: '월요일', subjects: ['국어', '체육'], hasPe: true };
   const words = Journey.nextDayStep(plan, null, data).clips.map(clipName);
   assert.deepStrictEqual(words, ['p_day_1', 's_1', 's_6', 'p_have', 'p_pe_ready', 'p_check']);
-  const exam = Journey.nextDayStep(plan, { eventName: '2차 시험' }, data);
+  const monday = { ...plan, ymd: '20261207' };
+  const exam = Journey.nextDayStep(monday, { eventName: '2차 시험', eventYmd: '20261207' }, data);
   assert.strictEqual(exam.title, '월요일 2차 시험');
   assert.deepStrictEqual(exam.clips.map(clipName), ['p_day_1', 'p_event', 'p_check']);
+  const later = Journey.nextDayStep(monday, { eventName: '기말고사', eventYmd: '20261210' }, data);
+  assert.strictEqual(later.title, '월요일 준비');
   assert.deepStrictEqual(Journey.nextDayStep(null, null, data).clips.map(clipName), ['p_nodata']);
 });
 

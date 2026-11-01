@@ -53,6 +53,7 @@ class MainActivity : Activity() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
                     applyPlatformRestriction(isRestricted)
+                    navi?.requestPlaces()
                 }
             }
             addJavascriptInterface(WebAppInterface(), "AndroidBridge")

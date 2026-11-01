@@ -31,6 +31,10 @@ function parseCsv(text) {
     else if (c === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
     else if (c !== '\r') cell += c;
   }
+  if (quoted) {
+    console.error('표에 닫히지 않은 큰따옴표가 있습니다. 대사 안의 따옴표를 확인하세요.');
+    process.exit(1);
+  }
   if (cell || row.length) { row.push(cell); rows.push(row); }
   return rows.filter(cells => cells.some(value => value.trim()));
 }
@@ -39,6 +43,9 @@ function parseCsv(text) {
 function readPieces() {
   const rows = parseCsv(fs.readFileSync(PIECES, 'utf8').replace(/^\uFEFF/, ''));
   const header = rows[0];
+  rows.slice(1).forEach((cells, index) => {
+    if (cells.length !== header.length) fail(index + 2, `음원조각 표의 칸 수가 ${cells.length}개입니다. ${header.length}개여야 합니다.`);
+  });
   const lines = rows.slice(1).map(cells => ({
     id: cells[header.indexOf('음원 이름')].trim(),
     text: cells[header.indexOf('대사')].trim(),
@@ -63,10 +70,13 @@ function readTable() {
   const seen = new Set();
   return rows.slice(1).map((cells, index) => {
     const line = index + 2;
+    if (cells.length !== header.length) fail(line, `칸 수가 ${cells.length}개입니다. ${header.length}개여야 합니다. 대사에 쉼표가 있으면 칸 전체를 큰따옴표로 묶으세요.`);
     const get = name => (cells[header.indexOf(name)] || '').trim();
     const id = get('번호');
     if (!/^\d+$/.test(id) || seen.has(id)) fail(line, `번호 '${id}'를 쓸 수 없습니다. 겹치지 않는 숫자여야 합니다.`);
     seen.add(id);
+    if (!/^\d+$/.test(get('순위'))) fail(line, '순위는 숫자여야 합니다.');
+    if (!get('화면 제목')) fail(line, '화면 제목이 비어 있습니다.');
     const mode = MODES[get('여정')];
     const type = TYPES[get('대화 방식')];
     const levels = LEVELS[get('학교급')];
@@ -83,7 +93,7 @@ function readTable() {
     if (type !== 'question' && !first) fail(line, '첫 말이 비어 있습니다.');
     if ((type === 'confirm' || type === 'story') && !get('끝 말')) fail(line, '확인·이야기 방식에는 끝 말이 필요합니다.');
     return {
-      id: Number(id), rank: Number(get('순위')) || 99, name: get('이름'), mode, levels, words, when, subject,
+      id: Number(id), rank: Number(get('순위')), name: get('이름'), mode, levels, words, when, subject,
       title: get('화면 제목'), desc: get('화면 설명'), prep: get('준비물 칸') === '없음' ? '' : get('준비물 칸'),
       type, first, last: get('끝 말')
     };

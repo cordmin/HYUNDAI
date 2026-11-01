@@ -1,0 +1,7 @@
+{
+  "regions": ["icn1"],
+  "rewrites": [
+    { "source": "/neis/:service", "destination": "/api/relay?source=neis&service=:service" },
+    { "source": "/tour/:service", "destination": "/api/relay?source=tour&service=:service" }
+  ]
+}

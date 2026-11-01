@@ -129,7 +129,7 @@ class MainActivity : Activity() {
         @JavascriptInterface
         fun neisGet(requestId: Int, service: String, query: String) {
             Thread {
-                val body = try { NeisClient.fetch(service, query, BuildConfig.NEIS_API_KEY) } catch (_: Exception) { "" }
+                val body = try { NeisClient.fetch(service, query) } catch (_: Exception) { "" }
                 runOnUiThread {
                     if (!isDestroyed) {
                         webView.evaluateJavascript("window.onNeisResult && window.onNeisResult($requestId, ${JSONObject.quote(body)});", null)

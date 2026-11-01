@@ -1331,7 +1331,7 @@
     // ========================================================
     // 학교 정보 (나이스 교육정보 개방 포털)
     // ========================================================
-    const NEIS_URL = 'https://open.neis.go.kr/hub/';
+    const NEIS_URL = 'https://relay-khaki-omega.vercel.app/neis/';
     const SCHOOL_KEY = 'dait.school';
     const DAYS_KEY = 'dait.schoolDays';
     const DAYS_AHEAD = 7;
@@ -1378,7 +1378,7 @@
       return WEEKDAYS[fromYmd(ymd).getDay()];
     }
 
-    // 앱에서는 Kotlin이 대신 받아 인증키를 화면 코드 밖에 두고, 브라우저 미리보기는 직접 받는다.
+    // 인증키는 중계 서버에만 있다. 앱에서는 Kotlin이 대신 받고, 브라우저 미리보기는 중계 서버에 직접 묻는다.
     window.onNeisResult = function(requestId, body) {
       const resolve = neisWaiting[requestId];
       delete neisWaiting[requestId];
@@ -1424,7 +1424,7 @@
       return (SCHOOL_KINDS[target.kind] || SCHOOL_KINDS['초등학교']).service;
     }
 
-    // 인증키가 없으면 응답이 5건으로 줄어들어 시간표는 하루씩 받는다.
+    // 시간표는 하루씩 받는다.
     async function refreshSchoolDays() {
       if (!school) return;
       const target = school;

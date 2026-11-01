@@ -1,4 +1,4 @@
-param([switch]$Install)
+param([switch]$Install, [switch]$DeviceChecks)
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path $PSScriptRoot -Parent
 $env:JAVA_HOME = Join-Path $env:USERPROFILE '.jdks\jbr-21.0.11'
@@ -18,17 +18,29 @@ try {
     "sdk.dir=$sdkRoot" | Set-Content -LiteralPath 'local.properties' -Encoding ascii
     & '.\gradlew.bat' ':app:assembleDebug' ':app:testDebugUnitTest' ':app:lintDebug' "-PdaitBuildRoot=$($buildRoot.Replace('\','/'))" '--no-daemon' '--console' 'plain'
     if ($LASTEXITCODE -ne 0) { throw 'Build or checks failed.' }
-    $apk = Join-Path $taskRoot 'apk\DAIT-dialogue-debug.apk'
+    & node --test 'app\src\test\js\journey.test.js'
+    if ($LASTEXITCODE -ne 0) { throw 'Journey rule tests failed.' }
+    if (-not (Test-Path -LiteralPath 'app\src\main\assets\model-ko\uuid')) { Write-Warning 'Speech model is missing: the app builds, but answers work by touch only. Run tools\Setup-Voice-Model.py.' }
+    $apk =Join-Path $taskRoot 'apk\DAIT-dialogue-debug.apk'
     New-Item -ItemType Directory -Path (Split-Path $apk -Parent) -Force | Out-Null
     Copy-Item -LiteralPath (Join-Path $buildRoot 'app\outputs\apk\debug\app-debug.apk') -Destination $apk -Force
     if ($Install) {
         $adb = Join-Path $sdkHome 'platform-tools\adb.exe'
         $avd = & $adb '-s' 'emulator-5554' 'emu' 'avd' 'name'
-        if ($avd -notcontains 'DAIT_Pleos_2_1') { throw 'Expected the DAIT Pleos emulator on emulator-5554.' }
+        if (-not ($avd | Where-Object { $_ -in 'DAIT_Pleos_2_1', 'Automotive_1408p_landscape' })) { throw 'Expected a Pleos emulator on emulator-5554.' }
         & $adb '-s' 'emulator-5554' 'install' '-r' $apk
         if ($LASTEXITCODE -ne 0) { throw 'Install failed.' }
         & $adb '-s' 'emulator-5554' 'shell' 'am' 'start' '-W' '-n' 'io.dait.app/.MainActivity'
         if ($LASTEXITCODE -ne 0) { throw 'Launch failed.' }
+    }
+    if ($DeviceChecks) {
+        $adb = Join-Path $sdkHome 'platform-tools\adb.exe'
+        & '.\gradlew.bat' ':app:assembleDebugAndroidTest' "-PdaitBuildRoot=$($buildRoot.Replace('\','/'))" '--no-daemon' '--console' 'plain'
+        if ($LASTEXITCODE -ne 0) { throw 'Device check build failed.' }
+        & $adb '-s' 'emulator-5554' 'install' '-r' (Join-Path $buildRoot 'app\outputs\apk\androidTest\debug\app-debug-androidTest.apk')
+        if ($LASTEXITCODE -ne 0) { throw 'Device check install failed.' }
+        & $adb '-s' 'emulator-5554' 'shell' 'am' 'instrument' '-w' 'io.dait.app.test/io.dait.app.OfflineVoiceCheck'
+        & $adb '-s' 'emulator-5554' 'shell' 'am' 'instrument' '-w' '-e' 'check' 'focus' 'io.dait.app.test/io.dait.app.OfflineVoiceCheck'
     }
     Write-Output $apk
 } finally { Pop-Location }

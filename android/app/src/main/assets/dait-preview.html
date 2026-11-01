@@ -317,6 +317,49 @@
     }
     .home-card.start.afternoon { background: linear-gradient(150deg, #E4835A 0%, #C2527F 58%, #7A4BB5 100%); }
     .home-card.start.weekend { background: linear-gradient(150deg, #7C7FE0 0%, #6A55C8 58%, #4A3FA0 100%); }
+
+    /* 학교 등록 전 첫 화면: 빈 칸 없이 수업의 질문 하나를 크게 보여 준다 */
+    .question-home {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+      gap: calc(10 * var(--u));
+    }
+    .home-card.question-card { cursor: default; padding: calc(16 * var(--u)) calc(18 * var(--u)); }
+    .question-title {
+      margin-top: calc(8 * var(--u));
+      font-size: calc(27 * var(--u));
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.6px;
+      overflow-wrap: anywhere;
+    }
+    .question-promise { margin-top: calc(8 * var(--u)); font-size: calc(15 * var(--u)); font-weight: 600; }
+    .question-actions { margin-top: auto; display: flex; gap: calc(8 * var(--u)); }
+    .question-actions .card-btn { margin-top: 0; flex: 1; }
+    .question-side { min-height: 0; display: flex; flex-direction: column; gap: calc(10 * var(--u)); }
+    .question-side .home-card { flex: 1; }
+    .question-times { margin-top: auto; display: flex; gap: calc(6 * var(--u)); }
+    .question-times .choice-chip { min-width: 0; font-size: calc(14 * var(--u)); }
+    .register-line {
+      flex-shrink: 0;
+      margin-top: calc(10 * var(--u));
+      min-height: calc(44 * var(--u));
+      padding: 0 calc(14 * var(--u));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: calc(10 * var(--u));
+      background: var(--glass);
+      border: 1px solid var(--line);
+      border-radius: calc(12 * var(--u));
+      color: var(--ink);
+      font-size: calc(14 * var(--u));
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .register-line b { color: var(--lilac); font-weight: 800; }
     .home-card.start .card-label { color: rgba(255, 255, 255, 0.85); }
     .start-arrow {
       margin-top: auto;
@@ -938,6 +981,7 @@
 
     // --- 첫 화면: 인사 두 줄과 작은 카드 여섯 장 ---
     function renderHome(container) {
+      if (!school) { renderQuestionHome(container); return; }
       const trip = currentTrip();
       const info = homeInfo(trip);
       const isMorning = trip.mode === 'morning';
@@ -1000,6 +1044,59 @@
           </div>
         </div>
       `;
+    }
+
+    // 학교를 등록하지 않은 사람에게는 빈 칸 대신 바로 들을 수 있는 수업의 질문을 보여 준다.
+    function renderQuestionHome(container) {
+      const eta = remainMinutes();
+      if (eta !== null) lessonMinutes = Lesson.minutesFor(eta);
+      else if (!Lesson.TIME_CHOICES.includes(lessonMinutes)) lessonMinutes = Lesson.DEFAULT_MINUTES;
+      const progress = lessonProgress();
+      const reserved = armed && armed.lesson ? DAIT_LESSONS.find(item => item.id === armed.lesson) : null;
+      const lesson = reserved || Lesson.recommend(DAIT_LESSONS, lessonMinutes, progress.records)[0];
+      const times = eta !== null ? `<div class="card-focus">${Lesson.minutesFor(eta)}분</div><div class="card-sub">도착까지</div>`
+        : `<div class="question-times">${Lesson.TIME_CHOICES.map(minutes => `<button class="choice-chip" aria-pressed="${minutes === lessonMinutes}" onclick="pickLessonTime(${minutes})">${minutes}</button>`).join('')}</div>`;
+      container.innerHTML = `
+        <div class="home-top">
+          ${getDaitLogoHtml()}
+          <div class="home-greeting"></div>
+          <div class="home-tools">
+            <button class="icon-btn" aria-label="설정" onclick="openSettings()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.82 1.17V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-2.82-1.17l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0-1.17-2.82H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.17-2.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 2.82-1.17V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 2.82 1.17l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0 1.17 2.82H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="question-home">
+          <div class="home-card start question-card">
+            ${lesson ? `
+              <div class="card-label">${escapeHtml(lesson.subject)}</div>
+              <div class="question-title">${escapeHtml(lesson.question)}</div>
+              <div class="question-promise">${escapeHtml(lessonPromise(lesson, lessonMinutes))}</div>
+              <div class="question-actions">
+                <button class="card-btn" onclick="startLesson('${lesson.id}')">듣기</button>
+                <button class="card-btn quiet" onclick="toggleLessonArm('${lesson.id}')">${reserved ? '수업 예약 취소' : '출발하면 듣기'}</button>
+              </div>` : '<div class="question-title">이번 길은 짧아서 다음에 들려 드릴게요</div>'}
+          </div>
+          <div class="question-side">
+            <div class="home-card">
+              <div class="card-label">듣는 시간(분)</div>
+              ${times}
+            </div>
+            <div class="home-card">
+              <div class="card-label">배움과 이어진 수</div>
+              <div class="card-text">이음 ${progress.ieum}</div>
+              <button class="card-btn quiet" onclick="openLessons()">다른 수업 보기</button>
+            </div>
+          </div>
+        </div>
+        <button class="register-line" onclick="openSettings()"><span>학교를 등록하면 등하교 안내도 받아요</span><b>등록</b></button>
+      `;
+    }
+
+    // 도착 시간을 알 때만 도착을 약속한다. 모르면 수업 길이만 말한다.
+    function lessonPromise(lesson, minutes) {
+      if (remainMinutes() !== null) return '도착할 때쯤 답을 알게 돼요';
+      return `약 ${Math.round(Lesson.totalSeconds(Lesson.assemble(lesson, minutes)) / 60)}분이면 답을 알게 돼요`;
     }
 
     function bigWordHtml(word, sub) {
@@ -1844,7 +1941,7 @@
 
     // 주행 중에는 고르는 화면을 열지 않고, 가는 길에 들어갈 수업 하나를 버튼 하나로 제안한다.
     function lessonOffer(trip) {
-      if (trip.kind !== 'weekend' && !(naviInfo && !trip.known)) return null;
+      if (school && trip.kind !== 'weekend' && !(naviInfo && !trip.known)) return null; // 학교가 없는 사람에게는 등하교를 묻지 않는다
       return Lesson.recommend(DAIT_LESSONS, Lesson.minutesFor(remainMinutes()), lessonProgress().records)[0] || null;
     }
 
@@ -2478,10 +2575,10 @@
       const offer = inDialogue ? null : lessonOffer(trip);
       const canStart = !inDialogue && (!!offer || trip.kind !== 'weekend');
       const text = inDialogue ? (sentence || document.querySelector('.main-question')?.textContent || '')
-        : offer ? `${offer.subject} 수업을 들을까요?`
+        : offer ? offer.question
         : canStart ? `${trip.mode === 'morning' ? '등교' : '하교'} 이야기를 들을까요?` : '주차 후 이어갈게요';
       document.getElementById('driveSentence').textContent = text;
-      document.getElementById('driveSub').textContent = inDialogue ? heardLineText() : offer ? offer.title : (canStart ? '' : '설정과 자세한 내용은 주차한 뒤 열어요');
+      document.getElementById('driveSub').textContent = inDialogue ? heardLineText() : offer ? lessonPromise(offer, Lesson.minutesFor(remainMinutes())) : (canStart ? '' : '설정과 자세한 내용은 주차한 뒤 열어요');
       const done = inDialogue && isDialogueDone();
       const replay = document.getElementById('driveReplay');
       replay.disabled = !inDialogue || isLessonResting();

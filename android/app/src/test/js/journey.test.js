@@ -47,7 +47,7 @@ test('화면 코드가 끝까지 실행되고 시작 화면을 그린다', () =>
   vm.createContext(sandbox);
   vm.runInContext(code, sandbox);
   page = source => vm.runInContext(source, sandbox);
-  assert.ok(stage.innerHTML.includes('학교를 등록해 주세요'));
+  assert.ok(stage.innerHTML.includes('학교를 등록하면 등하교 안내도 받아요'));
   assert.strictEqual(typeof sandbox.setDrivingMode, 'function');
 });
 
@@ -1116,4 +1116,27 @@ test('수업 예약은 등하교 예약과 말이 다르고, 시간을 바꾸면
   page(`pickLessonTime(15);`);
   assert.strictEqual(page(`armed.minutes`), 15);
   page(`disarm(); currentMode = null; render(); lessonMinutes = 15;`);
+});
+
+test('학교 등록 전 첫 화면은 빈 칸 없이 수업의 질문을 보여 주고, 도착 시간을 모르면 도착을 약속하지 않는다', () => {
+  page(`localStorage.values.clear(); goHome(); demoMinutes = null; lessonMinutes = 15; renderStage();`);
+  const html = page(`document.getElementById('stageArea').innerHTML`);
+  assert.ok(html.includes('점순이는 왜 자꾸 닭싸움을 붙였을까?'));
+  assert.ok(html.includes('분이면 답을 알게 돼요'));
+  assert.ok(!html.includes('등록 필요'));
+  assert.ok(!html.includes('하교 대화'));
+  page(`demoMinutes = 20; renderStage();`);
+  assert.ok(page(`document.getElementById('stageArea').innerHTML`).includes('도착할 때쯤 답을 알게 돼요'));
+  page(`demoMinutes = 3; renderStage();`);
+  assert.ok(page(`document.getElementById('stageArea').innerHTML`).includes('다음에 들려 드릴게요'));
+  page(`demoMinutes = null; lessonMinutes = 15; renderStage();`);
+});
+
+test('학교가 없으면 주행 화면도 등하교 대신 수업의 질문을 묻고, 학교가 있으면 그대로 등하교를 묻는다', () => {
+  page(`window.setDrivingMode(true); updateDriveScreen();`);
+  assert.ok(page(`lessonOffer(currentTrip()).question`).endsWith('?'));
+  page(`school = { name: '시험학교' }; `);
+  const weekday = page(`currentTrip().kind`);
+  if (weekday !== 'weekend') assert.strictEqual(page(`lessonOffer(currentTrip())`), null);
+  page(`school = null; window.setDrivingMode(false); render();`);
 });

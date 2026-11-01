@@ -68,7 +68,8 @@ function build() {
   const lessons = readTable(path.join(LESSONS, '목록.csv')).map(row => {
     const pieces = readTable(path.join(LESSONS, row['파일'])).map(line => buildPiece(row['이름'], line, lengths, row['파일']));
     if (new Set(pieces.map(piece => piece.id)).size !== pieces.length) throw new Error(`${row['파일']}: 조각 이름이 겹칩니다`);
-    return { id: row['이름'], title: row['제목'], subject: row['과목'], field: row['분야'], intro: row['소개'], homework: row['숙제'], review: row['검수'], pieces };
+    if (!row['질문']) throw new Error(`목록.csv ${row['이름']}: 첫 화면에 쓸 질문이 없습니다`);
+    return { id: row['이름'], title: row['제목'], question: row['질문'], subject: row['과목'], field: row['분야'], intro: row['소개'], homework: row['숙제'], review: row['검수'], pieces };
   });
   fs.writeFileSync(OUTPUT, `// tools/build-lessons.js가 만든 파일입니다. lessons/*.csv를 고치세요.
 (function (root) {

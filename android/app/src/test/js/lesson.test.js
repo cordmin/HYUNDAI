@@ -48,6 +48,7 @@ test('모든 수업은 도입·발문·정리와 복습·짧은 정리를 갖추
     const kinds = new Set(item.pieces.map(line => line.kind));
     ['복습', '도입', '발문', '정리', '짧은정리'].forEach(kind => assert.ok(kinds.has(kind), `${item.id} ${kind}`));
     assert.ok(Lesson.fits(item, 15), item.id);
+    assert.ok(item.question.endsWith('?'), item.id);
     assert.ok(item.pieces.every(line => line.line && line.text), item.id);
     assert.ok(item.pieces.filter(Lesson.isQuestion).every(line => line.wait > 0 && line.level), item.id);
   }

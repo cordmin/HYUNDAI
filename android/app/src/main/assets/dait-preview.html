@@ -33,7 +33,15 @@
       justify-content: center;
       min-height: 100vh;
       padding: 24px;
+      /* 한국어는 어절 사이에서만 줄을 바꾼다 ("확 / 인", "있어 / 요" 방지) */
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
+    /* 제목과 큰 글씨는 줄 길이를 고르게, 본문은 마지막 줄에 한 어절만 남지 않게 */
+    .hero-title, .main-question, .wide-card-title, .mini-tile-focus, .career-title, .news-card-title,
+    .news-headline, .side-question, .stop-name, .video-caption, .drive-sentence { text-wrap: balance; }
+    .hero-desc, .wide-card-desc, .mini-tile-sub, .news-card-lead, .easy-points li, .stop-desc,
+    .route-why, .route-notice, .heard-bubble { text-wrap: pretty; }
 
     /* Pleos Display */
     .pleos-display {
@@ -238,7 +246,7 @@
     }
     .school-setting-btn {
       min-height: 48px;
-      padding: 8px 20px;
+      padding: 8px clamp(12px, 1.8vw, 20px); /* 좁은 화면에서 버튼 둘이 카드 밖으로 밀리지 않게 */
       border-radius: 16px;
       background: rgba(255,255,255,0.10);
       border: 1px solid rgba(255,255,255,0.22);
@@ -411,6 +419,9 @@
       line-height: 1.25;
       overflow-wrap: anywhere;
     }
+    /* 칸 너비에 맞춰 줄여서 한 줄에 들어가게 한다 (8글자 기준) */
+    .info-mini-tile { container-type: inline-size; }
+    .mini-tile-focus.long { font-size: clamp(15px, 11.5cqi, 19px); letter-spacing: -0.6px; }
     .mini-tile-sub {
       font-size: 16px;
       font-weight: 600;
@@ -869,6 +880,7 @@
       .info-mini-tile { padding: 12px 14px 12px; min-height: 92px; gap: 4px; }
       .mini-text-bold { font-size: 13px; }
       .mini-tile-focus { font-size: 20px; }
+      .mini-tile-focus.long { font-size: clamp(14px, 11.5cqi, 16px); }
       .mini-tile-sub { font-size: 15px; }
       .bento-wide-card { padding: 14px 16px; }
       .wide-card-title { font-size: 22px; }
@@ -1700,6 +1712,12 @@
       renderDialogueFlow(stageArea);
     }
 
+    // 급식 메뉴처럼 띄어쓰기 없는 긴 낱말은 칸에서 쪼개지지 않게 글씨를 줄인다.
+    function tileTextClass(text) {
+      const longest = String(text || '').split(/\s+/).reduce((max, word) => Math.max(max, word.length), 0);
+      return longest >= 7 ? ' long' : '';
+    }
+
     // --- 스마트 벤토: 완성형 레이아웃 ---
     function renderHome(container) {
       const trip = currentTrip();
@@ -1741,14 +1759,14 @@
               <div class="info-mini-tile tile-tint-prep">
                 <div class="mini-tile-label"><span class="mini-text-bold text-prep">${escapeHtml(info.prepLabel)}</span></div>
                 <div class="mini-tile-body">
-                  <div class="mini-tile-focus">${escapeHtml(info.prep)}</div>
+                  <div class="mini-tile-focus${tileTextClass(info.prep)}">${escapeHtml(info.prep)}</div>
                   ${info.prepSub ? `<div class="mini-tile-sub">${escapeHtml(info.prepSub)}</div>` : ''}
                 </div>
               </div>
               <div class="info-mini-tile tile-tint-meal">
                 <div class="mini-tile-label"><span class="mini-text-bold text-meal">${escapeHtml(info.mealLabel)}</span></div>
                 <div class="mini-tile-body">
-                  <div class="mini-tile-focus">${escapeHtml(info.meal)}</div>
+                  <div class="mini-tile-focus${tileTextClass(info.meal)}">${escapeHtml(info.meal)}</div>
                   ${info.mealSub ? `<div class="mini-tile-sub">${escapeHtml(info.mealSub)}</div>` : ''}
                 </div>
               </div>

@@ -5,14 +5,19 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.car.Car
 import android.car.drivingstate.CarUxRestrictionsManager
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import java.util.Locale
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -29,6 +34,7 @@ class MainActivity : Activity() {
     private var hasSpeechModel = false
     private var speechInput: LocalVoiceInput? = null
     private var journeyActive = false
+    private var tts: TextToSpeech? = null
 
     private val restrictionListener = CarUxRestrictionsManager.OnUxRestrictionsChangedListener { value ->
         runOnUiThread { applyPlatformRestriction(value.isRequiresDistractionOptimization) }
@@ -71,6 +77,11 @@ class MainActivity : Activity() {
         }.also { it.connect() }
         doors = DoorBridge(this) { callPage("window.onDoorOpened && window.onDoorOpened();") }.also { it.connect() }
         connectCarService()
+
+        // 주말 진로 체험의 기사 낭독용 (니카 녹음 음원이 없는 실시간 기사). 주차 중 화면에서만 쓴다.
+        tts = TextToSpeech(this) { status ->
+            if (status == TextToSpeech.SUCCESS) tts?.language = Locale.KOREAN
+        }
     }
 
     override fun onResume() {
@@ -90,6 +101,8 @@ class MainActivity : Activity() {
         JourneyService.stop(this)
         voice?.release()
         voice = null
+        tts?.shutdown()
+        tts = null
         navi?.release()
         navi = null
         doors?.release()
@@ -189,6 +202,24 @@ class MainActivity : Activity() {
         @JavascriptInterface
         fun stopSpeech() {
             runOnUiThread { voice?.stop() }
+        }
+
+        @JavascriptInterface
+        fun speakText(text: String) {
+            tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "dait-news")
+        }
+
+        @JavascriptInterface
+        fun stopText() {
+            tts?.stop()
+        }
+
+        @JavascriptInterface
+        fun openUrl(url: String) {
+            if (!url.startsWith("https://")) return
+            runOnUiThread {
+                try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))) } catch (_: ActivityNotFoundException) {}
+            }
         }
 
         // 'none'은 음성 인식 모델이 없음, 'ask'는 아직 마이크 허락을 받지 않음,

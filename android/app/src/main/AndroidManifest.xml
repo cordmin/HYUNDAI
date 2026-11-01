@@ -7,6 +7,11 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+    </queries>
     <application android:label="다잇" android:icon="@drawable/ic_dait" android:theme="@style/AppTheme" android:allowBackup="false" android:fullBackupContent="false" android:dataExtractionRules="@xml/data_extraction_rules" android:supportsRtl="true">
         <uses-library android:name="android.car" android:required="false" />
         <activity android:name=".MainActivity" android:exported="true" android:configChanges="uiMode|orientation|screenSize|smallestScreenSize|screenLayout|density|fontScale|locale|layoutDirection|keyboard|keyboardHidden|navigation">

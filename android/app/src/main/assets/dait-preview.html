@@ -887,6 +887,493 @@
       .primary-btn { height: 48px; font-size: 17px; }
     }
 
+    /* ========================================================
+       진로·진학 안내: 쉬운 기사 요약 + 관련 체험 여행 루트
+       ======================================================== */
+    .career-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+    }
+    .career-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .career-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+    }
+    .data-badge {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      background: var(--control);
+      border: 1px solid var(--outline);
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+    .cat-tag {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 4px 11px;
+      border-radius: 999px;
+      color: var(--cat);
+      background: var(--cat-soft);
+    }
+
+    /* 기사 목록 */
+    .news-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 14px;
+      min-height: 0;
+    }
+    .news-card {
+      background: var(--paper);
+      border: 1px solid var(--outline);
+      border-radius: 22px;
+      padding: 20px 22px;
+      display: flex;
+      gap: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      overflow: hidden;
+    }
+    .news-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(14, 27, 42, 0.08);
+    }
+    .news-card-icon {
+      width: 64px;
+      height: 64px;
+      flex-shrink: 0;
+      border-radius: 18px;
+      background: var(--cat-soft);
+      color: var(--cat);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .news-card-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+    .news-card-title {
+      font-size: 19px;
+      font-weight: 800;
+      line-height: 1.35;
+      letter-spacing: -0.3px;
+    }
+    .news-card-lead {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .news-card-foot {
+      margin-top: auto;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* 기사 상세 */
+    .news-detail {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: 16px;
+      min-height: 0;
+    }
+    .news-media {
+      background: var(--paper);
+      border: 1px solid var(--outline);
+      border-radius: 24px;
+      padding: 18px 22px 20px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .media-tabs {
+      display: flex;
+      gap: 6px;
+      background: var(--control);
+      padding: 4px;
+      border-radius: 14px;
+      align-self: flex-start;
+      margin-bottom: 14px;
+    }
+    .media-tab {
+      border: none;
+      background: transparent;
+      padding: 8px 16px;
+      border-radius: 11px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .media-tab.active {
+      background: var(--paper);
+      color: var(--accent);
+      box-shadow: 0 2px 6px rgba(14, 27, 42, 0.08);
+    }
+    .media-body {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .news-headline {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.35;
+      letter-spacing: -0.4px;
+      margin: 10px 0 14px;
+    }
+    .easy-points {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .easy-points li {
+      font-size: 17px;
+      line-height: 1.55;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: var(--surface);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .easy-points li.speaking {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .listen-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .listen-head .dialogue-orb {
+      width: 56px;
+      height: 56px;
+      margin: 0;
+    }
+    .listen-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .media-replay {
+      margin-top: auto;
+      align-self: flex-start;
+    }
+
+    /* 짧은 영상: 장면 + 자막 + 내레이션 */
+    .video-stage {
+      flex: 1;
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      background: linear-gradient(145deg, #07172C 0%, #0E294E 55%, var(--cat) 140%);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .video-progress {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      gap: 6px;
+    }
+    .video-progress span {
+      flex: 1;
+      height: 4px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.25);
+      overflow: hidden;
+    }
+    .video-progress span i {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: #FFFFFF;
+    }
+    .video-progress span.done i { width: 100%; }
+    .video-progress span.now i { animation: sceneFill var(--scene-ms) linear forwards; }
+    @keyframes sceneFill { to { width: 100%; } }
+    .video-art {
+      color: #FFFFFF;
+      opacity: 0.95;
+      margin-bottom: 70px;
+      animation: sceneArt 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .video-art svg { width: 120px; height: 120px; }
+    @keyframes sceneArt {
+      from { transform: scale(0.82) translateY(10px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 0.95; }
+    }
+    .video-caption {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      bottom: 18px;
+      background: rgba(4, 14, 28, 0.6);
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.45;
+      text-align: center;
+      animation: sceneArt 0.5s ease;
+    }
+    .video-end {
+      text-align: center;
+    }
+    .video-end .back-btn { margin-top: 14px; }
+
+    .news-side {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 0;
+    }
+    .side-block {
+      background: var(--paper);
+      border: 1px solid var(--outline);
+      border-radius: 20px;
+      padding: 16px 18px;
+    }
+    .side-label {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .side-question {
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+    .job-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .job-chip {
+      font-size: 14px;
+      font-weight: 700;
+      padding: 7px 12px;
+      border-radius: 12px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .side-actions {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .wide-btn {
+      height: 54px;
+      border-radius: 18px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--outline);
+      background: var(--control);
+      color: var(--ink);
+    }
+    .wide-btn:hover { background: var(--control-hover); }
+    .wide-btn.primary {
+      border: none;
+      background: var(--accent);
+      color: #FFFFFF;
+      box-shadow: 0 4px 16px rgba(0, 77, 160, 0.28);
+    }
+    .wide-btn.primary:hover { background: var(--accent-hover); }
+
+    /* 여행 루트 */
+    .route-layout {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: 16px;
+      min-height: 0;
+    }
+    .route-list {
+      background: var(--paper);
+      border: 1px solid var(--outline);
+      border-radius: 24px;
+      padding: 18px 22px;
+      overflow-y: auto;
+    }
+    .route-leg {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 0 4px 15px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .route-leg::before {
+      content: '';
+      width: 2px;
+      height: 24px;
+      background: repeating-linear-gradient(to bottom, var(--outline) 0 4px, transparent 4px 8px);
+      margin-right: 16px;
+    }
+    .route-start {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .route-start .stop-num { background: var(--control); color: var(--muted); }
+    .route-stop {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .stop-num {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #FFFFFF;
+      font-size: 15px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .stop-body { flex: 1; min-width: 0; }
+    .stop-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .stop-name {
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .stop-type {
+      font-size: 12px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+    .stop-type.t-exp { background: #E5EFFB; color: #004DA0; }
+    .stop-type.t-museum { background: #F3E8FF; color: #6D28D9; }
+    .stop-type.t-heritage { background: #FEF3C7; color: #92400E; }
+    .stop-type.t-trip { background: #DCFCE7; color: #166534; }
+    .stop-meta {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+    .stop-desc {
+      font-size: 14px;
+      line-height: 1.5;
+      margin-top: 4px;
+    }
+    .route-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+    .route-stat {
+      text-align: center;
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 10px 4px;
+    }
+    .route-stat b {
+      display: block;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .route-stat span {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .route-why {
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .source-note {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+
+    /* 시간표 칸이 줄지 않도록 진로 체험 칸은 내용 높이만 쓴다. */
+    .bento-wide-card.career {
+      flex: 0 0 auto;
+      padding: 14px 20px;
+      align-items: center;
+      border-left: 4px solid #9A8CFF;
+    }
+    .bento-wide-card.career .wide-card-title { font-size: 21px; }
+    .bento-wide-card.career .wide-card-desc { font-size: 15px; }
+    .career-toast {
+      position: absolute;
+      top: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0E1F36;
+      color: #FFFFFF;
+      padding: 14px 24px;
+      border-radius: 18px;
+      font-size: 16px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      display: none;
+      z-index: 600;
+      max-width: 80%;
+      text-align: center;
+    }
+
+    @media (max-height: 540px), (max-width: 860px) {
+      .career-head { margin-bottom: 8px; }
+      .career-title { font-size: 21px; }
+      .news-grid, .news-detail, .route-layout { gap: 10px; }
+      .news-card { padding: 14px 16px; gap: 12px; }
+      .news-card-icon { width: 48px; height: 48px; border-radius: 14px; }
+      .news-card-title { font-size: 17px; }
+      .news-card-lead { font-size: 13px; }
+      .news-media, .route-list { padding: 12px 16px; }
+      .news-headline { font-size: 20px; margin: 6px 0 10px; }
+      .easy-points li { font-size: 15px; padding: 8px 12px; }
+      .video-art svg { width: 84px; height: 84px; }
+      .video-caption { font-size: 15px; padding: 8px 12px; }
+      .side-block { padding: 12px 14px; }
+      .side-question { font-size: 15px; }
+      .wide-btn { height: 46px; font-size: 15px; }
+    }
+
   </style>
 </head>
 <body>
@@ -960,7 +1447,10 @@
       <button id="demoEtaMid" onclick="setEtaDemo(4)">4분 전</button>
       <button id="demoEtaShort" onclick="setEtaDemo(2)">2분 전</button>
       <button id="demoDest" onclick="cycleDestDemo()">목적지</button>
+      <button id="demoWeekend" onclick="toggleWeekendDemo()">주말</button>
     </div>
+
+    <div id="careerToast" class="career-toast"></div>
 
   </div>
 
@@ -971,10 +1461,17 @@
   <script>
     // State
     const voice = 'nika';
-    let currentMode = null; // 'morning' | 'afternoon' | 'tour' | null
+    let currentMode = null; // 'morning' | 'afternoon' | 'settings' | 'places' | 'career' | null
     let stage = '';
     let heard = '';
     let isDrivingMode = false;
+    let weekendDemo = false;
+    // 주말 진로 체험 화면 상태
+    let careerView = 'list'; // 'list' | 'detail' | 'route'
+    let careerNewsId = null;
+    let mediaTab = 'read'; // 'read' | 'listen' | 'video'
+    let videoScene = 0;
+    let videoTimer = null;
     let currentChoices = [];
     let demoMinutes = null; // 시연 조작으로 고른 남은 분
     let speechPhase = 'idle'; // 'idle' | 'speaking' | 'listening'
@@ -1022,6 +1519,114 @@
       `;
     }
 
+    // 주말 진로 체험 예시 데이터 (빅카인즈·커리어넷·TourAPI·국가유산청·TMAP 연결 전)
+    // 기사: 빅카인즈 원문을 초·중등 눈높이로 요약해 points에 담고, 원문은 url로 연결한다.
+    const careerCategories = {
+      space: { label: '우주·항공', color: '#004DA0', soft: '#E5EFFB',
+        icon: '<svg viewBox="0 0 64 64" fill="none"><path d="M32 5c10 8 14 21 12 35H20C18 26 22 13 32 5z" fill="currentColor"/><circle cx="32" cy="23" r="5" fill="#fff"/><path d="M20 38l-9 11h11zM44 38l9 11H42z" fill="currentColor" opacity=".65"/><path d="M27 43h10l-5 13z" fill="#38BDF8"/></svg>' },
+      ai: { label: 'AI·로봇', color: '#6D28D9', soft: '#F3E8FF',
+        icon: '<svg viewBox="0 0 64 64" fill="none"><line x1="32" y1="6" x2="32" y2="15" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><circle cx="32" cy="6" r="3.5" fill="currentColor"/><rect x="12" y="15" width="40" height="32" rx="10" fill="currentColor"/><circle cx="24" cy="30" r="5" fill="#fff"/><circle cx="40" cy="30" r="5" fill="#fff"/><rect x="24" y="39" width="16" height="3.5" rx="1.75" fill="#fff" opacity=".8"/><rect x="5" y="25" width="6" height="12" rx="3" fill="currentColor" opacity=".6"/><rect x="53" y="25" width="6" height="12" rx="3" fill="currentColor" opacity=".6"/><rect x="20" y="49" width="24" height="9" rx="4" fill="currentColor" opacity=".6"/></svg>' },
+      env: { label: '기후·환경', color: '#0F7A55', soft: '#DCFCE7',
+        icon: '<svg viewBox="0 0 64 64" fill="none"><path d="M52 8C26 8 12 20 12 38c0 6 2 11 5 15 3-14 12-24 24-30-10 8-17 18-19 32 4 2 8 3 12 3 18 0 22-20 18-50z" fill="currentColor"/></svg>' },
+      history: { label: '역사·문화유산', color: '#B45309', soft: '#FEF3C7',
+        icon: '<svg viewBox="0 0 64 64" fill="none"><path d="M6 22c10-2 18-8 26-14 8 6 16 12 26 14v4H6z" fill="currentColor"/><rect x="10" y="28" width="44" height="4" rx="2" fill="currentColor" opacity=".7"/><rect x="14" y="34" width="5" height="18" fill="currentColor"/><rect x="29.5" y="34" width="5" height="18" fill="currentColor"/><rect x="45" y="34" width="5" height="18" fill="currentColor"/><rect x="8" y="53" width="48" height="5" rx="2" fill="currentColor"/></svg>' }
+    };
+
+    const careerNews = [
+      {
+        id: 'space',
+        title: '우리 손으로 만든 로켓, 우주로 한 걸음 더',
+        lead: '우리나라 연구진이 만든 로켓과 인공위성 이야기예요.',
+        points: [
+          '로켓은 무거운 인공위성을 우주까지 실어 나르는 운반 수단이에요.',
+          '인공위성은 날씨를 살피고, 지도를 만들고, 통신을 도와줘요.',
+          '우주 기술을 가진 나라는 많지 않아서 더 의미가 커요.'
+        ],
+        question: '내가 인공위성을 만든다면 어떤 일을 맡기고 싶나요?',
+        jobs: ['항공우주공학자', '위성 데이터 분석가', '천문학자'],
+        url: 'https://www.bigkinds.or.kr/'
+      },
+      {
+        id: 'ai',
+        title: '로봇이 공장과 병원에서 사람을 돕고 있어요',
+        lead: '사람과 함께 일하는 똑똑한 로봇 이야기예요.',
+        points: [
+          '로봇은 무겁거나 위험한 일을 사람 대신 할 수 있어요.',
+          '인공지능이 들어간 로봇은 보고 듣고 스스로 판단하기도 해요.',
+          '그래서 로봇을 안전하게 쓰는 규칙을 만드는 사람도 필요해요.'
+        ],
+        question: '우리 집에 로봇이 온다면 어떤 일을 부탁하고 싶나요?',
+        jobs: ['로봇공학자', 'AI 개발자', 'AI 윤리 전문가'],
+        url: 'https://www.bigkinds.or.kr/'
+      },
+      {
+        id: 'env',
+        title: '더워지는 지구, 숲과 바다를 지키는 사람들',
+        lead: '기후 변화와 생물을 연구하는 과학자 이야기예요.',
+        points: [
+          '지구가 더워지면서 폭염과 큰비가 더 자주 찾아오고 있어요.',
+          '숲과 바다는 이산화탄소를 흡수해서 지구를 식혀 줘요.',
+          '생물을 연구하고 지키는 과학자들이 해결 방법을 찾고 있어요.'
+        ],
+        question: '오늘 내가 할 수 있는 작은 환경 실천은 무엇일까요?',
+        jobs: ['생태학자', '해양생물학자', '기후 데이터 과학자'],
+        url: 'https://www.bigkinds.or.kr/'
+      },
+      {
+        id: 'history',
+        title: '오래된 유물에서 옛사람들의 생활을 찾아요',
+        lead: '유물을 연구하고 되살리는 사람들 이야기예요.',
+        points: [
+          '유물은 옛날 사람들이 실제로 쓰던 물건이에요.',
+          '연구자들은 유물을 살펴보고 언제, 어떻게 쓰였는지 알아내요.',
+          '과학 기술로 낡은 유물을 원래 모습에 가깝게 되살리기도 해요.'
+        ],
+        question: '100년 뒤 사람들이 내 물건을 본다면 무엇을 알 수 있을까요?',
+        jobs: ['학예연구사', '문화유산 보존과학자', '고고학자'],
+        url: 'https://www.bigkinds.or.kr/'
+      }
+    ];
+
+    // 여행 루트: 관광지·체험관(TourAPI), 유적지(국가유산청), 경유 순서·이동 시간(TMAP)
+    // stay·drive는 분 단위 예상값이며 서울 출발 기준이다.
+    const careerRoutes = {
+      space: {
+        why: '비행기와 로켓을 직접 보고, 별자리 관측까지 이어지는 하루 코스예요.',
+        stops: [
+          { name: '국립항공박물관', type: 'exp', region: '서울 강서구', drive: 30, stay: 90, desc: '비행 시뮬레이터로 조종사 체험을 해요.' },
+          { name: '국립과천과학관', type: 'exp', region: '경기 과천시', drive: 40, stay: 120, desc: '천체투영관과 우주 전시를 둘러봐요.' },
+          { name: '서울대공원', type: 'trip', region: '경기 과천시', drive: 10, stay: 60, desc: '호숫가를 걸으며 오늘 본 것을 이야기해요.' }
+        ]
+      },
+      ai: {
+        why: '로봇과 과학 원리를 체험하고, 저녁에는 천문대에서 하늘을 봐요.',
+        stops: [
+          { name: '국립중앙과학관', type: 'exp', region: '대전 유성구', drive: 110, stay: 120, desc: '로봇과 첨단 과학 전시를 체험해요.' },
+          { name: '엑스포과학공원 한빛탑', type: 'trip', region: '대전 유성구', drive: 10, stay: 40, desc: '전망대에서 대전 시내를 내려다봐요.' },
+          { name: '대전시민천문대', type: 'exp', region: '대전 유성구', drive: 10, stay: 60, desc: '망원경으로 달과 행성을 관측해요.' }
+        ]
+      },
+      env: {
+        why: '숲과 바다 생물을 한곳에서 만나며 기후와 생태를 함께 배워요.',
+        stops: [
+          { name: '국립생태원', type: 'exp', region: '충남 서천군', drive: 160, stay: 150, desc: '세계 여러 기후의 숲과 동식물을 만나요.' },
+          { name: '국립해양생물자원관', type: 'museum', region: '충남 서천군', drive: 15, stay: 60, desc: '바다 생물 표본과 연구 과정을 살펴봐요.' },
+          { name: '장항 스카이워크', type: 'trip', region: '충남 서천군', drive: 5, stay: 40, desc: '소나무숲 위를 걸으며 갯벌을 바라봐요.' }
+        ]
+      },
+      history: {
+        why: '박물관에서 유물을 보고, 실제 궁궐에서 옛사람들의 생활을 떠올려요.',
+        stops: [
+          { name: '국립중앙박물관', type: 'museum', region: '서울 용산구', drive: 30, stay: 120, desc: '선사시대부터 조선까지의 유물을 만나요.' },
+          { name: '경복궁', type: 'heritage', region: '서울 종로구', drive: 20, stay: 90, desc: '조선의 법궁을 걸으며 궁궐 생활을 상상해요.' },
+          { name: '국립고궁박물관', type: 'museum', region: '서울 종로구', drive: 5, stay: 60, desc: '왕실 유물과 과학 기구를 살펴봐요.' }
+        ]
+      }
+    };
+    const stopTypeLabels = { exp: '체험관', museum: '박물관', heritage: '유적지', trip: '여행지' };
+    // 루트 화면의 '근처에서 더 찾기'가 여는 가 볼 만한 곳 주제
+    const careerPlaceTopics = { space: '과학관', ai: '과학관', env: '체험관', history: '유적지' };
+
     function render() {
       renderStage();
       syncJourney();
@@ -1048,7 +1653,13 @@
         return;
       }
 
-      // 4. Dialogue Flow
+      // 4. Weekend career (기사 목록 → 기사 상세 → 체험 여행 루트)
+      if (currentMode === 'career') {
+        renderCareer(stageArea);
+        return;
+      }
+
+      // 5. Dialogue Flow
       renderDialogueFlow(stageArea);
     }
 
@@ -1117,6 +1728,17 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
               </div>`}
             </div>
+
+            ${trip.kind === 'weekend' ? `<div class="bento-wide-card career" onclick="openCareer()">
+              <div class="wide-card-text">
+                <div class="wide-card-kicker">이번 주말 진로 체험</div>
+                <div class="wide-card-title">뉴스 보고 체험 떠나기</div>
+                <div class="wide-card-desc">쉬운 기사와 체험관·유적지 루트</div>
+              </div>
+              <div class="wide-card-arrow">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+              </div>
+            </div>` : ''}
           </div>
         </div>
       `;
@@ -1225,6 +1847,7 @@
     }
 
     function goHome() {
+      stopCareerMedia();
       stopSpeech();
       currentMode = null;
       stage = '';
@@ -1731,8 +2354,8 @@
       // 여기부터는 목적지가 학교도 집도 아니거나 없다. 남은 시간은 쓰지 않는다
       const unknownMins = null;
       const todayYmd = toYmd(now);
-      const todayHasClass = isClassDay(todayYmd);
-      const isWeekend = now.getDay() === 0 || now.getDay() === 6;
+      const todayHasClass = !weekendDemo && isClassDay(todayYmd);
+      const isWeekend = weekendDemo || now.getDay() === 0 || now.getDay() === 6;
       if (school && Object.keys(schoolDays).length && !todayHasClass) {
         const plan = schoolPlan();
         const label = plan ? plan.label : '다음 수업일';
@@ -1899,10 +2522,11 @@
       render();
     }
 
-    function openPlaces() {
+    function openPlaces(topic = PLACE_TOPICS[0]) {
+      stopCareerMedia();
       stopSpeech();
       currentMode = 'places';
-      searchPlaces(PLACE_TOPICS[0]);
+      searchPlaces(topic);
     }
 
     function renderPlaces(container) {
@@ -1929,8 +2553,314 @@
       `;
     }
 
+    // ========================================================
+    // 주말 진로 체험: 기사 목록 · 기사 상세(글/듣기/짧은 영상) · 여행 루트
+    // ========================================================
+    const SCENE_MS = 5200;
+
+    function showCareerToast(message) {
+      const toast = document.getElementById('careerToast');
+      toast.textContent = message;
+      toast.style.display = 'block';
+      clearTimeout(showCareerToast.timer);
+      showCareerToast.timer = setTimeout(() => { toast.style.display = 'none'; }, 2200);
+    }
+
+    function currentNews() {
+      return careerNews.find(n => n.id === careerNewsId);
+    }
+
+    function catStyle(id) {
+      const c = careerCategories[id];
+      return `--cat:${c.color}; --cat-soft:${c.soft};`;
+    }
+
+    function formatMinutes(min) {
+      const h = Math.floor(min / 60), m = min % 60;
+      if (!h) return `${m}분`;
+      return m ? `${h}시간 ${m}분` : `${h}시간`;
+    }
+
+    function renderCareer(container) {
+      if (careerView === 'detail') renderCareerDetail(container);
+      else if (careerView === 'route') renderCareerRoute(container);
+      else renderCareerList(container);
+    }
+
+    function renderCareerList(container) {
+      container.innerHTML = `
+        <div class="career-wrap">
+          <div class="dialogue-top">
+            <button class="back-btn" onclick="goHome()">처음으로</button>
+            <span style="font-size:15px; font-weight:700; color:var(--muted);">주말 진로 체험</span>
+          </div>
+          <div class="career-head">
+            <div class="career-title">이번 주 진로 뉴스</div>
+            <span class="data-badge">빅카인즈 기사 · 초중등 눈높이 요약 · 예시 데이터</span>
+          </div>
+          <div class="news-grid">
+            ${careerNews.map(n => {
+              const c = careerCategories[n.id];
+              return `
+                <div class="news-card" style="${catStyle(n.id)}" onclick="openCareerNews('${n.id}')">
+                  <div class="news-card-icon"><svg width="40" height="40" viewBox="0 0 64 64">${c.icon.replace(/^<svg[^>]*>|<\/svg>$/g, '')}</svg></div>
+                  <div class="news-card-body">
+                    <div><span class="cat-tag">${c.label}</span></div>
+                    <div class="news-card-title">${n.title}</div>
+                    <div class="news-card-lead">${n.lead}</div>
+                    <div class="news-card-foot">글 · 듣기 · 짧은 영상 →</div>
+                  </div>
+                </div>`;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCareerDetail(container) {
+      const n = currentNews();
+      const c = careerCategories[n.id];
+      const tabs = [['read', '글로 읽기'], ['listen', '듣기'], ['video', '짧은 영상']];
+
+      let body = '';
+      if (mediaTab === 'read') {
+        body = `
+          <div><span class="cat-tag">${c.label}</span></div>
+          <div class="news-headline">${n.title}</div>
+          <ul class="easy-points">${n.points.map(p => `<li>${p}</li>`).join('')}</ul>`;
+      } else if (mediaTab === 'listen') {
+        body = `
+          <div class="listen-head">
+            <div class="dialogue-orb">
+              <div class="voice-visualizer" style="height:20px; margin:0;">
+                ${'<div class="v-bar" style="background:#fff;"></div>'.repeat(5)}
+              </div>
+            </div>
+            <div>
+              <div class="listen-label">니카가 읽어 줘요</div>
+              <div style="font-size:19px; font-weight:800;">${n.title}</div>
+            </div>
+          </div>
+          <ul class="easy-points" id="listenLines">${n.points.map(p => `<li>${p}</li>`).join('')}</ul>
+          <button class="back-btn media-replay" style="margin-top:14px;" onclick="startListening()">다시 듣기</button>`;
+      } else {
+        body = `<div class="video-stage" id="videoStage" style="--scene-ms:${SCENE_MS}ms;"></div>`;
+      }
+
+      container.innerHTML = `
+        <div class="career-wrap" style="${catStyle(n.id)}">
+          <div class="dialogue-top">
+            <button class="back-btn" onclick="showCareerList()">기사 목록</button>
+            <span style="font-size:15px; font-weight:700; color:var(--muted);">주말 진로 체험</span>
+          </div>
+          <div class="news-detail">
+            <div class="news-media">
+              <div class="media-tabs">
+                ${tabs.map(([id, label]) => `<button class="media-tab ${mediaTab === id ? 'active' : ''}" onclick="setMediaTab('${id}')">${label}</button>`).join('')}
+              </div>
+              <div class="media-body">${body}</div>
+            </div>
+            <div class="news-side">
+              <div class="side-block">
+                <div class="side-label">생각해 볼 질문</div>
+                <div class="side-question">${n.question}</div>
+              </div>
+              <div class="side-block">
+                <div class="side-label">이런 직업과 이어져요</div>
+                <div class="job-chips">${n.jobs.map(j => `<span class="job-chip">${j}</span>`).join('')}</div>
+              </div>
+              <div class="side-actions">
+                <button class="wide-btn" onclick="openOriginalArticle()">원문 기사 보기</button>
+                <button class="wide-btn primary" onclick="showCareerRoute()">관련 체험 여행 루트</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      if (mediaTab === 'listen') startListening();
+      if (mediaTab === 'video') startVideo();
+    }
+
+    function renderCareerRoute(container) {
+      const n = currentNews();
+      const c = careerCategories[n.id];
+      const route = careerRoutes[n.id];
+      const driveTotal = route.stops.reduce((sum, s) => sum + s.drive, 0);
+      const stayTotal = route.stops.reduce((sum, s) => sum + s.stay, 0);
+
+      const stopsHtml = route.stops.map((s, i) => `
+        <div class="route-leg">이동 약 ${formatMinutes(s.drive)}</div>
+        <div class="route-stop">
+          <div class="stop-num">${i + 1}</div>
+          <div class="stop-body">
+            <div class="stop-top">
+              <span class="stop-name">${s.name}</span>
+              <span class="stop-type t-${s.type}">${stopTypeLabels[s.type]}</span>
+            </div>
+            <div class="stop-meta">${s.region} · 머무는 시간 ${formatMinutes(s.stay)}</div>
+            <div class="stop-desc">${s.desc}</div>
+          </div>
+        </div>`).join('');
+
+      container.innerHTML = `
+        <div class="career-wrap" style="${catStyle(n.id)}">
+          <div class="dialogue-top">
+            <button class="back-btn" onclick="openCareerNews('${n.id}')">기사로 돌아가기</button>
+            <span style="font-size:15px; font-weight:700; color:var(--muted);">주말 진로 체험</span>
+          </div>
+          <div class="career-head">
+            <div class="career-title">${c.label} 체험 여행 루트</div>
+            <span class="cat-tag">${n.jobs[0]} 꿈나무 코스</span>
+          </div>
+          <div class="route-layout">
+            <div class="route-list">
+              <div class="route-start"><div class="stop-num">집</div>출발 (서울 기준)</div>
+              ${stopsHtml}
+            </div>
+            <div class="news-side">
+              <div class="side-block">
+                <div class="route-stats">
+                  <div class="route-stat"><b>${route.stops.length}곳</b><span>방문</span></div>
+                  <div class="route-stat"><b>${formatMinutes(stayTotal)}</b><span>체험</span></div>
+                  <div class="route-stat"><b>${formatMinutes(driveTotal)}</b><span>이동</span></div>
+                </div>
+              </div>
+              <div class="side-block">
+                <div class="side-label">이 루트를 추천하는 이유</div>
+                <div class="route-why">${route.why}</div>
+              </div>
+              <div class="source-note">장소: 한국관광공사 TourAPI · 국가유산청 · 경유 순서와 이동 시간: TMAP 예상값 (예시 데이터)</div>
+              <div class="side-actions">
+                <button class="wide-btn" onclick="openPlaces(careerPlaceTopics[careerNewsId])">근처에서 더 찾기</button>
+                <button class="wide-btn primary" onclick="sendRouteToNavi()">차량 내비로 보내기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function openCareer() {
+      stopSpeech();
+      currentMode = 'career';
+      careerView = 'list';
+      careerNewsId = null;
+      render();
+    }
+
+    function openCareerNews(id) {
+      stopCareerMedia();
+      careerNewsId = id;
+      careerView = 'detail';
+      mediaTab = 'read';
+      render();
+    }
+
+    function showCareerList() {
+      stopCareerMedia();
+      careerView = 'list';
+      render();
+    }
+
+    function showCareerRoute() {
+      stopCareerMedia();
+      careerView = 'route';
+      render();
+    }
+
+    function setMediaTab(tab) {
+      stopCareerMedia();
+      mediaTab = tab;
+      render();
+    }
+
+    function openOriginalArticle() {
+      const url = currentNews().url;
+      if (window.AndroidBridge && window.AndroidBridge.openUrl) window.AndroidBridge.openUrl(url);
+      else window.open(url, '_blank', 'noopener');
+    }
+
+    function sendRouteToNavi() {
+      // Pleos NaviHelper 연결 전: 경유지 목록을 넘기는 자리
+      const stops = careerRoutes[careerNewsId].stops.map(s => s.name).join(' → ');
+      showCareerToast(`내비게이션에 경로를 보냈어요: ${stops}`);
+    }
+
+
+    // 듣기: 문장마다 읽으면서 해당 줄을 강조한다.
+    function startListening() {
+      const n = currentNews();
+      const lines = [n.title, ...n.points];
+      speakLines(lines, idx => {
+        document.querySelectorAll('#listenLines li').forEach((li, i) => li.classList.toggle('speaking', i === idx - 1));
+      });
+    }
+
+    // 짧은 영상: 요약 문장마다 장면 하나, 자막과 내레이션을 함께 재생한다.
+    function startVideo() {
+      videoScene = 0;
+      showVideoScene();
+    }
+
+    function showVideoScene() {
+      const n = currentNews();
+      const stageEl = document.getElementById('videoStage');
+      if (!stageEl) return;
+      const total = n.points.length;
+
+      if (videoScene >= total) {
+        stageEl.innerHTML = `
+          <div class="video-end">
+            <div class="video-art">${careerCategories[n.id].icon}</div>
+            <button class="back-btn" onclick="startVideo()">다시 보기</button>
+          </div>`;
+        return;
+      }
+
+      stageEl.innerHTML = `
+        <div class="video-progress">
+          ${n.points.map((_, i) => `<span class="${i < videoScene ? 'done' : i === videoScene ? 'now' : ''}"><i></i></span>`).join('')}
+        </div>
+        <div class="video-art">${careerCategories[n.id].icon}</div>
+        <div class="video-caption">${n.points[videoScene]}</div>`;
+      speakLines([n.points[videoScene]]);
+      videoTimer = setTimeout(() => {
+        videoScene += 1;
+        showVideoScene();
+      }, SCENE_MS);
+    }
+
+    function stopCareerMedia() {
+      clearTimeout(videoTimer);
+      videoTimer = null;
+      stopSpeaking();
+    }
+
+    // 기사 낭독: 앱에서는 Android TTS, 브라우저 프리뷰에서는 Web Speech API
+    function speakLines(lines, onLine) {
+      stopSpeaking();
+      if (window.AndroidBridge && window.AndroidBridge.speakText) {
+        window.AndroidBridge.speakText(lines.join(' '));
+        return;
+      }
+      if (!('speechSynthesis' in window)) return;
+      lines.forEach((line, idx) => {
+        const u = new SpeechSynthesisUtterance(line);
+        u.lang = 'ko-KR';
+        if (onLine) u.onstart = () => onLine(idx);
+        if (onLine && idx === lines.length - 1) u.onend = () => onLine(-1);
+        window.speechSynthesis.speak(u);
+      });
+    }
+
+    function stopSpeaking() {
+      if (window.AndroidBridge && window.AndroidBridge.stopText) window.AndroidBridge.stopText();
+      else if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    }
+
     function isParkedScreen() {
-      return currentMode === 'settings' || currentMode === 'places';
+      return currentMode === 'settings' || currentMode === 'places' || currentMode === 'career';
     }
 
     function openSettings() {
@@ -2129,6 +3059,13 @@
       } else if (isDialogueDone()) goHome();
       else skipQuestion();
       updateDriveScreen();
+    }
+
+    // 시연용 주말. 수업이 있는 날에도 주말 첫 화면(진로 체험 카드)을 보여 준다.
+    function toggleWeekendDemo() {
+      weekendDemo = !weekendDemo;
+      document.getElementById('demoWeekend').classList.toggle('on', weekendDemo);
+      if (!currentMode) render();
     }
 
     function toggleDrivingDemo() {

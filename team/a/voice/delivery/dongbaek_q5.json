@@ -1,0 +1,10 @@
+{
+  "id": "dongbaek_q5",
+  "model": "gemini-3.8-flash-tts",
+  "voice": "Nika",
+  "text": "이 장면을 오늘의 교실로 옮긴다고 상상해 볼까요? 구운 감자 대신 어떤 물건이나 행동으로 마음을 전할 수 있을까요? 상대의 형편을 건드리지 않으면서 호의를 전하는 말도 떠올려 볼 수 있겠습니다. 속으로만 생각해도 좋습니다. 운전 중에는 대답하지 않으셔도 괜찮습니다.",
+  "fingerprint": "fb7e8f22846d634e293e27e6480751b91c36abd93e105877e77af8e9c91b73cd",
+  "sha256": "1cbdf8c45d26fc82d95e14b626edda49205db42a95c41de66d5bb82f288444e0",
+  "seconds": 22.12,
+  "review": "generated_not_listening_reviewed"
+}

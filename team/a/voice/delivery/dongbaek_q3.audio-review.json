@@ -1,0 +1,10 @@
+{
+  "transcript": "점순이의 행동을 오늘의 눈으로 생각해 보겠습니다. 좋아하는 마음이 있었다고 해도 상대를 괴롭히거나 동물을 해치는 행동이 괜찮아지는 것은 아닙니다. 그렇다면 점순이는 어떤 말이나 행동으로 마음을 전할 수 있었을까요? 운전 중에는 대답하지 않고 듣기만 하셔도 괜찮습니다.",
+  "issues": [],
+  "clip": "dongbaek_q3",
+  "sha256": "d6e939003ae18e76c9082866661e1dae7d664fa95ab3c69742d9ad911efbecc4",
+  "model": "gemini-3.8-flash",
+  "similarity": 1.0,
+  "passed": true,
+  "review_type": "AI audio review; not human listening"
+}

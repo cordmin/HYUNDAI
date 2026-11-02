@@ -1,0 +1,11 @@
+{
+  "transcript": "안녕하세요, 다이시입니다. 오늘은 수학 시간입니다. 칠판도 공책도 없이 머릿속 그림 하나로 2000년 넘은 증명을 함께 따라가 보겠습니다. 오늘의 질문은 이것입니다. 소수는 어디까지 있을까요? 수가 커질수록 점점 드물어지다가 언젠가 끝나 버릴까요? 아니면 끝없이 이어질까요? 운전에 집중하시면서 편하게 들어 주세요. 계산은 하지 않으셔도 괜찮습니다.",
+  "issues": [],
+  "clip": "prime_i1",
+  "sha256": "aa9044ac408d37b7253f056f3e6fcd70a9fe8e0ca67b5f84eab4ecdc4fbf4c38",
+  "model": "gemini-3.8-flash",
+  "similarity": 0.96842,
+  "passed": true,
+  "review_type": "AI audio review; not human listening",
+  "review_notes": "AI 재검토: 이천 년을 2000년으로 전사한 차이가 있다. 첫 인사 고유명사 전사 오인은 별도 음성 비교(prime_i1.brand-check.txt)에서 다잇입니다의 자연스러운 연음 다이십니다이며 음절 덧붙임·잘림이 없다고 확인했다."
+}

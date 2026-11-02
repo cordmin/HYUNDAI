@@ -1,0 +1,10 @@
+{
+  "transcript": "곧 도착이네요. 핵심만 정리하겠습니다. 어떤 유한한 소수 목록을 만들어도 목록에 없는 소수가 더 있습니다. 모두 곱하고 이를 더한 수가 언제나 소수인 것은 아니지만 그 수의 소인수는 처음 목록에 없습니다. 그래서 소수는 끝이 없습니다. 오늘은 여기서 마치겠습니다.",
+  "issues": [],
+  "clip": "prime_s1",
+  "sha256": "87c5084da216895ae6a49dce7911ef93e68120d37572aa67a706a33d8d7eb3fe",
+  "model": "gemini-3.8-flash",
+  "similarity": 0.98113,
+  "passed": true,
+  "review_type": "AI audio review; not human listening"
+}

@@ -1,0 +1,10 @@
+{
+  "transcript": "유클리드의 원론에는 소수가 어떤 정해진 유한한 목록보다도 더 많다는 명제가 있습니다. 오늘은 그 생각을 현대식으로 풀어보겠습니다. 먼저 소수가 몇 개뿐이라고 가정합니다. 그러면 그 소수를 빠짐없이 적은 목록을 만들 수 있겠지요? 그 목록에 없는 소수가 더 있다는 것을 보이면 모든 소수를 적었다는 가정이 잘못된 셈입니다. 직접 큰 수를 계산하는 대신 어떤 목록에도 통하는 이유를 찾는 방법입니다.",
+  "issues": [],
+  "clip": "prime_b7",
+  "sha256": "5b512eb616c1ea1cf6dbc366c7661a945d2be4563cc4658a35bf730b1a2cbde4",
+  "model": "gemini-3.8-flash",
+  "similarity": 1.0,
+  "passed": true,
+  "review_type": "AI audio review; not human listening"
+}

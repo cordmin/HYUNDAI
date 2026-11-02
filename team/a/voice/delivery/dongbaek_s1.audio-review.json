@@ -1,0 +1,10 @@
+{
+  "transcript": "곧 도착이네요. 핵심만 정리하겠습니다. 점순이의 닭싸움에는 서툰 호감과 서운함이 얽혀 있다고 읽을 수 있습니다. 하지만 좋아하는 마음이 괴롭힘을 정당화하지는 않습니다. 두 집안의 힘의 차이도 함께 기억해 주세요. 오늘은 여기서 마치겠습니다.",
+  "issues": [],
+  "clip": "dongbaek_s1",
+  "sha256": "9b5f4109014748cfaa66d533a86f281788e78dfd130434f2ef968231135d7e48",
+  "model": "gemini-3.8-flash",
+  "similarity": 1.0,
+  "passed": true,
+  "review_type": "AI audio review; not human listening"
+}

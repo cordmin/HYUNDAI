@@ -1741,7 +1741,7 @@
               ${stopped ? `<div class="lesson-row">
                 <button class="choice-chip" onclick="startLesson('${stopped.id}', true)">
                   <span class="lesson-title">지난번 멈춘 곳부터: ${escapeHtml(stopped.title)}</span>
-                  <span class="lesson-meta">${escapeHtml(stopped.subject)} · 남은 약 ${Math.max(1, Math.round(Lesson.totalSeconds(Lesson.resumePlan(stopped, lessonProgress().resume, lessonMinutes)) / 60))}분</span>
+                  <span class="lesson-meta">${escapeHtml(stopped.subject)} · 남은 약 ${stopMinutesLeft(stopped, lessonMinutes)}분</span>
                 </button>
                 <button class="card-btn quiet" onclick="toggleLessonArm('${stopped.id}', true)">${stopReserved && reserved === stopped ? '예약 취소' : '출발하면 듣기'}</button>
               </div>` : ''}
@@ -1833,6 +1833,11 @@
       if (!Lesson.resumeFresh(resume, toYmd(new Date()))) return null;
       const lesson = DAIT_LESSONS.find(item => item.id === resume.lesson);
       return lesson && Lesson.resumeFits(lesson, resume, minutes) ? lesson : null;
+    }
+
+    // 멈춘 곳부터 이어 들을 때 남은 분. 처음부터 듣는 길이와 다르다.
+    function stopMinutesLeft(lesson, minutes) {
+      return Math.max(1, Math.round(Lesson.totalSeconds(Lesson.resumePlan(lesson, lessonProgress().resume, minutes)) / 60));
     }
 
     // 멈춘 곳부터 듣는 수업은 교시로 나누지 않고 그 수업 하나만 잇는다.
@@ -2690,12 +2695,15 @@
       const trip = inDialogue ? null : currentTrip();
       const offer = inDialogue ? null : lessonOffer(trip);
       const canStart = !inDialogue && (!!offer || trip.kind !== 'weekend');
+      const minutes = Lesson.minutesFor(remainMinutes());
+      const fromStop = !!offer && offer === stoppedLesson(minutes);
       const text = inDialogue ? (sentence || document.querySelector('.main-question')?.textContent || '')
-        : offer ? (offer === stoppedLesson(Lesson.minutesFor(remainMinutes())) ? '지난번 멈춘 곳부터 들을까요?' : offer.question)
+        : offer ? (fromStop ? '지난번 멈춘 곳부터 들을까요?' : offer.question)
         : canStart ? `${trip.mode === 'morning' ? '등교' : '하교'} 이야기를 들을까요?` : '주차 후 이어갈게요';
       document.getElementById('driveSentence').textContent = text;
       const paused = inDialogue && currentMode === 'lesson' && lessonRun && lessonRun.paused;
-      document.getElementById('driveSub').textContent = inDialogue ? (paused ? '잠시 멈췄어요' : heardLineText()) : offer ? lessonPromise(offer, Lesson.minutesFor(remainMinutes())) : (canStart ? '' : '설정과 자세한 내용은 주차한 뒤 열어요');
+      const offerLine = !offer ? '' : fromStop ? `${offer.title} · 남은 약 ${stopMinutesLeft(offer, minutes)}분` : lessonPromise(offer, minutes);
+      document.getElementById('driveSub').textContent = inDialogue ? (paused ? '잠시 멈췄어요' : heardLineText()) : offer ? offerLine : (canStart ? '' : '설정과 자세한 내용은 주차한 뒤 열어요');
       const done = inDialogue && isDialogueDone();
       const lessonOn = inDialogue && currentMode === 'lesson' && !done;
       const replay = document.getElementById('driveReplay');

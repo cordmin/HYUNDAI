@@ -992,6 +992,7 @@ test('주행 중 제안은 멈춘 수업을 먼저 권하고, 누르면 멈춘 �
     document.getElementById = id => (id.startsWith('drive') ? (driveShown[id] = driveShown[id] || {}) : realGet(id));
     updateDriveScreen();`);
   assert.strictEqual(page(`driveShown.driveSentence.textContent`), '지난번 멈춘 곳부터 들을까요?');
+  assert.ok(page(`driveShown.driveSub.textContent`).startsWith('동백꽃과 점순이 · 남은 약 '));
   page(`driveNext();`);
   assert.strictEqual(page(`lessonRun.lesson.id`), 'dongbaek');
   assert.strictEqual(page(`lessonRun.pieces[0].id`), page(`lessonProgress().resume.from`));

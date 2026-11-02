@@ -887,7 +887,7 @@ test('쉬는 시간은 넘기면 바로 다음 교시로 가고, 다시 듣기�
   page(`goHome(); demoMinutes = null;`);
 });
 
-test('주행 중 쉬는 시간도 문장 하나와 버튼 둘이고, 다시 듣기는 잠긴다', () => {
+test('주행 중 쉬는 시간도 문장 하나와 버튼 둘이고, 이전은 잠긴다', () => {
   page(`localStorage.values.clear(); demoMinutes = 45; openLessons(); startLesson('dongbaek'); window.setDrivingMode(true);
     while (!isLessonResting()) skipQuestion();
     var realGet = document.getElementById; var driveShown = {};
@@ -895,8 +895,114 @@ test('주행 중 쉬는 시간도 문장 하나와 버튼 둘이고, 다시 듣�
     updateDriveScreen(lessonRun.pieces[lessonRun.index].line);`);
   assert.strictEqual(page(`driveShown.driveSentence.textContent`), '쉬는 시간이에요. 다음은 2교시 과학');
   assert.strictEqual(page(`driveShown.driveReplay.disabled`), true);
-  assert.strictEqual(page(`driveShown.driveNext.textContent`), '넘기기');
+  assert.strictEqual(page(`driveShown.driveNext.textContent`), '다음 교시 듣기');
   page(`document.getElementById = realGet; window.setDrivingMode(false); goHome(); demoMinutes = null;`);
+});
+
+test('수업 주행 화면의 버튼은 이전과 일시정지이고, 멈추면 이어 듣기로 바뀐다', () => {
+  page(`localStorage.values.clear(); demoMinutes = null; lessonMinutes = 15; startLesson('prime'); window.setDrivingMode(true);
+    var realGet = document.getElementById; var driveShown = {};
+    document.getElementById = id => (id.startsWith('drive') ? (driveShown[id] = driveShown[id] || {}) : realGet(id));
+    updateDriveScreen();`);
+  assert.strictEqual(page(`driveShown.driveReplay.textContent`), '이전');
+  assert.strictEqual(page(`driveShown.driveNext.textContent`), '일시정지');
+  page(`driveNext();`);
+  assert.strictEqual(page(`lessonRun.paused`), true);
+  assert.strictEqual(page(`driveShown.driveNext.textContent`), '이어 듣기');
+  assert.strictEqual(page(`driveShown.driveSub.textContent`), '잠시 멈췄어요');
+  page(`driveNext();`);
+  assert.strictEqual(page(`lessonRun.paused`), false);
+  page(`document.getElementById = realGet; window.setDrivingMode(false); goHome();`);
+});
+
+test('30초 안에 이으면 멈춘 곳부터, 넘으면 지금 조각을 처음부터 말한다', () => {
+  page(`localStorage.values.clear(); demoMinutes = null; lessonMinutes = 15;
+    DAIT_LESSONS.forEach(item => item.pieces.forEach(line => { line.voiced = true; }));
+    var bridgeCalls = [];
+    window.AndroidBridge = { micState: () => 'none', speak: clips => bridgeCalls.push(['speak', JSON.parse(clips)]), stopSpeech() {},
+      holdSpeech: () => bridgeCalls.push(['hold']), proceedSpeech: () => bridgeCalls.push(['proceed']), setJourneyActive() {} };
+    startLesson('prime'); bridgeCalls.length = 0;
+    pauseLesson(); lessonRun.pausedAt = Date.now() - 10 * 1000; resumeLesson();`);
+  assert.strictEqual(page(`bridgeCalls.map(call => call[0]).join()`), 'hold,proceed');
+  page(`bridgeCalls.length = 0; pauseLesson(); lessonRun.pausedAt = Date.now() - 40 * 1000; resumeLesson();`);
+  assert.strictEqual(page(`bridgeCalls.map(call => call[0]).join()`), 'hold,speak');
+  assert.strictEqual(page(`bridgeCalls[1][1].join()`), 'lesson/prime_i1');
+  page(`goHome(); delete window.AndroidBridge; DAIT_LESSONS.forEach(item => item.pieces.forEach(line => { delete line.voiced; }));`);
+});
+
+test('음원 없는 조각과 발문 뒤 생각할 틈도 멈춘 만큼 기다렸다가 잇는다', () => {
+  page(`localStorage.values.clear(); demoMinutes = null; lessonMinutes = 15; startLesson('prime');
+    lessonRun.wait.endsAt = Date.now() + 5000; pauseLesson();`);
+  assert.ok(page(`lessonRun.wait.left`) > 4000 && page(`lessonRun.wait.left`) <= 5000);
+  page(`resumeLesson();`);
+  assert.ok(page(`lessonRun.wait.endsAt - Date.now()`) <= 5000);
+  page(`goHome();`);
+});
+
+test('이전은 조각을 조금 들었으면 그 조각을, 막 시작했으면 앞 조각을 다시 말한다', () => {
+  page(`localStorage.values.clear(); demoMinutes = null; lessonMinutes = 15; startLesson('prime'); nextLessonPiece(); nextLessonPiece();`);
+  assert.strictEqual(page(`lessonRun.index`), 2);
+  page(`prevLessonPiece();`);
+  assert.strictEqual(page(`lessonRun.index`), 1);
+  page(`lessonRun.pieceStartedAt = Date.now() - 10 * 1000; prevLessonPiece();`);
+  assert.strictEqual(page(`lessonRun.index`), 1);
+  page(`lessonRun.index = 0; playLessonPiece(); prevLessonPiece();`);
+  assert.strictEqual(page(`lessonRun.index`), 0);
+  page(`goHome();`);
+});
+
+test('끝까지 못 들은 수업은 다음 이동에서 멈춘 곳부터 잇고, 앞에서 들은 것까지 합쳐 마친 수업이 된다', () => {
+  page(`localStorage.values.clear(); demoMinutes = null; lessonMinutes = 15; startLesson('prime');`);
+  for (let i = 0; i < 6; i++) hearLesson('ended');
+  page(`goHome();`); // 들은 조각: i1 i2 b1 b2 b3, 발문 q1에서 멈춤
+  const resume = page(`lessonProgress().resume`);
+  assert.strictEqual(resume.lesson, 'prime');
+  assert.strictEqual(resume.from, 'b4');
+  assert.strictEqual(resume.short, false);
+  page(`openLessons();`);
+  assert.ok(stageHtml().includes('지난번 멈춘 곳부터: 소수는 어디까지 있을까'));
+  page(`startLesson('prime', true);`);
+  assert.strictEqual(page(`lessonRun.pieces[0].id`), 'b4');
+  assert.strictEqual(page(`lessonRun.heard.length`), 6);
+  hearPeriod();
+  assert.strictEqual(page(`lessonRun.finished`), true);
+  assert.strictEqual(page(`lessonProgress().resume`), null);
+  page(`goHome(); openLessons();`);
+  assert.ok(!stageHtml().includes('지난번 멈춘 곳부터'));
+  page(`goHome();`);
+});
+
+test('짧은 판에서 멈춘 수업은 짧은 판으로 잇고, 7일이 지나면 권하지 않는다', () => {
+  page(`localStorage.values.clear(); demoMinutes = null; lessonMinutes = 8; startLesson('prime');`);
+  for (let i = 0; i < 3; i++) hearLesson('ended');
+  page(`goHome();`);
+  assert.strictEqual(page(`lessonProgress().resume.short`), true);
+  page(`lessonMinutes = 15; startLesson('prime', true);`);
+  assert.ok(page(`lessonRun.pieces.every(line => line.short)`));
+  page(`goHome(); writeStored(LESSON_KEY, { ...lessonProgress(), resume: { ...lessonProgress().resume, ymd: '2026-01-01' } });`);
+  assert.strictEqual(page(`stoppedLesson(15)`), null);
+  page(`localStorage.values.clear();`);
+});
+
+test('주행 중 제안은 멈춘 수업을 먼저 권하고, 누르면 멈춘 곳부터 잇는다', () => {
+  page(`localStorage.values.clear(); demoMinutes = null; lessonMinutes = 15; startLesson('dongbaek');`);
+  for (let i = 0; i < 3; i++) hearLesson('ended');
+  page(`goHome(); demoMinutes = 20; window.setDrivingMode(true);
+    var realGet = document.getElementById; var driveShown = {};
+    document.getElementById = id => (id.startsWith('drive') ? (driveShown[id] = driveShown[id] || {}) : realGet(id));
+    updateDriveScreen();`);
+  assert.strictEqual(page(`driveShown.driveSentence.textContent`), '지난번 멈춘 곳부터 들을까요?');
+  page(`driveNext();`);
+  assert.strictEqual(page(`lessonRun.lesson.id`), 'dongbaek');
+  assert.strictEqual(page(`lessonRun.pieces[0].id`), page(`lessonProgress().resume.from`));
+  page(`document.getElementById = realGet; window.setDrivingMode(false); goHome(); demoMinutes = null; localStorage.values.clear();`);
+});
+
+test('답 기록을 켜도 마이크를 쓸 수 없으면 버튼은 짧게 두고 사정은 설명 줄에 쓴다', () => {
+  page(`localStorage.values.clear(); writeStored(LESSON_RECORD_KEY, true); openLessons();`);
+  assert.ok(stageHtml().includes('내 답 글로 남기기: 켜짐</button>'));
+  assert.ok(stageHtml().includes('마이크를 쓸 수 없어 지금은 답을 남기지 못해요.'));
+  page(`localStorage.values.clear(); goHome();`);
 });
 
 test('도착이 앞당겨지면 뒤 교시와 쉬는 시간이 빠지고, 늦어지면 되살아난다', () => {

@@ -51,10 +51,12 @@ function buildPiece(lessonId, row, lengths, file) {
   if (!['예', '아니오'].includes(row['필수'])) fail('필수는 예 또는 아니오로 씁니다');
   if (!LEVELS.includes(row['수준'])) fail(`수준이 틀렸습니다: ${row['수준']}`);
   if (!row['대사']) fail('대사가 없습니다');
-  if (!['', '15', '30'].includes(row['판'] || '')) fail('판은 15 또는 30으로 씁니다');
+  if (!['', '8', '15', '30'].includes(row['판'] || '')) fail('판은 8, 15, 30 가운데 하나로 씁니다');
+  if (row['판'] === '8' && ['복습', '짧은정리'].includes(row['구분'])) fail('짧은 판(8)에는 복습과 짧은 정리를 두지 않습니다');
   const clip = `lesson/${lessonId}_${row['조각']}`;
   const piece = { id: row['조각'], kind: row['구분'], must: row['필수'] === '예', line: row['화면 문장'], text: row['대사'], clip };
   if (row['판'] === '30') piece.long = true;
+  if (row['판'] === '8') piece.short = true; // 짧은 판 전용 조각. 15·30분 판에는 들어가지 않는다
   if (row['수준']) piece.level = row['수준'];
   if (row['기다림']) piece.wait = Number(row['기다림']);
   if (lengths[clip]) piece.seconds = lengths[clip];

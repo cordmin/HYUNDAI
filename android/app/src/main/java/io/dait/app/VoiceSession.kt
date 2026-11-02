@@ -28,6 +28,7 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
 
     private var phase = Phase.IDLE
     private var suspended = false
+    private var held = false // 사람이 일시정지를 눌렀다. 소리를 돌려받아도 저절로 잇지 않는다
     private var clips: List<String> = emptyList()
     private var index = 0
     private var listen = ""
@@ -43,6 +44,27 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
         when (audio.requestAudioFocus(focus)) {
             AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> playNext()
             AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> { suspended = true; emit("paused") }
+            else -> finish("stopped")
+        }
+    }
+
+    // 사람이 누른 일시정지. 멈춘 동안 다른 앱이 소리를 쓰도록 소리를 돌려준다.
+    fun hold() {
+        if (phase == Phase.IDLE || held) return
+        held = true
+        if (phase == Phase.SPEAKING) player?.pause() else input?.stop()
+        audio.abandonAudioFocusRequest(focus)
+        emit("paused")
+    }
+
+    // 이어 듣기. 소리를 다시 받아 멈춘 곳에서 잇는다. 바로 못 받으면 받을 때까지 기다린다.
+    fun proceed() {
+        if (!held) return
+        held = false
+        suspended = false
+        when (audio.requestAudioFocus(focus)) {
+            AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> resume()
+            AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> suspended = true
             else -> finish("stopped")
         }
     }
@@ -93,7 +115,7 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
     private fun onClipDone() {
         releasePlayer()
         index++
-        if (!suspended) playNext() // 소리를 빼앗긴 사이라면 돌아왔을 때 이어 간다.
+        if (!suspended && !held) playNext() // 소리를 빼앗겼거나 멈춘 사이라면 돌아왔을 때 이어 간다.
     }
 
     private fun startListening(): Boolean {
@@ -111,14 +133,14 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
 
     private fun onFocusChange(change: Int) {
         when (change) {
-            AudioManager.AUDIOFOCUS_GAIN -> if (suspended) resume()
+            AudioManager.AUDIOFOCUS_GAIN -> if (suspended && !held) resume()
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT, AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> suspend()
             AudioManager.AUDIOFOCUS_LOSS -> finish("stopped")
         }
     }
 
     private fun suspend() {
-        if (phase == Phase.IDLE || suspended) return
+        if (phase == Phase.IDLE || suspended || held) return
         suspended = true
         if (phase == Phase.SPEAKING) player?.pause() else input?.stop()
         emit("paused")
@@ -149,6 +171,7 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
         input?.stop()
         phase = Phase.IDLE
         suspended = false
+        held = false
         clips = emptyList()
         index = 0
     }

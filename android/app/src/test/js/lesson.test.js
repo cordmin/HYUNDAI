@@ -37,7 +37,7 @@ test('시간이 모자라면 필수만, 넉넉하면 대본 차례대로 더하�
 
 test('조립한 수업은 고른 시간을 넘지 않는다', () => {
   for (const item of lessons) {
-    for (const minutes of Lesson.TIME_CHOICES) {
+    for (const minutes of Lesson.TIME_CHOICES.filter(minutes => Lesson.fits(item, minutes))) {
       assert.ok(Lesson.totalSeconds(Lesson.assemble(item, minutes)) <= minutes * 60, `${item.id} ${minutes}분`);
     }
   }
@@ -52,6 +52,51 @@ test('모든 수업은 도입·발문·정리와 복습·짧은 정리를 갖추
     assert.ok(item.pieces.every(line => line.line && line.text), item.id);
     assert.ok(item.pieces.filter(Lesson.isQuestion).every(line => line.wait > 0 && line.level), item.id);
   }
+});
+
+const shortPiece = (id, kind, must, seconds) => ({ ...piece(id, kind, must, seconds), short: true });
+const withShort = {
+  ...lesson, id: 'w',
+  pieces: [
+    ...lesson.pieces.map(item => ({ ...item, seconds: item.seconds * 3 })), // 원래 판 필수 9분 남짓
+    shortPiece('m1', '도입', true, 60), shortPiece('m2', '전개', false, 90), shortPiece('m3', '발문', true, 30), shortPiece('m4', '정리', true, 60)
+  ]
+};
+
+test('짧은 판 조각은 원래 판에 들어가지 않고, 10분보다 짧으면 짧은 판으로 듣는다', () => {
+  assert.deepStrictEqual(ids(Lesson.assemble(withShort, 5)), ['m1', 'm2', 'm3', 'm4']);
+  assert.deepStrictEqual(ids(Lesson.assemble(withShort, 3)), ['m1', 'm3', 'm4']);
+  assert.ok(Lesson.assemble(withShort, 15).every(item => !item.short));
+  assert.ok(Lesson.fits(withShort, 3));
+  assert.ok(!Lesson.fits(lesson, 2.5) && !Lesson.fits(withShort, 2.5));
+});
+
+test('짧은 판을 듣다가 도착이 바뀌어도 짧은 판 안에서만 줄이고 늘린다', () => {
+  const pieces = Lesson.assemble(withShort, 5);
+  assert.deepStrictEqual(ids(Lesson.fitRemaining(pieces, 0, 150, withShort).pieces), ['m1', 'm3', 'm4']);
+  assert.deepStrictEqual(ids(Lesson.fitRemaining(Lesson.assemble(withShort, 3), 0, 1800, withShort).pieces), ['m1', 'm2', 'm3', 'm4']);
+  assert.deepStrictEqual(ids(Lesson.fitRemaining(pieces, 0, 30, withShort).pieces), ['m1', 's1']);
+});
+
+test('짧은 판만 들은 수업은 추천에서 뒤로 보내지 않는다', () => {
+  const other = { ...lesson, id: 'o', pieces: withShort.pieces.map(item => ({ ...item })) };
+  const shortDone = Lesson.finishLesson(null, withShort, '2026-11-02', true, 0, [], true);
+  assert.strictEqual(shortDone.records[0].short, true);
+  assert.strictEqual(shortDone.ieum, 1);
+  assert.deepStrictEqual(Lesson.recommend([withShort, other], 15, shortDone.records).map(item => item.id), ['w', 'o']);
+  const fullDone = Lesson.finishLesson(null, withShort, '2026-11-02', true, 0, []);
+  assert.deepStrictEqual(Lesson.recommend([withShort, other], 15, fullDone.records).map(item => item.id), ['o', 'w']);
+});
+
+test('소수는 5분부터 짧은 판으로 들을 수 있고, 8분 안에 끝난다', () => {
+  const prime = lessons.find(item => item.id === 'prime');
+  assert.ok(!Lesson.fits(prime, 4));
+  const five = Lesson.assemble(prime, 5);
+  assert.ok(five.every(item => item.short) && Lesson.isClosing(five[five.length - 1]));
+  const eight = Lesson.assemble(prime, 8);
+  assert.ok(Lesson.totalSeconds(eight) <= 8 * 60 - 20);
+  assert.ok(eight.some(Lesson.isQuestion));
+  assert.ok(Lesson.assemble(prime, 10).every(item => !item.short));
 });
 
 test('필수 조각도 못 들어가는 시간에는 수업을 추천하지 않는다', () => {

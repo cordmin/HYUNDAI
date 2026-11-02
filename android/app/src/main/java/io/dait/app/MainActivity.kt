@@ -201,6 +201,16 @@ class MainActivity : Activity() {
             runOnUiThread { voice?.stop() }
         }
 
+        @JavascriptInterface
+        fun holdSpeech() {
+            runOnUiThread { voice?.hold() }
+        }
+
+        @JavascriptInterface
+        fun proceedSpeech() {
+            runOnUiThread { voice?.proceed() }
+        }
+
         // 'none'은 음성 인식 모델이 없음, 'ask'는 아직 마이크 허락을 받지 않음,
         // 'loading'은 모델을 읽는 중, 'ready'는 들을 수 있음.
         @JavascriptInterface

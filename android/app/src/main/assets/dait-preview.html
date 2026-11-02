@@ -1331,12 +1331,12 @@
     // 고른 대로 출발할 때 시작한다. 수업은 출발할 때 아는 남은 시간을 먼저 쓴다.
     // 그 시간에 들어가지 않는 수업이면 말을 시작하지 않고 예약만 지운다.
     function startArmed() {
-      const { mode, lesson, minutes } = armed;
+      const { mode, lesson, minutes, fromStop } = armed;
       disarm();
       if (mode !== 'lesson') { startFlow(mode); return; }
       const eta = remainMinutes();
       lessonMinutes = eta !== null ? Lesson.minutesFor(eta) : minutes;
-      startLesson(lesson);
+      startLesson(lesson, fromStop);
       refreshHomeIfIdle(); // 시간이 모자라 시작하지 못했으면 예약이 사라진 것을 보여 준다
     }
 
@@ -1492,6 +1492,16 @@
       else document.getElementById('audioPlayer').pause();
     }
 
+    function holdSpeech() {
+      if (window.AndroidBridge) window.AndroidBridge.holdSpeech();
+      else document.getElementById('audioPlayer').pause();
+    }
+
+    function proceedSpeech() {
+      if (window.AndroidBridge) window.AndroidBridge.proceedSpeech();
+      else document.getElementById('audioPlayer').play().catch(() => window.onSpeechEvent(JSON.stringify({ event: 'ended', seq: speechSeq })));
+    }
+
     function heardLineText() {
       if (speechPhase === 'listening') return '듣고 있어요';
       return heard ? `“${heard}”` : '';
@@ -1613,6 +1623,8 @@
     let lessonMinutes = Lesson.DEFAULT_MINUTES;
     let lessonSubject = ''; // 고르는 화면의 과목 칩. 빈 값은 전체
     let lessonTimer = null;
+    const LESSON_RESUME_MS = 30 * 1000; // 이보다 오래 멈추면 이어 들을 때 지금 조각을 처음부터 다시 말한다
+    const LESSON_BACK_MS = 3000; // 조각을 이만큼 들었으면 「이전」은 그 조각을 처음부터, 덜 들었으면 앞 조각을 말한다
     const TOP_SPEED_MPS = 50; // 이보다 빨리 줄어든 남은 거리는 달린 것이 아니라 목적지를 바꾼 것이다
 
     function lessonProgress() {
@@ -1655,12 +1667,12 @@
     }
 
     // 출발하면 들려주기를 수업에도 쓴다. 마이크는 답을 남기기로 한 사람에게만 묻는다.
-    function toggleLessonArm(lessonId) {
+    function toggleLessonArm(lessonId, fromStop) {
       if (isDrivingMode) return;
-      if (armed && armed.lesson === lessonId) { disarm(); render(); return; }
-      if (lessonRecordOn() && askMicFirst(() => toggleLessonArm(lessonId))) return;
+      if (armed && armed.lesson === lessonId && !!armed.fromStop === !!fromStop) { disarm(); render(); return; }
+      if (lessonRecordOn() && askMicFirst(() => toggleLessonArm(lessonId, fromStop))) return;
       disarm();
-      arm({ mode: 'lesson', lesson: lessonId, minutes: lessonMinutes });
+      arm({ mode: 'lesson', lesson: lessonId, minutes: lessonMinutes, fromStop: !!fromStop });
       render();
     }
 
@@ -1673,7 +1685,12 @@
 
     function lessonRecordLabel() {
       if (!lessonRecordOn()) return '꺼짐';
-      return canListen() || micState() === 'loading' ? '켜짐' : '켜짐, 마이크를 쓸 수 없어요';
+      return '켜짐';
+    }
+
+    // 켜 두었어도 마이크를 쓸 수 없으면 답을 받을 수 없다. 버튼은 짧게 두고 사정은 설명 줄에서 말한다.
+    function lessonRecordNote() {
+      return lessonRecordOn() && !canListen() && micState() !== 'loading' ? '마이크를 쓸 수 없어 지금은 답을 남기지 못해요.' : '';
     }
 
     function doneHomework() {
@@ -1697,6 +1714,8 @@
       const subjects = Lesson.subjects(DAIT_LESSONS.filter(lesson => lessons.includes(lesson)));
       if (!subjects.includes(lessonSubject)) lessonSubject = '';
       const reserved = armed && armed.lesson ? DAIT_LESSONS.find(lesson => lesson.id === armed.lesson) : null;
+      const stopped = stoppedLesson(lessonMinutes);
+      const stopReserved = !!reserved && armed.fromStop;
       const scrolled = document.querySelector('.lesson-main')?.scrollTop || 0;
       const km = Math.round(progress.km[Lesson.monthOf(toYmd(new Date()))] || 0);
       const answers = progress.records.flatMap(record => record.answers).slice(-3).reverse();
@@ -1717,14 +1736,21 @@
               ${subjects.length > 1 ? `<div class="lesson-subjects">
                 ${['', ...subjects].map(subject => `<button class="choice-chip" aria-pressed="${subject === lessonSubject}" data-subject="${escapeHtml(subject)}" onclick="pickLessonSubject(this.dataset.subject)">${escapeHtml(subject || '전체')}</button>`).join('')}
               </div>` : ''}
-              ${reserved ? `<div class="card-sub">출발하면 들려줄게요: ${escapeHtml(reserved.title)}</div>` : ''}
-              ${lessons.length === 0 ? '<div class="settings-message">이 시간에 맞는 수업이 아직 없어요</div>' : ''}
+              ${reserved ? `<div class="card-sub">출발하면 들려줄게요: ${escapeHtml(reserved.title)}${stopReserved ? ' (멈춘 곳부터)' : ''}</div>` : ''}
+              ${lessons.length === 0 && !stopped ? '<div class="settings-message">이 시간에 맞는 수업이 아직 없어요</div>' : ''}
+              ${stopped ? `<div class="lesson-row">
+                <button class="choice-chip" onclick="startLesson('${stopped.id}', true)">
+                  <span class="lesson-title">지난번 멈춘 곳부터: ${escapeHtml(stopped.title)}</span>
+                  <span class="lesson-meta">${escapeHtml(stopped.subject)} · 남은 약 ${Math.max(1, Math.round(Lesson.totalSeconds(Lesson.resumePlan(stopped, lessonProgress().resume, lessonMinutes)) / 60))}분</span>
+                </button>
+                <button class="card-btn quiet" onclick="toggleLessonArm('${stopped.id}', true)">${stopReserved && reserved === stopped ? '예약 취소' : '출발하면 듣기'}</button>
+              </div>` : ''}
               ${Lesson.bySubject(lessons, lessonSubject).map(lesson => `<div class="lesson-row">
                 <button class="choice-chip" onclick="startLesson('${lesson.id}')">
                   <span class="lesson-title">${escapeHtml(lesson.title)}</span>
                   <span class="lesson-meta">${escapeHtml(lesson.subject)} · ${escapeHtml(lesson.field)} · 약 ${Math.round(Lesson.totalSeconds(Lesson.assemble(lesson, trip.minutes)) / 60)}분</span>
                 </button>
-                <button class="card-btn quiet" onclick="toggleLessonArm('${lesson.id}')">${reserved === lesson ? '예약 취소' : '출발하면 듣기'}</button>
+                <button class="card-btn quiet" onclick="toggleLessonArm('${lesson.id}')">${reserved === lesson && !stopReserved ? '예약 취소' : '출발하면 듣기'}</button>
               </div>`).join('')}
             </div>
             <div class="lesson-side">
@@ -1733,6 +1759,7 @@
               ${mileage ? `<div class="card-sub">${escapeHtml(mileage)}</div>` : ''}
               ${progress.homework ? `<div class="card-label">숙제</div><div class="card-sub">${escapeHtml(progress.homework.title)}</div><button class="card-btn" onclick="doneHomework()">했어요</button>` : ''}
               <button class="card-btn quiet" onclick="toggleLessonRecord()">내 답 글로 남기기: ${lessonRecordLabel()}</button>
+              ${lessonRecordNote() ? `<div class="card-sub">${lessonRecordNote()}</div>` : ''}
               <div class="card-sub">켜면 발문에 말한 답을 이 차 안에만 글로 남겨요. 녹음 파일은 만들지 않고 서버로 보내지 않아요.</div>
               ${answers.map(answer => `<div class="card-sub">${escapeHtml(answer.question)}: “${escapeHtml(answer.text)}”</div>`).join('')}
               ${answers.length ? '<button class="card-btn quiet" onclick="forgetLessonAnswers()">남긴 답 지우기</button>' : ''}
@@ -1749,9 +1776,9 @@
       const piece = run.pieces[run.index];
       const resting = !run.done && Lesson.isBreak(piece);
       const title = run.done ? lessonDoneLine(run) : run.stopped ? '수업을 잠시 멈췄어요' : piece.line;
-      const replay = `<button class="primary-btn" onclick="handlePrimaryAction()">${run.stopped ? '이어 듣기' : '다시 듣기'}</button>`;
+      const back = '<button class="primary-btn secondary" onclick="prevLessonPiece()">이전</button>';
       const buttons = run.done ? '<button class="primary-btn" onclick="handlePrimaryAction()">마치기</button>'
-        : `${resting ? '' : replay}<button class="primary-btn secondary" onclick="skipQuestion()">넘기기</button>`;
+        : `${resting ? '' : back}<button class="primary-btn" onclick="lessonMainAction()">${lessonMainLabel(run)}</button>`;
       container.innerHTML = `
         <div class="dialogue-wrap">
           <div class="dialogue-top">
@@ -1761,7 +1788,7 @@
           <div class="dialogue-card">
             <div class="card-center">
               <div class="main-question">${escapeHtml(title)}</div>
-              ${run.done || resting || piece.voiced ? '' : '<div class="card-sub">음원 준비 중</div>'}
+              ${run.done || resting ? '' : run.paused ? '<div class="card-sub">잠시 멈췄어요</div>' : piece.voiced ? '' : '<div class="card-sub">음원 준비 중</div>'}
               <div id="heardLine" class="heard-bubble"${heard || speechPhase === 'listening' ? '' : ' hidden'}>${escapeHtml(heardLineText())}</div>
             </div>
           </div>
@@ -1784,10 +1811,11 @@
       return !!lessonRun && !lessonRun.done && Lesson.isBreak(lessonRun.pieces[lessonRun.index]);
     }
 
-    function startLesson(lessonId) {
-      const trip = lessonTripFor(lessonId);
-      if (!trip.lesson || !Lesson.fits(trip.lesson, trip.minutes)) return;
-      if (lessonRecordOn() && askMicFirst(() => startLesson(lessonId))) return;
+    // fromStop이면 지난번 멈춘 곳부터 잇는다.
+    function startLesson(lessonId, fromStop) {
+      const trip = fromStop ? stopTrip(lessonId) : lessonTripFor(lessonId);
+      if (!trip || !trip.lesson || !(trip.resume || Lesson.fits(trip.lesson, trip.minutes))) return;
+      if (lessonRecordOn() && askMicFirst(() => startLesson(lessonId, fromStop))) return;
       disarm();
       tripForDoor = null; // 내릴 때 한마디가 수업을 끊고 지나가지 않게 한다
       clearTimeout(doorTimer);
@@ -1799,12 +1827,30 @@
       syncJourney();
     }
 
+    // 끝까지 못 들은 수업이 있고 이 시간에 이어 들을 수 있으면 그 수업을 돌려준다.
+    function stoppedLesson(minutes) {
+      const resume = lessonProgress().resume;
+      if (!Lesson.resumeFresh(resume, toYmd(new Date()))) return null;
+      const lesson = DAIT_LESSONS.find(item => item.id === resume.lesson);
+      return lesson && Lesson.resumeFits(lesson, resume, minutes) ? lesson : null;
+    }
+
+    // 멈춘 곳부터 듣는 수업은 교시로 나누지 않고 그 수업 하나만 잇는다.
+    function stopTrip(lessonId) {
+      const lesson = stoppedLesson(lessonMinutes);
+      if (!lesson || lesson.id !== lessonId) return null;
+      return { ...Lesson.planTrip([lesson], lessonMinutes), resume: lessonProgress().resume };
+    }
+
     // 교시마다 기록을 따로 남기려고 교시마다 새로 시작한다. 앞 교시를 마쳤으면 그 복습이 앞에 붙는다.
+    // 멈춘 곳부터 이을 때는 복습 없이 멈춘 조각부터 말하고, 앞에서 들은 조각도 들은 것으로 센다.
     function startPeriod(trip) {
-      const pieces = Lesson.plan(trip.lesson, DAIT_LESSONS, trip.minutes, lessonProgress().records);
+      const before = trip.resume ? Lesson.resumeHeard(trip.lesson, trip.resume) : [];
+      const pieces = trip.resume ? Lesson.resumePlan(trip.lesson, trip.resume, trip.minutes)
+        : Lesson.plan(trip.lesson, DAIT_LESSONS, trip.minutes, lessonProgress().records);
       const run = {
-        lesson: trip.lesson, trip, pieces: Lesson.withBreak(pieces, trip), plannedSeconds: Lesson.lessonSeconds(pieces),
-        index: 0, heard: [], answers: [], meters: 0, lastMeters: null, lastMetersAt: 0,
+        lesson: trip.lesson, trip, pieces: Lesson.withBreak(pieces, trip), plannedSeconds: Lesson.lessonSeconds([...before, ...pieces]), short: Lesson.isShort([...before, ...pieces]),
+        index: 0, heard: before, answers: [], meters: 0, lastMeters: null, lastMetersAt: 0,
         reachedEnd: false, done: false, finished: false, stopped: false, saved: false
       };
       lessonRun = run;
@@ -1826,6 +1872,9 @@
       if (!run || run.done) return;
       clearTimeout(lessonTimer);
       run.stopped = false;
+      run.paused = false;
+      run.wait = null;
+      run.pieceStartedAt = Date.now();
       const piece = run.pieces[run.index];
       if (Lesson.isClosing(piece)) run.reachedEnd = true;
       if (Lesson.isBreak(piece)) {
@@ -1847,7 +1896,70 @@
       stopSpeech();
       speechPhase = 'speaking';
       const seq = speechSeq;
-      lessonTimer = setTimeout(() => window.onSpeechEvent(JSON.stringify({ event: 'ended', seq })), Lesson.speechSeconds(piece) * 1000);
+      lessonWait(Lesson.speechSeconds(piece) * 1000, () => window.onSpeechEvent(JSON.stringify({ event: 'ended', seq })));
+    }
+
+    // 소리 없이 기다리는 동안(음원 없는 조각, 발문 뒤 생각할 틈)은 타이머로 잰다. 일시정지하면 남은 만큼 다시 잰다.
+    function lessonWait(ms, then) {
+      const run = lessonRun;
+      clearTimeout(lessonTimer);
+      run.wait = { then, endsAt: Date.now() + ms };
+      lessonTimer = setTimeout(() => { if (lessonRun === run && !run.paused) { run.wait = null; then(); } }, ms);
+    }
+
+    // 사람이 누른 일시정지. 앱이 먼저 다시 말을 걸지 않고, 이어 듣기를 누를 때까지 기다린다.
+    function pauseLesson() {
+      const run = lessonRun;
+      if (!run || run.done || run.paused || run.stopped || isLessonResting()) return;
+      run.paused = true;
+      run.pausedAt = Date.now();
+      if (run.wait) {
+        clearTimeout(lessonTimer);
+        run.wait.left = Math.max(0, run.wait.endsAt - run.pausedAt);
+      } else holdSpeech();
+      renderStage();
+      updateDriveScreen();
+    }
+
+    // 30초 안이면 멈춘 곳에서, 넘으면 지금 조각을 처음부터 잇는다. 멈춘 동안 도착이 가까워졌으면 뒤쪽 조각부터 뺀다.
+    function resumeLesson() {
+      const run = lessonRun;
+      if (!run || run.done || !run.paused) return;
+      const away = Date.now() - run.pausedAt;
+      run.paused = false;
+      run.pieceStartedAt += away;
+      fitLessonToEta(remainMinutes());
+      if (run.done) return;
+      if (away > LESSON_RESUME_MS) { playLessonPiece(); return; }
+      if (run.wait) lessonWait(run.wait.left, run.wait.then);
+      else proceedSpeech();
+      renderStage();
+      updateDriveScreen();
+    }
+
+    // 「이전」: 조각을 조금 들었으면 그 조각을 처음부터, 막 시작했으면 앞 조각을 다시 말한다. 지난 교시로는 돌아가지 않는다.
+    function prevLessonPiece() {
+      const run = lessonRun;
+      if (!run || run.done || isLessonResting()) return;
+      const listened = (run.paused ? run.pausedAt : Date.now()) - run.pieceStartedAt;
+      if (listened < LESSON_BACK_MS && run.index > 0) run.index--;
+      playLessonPiece();
+      fitLessonToEta(remainMinutes()); // 다시 듣는 만큼 뒤쪽 선택 조각을 뺀다
+    }
+
+    // 수업 화면 오른쪽 버튼: 쉬는 시간이면 다음 교시, 멈췄으면 잇기, 아니면 일시정지.
+    function lessonMainAction() {
+      const run = lessonRun;
+      if (!run || run.done) return;
+      if (isLessonResting()) nextLessonPiece();
+      else if (run.stopped) playLessonPiece();
+      else if (run.paused) resumeLesson();
+      else pauseLesson();
+    }
+
+    function lessonMainLabel(run) {
+      if (isLessonResting()) return '다음 교시 듣기';
+      return run.paused || run.stopped ? '이어 듣기' : '일시정지';
     }
 
     function nextLessonPiece() {
@@ -1881,7 +1993,7 @@
       } else if (info.event === 'silence') nextLessonPiece(); // 답하지 않아도 재촉하지 않는다
       else if (Lesson.isQuestion(piece)) {
         if (info.event === 'micFailed') micBroken = true;
-        lessonTimer = setTimeout(nextLessonPiece, piece.wait * 1000); // 생각할 틈
+        lessonWait(piece.wait * 1000, nextLessonPiece); // 생각할 틈
       } else nextLessonPiece();
     }
 
@@ -1929,7 +2041,10 @@
       run.finished = Lesson.countsAsFinished(run);
       if (run.finished) run.trip.earned++;
       if (run.heard.length > 0) {
-        writeStored(LESSON_KEY, Lesson.finishLesson(lessonProgress(), run.lesson, toYmd(new Date()), run.finished, run.meters / 1000, run.answers));
+        const ymd = toYmd(new Date());
+        const progress = Lesson.finishLesson(lessonProgress(), run.lesson, ymd, run.finished, run.meters / 1000, run.answers, run.short);
+        const point = run.finished ? null : Lesson.resumePoint(run.lesson, run.heard, ymd); // 다음 이동에서 멈춘 곳부터 잇게 한다
+        writeStored(LESSON_KEY, point ? Lesson.keepResume(progress, point) : progress);
       }
     }
 
@@ -1942,7 +2057,8 @@
     // 주행 중에는 고르는 화면을 열지 않고, 가는 길에 들어갈 수업 하나를 버튼 하나로 제안한다.
     function lessonOffer(trip) {
       if (school && trip.kind !== 'weekend' && !(naviInfo && !trip.known)) return null; // 학교가 없는 사람에게는 등하교를 묻지 않는다
-      return Lesson.recommend(DAIT_LESSONS, Lesson.minutesFor(remainMinutes()), lessonProgress().records)[0] || null;
+      const minutes = Lesson.minutesFor(remainMinutes());
+      return stoppedLesson(minutes) || Lesson.recommend(DAIT_LESSONS, minutes, lessonProgress().records)[0] || null;
     }
 
     // ========================================================
@@ -2575,21 +2691,24 @@
       const offer = inDialogue ? null : lessonOffer(trip);
       const canStart = !inDialogue && (!!offer || trip.kind !== 'weekend');
       const text = inDialogue ? (sentence || document.querySelector('.main-question')?.textContent || '')
-        : offer ? offer.question
+        : offer ? (offer === stoppedLesson(Lesson.minutesFor(remainMinutes())) ? '지난번 멈춘 곳부터 들을까요?' : offer.question)
         : canStart ? `${trip.mode === 'morning' ? '등교' : '하교'} 이야기를 들을까요?` : '주차 후 이어갈게요';
       document.getElementById('driveSentence').textContent = text;
-      document.getElementById('driveSub').textContent = inDialogue ? heardLineText() : offer ? lessonPromise(offer, Lesson.minutesFor(remainMinutes())) : (canStart ? '' : '설정과 자세한 내용은 주차한 뒤 열어요');
+      const paused = inDialogue && currentMode === 'lesson' && lessonRun && lessonRun.paused;
+      document.getElementById('driveSub').textContent = inDialogue ? (paused ? '잠시 멈췄어요' : heardLineText()) : offer ? lessonPromise(offer, Lesson.minutesFor(remainMinutes())) : (canStart ? '' : '설정과 자세한 내용은 주차한 뒤 열어요');
       const done = inDialogue && isDialogueDone();
+      const lessonOn = inDialogue && currentMode === 'lesson' && !done;
       const replay = document.getElementById('driveReplay');
+      replay.textContent = lessonOn ? '이전' : '다시 듣기';
       replay.disabled = !inDialogue || isLessonResting();
       replay.hidden = canStart;
       const next = document.getElementById('driveNext');
-      next.textContent = canStart ? '듣기' : (done ? '마치기' : '넘기기');
+      next.textContent = canStart ? '듣기' : done ? '마치기' : lessonOn ? lessonMainLabel(lessonRun) : '넘기기';
       next.disabled = !inDialogue && !canStart;
     }
 
     function driveReplay() {
-      if (currentMode === 'lesson') { if (!isDialogueDone() && !isLessonResting()) playLessonPiece(); }
+      if (currentMode === 'lesson') { if (!isDialogueDone()) prevLessonPiece(); }
       else if (currentMode && !isParkedScreen()) render();
     }
 
@@ -2597,9 +2716,10 @@
       if (!currentMode || isParkedScreen()) {
         const trip = currentTrip();
         const offer = lessonOffer(trip);
-        if (offer) { lessonMinutes = Lesson.minutesFor(remainMinutes()); startLesson(offer.id); }
+        if (offer) { lessonMinutes = Lesson.minutesFor(remainMinutes()); startLesson(offer.id, offer === stoppedLesson(lessonMinutes)); }
         else if (trip.kind !== 'weekend') startFlow(trip.mode);
       } else if (isDialogueDone()) goHome();
+      else if (currentMode === 'lesson') lessonMainAction();
       else skipQuestion();
       updateDriveScreen();
     }

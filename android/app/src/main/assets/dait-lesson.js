@@ -1,16 +1,18 @@
 // 수업 규칙: 시간에 맞춘 수업 조립, 긴 이동의 교시 나누기, 도착에 맞춘 줄이기, 숙제와 이음.
 // 대사는 교사가 검수한 조각만 쓴다. 필수 조각은 그대로 두고 시간이 남는 만큼 나머지 조각을 더한다.
 (function (root) {
-  const TIME_CHOICES = [15, 20, 30];
+  const TIME_CHOICES = [8, 15, 20, 30];
   const LONG_CHOICES = [60, 90]; // 목적지 없이 고르는 긴 이동. 60분은 2교시, 90분은 4교시로 나뉜다
   const LONG_TRIP_MINUTES = 40; // 이 시간부터 수업 하나 대신 학교처럼 교시로 나눈다
   const PERIOD_MINUTES = 15; // 몇 교시가 들어가는지 셀 때 한 교시로 치는 길이
   const BREAK_MINUTES = 10; // 교시 사이 쉬는 시간. 쉬는 시간 내용이 오기 전까지는 말하지 않는다
   const DEFAULT_MINUTES = 15; // 목적지가 없을 때의 보통 길이
+  const SHORT_UNDER_MINUTES = 10; // 이보다 짧은 시간에는 짧은 판이 있는 수업을 짧은 판으로 듣는다
   const CHARS_PER_SECOND = 4.62; // 음원을 만들기 전 대사의 예상 길이
   const ARRIVAL_MARGIN_S = 20; // 도착 전에 마지막 말을 마칠 여유
   const HEARD_TO_COUNT = 0.5; // 이만큼은 들어야 한 차시를 마친 것으로 본다
   const KEEP_RECORDS = 200;
+  const RESUME_DAYS = 7; // 끝까지 못 들은 수업을 이 날수까지 「멈춘 곳부터」로 권한다
   // 도로 기준 어림값. 말로 보여 주기 위한 것이라 정밀하지 않아도 된다.
   const DISTANCE_MARKS = [
     { km: 400, text: '서울에서 부산까지' },
@@ -33,7 +35,32 @@
   }
 
   function lessonOrder(lesson) {
-    return lesson.pieces.filter(piece => !['복습', '짧은정리'].includes(piece.kind));
+    return lesson.pieces.filter(piece => !piece.short && !['복습', '짧은정리'].includes(piece.kind));
+  }
+
+  // 짧은 판(판 8)은 따로 짠 맛보기 수업이다. 질문으로 시작해 개념 하나만 다루고 답과 숙제로 맺는다.
+  function shortOrder(lesson) {
+    return lesson.pieces.filter(piece => piece.short);
+  }
+
+  function orderFits(order, minutes) {
+    return order.length > 0 && totalSeconds(order.filter(piece => piece.must)) <= minutes * 60 - ARRIVAL_MARGIN_S;
+  }
+
+  // 10분보다 짧거나 원래 판의 필수 조각이 들어가지 않으면 짧은 판으로 듣는다.
+  function orderFor(lesson, minutes) {
+    const short = shortOrder(lesson);
+    const useShort = (minutes < SHORT_UNDER_MINUTES || !orderFits(lessonOrder(lesson), minutes)) && orderFits(short, minutes);
+    return useShort ? short : lessonOrder(lesson);
+  }
+
+  // 지금 틀고 있는 판의 조각 차례. 짧은 판을 듣다가 도착이 늦어져도 원래 판으로 바꾸지 않는다.
+  function playingOrder(lesson, pieces) {
+    return pieces.some(piece => piece.short) ? shortOrder(lesson) : lessonOrder(lesson);
+  }
+
+  function isShort(pieces) {
+    return pieces.some(piece => piece.short);
   }
 
   function required(lesson) {
@@ -49,7 +76,7 @@
   }
 
   function fits(lesson, minutes) {
-    return totalSeconds(required(lesson)) <= minutes * 60 - ARRIVAL_MARGIN_S;
+    return orderFits(lessonOrder(lesson), minutes) || orderFits(shortOrder(lesson), minutes);
   }
 
   // 필수 조각을 두고, 15분 판 조각부터 대본 순서대로 더한 뒤 30분 판 조각을 더한다.
@@ -68,12 +95,13 @@
   }
 
   function assemble(lesson, minutes) {
-    return pick(lessonOrder(lesson), minutes * 60);
+    return pick(orderFor(lesson, minutes), minutes * 60);
   }
 
   // 남은 시간에 들어가는 수업을, 그 시간을 많이 채우는 순서로 고른다. 들은 수업은 뒤로 보낸다.
+  // 짧은 판만 들은 수업은 맛보기를 한 것이라 뒤로 보내지 않는다. 다음 긴 이동에서 원래 판으로 이어 듣게 한다.
   function recommend(lessons, minutes, records) {
-    const heard = new Set((records || []).map(record => record.lesson));
+    const heard = new Set((records || []).filter(record => !record.short).map(record => record.lesson));
     return lessons
       .filter(lesson => fits(lesson, minutes))
       .map(lesson => ({ lesson, seconds: totalSeconds(assemble(lesson, minutes)) }))
@@ -107,7 +135,7 @@
   function fitRemaining(pieces, index, remainingSeconds, lesson) {
     if (isClosing(pieces[index])) return { pieces, wrapped: false }; // 정리는 끝까지 말한다
     const done = pieces.slice(0, index + 1);
-    const order = lessonOrder(lesson);
+    const order = playingOrder(lesson, pieces);
     const ahead = order.slice(order.indexOf(pieces[index]) + 1);
     const budget = remainingSeconds - ARRIVAL_MARGIN_S;
     if (totalSeconds(ahead.filter(piece => piece.must)) <= budget) {
@@ -181,7 +209,7 @@
   function fitTrip(pieces, index, remainingSeconds, lesson, trip) {
     const now = pieces[index];
     const own = pieces.filter(piece => !isBreak(piece));
-    const order = lessonOrder(lesson);
+    const order = playingOrder(lesson, own);
     const ahead = isBreak(now) || isClosing(now) ? [] : order.slice(order.indexOf(now) + 1);
     const must = totalSeconds(ahead.filter(piece => piece.must));
     const count = laterCount(trip, must, totalSeconds(own.slice(index + 1)), remainingSeconds - ARRIVAL_MARGIN_S);
@@ -190,6 +218,50 @@
     const held = trip.later.slice(0, count).reduce((sum, item) => sum + BREAK_MINUTES * 60 + totalSeconds(assemble(item, trip.minutes)), 0);
     const room = count ? Math.max(remainingSeconds - held, must + ARRIVAL_MARGIN_S) : remainingSeconds;
     return { pieces: withBreak(fitRemaining(own, index, room, lesson).pieces, kept), count };
+  }
+
+  // 끝까지 못 들은 수업은 마지막으로 들은 조각의 다음 조각부터 이어 듣게 기억한다.
+  // 들은 판(짧은 판인지 원래 판인지)은 바꾸지 않는다. 들은 조각은 마친 수업을 셀 때 함께 센다.
+  function resumePoint(lesson, heard, ymd) {
+    const order = playingOrder(lesson, heard);
+    const own = heard.filter(piece => order.includes(piece));
+    const last = Math.max(-1, ...own.map(piece => order.indexOf(piece)));
+    const next = order[last + 1];
+    if (last < 0 || !next) return null;
+    return { lesson: lesson.id, from: next.id, heard: own.map(piece => piece.id), short: isShort(heard), ymd };
+  }
+
+  // 날짜는 화면이 쓰는 20261102와 2026-11-02 꼴을 모두 받는다.
+  function dayNumber(ymd) {
+    const digits = String(ymd).replace(/-/g, '');
+    return Date.UTC(Number(digits.slice(0, 4)), Number(digits.slice(4, 6)) - 1, Number(digits.slice(6, 8))) / 86400000;
+  }
+
+  function daysBetween(from, to) {
+    return dayNumber(to) - dayNumber(from);
+  }
+
+  function resumeFresh(resume, ymd) {
+    return !!resume && daysBetween(resume.ymd, ymd) <= RESUME_DAYS;
+  }
+
+  function resumeOrder(lesson, resume) {
+    const order = resume.short ? shortOrder(lesson) : lessonOrder(lesson);
+    const start = order.findIndex(piece => piece.id === resume.from);
+    return start < 0 ? [] : order.slice(start);
+  }
+
+  function resumeFits(lesson, resume, minutes) {
+    return orderFits(resumeOrder(lesson, resume), minutes);
+  }
+
+  // 멈춘 조각부터 대본 차례대로, 남은 시간에 들어가는 만큼 고른다.
+  function resumePlan(lesson, resume, minutes) {
+    return pick(resumeOrder(lesson, resume), minutes * 60);
+  }
+
+  function resumeHeard(lesson, resume) {
+    return lesson.pieces.filter(piece => resume.heard.includes(piece.id));
   }
 
   // 과목 칩은 자료에서 만든다. 수업이 늘면 칩도 늘어난다.
@@ -225,19 +297,22 @@
   }
 
   function emptyProgress() {
-    return { ieum: 0, km: {}, records: [], homework: null, homeworkNext: [] };
+    return { ieum: 0, km: {}, records: [], homework: null, homeworkNext: [], resume: null };
   }
 
   function normalize(progress) {
     return { ...emptyProgress(), ...(progress || {}) };
   }
 
-  function finishLesson(progress, lesson, ymd, finished, km, answers) {
+  function finishLesson(progress, lesson, ymd, finished, km, answers, short) {
     const next = normalize(progress);
     const heldKm = Math.max(0, km || 0);
     next.km = { ...next.km, [monthOf(ymd)]: (next.km[monthOf(ymd)] || 0) + (finished ? heldKm : 0) };
-    next.records = [...next.records, { lesson: lesson.id, title: lesson.title, ymd, finished, answers: answers || [] }].slice(-KEEP_RECORDS);
+    const record = { lesson: lesson.id, title: lesson.title, ymd, finished, answers: answers || [] };
+    if (short) record.short = true; // 짧은 판으로 들었다는 표시. 추천에서 이 수업을 뒤로 보내지 않는다
+    next.records = [...next.records, record].slice(-KEEP_RECORDS);
     if (!finished) return next;
+    if (next.resume && next.resume.lesson === lesson.id) next.resume = null; // 이어 듣던 수업을 마쳤다
     next.ieum += 1;
     if (lesson.homework) {
       // 긴 이동에서 교시마다 숙제가 생겨도 앞 숙제를 덮지 않는다. 같은 수업의 숙제만 새것으로 바꾼다.
@@ -247,6 +322,11 @@
       next.homeworkNext = rest;
     }
     return next;
+  }
+
+  // 끝까지 못 들은 수업 하나만 기억한다. 다른 수업이 또 끊기면 그것으로 바뀐다.
+  function keepResume(progress, point) {
+    return { ...normalize(progress), resume: point };
   }
 
   function finishHomework(progress) {
@@ -272,8 +352,9 @@
   }
 
   const Lesson = {
-    TIME_CHOICES, LONG_CHOICES, LONG_TRIP_MINUTES, BREAK_MINUTES, DEFAULT_MINUTES, assemble, fits, recommend, minutesFor, plan, lessonSeconds, fitRemaining,
-    speechSeconds, totalSeconds, required, recap, shortEnd, isQuestion, isClosing, isLongTrip, periodCount, tripOrder, planTrip, nextPeriod, periods, isBreak, withBreak, fitTrip,
+    TIME_CHOICES, LONG_CHOICES, LONG_TRIP_MINUTES, BREAK_MINUTES, DEFAULT_MINUTES, SHORT_UNDER_MINUTES, assemble, fits, recommend, minutesFor, plan, lessonSeconds, fitRemaining,
+    speechSeconds, totalSeconds, required, shortOrder, isShort, recap, shortEnd, isQuestion, isClosing, isLongTrip, periodCount, tripOrder, planTrip, nextPeriod, periods, isBreak, withBreak, fitTrip,
+    resumePoint, resumeFresh, resumeFits, resumePlan, resumeHeard, keepResume, RESUME_DAYS,
     subjects, bySubject, unvoiced, countsAsFinished, monthOf, normalize, finishLesson, finishHomework, forgetAnswers, mileageLine
   };
   root.Lesson = Lesson;

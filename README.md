@@ -73,6 +73,8 @@ powershell -ExecutionPolicy Bypass -File .\tools\Build-App.ps1 -Install -DeviceC
 
 설치 과정과 점검 결과는 [`개발환경-점검.md`](개발환경-점검.md)에 있습니다.
 
+AI 없이 빌드·음원 넣기·제출용 앱 만들기를 이어 받는 방법은 [`인수인계.md`](인수인계.md)에 있습니다.
+
 ## APK 위치
 
 - 개발용: `apk/DAIT-dialogue-debug.apk` (debug 빌드, 저장소에는 올리지 않음)

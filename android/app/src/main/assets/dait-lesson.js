@@ -114,14 +114,15 @@
     return Number.isFinite(etaMinutes) ? Math.floor(etaMinutes) : DEFAULT_MINUTES;
   }
 
-  // 지난 수업이 마친 수업이고 다른 수업을 시작할 때만 앞에 복습을 붙인다.
-  // 복습도 시간 안에 넣는다. 복습 때문에 필수 조각이 빠지게 되면 복습을 뺀다.
+  // 지난 수업이 마친 수업이고 다른 수업을 시작할 때만 앞에 복습을 붙인다. 짧은 판에는 복습을 두지 않는다.
+  // 판은 고른 시간으로 정하고, 복습도 시간 안에 넣는다. 복습 때문에 필수 조각이 빠지게 되면 복습을 뺀다.
   function plan(lesson, lessons, minutes, records) {
+    const order = orderFor(lesson, minutes);
     const last = (records || []).filter(record => record.finished).slice(-1)[0];
     const before = last && last.lesson !== lesson.id ? lessons.find(item => item.id === last.lesson) : null;
-    const line = before ? recap(before) : null;
+    const line = before && !isShort(order) ? recap(before) : null;
     const left = line ? minutes - pieceSeconds(line) / 60 : minutes;
-    return line && fits(lesson, left) ? [line, ...assemble(lesson, left)] : assemble(lesson, minutes);
+    return line && orderFits(order, left) ? [line, ...pick(order, left * 60)] : pick(order, minutes * 60);
   }
 
   // 복습은 지난 수업의 말이므로 이번 수업을 들은 시간에 넣지 않는다.

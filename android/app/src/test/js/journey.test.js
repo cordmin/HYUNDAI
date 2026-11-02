@@ -939,6 +939,42 @@ test('음원 없는 조각과 발문 뒤 생각할 틈도 멈춘 만큼 기다�
   page(`goHome();`);
 });
 
+test('일시정지와 거의 같이 조각이 끝나면 이어 듣기를 누를 때까지 다음 조각으로 넘어가지 않는다', () => {
+  page(`localStorage.values.clear(); demoMinutes = null; lessonMinutes = 15;
+    DAIT_LESSONS.forEach(item => item.pieces.forEach(line => { line.voiced = true; }));
+    window.AndroidBridge = { micState: () => 'none', speak() {}, stopSpeech() {}, holdSpeech() {}, proceedSpeech() {}, setJourneyActive() {} };
+    startLesson('prime'); pauseLesson();`);
+  hearLesson('ended');
+  assert.strictEqual(page(`lessonRun.paused`), true);
+  assert.strictEqual(page(`lessonRun.index`), 0);
+  page(`resumeLesson(); lessonRun.wait.then();`); // 시험에서는 타이머가 돌지 않아 기다린 뒤의 일을 바로 부른다
+  assert.strictEqual(page(`lessonRun.index`), 1);
+  page(`goHome(); delete window.AndroidBridge; DAIT_LESSONS.forEach(item => item.pieces.forEach(line => { delete line.voiced; }));`);
+});
+
+test('멈춰 둔 채 도착하면 수업을 닫고 멈춘 곳을 남긴다', () => {
+  page(`localStorage.values.clear(); demoMinutes = null; lessonMinutes = 15; startLesson('prime');`);
+  for (let i = 0; i < 3; i++) hearLesson('ended');
+  page(`pauseLesson(); finishOnArrival();`);
+  assert.strictEqual(page(`lessonRun === null || lessonRun.done`), true);
+  assert.strictEqual(page(`lessonProgress().resume.lesson`), 'prime');
+  page(`goHome();`);
+});
+
+test('멈춘 곳부터 잇다가 새로 들은 조각 없이 닫으면 기록과 멈춘 날짜를 그대로 둔다', () => {
+  page(`localStorage.values.clear(); demoMinutes = null; lessonMinutes = 15; startLesson('prime');`);
+  for (let i = 0; i < 3; i++) hearLesson('ended');
+  page(`goHome(); var yesterday = toYmd(new Date(Date.now() - 86400000));
+    writeStored(LESSON_KEY, { ...lessonProgress(), resume: { ...lessonProgress().resume, ymd: yesterday } });`);
+  const records = page(`lessonProgress().records.length`);
+  page(`startLesson('prime', true);`);
+  assert.strictEqual(page(`lessonRun.heard.length`), 3);
+  page(`goHome();`);
+  assert.strictEqual(page(`lessonProgress().records.length`), records);
+  assert.strictEqual(page(`lessonProgress().resume.ymd`), page(`yesterday`));
+  page(`localStorage.values.clear();`);
+});
+
 test('이전은 조각을 조금 들었으면 그 조각을, 막 시작했으면 앞 조각을 다시 말한다', () => {
   page(`localStorage.values.clear(); demoMinutes = null; lessonMinutes = 15; startLesson('prime'); nextLessonPiece(); nextLessonPiece();`);
   assert.strictEqual(page(`lessonRun.index`), 2);

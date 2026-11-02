@@ -1598,7 +1598,7 @@
       if (currentMode === 'lesson') {
         hasArrived = true;
         if (lessonRun.done) closeAfterArrival();
-        else if (lessonRun.stopped) endLesson();
+        else if (lessonRun.stopped || lessonRun.paused) endLesson(); // 멈춰 둔 채 도착하면 이어 말하지 않고 기록을 남긴다
         else fitLessonToEta(0);
         return;
       }
@@ -1855,7 +1855,7 @@
         : Lesson.plan(trip.lesson, DAIT_LESSONS, trip.minutes, lessonProgress().records);
       const run = {
         lesson: trip.lesson, trip, pieces: Lesson.withBreak(pieces, trip), plannedSeconds: Lesson.lessonSeconds([...before, ...pieces]), short: Lesson.isShort([...before, ...pieces]),
-        index: 0, heard: before, answers: [], meters: 0, lastMeters: null, lastMetersAt: 0,
+        index: 0, heard: before, heardBefore: before.length, answers: [], meters: 0, lastMeters: null, lastMetersAt: 0,
         reachedEnd: false, done: false, finished: false, stopped: false, saved: false
       };
       lessonRun = run;
@@ -1933,7 +1933,7 @@
       const away = Date.now() - run.pausedAt;
       run.paused = false;
       run.pieceStartedAt += away;
-      fitLessonToEta(remainMinutes());
+      fitLessonToEta(hasArrived ? 0 : remainMinutes());
       if (run.done) return;
       if (away > LESSON_RESUME_MS) { playLessonPiece(); return; }
       if (run.wait) lessonWait(run.wait.left, run.wait.then);
@@ -1949,7 +1949,7 @@
       const listened = (run.paused ? run.pausedAt : Date.now()) - run.pieceStartedAt;
       if (listened < LESSON_BACK_MS && run.index > 0) run.index--;
       playLessonPiece();
-      fitLessonToEta(remainMinutes()); // 다시 듣는 만큼 뒤쪽 선택 조각을 뺀다
+      fitLessonToEta(hasArrived ? 0 : remainMinutes()); // 다시 듣는 만큼 뒤쪽 선택 조각을 뺀다
     }
 
     // 수업 화면 오른쪽 버튼: 쉬는 시간이면 다음 교시, 멈췄으면 잇기, 아니면 일시정지.
@@ -1981,6 +1981,7 @@
     function onLessonSpeech(info) {
       const run = lessonRun;
       if (!run || run.done || info.event === 'listening') return;
+      if (run.paused && info.event !== 'stopped') { run.wait = { then: () => onLessonSpeech(info), left: 0 }; return; } // 일시정지와 거의 같이 조각이 끝났으면 이어 듣기를 누른 뒤에 넘어간다
       const piece = run.pieces[run.index];
       if (Lesson.isBreak(piece) && !isDrivingMode) { endLesson(); return; } // 쉬는 시간이 끝났을 때 주차 중이면 사람 없는 차에서 말을 시작하지 않는다
       if (info.event === 'stopped') {
@@ -2045,7 +2046,7 @@
       run.saved = true;
       run.finished = Lesson.countsAsFinished(run);
       if (run.finished) run.trip.earned++;
-      if (run.heard.length > 0) {
+      if (run.heard.length > run.heardBefore) { // 멈춘 곳부터 잇다가 새로 들은 조각이 없으면 기록도 멈춘 날짜도 그대로 둔다
         const ymd = toYmd(new Date());
         const progress = Lesson.finishLesson(lessonProgress(), run.lesson, ymd, run.finished, run.meters / 1000, run.answers, run.short);
         const point = run.finished ? null : Lesson.resumePoint(run.lesson, run.heard, ymd); // 다음 이동에서 멈춘 곳부터 잇게 한다

@@ -78,6 +78,15 @@ test('짧은 판을 듣다가 도착이 바뀌어도 짧은 판 안에서만 줄
   assert.deepStrictEqual(ids(Lesson.fitRemaining(pieces, 0, 30, withShort).pieces), ['m1', 's1']);
 });
 
+test('복습을 붙여도 판은 고른 시간으로 정하고, 짧은 판에는 복습을 두지 않는다', () => {
+  const prime = lessons.find(item => item.id === 'prime');
+  const done = [{ lesson: 'sky', finished: true }];
+  assert.ok(!Lesson.isShort(Lesson.plan(prime, lessons, 10, done)));
+  const short = Lesson.plan(prime, lessons, 8, done);
+  assert.ok(Lesson.isShort(short));
+  assert.ok(short.every(line => line.kind !== '복습'));
+});
+
 test('짧은 판만 들은 수업은 추천에서 뒤로 보내지 않는다', () => {
   const other = { ...lesson, id: 'o', pieces: withShort.pieces.map(item => ({ ...item })) };
   const shortDone = Lesson.finishLesson(null, withShort, '2026-11-02', true, 0, [], true);

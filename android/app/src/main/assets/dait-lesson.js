@@ -8,6 +8,7 @@
   const BREAK_MINUTES = 10; // 교시 사이 쉬는 시간. 쉬는 시간 내용이 오기 전까지는 말하지 않는다
   const DEFAULT_MINUTES = 15; // 목적지가 없을 때의 보통 길이
   const SHORT_UNDER_MINUTES = 10; // 이보다 짧은 시간에는 짧은 판이 있는 수업을 짧은 판으로 듣는다
+  const MIN_LESSON_MINUTES = 5; // 이보다 짧은 이동에는 수업을 권하지 않는다. 필수 조각이 들어가더라도 그렇다
   const CHARS_PER_SECOND = 4.62; // 음원을 만들기 전 대사의 예상 길이
   const ARRIVAL_MARGIN_S = 20; // 도착 전에 마지막 말을 마칠 여유
   const HEARD_TO_COUNT = 0.5; // 이만큼은 들어야 한 차시를 마친 것으로 본다
@@ -102,6 +103,7 @@
   // 짧은 판만 들은 수업은 맛보기를 한 것이라 뒤로 보내지 않는다. 다음 긴 이동에서 원래 판으로 이어 듣게 한다.
   function recommend(lessons, minutes, records) {
     const heard = new Set((records || []).filter(record => !record.short).map(record => record.lesson));
+    if (minutes < MIN_LESSON_MINUTES) return [];
     return lessons
       .filter(lesson => fits(lesson, minutes))
       .map(lesson => ({ lesson, seconds: totalSeconds(assemble(lesson, minutes)) }))

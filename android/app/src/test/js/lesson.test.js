@@ -99,7 +99,7 @@ test('짧은 판만 들은 수업은 추천에서 뒤로 보내지 않는다', (
 
 test('소수는 5분부터 짧은 판으로 들을 수 있고, 8분 안에 끝난다', () => {
   const prime = lessons.find(item => item.id === 'prime');
-  assert.ok(!Lesson.fits(prime, 4));
+  assert.deepStrictEqual(Lesson.recommend(lessons, 4, []), []); // 실제 음원으로는 필수 조각이 4분에 들어가지만 권하지 않는다
   const five = Lesson.assemble(prime, 5);
   assert.ok(five.every(item => item.short) && Lesson.isClosing(five[five.length - 1]));
   const eight = Lesson.assemble(prime, 8);

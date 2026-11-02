@@ -67,13 +67,14 @@ def main():
         writer = csv.writer(file)
         writer.writerow(['음원', '초'])
         writer.writerows((f'lesson/{clip}', meta['seconds']) for clip, meta in ready)
-    for name in ['동백꽃-AI검수안.csv', '소수-AI검수안.csv', '검수목록.csv', '수업-대본-AI검수안.csv', '동백꽃-AI검수결과.md', '소수-AI검수결과.md', '제작-현황.md']:
+    for name in ['동백꽃-AI검수안.csv', '소수-AI검수안.csv', '소수-짧은판-AI검수안.csv', '소수-짧은판-AI검수결과.md', '검수목록.csv', '수업-대본-AI검수안.csv', '동백꽃-AI검수결과.md', '소수-AI검수결과.md', '제작-현황.md']:
         shutil.copy2(tts.HERE / name, package / name)
     (package / '인계.md').write_text('''# 관리자 인계
 
-사용자 위임에 따라 AI가 검수·제작한 동백꽃 36개와 소수 20개다. 사람 교사 검수·사람 청취로 표시하지 않는다.
+사용자 위임에 따라 AI가 검수·제작한 동백꽃 36개와 소수 31개(원래 판 20개·짧은 판 11개)다. 사람 교사 검수·사람 청취로 표시하지 않는다.
 대사와 파일 해시, AI 음성 검사 결과가 서로 일치하는 최신 파일만 담았다.
 원본 대본과 이 폴더의 검수안을 비교해 반영 여부를 정한다. 원본과 다른 대사는 수정안을 반영하거나 해당 음원을 다시 제작해야 한다.
+소수-AI검수안.csv의 20행과 소수-짧은판-AI검수안.csv의 11행을 함께 반영한다. 앱의 최신 판 8 처리 코드도 필요하다.
 m4a만 android/app/src/main/assets/voices/lesson/에 복사하고 tools/Measure-Lesson-Voice.ps1을 실행한다.
 이 폴더의 음원길이.csv는 확인 자료다. 앱의 길이 파일을 덮어쓰지 말고 측정 스크립트가 기존 전체 음원을 포함해 다시 만들게 한다.
 실제 앱의 재생·발문 답 기록·길 안내 양보를 에뮬레이터에서 확인한다.

@@ -1,0 +1,10 @@
+{
+  "id": "prime_m4",
+  "model": "gemini-3.8-flash-tts",
+  "voice": "Nika",
+  "text": "유클리드의 원론에 담긴 생각을 현대식으로 풀어 보겠습니다. 먼저 소수가 몇 개뿐이라고 가정합니다. 그렇다면 세상의 모든 소수를 적은 유한한 목록을 만들 수 있겠지요. 이제 목록의 소수를 모두 곱한 뒤 일을 더해 새 수를 만듭니다. 이 수 자체가 소수일 수도 있고 합성수일 수도 있습니다. 증명에 필요한 것은 이 수가 언제나 소수라는 주장이 아니라, 이 목록 밖에 소수가 더 있다는 사실입니다.",
+  "fingerprint": "d6ae3ff6b1cd5b9a11de936ec433964b9752642373c8075d73a1c846a7fe15e0",
+  "sha256": "98f11db139186fed1eb46b903af27b78d716087be5b8d0e302c79c0b6ae5ad93",
+  "seconds": 33.6,
+  "review": "generated_not_listening_reviewed"
+}

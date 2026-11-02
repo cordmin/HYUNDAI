@@ -1,0 +1,10 @@
+{
+  "transcript": "여기서 많은 사람이 착각합니다. 소수를 차례로 곱하고 일을 더하면 늘 소수가 나온다고요. 그렇지는 않습니다. 이부터 십삼까지 곱하고 일을 더한 삼만 삼십일은 오십구 곱하기 오백구입니다. 그래도 증명은 무너지지 않습니다. 오십구와 오백구 모두 목록에 없던 새 소수이니까요. 증명이 말하는 것은 새 수가 소수라는 것이 아니라 목록 밖에 소수가 있다는 것입니다.",
+  "issues": [],
+  "clip": "prime_m8",
+  "sha256": "be6c57308c7a6baddfb5b2d739529749f68da7a90a58244a126b3becb4ccc90b",
+  "model": "gemini-3.8-flash",
+  "similarity": 1.0,
+  "passed": true,
+  "review_type": "AI audio review; not human listening"
+}

@@ -9,7 +9,7 @@
 |---|---|---|---|
 | L1 | 동백꽃 대본 검수 | 11/5 | 36개 검토, 대사 26개 수정. AI 검수 결과와 CSV 작성 |
 | L2 | 동백꽃 36개 음원 | 11/8 | AI 검수안으로 제작·음성 검사. S2 관리자 원본 반영은 별도 |
-| L3 | 소수 20개 음원 | 11/9 | 제작용 AI 검수: 20개 검토, 대사 15개 수정. S1 관리자 상태는 변경하지 않음 |
+| L3 | 소수 31개 음원 | 11/9 | 제작용 AI 검수: 20개 검토, 대사 15개 수정. S1 관리자 상태는 변경하지 않음 |
 | L4 | AI 수업 음원 | 11/10 | T2·S4의 확정 대본과 음원 이름 대기 |
 | L5 | 시연 영상용 음원 | 11/11 | S3에서 각본 1·2 중 선택한 확정 각본 대기 |
 
@@ -20,7 +20,7 @@
 
 - 동백꽃-AI검수결과.md, 소수-AI검수결과.md: 조각별 판단과 근거.
 - 동백꽃-AI검수안.csv, 소수-AI검수안.csv: 원본과 같은 수업 CSV 형식의 수정안.
-- 수업-대본-AI검수안.csv: 동백꽃 36개, 소수 20개의 제작 목록. sky·price 제외.
+- 수업-대본-AI검수안.csv: 동백꽃 36개, 소수 31개의 제작 목록. sky·price 제외.
 - 검수목록.csv: 대사 해시, 대본 검수 종류, 음성 검사 상태. 실명·계정·키를 적지 않는다.
 - generated/: m4a, 생성 정보와 AI 음성 검사 JSON. 중간 파일은 Git에서 제외한다.
 - 동백꽃-검토용.md: 수정 전 사본으로, 음원 제작에는 쓰지 않는다.
@@ -35,7 +35,7 @@ python team/a/voice/lesson_tts.py status --script team/a/voice/수업-대본-AI�
 python team/a/voice/test_lesson_tts.py
 # GEMINI_API_KEY를 해당 터미널에 설정한 뒤 실행
 python team/a/voice/lesson_tts.py generate --script team/a/voice/수업-대본-AI검수안.csv --lesson dongbaek --limit 36
-python team/a/voice/lesson_tts.py generate --script team/a/voice/수업-대본-AI검수안.csv --lesson prime --limit 20
+python team/a/voice/lesson_tts.py generate --script team/a/voice/수업-대본-AI검수안.csv --lesson prime --limit 31
 python team/a/voice/check_audio.py
 ```
 
@@ -64,3 +64,10 @@ tools/Measure-Lesson-Voice.ps1로 실제 길이를 측정하고 앱용 파일을
 - [현황 보고서](https://claude.ai/artifact/VukCK7V8JenP7ux32WNeyu#37a495d5-976b): Chrome에서 본문 확인. 자동 시험 161개·개발 빌드 통과는 보고서 작성자 기록이다.
 - [Gemini TTS](https://ai.google.dev/gemini-api/docs/speech-generation), [음성 이해](https://ai.google.dev/gemini-api/docs/audio): Interactions API, 모델과 스타일, 음원 전사 방식.
 - 작품·수학의 출처는 각각의 AI 검수 결과 문서에 있다.
+
+## 2026-11-02 저녁 추가 작업
+
+team-base dbb3282에 소수 짧은 판(판 8)의 prime_m1~prime_m11 11개가 추가되어 별도 검수·제작한다.
+기존 56개에 11개를 더한 전체 대상은 67개이며, 새 검수안은 소수-짧은판-AI검수안.csv와 검수 결과 문서에 있다.
+소수 원래 판 20개 CSV와 짧은 판 11개 CSV를 함께 반영해야 한다. 앱의 최신 판 8 처리 코드도 필요하다.
+현재 작업 폴더에 있던 앱·도구 파일 삭제 변경은 이번 작업에서 수정하거나 커밋하지 않는다.

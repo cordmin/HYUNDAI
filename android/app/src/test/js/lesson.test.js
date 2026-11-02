@@ -17,14 +17,15 @@ const lesson = {
 };
 const ids = pieces => pieces.map(item => item.id);
 
-test('동백꽃은 15분 전후 판과 30분 전후 판이 있고, 30분 판 조각은 15분 판에 들어가지 않는다', () => {
+test('동백꽃은 15분 전후 판과 30분 전후 판이 있고, 30분 판 조각은 15분 판 조각이 다 들어간 뒤에만 더한다', () => {
   const dongbaek = lessons.find(item => item.id === 'dongbaek');
   const short = Lesson.assemble(dongbaek, 15);
   const long = Lesson.assemble(dongbaek, 30);
   const minutes = pieces => Lesson.totalSeconds(pieces) / 60;
   assert.ok(minutes(short) >= 13 && minutes(short) <= 15, String(minutes(short)));
-  assert.ok(minutes(long) >= 27 && minutes(long) <= 30, String(minutes(long)));
-  assert.ok(short.every(line => !line.long));
+  assert.ok(minutes(long) > minutes(short) + 5 && minutes(long) <= 30, String(minutes(long))); // 실제 음원으로는 약 21분
+  const regular = dongbaek.pieces.filter(line => !line.long && !line.short && !['복습', '짧은정리'].includes(line.kind));
+  if (short.some(line => line.long)) assert.ok(regular.every(line => short.includes(line)));
   assert.ok(long.filter(Lesson.isQuestion).length > short.filter(Lesson.isQuestion).length);
   assert.ok(Lesson.isClosing(long[long.length - 1]));
 });

@@ -1128,10 +1128,11 @@ test('과목 칩은 자료에서 만들고, 고른 시간에 들어가지 않는
   assert.ok(stageHtml().includes('왜 하늘은'));
   assert.ok(!stageHtml().includes('동백꽃과 점순이'));
   assert.ok(stageHtml().includes('aria-pressed="true" data-subject="과학"'));
-  page(`goHome(); demoMinutes = 9; openLessons();`); // 동백꽃 필수 조각은 9분에 들어가지 않는다
-  assert.ok(!stageHtml().includes('>국어</button>'));
-  assert.ok(stageHtml().includes('>과학</button>'));
-  page(`pickLessonSubject('과학'); demoMinutes = 8; pickLessonTime(8);`); // 8분에는 수학만 들어간다
+  page(`goHome(); demoMinutes = 8; openLessons();`); // 과학과 사회 수업은 8분에 들어가지 않는다
+  assert.ok(!stageHtml().includes('>과학</button>'));
+  assert.ok(!stageHtml().includes('>사회</button>'));
+  assert.ok(stageHtml().includes('>수학</button>'));
+  page(`goHome(); demoMinutes = 9; openLessons(); pickLessonSubject('과학'); demoMinutes = 8; pickLessonTime(8);`); // 고른 과목이 시간에 들어가지 않으면 전체로 돌아간다
   assert.ok(!stageHtml().includes('>과학</button>'));
   assert.strictEqual(page(`lessonSubject`), '');
   assert.ok(stageHtml().includes('소수는 어디까지'));

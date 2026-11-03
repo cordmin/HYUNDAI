@@ -1,0 +1,14 @@
+{
+  "duration": 4.52,
+  "sample_rate": 24000,
+  "peak": 18871,
+  "rms": 2955.01,
+  "sha256": "270fdf72c2463f2b424774272be435113e91c185fdbdd23ccc1778c48892578a",
+  "id": "demo_05",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "주행 중에는 문장 하나와 큰 버튼 둘만 보여 줍니다.",
+  "fingerprint": "411739beb7350455e96f7ca427c6467f0c42e6a6e1f2c83cd306c43d543184f6",
+  "generated_at": "2026-11-03T11:04:20+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 5.68,
+  "sample_rate": 24000,
+  "peak": 17984,
+  "rms": 2896.96,
+  "sha256": "38c8d033dc24ac2009cc486820fb088cc7c269f5e202a83ac753bb64e571af6c",
+  "id": "demo_01",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "매일 차에서 보내는 시간, 이 시간이 한 차시가 된다면 어떨까요?",
+  "fingerprint": "25050bffa1fec96e0583a76b978e678c6cc2c0d7e13ddc8ec824422e47393528",
+  "generated_at": "2026-11-03T11:03:56+0900",
+  "review": "generated_not_listening_reviewed"
+}

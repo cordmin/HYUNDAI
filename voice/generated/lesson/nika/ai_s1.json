@@ -1,0 +1,14 @@
+{
+  "duration": 19.08,
+  "sample_rate": 24000,
+  "peak": 24706,
+  "rms": 2809.16,
+  "sha256": "9b4f7df5c4f4e08bfe102ab41cf1c99b39e4db715539af7d79019a64531e1c68",
+  "id": "ai_s1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "곧 도착이네요. 오늘의 핵심은 인공지능의 그럴듯한 답도 확인이 필요하다는 것입니다. 어떤 자료로 배웠는지, 새로운 상황에서 어떻게 시험했는지 함께 살펴요. 남은 이야기는 다음 이동에서 이어 가겠습니다. 지금은 도착에 집중해 주세요.",
+  "fingerprint": "d079abd719641b655f1db294403bd12a07d29ca8426b037a280fe7c8a1a5f05f",
+  "generated_at": "2026-11-03T10:44:00+0900",
+  "review": "generated_not_listening_reviewed"
+}

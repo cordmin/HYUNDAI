@@ -1,0 +1,14 @@
+{
+  "duration": 4.32,
+  "sample_rate": 24000,
+  "peak": 19129,
+  "rms": 3079.69,
+  "sha256": "400f2105e9642275a754a9730ce0e0f417ff1a9b881c4b349dc292059ce4a7af",
+  "id": "demo_10",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "수업을 마치면 숙제와 남긴 답을 확인할 수 있습니다.",
+  "fingerprint": "f7b297f886923e8eb40d55e7c08f253a39b0cdf5ad40eb43b81123d627e560e0",
+  "generated_at": "2026-11-03T11:04:51+0900",
+  "review": "generated_not_listening_reviewed"
+}

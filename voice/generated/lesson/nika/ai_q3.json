@@ -1,0 +1,14 @@
+{
+  "duration": 24.4,
+  "sample_rate": 24000,
+  "peak": 18306,
+  "rms": 2764.74,
+  "sha256": "d977e901498f55abc222410665ccfd3aad109deab89b3eea27e50344a8149ffe",
+  "id": "ai_q3",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "스팸을 놓치는 실수와 정상 메시지를 스팸으로 지우는 실수는 다릅니다. 중요한 연락을 받는 상황이라면 어느 실수를 더 조심해야 할까요? 정답을 하나로 정하는 질문은 아닙니다. 실제 사람에게 어떤 불편이 생길지 생각해 보는 질문입니다. 개인적인 메시지 내용은 말하지 않아도 됩니다.",
+  "fingerprint": "b9bff90c0933da77003a4579710a73c20fc0cbd36c59bd73a1803e196d9fd7b6",
+  "generated_at": "2026-11-03T10:42:34+0900",
+  "review": "generated_not_listening_reviewed"
+}

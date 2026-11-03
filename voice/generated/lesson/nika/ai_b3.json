@@ -1,0 +1,14 @@
+{
+  "duration": 33.16,
+  "sample_rate": 24000,
+  "peak": 21123,
+  "rms": 2504.96,
+  "sha256": "4a618f9e4ba78ad921dcf55eaa7d76350cef5ad190304ea07ff893cdebfbe96c",
+  "id": "ai_b3",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "사진은 판단할 재료인 입력이고, 사과라는 이름표는 학습할 때 비교하는 정답입니다. 실제로 새 사진을 분류할 때는 정답 이름표가 함께 주어지지 않습니다. 모델이 사진을 받아 결과를 내놓아야 하지요. 학습할 때 본 사진을 잘 맞히는 것만으로는 충분하지 않은 이유가 여기에 있습니다. 우리가 알고 싶은 것은 이미 답을 본 사진의 성적이 아니라, 처음 만나는 사진에서도 쓸모 있는 판단을 하느냐입니다.",
+  "fingerprint": "7e57a60b85a4e7d488e1aae7e3c8feb6dc677af69c51706fd9ae174d44d2db6f",
+  "generated_at": "2026-11-03T10:41:36+0900",
+  "review": "generated_not_listening_reviewed"
+}

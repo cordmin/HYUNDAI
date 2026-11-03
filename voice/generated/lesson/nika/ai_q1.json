@@ -1,0 +1,14 @@
+{
+  "duration": 16.88,
+  "sample_rate": 24000,
+  "peak": 20071,
+  "rms": 2664.32,
+  "sha256": "ec5e34f38c00f42136e82acbcc10659a31a145cfe55666c847f8b2d8afbea50d",
+  "id": "ai_q1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "잠깐 정리해 볼까요? 과일 분류기에서 사진과 사과라는 이름표는 각각 어떤 역할일까요? 말하고 싶지 않으면 답하지 않아도 됩니다. 운전 중이라면 생각을 따라가느라 애쓰지 말고 다음 설명을 편하게 들어 주세요.",
+  "fingerprint": "ce2d984f807b3dc2e0233dafcddef3e52d8ddb6c2ba35cdf87d5a6f4f18b998c",
+  "generated_at": "2026-11-03T10:41:25+0900",
+  "review": "generated_not_listening_reviewed"
+}

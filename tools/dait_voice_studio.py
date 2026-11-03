@@ -62,14 +62,14 @@ def fingerprint(data, line, voice):
     return hashlib.sha256(json.dumps(content, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
 
 
-def audio_info(path):
+def audio_info(path, max_seconds=45):
     with wave.open(str(path), "rb") as wav:
         if wav.getcomptype() != "NONE" or wav.getsampwidth() != 2 or wav.getnchannels() != 1:
             raise ValueError("Expected mono PCM16 WAV")
         frames = wav.getnframes()
         rate = wav.getframerate()
         pcm = wav.readframes(frames)
-    if len(pcm) != frames * 2 or not 0.2 <= frames / rate <= 45:
+    if len(pcm) != frames * 2 or not 0.2 <= frames / rate <= max_seconds:
         raise ValueError("Invalid audio length")
     samples = struct.unpack(f"<{len(pcm) // 2}h", pcm)
     peak = max(abs(v) for v in samples)
@@ -125,7 +125,7 @@ def synthesize(data, line, voice, client):
         rate = int(re.search(r"rate=(\d+)", mime).group(1)) if "rate=" in mime else 24000
         with wave.open(str(temporary), "wb") as out:
             out.setnchannels(1); out.setsampwidth(2); out.setframerate(rate); out.writeframes(payload)
-    info = audio_info(temporary)
+    info = audio_info(temporary, data.get("max_seconds", 45))
     # Keep every older take rather than silently replacing it.
     if wav.exists():
         archive = wav.parent / "takes" / line["id"]
@@ -150,9 +150,9 @@ def safe_error(error):
     return f"{type(error).__name__}" + (f" (HTTP {code})" if code else "")
 
 
-def generate(voices=VOICES, ids=None, force=False, interval=6.3):
+def generate(voices=VOICES, ids=None, force=False, interval=6.3, catalog=None):
     from google import genai
-    data = load_catalog()
+    data = catalog if catalog is not None else load_catalog()
     lines = [line for line in data["lines"] if ids is None or line["id"] in ids]
     if not lines or any(v not in VOICES for v in voices) or (ids and set(ids) - {x["id"] for x in lines}):
         raise ValueError("Unknown voice or line")

@@ -1,0 +1,14 @@
+{
+  "duration": 5.04,
+  "sample_rate": 24000,
+  "peak": 20352,
+  "rms": 3426.73,
+  "sha256": "c9831da464ef05dc17fc583c39fa4b8f3762a104fe341f0456a8c8b78121efca",
+  "id": "demo_09",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "도착이 앞당겨지면 남은 조각을 덜고 짧은 정리로 마칩니다.",
+  "fingerprint": "9986535f5f27648b44c8b34fb1e36ec386a097a88b91936761e5756c769898ee",
+  "generated_at": "2026-11-03T11:04:46+0900",
+  "review": "generated_not_listening_reviewed"
+}

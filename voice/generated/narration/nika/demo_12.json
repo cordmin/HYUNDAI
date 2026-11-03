@@ -1,0 +1,14 @@
+{
+  "duration": 1.2,
+  "sample_rate": 24000,
+  "peak": 26161,
+  "rms": 2365.15,
+  "sha256": "9f7e21f2fbb02446b31f1252eaf924e1c812e3f9d06eeed1abe74f3f48405269",
+  "id": "demo_12",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "다잇.",
+  "fingerprint": "9b673ed1061694298bcebfc347360bc2c33d909dc2f1adf008f7a3be440b9188",
+  "generated_at": "2026-11-03T11:05:04+0900",
+  "review": "generated_not_listening_reviewed"
+}

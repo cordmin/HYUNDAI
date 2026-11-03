@@ -1,0 +1,14 @@
+{
+  "duration": 19.92,
+  "sample_rate": 24000,
+  "peak": 22895,
+  "rms": 3040.2,
+  "sha256": "9c36c4292f1736c7e888e64b4669e731fc883c9ba500a6ae7bab2e57226c05fd",
+  "id": "ai_q4",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "인공지능의 답을 받은 뒤 덧붙일 질문을 하나 만들어 볼까요? 예를 들면 어떤 자료의 어느 부분으로 확인할 수 있나요라고 물을 수 있습니다. 다만 인공지능이 출처를 말해 주었다고 확인이 끝나는 것은 아니지요. 답은 말하지 않고 마음속에 남겨 두셔도 괜찮습니다.",
+  "fingerprint": "bc4c557cc8419561b4491cadf023b09163e0f4ba3cad2ab66b5f9e60a93b90ea",
+  "generated_at": "2026-11-03T10:43:23+0900",
+  "review": "generated_not_listening_reviewed"
+}

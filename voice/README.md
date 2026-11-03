@@ -57,6 +57,19 @@ Android 앱은 메뉴에서 상황을 선택하는 대신 **등교 준비 / 하�
 
 추가 생성 중 Gemini TTS의 `generate_requests_per_model_per_day`, 일 100회 한도(HTTP 429)가 확인됐다. 질문·준비 완료·미준비 응답의 6개 음원은 완성됐고, 추가 대사 8개 × 두 목소리 = 16개는 `pending-dialogue.json`에 남겼다. 이 미완성 목록은 앱에서 참조하지 않는다. 현재 흐름은 완성된 102개 중 문맥에 맞는 음원으로 끝까지 동작한다. 일일 한도 오류에는 불필요한 재시도를 중단한다.
 
+## 수업 음원 생산 (2026-11-03)
+
+현재 앱 목록은 동백꽃·소수·인공지능 세 편이다. 하늘색·물가 원고는 `lessons/`에 보관하며 앱 목록에서는 제외했다. 인공지능 작업용 대본은 `lessons/인공지능.csv`이며 교사 검수 전이다.
+
+```powershell
+python tools/generate-lesson-voices.py ai
+powershell -ExecutionPolicy Bypass -File tools/Measure-Lesson-Voice.ps1
+```
+
+이 도구는 기존 작업실의 Nika·모델·키 조회·요청 간격·잠금·재시도·해시 캐시를 재사용한다. 수업 조각은 최대 180초까지 구조·비무음 검사를 하고, 생성된 WAV와 메타데이터를 `voice/generated/lesson/nika/`에 보관한다. 현재 대본과 맞는 음원만 AAC M4A로 바꾸어 `android/app/src/main/assets/voices/lesson/`에 넣는다. 변환한 음원의 길이와 해시를 기록한다. 같은 명령을 다시 실행하면 완성된 동일 대본은 재사용하고 빠지거나 바뀐 조각만 생성한다. API 오류로 멈춰도 완성된 조각은 내보내며, 전체 조각이 준비되지 않으면 종료 코드는 실패다.
+
+API 호출 없이 기존 생성본만 내보내려면 `python tools/generate-lesson-voices.py ai --export-only`를 쓴다. 길이 측정 후 앱을 다시 빌드한다. 내용 검토·청취 판단은 사용자 결정에 따라 후속 단계로 미루며, 음원이 있다는 사실을 검수 완료로 표시하지 않는다.
+
 ## 검수
 
 생성 파일마다 WAV 구조, PCM16/mono, 길이, 무음 여부, 피크/RMS, SHA-256을 기록한다. 이 검사는 청취 검수를 대신하지 않는다. 메타데이터의 `generated_not_listening_reviewed` 표시는 발음·억양을 사람이 최종 확인하기 전이라는 뜻이다. 출품 전 작업실에서 두 목소리를 듣고 필요한 대사만 새 테이크를 만든다.

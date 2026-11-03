@@ -1,0 +1,14 @@
+{
+  "duration": 3.64,
+  "sample_rate": 24000,
+  "peak": 27490,
+  "rms": 4363.58,
+  "sha256": "280df6ac983b1a5de193e7f746e1dc02979224d317ca8e3263c98d299377e878",
+  "id": "demo_02",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "다잇은 이동 시간에 맞춰 수업을 고릅니다.",
+  "fingerprint": "e65a1fa470f90b2fc9642deadbb1924e6571bd9b0dcf366b503e8c797a9eefea",
+  "generated_at": "2026-11-03T11:04:01+0900",
+  "review": "generated_not_listening_reviewed"
+}

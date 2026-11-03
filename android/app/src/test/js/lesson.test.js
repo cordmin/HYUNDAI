@@ -81,7 +81,7 @@ test('짧은 판을 듣다가 도착이 바뀌어도 짧은 판 안에서만 줄
 
 test('복습을 붙여도 판은 고른 시간으로 정하고, 짧은 판에는 복습을 두지 않는다', () => {
   const prime = lessons.find(item => item.id === 'prime');
-  const done = [{ lesson: 'sky', finished: true }];
+  const done = [{ lesson: 'ai', finished: true }];
   assert.ok(!Lesson.isShort(Lesson.plan(prime, lessons, 10, done)));
   const short = Lesson.plan(prime, lessons, 8, done);
   assert.ok(Lesson.isShort(short));
@@ -230,9 +230,9 @@ test('40분부터 교시로 나누고, 교시마다 15분과 쉬는 시간이 �
   assert.deepStrictEqual([39, 40, 64, 65, 90].map(Lesson.periodCount), [1, 2, 2, 3, 4]);
 });
 
-test('40분은 국어, 쉬는 시간, 과학이고 합쳐도 40분을 넘지 않는다', () => {
+test('40분은 국어, 쉬는 시간, 기술이고 합쳐도 40분을 넘지 않는다', () => {
   const trip = Lesson.planTrip(Lesson.tripOrder(lessons, []), 40);
-  assert.deepStrictEqual(Lesson.periods(trip).map(item => item.subject), ['국어', '과학']);
+  assert.deepStrictEqual(Lesson.periods(trip).map(item => item.subject), ['국어', '기술']);
   assert.strictEqual(trip.minutes, 15);
   const total = Lesson.periods(trip).reduce((sum, item) => sum + Lesson.totalSeconds(Lesson.assemble(item, trip.minutes)), Lesson.BREAK_MINUTES * 60);
   assert.ok(total <= 40 * 60, String(total));
@@ -335,7 +335,7 @@ test('쉬는 시간 뒤에는 남은 시간을 남은 교시에 다시 나눠, �
 });
 
 test('과목 목록은 자료에서 겹치지 않게 만들고, 과목으로 거른다', () => {
-  assert.deepStrictEqual(Lesson.subjects(lessons), ['국어', '과학', '수학', '사회']);
+  assert.deepStrictEqual(Lesson.subjects(lessons), ['국어', '수학', '기술']);
   assert.deepStrictEqual(Lesson.bySubject(lessons, '수학').map(item => item.id), ['prime']);
   assert.strictEqual(Lesson.bySubject(lessons, '').length, lessons.length);
 });

@@ -1,0 +1,14 @@
+{
+  "duration": 21.24,
+  "sample_rate": 24000,
+  "peak": 27056,
+  "rms": 3216.95,
+  "sha256": "d3a9303e827115808d4ced4089922051231421cfb7c5e7219ea1bb7cebb3e2a4",
+  "id": "ai_q2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "흰 접시의 사과만 맞히던 분류기를 확인하려고 합니다. 흰 접시의 사과 사진을 더 보여 주는 것과, 파란 접시의 사과를 보여 주는 것 가운데 어느 쪽이 접시 색에 기대는지 알아보는 데 도움이 될까요? 둘 다 중요한 자료일 수 있지만, 지금 확인하려는 의문에 맞춰 생각해 보세요.",
+  "fingerprint": "8ec3396ba763b026cab4f81bb27fe5031ea444ae6e4404f2a4236083f09d2047",
+  "generated_at": "2026-11-03T10:41:53+0900",
+  "review": "generated_not_listening_reviewed"
+}

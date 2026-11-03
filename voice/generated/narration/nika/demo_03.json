@@ -1,0 +1,14 @@
+{
+  "duration": 5.04,
+  "sample_rate": 24000,
+  "peak": 24395,
+  "rms": 3448.92,
+  "sha256": "4f17254aabd59586bd6e1440133612d29e6a0190c39437229379c55a5382e975",
+  "id": "demo_03",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "같은 수업도 시간이 짧으면 조각을 덜어 짧게 맞춥니다.",
+  "fingerprint": "fd53d9dad1c3239a12621f65172f6149d0249840955700e31b2a2cefd5d02e4c",
+  "generated_at": "2026-11-03T11:04:08+0900",
+  "review": "generated_not_listening_reviewed"
+}

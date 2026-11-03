@@ -1,8 +1,9 @@
-param([switch]$Install, [switch]$DeviceChecks, [switch]$Release, [string]$TeamName = 'DAIT')
+param([switch]$Install, [switch]$DeviceChecks, [switch]$Release, [string]$TeamName = 'DAIT', [string]$BuildRoot)
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path $PSScriptRoot -Parent
 $env:JAVA_HOME = Join-Path $env:USERPROFILE '.jdks\jbr-21.0.11'
-$buildRoot = Join-Path $env:LOCALAPPDATA 'DAIT\build'
+if (-not $BuildRoot) { $BuildRoot = Join-Path $env:LOCALAPPDATA 'DAIT\build' }
+$buildRoot = [System.IO.Path]::GetFullPath($BuildRoot)
 # The SDK may live on another drive, so use the first folder that exists.
 $sdkHome = @($env:ANDROID_HOME, (Join-Path $env:LOCALAPPDATA 'Android\Sdk'), 'D:\Android\Sdk') |
     Where-Object { $_ -and (Test-Path -LiteralPath $_) } | Select-Object -First 1

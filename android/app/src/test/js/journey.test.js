@@ -1035,9 +1035,11 @@ test('주행 중 제안은 멈춘 수업을 먼저 권하고, 누르면 멈춘 �
   page(`document.getElementById = realGet; window.setDrivingMode(false); goHome(); demoMinutes = null; localStorage.values.clear();`);
 });
 
-test('답 기록을 켜도 마이크를 쓸 수 없으면 버튼은 짧게 두고 사정은 설명 줄에 쓴다', () => {
-  page(`localStorage.values.clear(); writeStored(LESSON_RECORD_KEY, true); openLessons();`);
-  assert.ok(stageHtml().includes('내 답 글로 남기기: 켜짐</button>'));
+test('답 기록은 설정 화면에서 켜고, 마이크를 쓸 수 없으면 버튼은 짧게 두고 사정은 설명 줄에 쓴다', () => {
+  page(`localStorage.values.clear(); openLessons();`);
+  assert.ok(!stageHtml().includes('글로 남기기')); // 수업 고르는 화면에는 두지 않는다
+  page(`writeStored(LESSON_RECORD_KEY, true); openSettings();`);
+  assert.ok(stageHtml().includes('<span>수업 답 글로 남기기</span><span class="setting-state">켜짐</span></button>'));
   assert.ok(stageHtml().includes('마이크를 쓸 수 없어 지금은 답을 남기지 못해요.'));
   page(`localStorage.values.clear(); goHome();`);
 });
@@ -1121,22 +1123,22 @@ test('주행 중 제안도 남은 시간이 40분을 넘으면 교시로 듣는�
   page(`window.setDrivingMode(false); goHome(); demoMinutes = null;`);
 });
 
-test('과목 칩은 자료에서 만들고, 고른 시간에 들어가지 않는 수업은 뺀다', () => {
+test('과목 칩은 한 과목에 수업이 여럿일 때만 두고, 고른 시간에 들어가지 않는 수업은 뺀다', () => {
   page(`localStorage.values.clear(); openLessons();`);
+  assert.ok(!stageHtml().includes('>전체</button>')); // 지금은 과목마다 수업이 하나다
+  assert.ok(stageHtml().includes('AI는 왜 자신 있게 틀릴까요?</span>')); // 카드 큰 글은 수업의 질문
+  assert.ok(/기술 · 약 \d+분 · AI는 왜 자신 있게 틀릴까/.test(stageHtml()));
+  page(`DAIT_LESSONS.push({ ...DAIT_LESSONS.find(lesson => lesson.id === 'ai'), id: 'ai2', title: '둘째 기술 수업' }); render();`);
   for (const name of ['전체', '국어', '수학', '기술']) assert.ok(stageHtml().includes(`>${name}</button>`), name);
-  assert.ok(stageHtml().includes('기술 · 교양 · 약'));
   page(`pickLessonSubject('기술');`);
-  assert.ok(stageHtml().includes('AI는 왜 자신 있게 틀릴까'));
+  assert.ok(stageHtml().includes('둘째 기술 수업'));
   assert.ok(!stageHtml().includes('동백꽃과 점순이'));
   assert.ok(stageHtml().includes('aria-pressed="true" data-subject="기술"'));
-  page(`goHome(); demoMinutes = 5; openLessons();`); // 인공지능 수업은 5분에 들어가지 않는다
-  assert.ok(!stageHtml().includes('>기술</button>'));
-  assert.ok(stageHtml().includes('소수는 어디까지')); // 한 과목뿐이면 과목 칩은 생략한다
   page(`goHome(); demoMinutes = 9; openLessons(); pickLessonSubject('기술'); demoMinutes = 5; pickLessonTime(5);`); // 고른 과목이 시간에 들어가지 않으면 전체로 돌아간다
   assert.ok(!stageHtml().includes('>기술</button>'));
   assert.strictEqual(page(`lessonSubject`), '');
   assert.ok(stageHtml().includes('소수는 어디까지'));
-  page(`goHome(); demoMinutes = null;`);
+  page(`DAIT_LESSONS.pop(); goHome(); demoMinutes = null;`);
 });
 
 test('출발하면 듣기로 고른 수업은 출발할 때 시작하고, 고르는 동안에는 말하지 않는다', () => {

@@ -1132,11 +1132,13 @@ test('과목 칩은 한 과목에 수업이 여럿일 때만 두고, 고른 시�
   assert.ok(stageHtml().includes('둘째 기술 수업'));
   assert.ok(!stageHtml().includes('동백꽃과 점순이'));
   assert.ok(stageHtml().includes('aria-pressed="true" data-subject="기술"'));
-  page(`goHome(); demoMinutes = 9; openLessons(); pickLessonSubject('기술'); demoMinutes = 5; pickLessonTime(5);`); // 고른 과목이 시간에 들어가지 않으면 전체로 돌아간다
-  assert.ok(!stageHtml().includes('>기술</button>'));
+  page(`DAIT_LESSONS.pop(); var longOnly = { ...DAIT_LESSONS.find(lesson => lesson.id === 'ai'), subject: '과학' }; longOnly.pieces = longOnly.pieces.filter(piece => !piece.short);
+    DAIT_LESSONS.push({ ...longOnly, id: 'sci1' }, { ...longOnly, id: 'sci2' });
+    goHome(); demoMinutes = 9; openLessons(); pickLessonSubject('과학'); demoMinutes = 5; pickLessonTime(5);`); // 고른 과목이 시간에 들어가지 않으면 전체로 돌아간다. 짧은 판이 없는 수업은 5분에 들어가지 않는다
+  assert.ok(!stageHtml().includes('>과학</button>'));
   assert.strictEqual(page(`lessonSubject`), '');
   assert.ok(stageHtml().includes('소수는 어디까지'));
-  page(`DAIT_LESSONS.pop(); goHome(); demoMinutes = null;`);
+  page(`DAIT_LESSONS.pop(); DAIT_LESSONS.pop(); goHome(); demoMinutes = null;`);
 });
 
 test('출발하면 듣기로 고른 수업은 출발할 때 시작하고, 고르는 동안에는 말하지 않는다', () => {
@@ -1301,7 +1303,7 @@ test('30분 이동은 동백꽃 뒤에 쉬지 않고 다른 수업을 이어 듣
   assert.ok(stageHtml().includes('고른 수업이 끝나고 남는 시간은 다른 수업으로 이어 채워요'));
   assert.ok(!stageHtml().includes('교시'));
   page(`startLesson('dongbaek'); while (!isLessonResting()) skipQuestion();`);
-  assert.ok(stageHtml().includes('이어서 기술 수업이에요'));
+  assert.ok(stageHtml().includes('이어서 기술 수업 맛보기예요')); // 남은 약 9분은 AI 짧은 판으로 채운다
   assert.ok(stageHtml().includes('국어 수업 마침'));
   assert.ok(stageHtml().includes('다음 수업 듣기'));
   page(`onLessonSpeech({ event: 'ended' });`); // 잠깐 보여 준 뒤 넘어간다. 주차 중이어도 사람이 그대로 있다

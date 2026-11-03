@@ -215,8 +215,8 @@
     if (!trip.count) return pieces;
     const next = trip.later[0];
     if (!restOf(trip)) {
-      const taste = isShort(orderFor(next, trip.laterMinutes || trip.minutes)) ? ' 맛보기' : '';
-      return [...pieces, { id: 'break', kind: '쉬는시간', line: `이어서 ${next.subject} 수업${taste}이에요`, text: '', seconds: FOLLOW_SECONDS }];
+      const taste = isShort(orderFor(next, trip.laterMinutes || trip.minutes)) ? ' 맛보기예요' : '이에요';
+      return [...pieces, { id: 'break', kind: '쉬는시간', line: `이어서 ${next.subject} 수업${taste}`, text: '', seconds: FOLLOW_SECONDS }];
     }
     const line = `쉬는 시간이에요. 다음은 ${trip.number + 1}교시 ${trip.later[0].subject}`;
     return [...pieces, { id: 'break', kind: '쉬는시간', line, text: '', seconds: BREAK_MINUTES * 60 }];

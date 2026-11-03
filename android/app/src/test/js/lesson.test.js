@@ -248,7 +248,7 @@ test('40분이 안 되는 이동에서 첫 수업 뒤에 5분 넘게 남으면 �
   const thirty = fill(30);
   assert.strictEqual(thirty.trip.rest, 0);
   assert.deepStrictEqual(Lesson.periods(thirty.trip).map(item => item.id), ['dongbaek', 'ai']);
-  assert.ok(thirty.minutes > 28 && thirty.minutes <= 30, String(thirty.minutes)); // 전에는 동백꽃 하나로 약 21분
+  assert.ok(thirty.minutes > 26 && thirty.minutes <= 30, String(thirty.minutes)); // 동백꽃 약 21분 + AI 짧은 판 약 6분. 전에는 동백꽃 하나로 약 21분
   assert.strictEqual(fill(20).trip.count, 0); // 동백꽃이 20분을 다 채우면 이어 붙이지 않는다
   assert.strictEqual(fill(40).trip.rest, Lesson.BREAK_MINUTES); // 40분부터는 지금처럼 교시와 쉬는 시간
   const prime = Lesson.planTrip(Lesson.tripOrder(lessons, [], 'prime'), 20);
@@ -256,7 +256,7 @@ test('40분이 안 되는 이동에서 첫 수업 뒤에 5분 넘게 남으면 �
   const pieces = Lesson.withBreak(Lesson.assemble(prime.lesson, prime.minutes), prime);
   const turn = pieces[pieces.length - 1];
   assert.ok(Lesson.isBreak(turn));
-  assert.strictEqual(turn.line, '이어서 국어 수업이에요');
+  assert.strictEqual(turn.line, '이어서 국어 수업 맛보기예요'); // 10분이 안 남으면 이어 붙이는 수업은 짧은 판으로 듣는다
   assert.ok(Lesson.speechSeconds(turn) < 10); // 쉬는 시간 10분이 아니라 잠깐 보여 주고 넘어간다
 });
 

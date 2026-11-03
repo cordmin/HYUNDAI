@@ -16,6 +16,13 @@ const TIMINGS = ['당일', '마지막날', '전날', '앞둔 기간', ''];
 const LEVELS = { 전체: ['초', '중', '고'], 초: ['초'], 중: ['중'], 고: ['고'], 중고: ['중', '고'] };
 const EXTRA_LINES = [{ id: 'rule_missing', text: '아직 못 챙겼군요. 주차한 뒤 보호자와 확인해요.', use: '준비물을 못 챙겼다고 답했을 때' }];
 const MINUTES = [...Array.from({ length: 30 }, (_, i) => i + 1), 35, 40, 45, 50, 55, 60];
+const DIGITS = ['', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구'];
+
+// 음성 대본의 숫자는 소리 나는 대로 쓴다. 음성 엔진이 아라비아 숫자를 어색하게 읽는다. (99까지)
+function spokenNumber(n) {
+  const tens = Math.floor(n / 10);
+  return `${tens > 1 ? DIGITS[tens] : ''}${tens ? '십' : ''}${DIGITS[n % 10]}`;
+}
 
 function parseCsv(text) {
   const rows = [];
@@ -52,7 +59,7 @@ function readPieces() {
     subject: (cells[header.indexOf('과목')] || '').trim(),
     use: (cells[header.indexOf('쓰이는 곳')] || '').trim()
   }));
-  return [...lines, ...MINUTES.map(n => ({ id: `n_${n}`, text: `${n}분`, subject: '', use: '남은 시간' }))];
+  return [...lines, ...MINUTES.map(n => ({ id: `n_${n}`, text: `${spokenNumber(n)} 분`, subject: '', use: '남은 시간' }))];
 }
 
 function fail(line, message) {

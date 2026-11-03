@@ -1342,3 +1342,22 @@ test('가 볼 만한 곳은 관광공사의 지금 시도 코드로 찾는다. �
     JSON.stringify(found)`));
   assert.deepStrictEqual(codes, ['12', '12', '12', '36110', '11']);
 });
+
+test('가 볼 만한 곳을 누르면 그곳으로 내비 길 안내를 시작하고 첫 화면으로 돌아간다', () => {
+  const rows = JSON.parse(page(`JSON.stringify(tourRows({ response: { header: { resultCode: '0000' }, body: { items: { item: [
+    { title: '국립광주과학관', addr1: '전남광주통합특별시 북구', contenttypeid: '14', mapx: '126.89', mapy: '35.22' },
+    { title: '좌표 없는 곳', addr1: '어딘가', contenttypeid: '14', mapx: '', mapy: '' }
+  ] } } } }))`));
+  assert.deepStrictEqual(rows[0], { name: '국립광주과학관', address: '전남광주통합특별시 북구', lat: 35.22, lng: 126.89 });
+  page(`localStorage.values.clear(); var routes = [];
+    window.AndroidBridge = { micState: () => 'none', locationState: () => 'none', speak() {}, stopSpeech() {}, setJourneyActive() {}, setLocationOn() {}, startRoute: json => routes.push(JSON.parse(json)) };
+    currentMode = 'places'; places = { topic: '과학관', rows: ${JSON.stringify(rows)}, sample: false, message: '' }; render();`);
+  assert.strictEqual(stageHtml().split('여기로 안내').length - 1, 1); // 좌표가 없는 곳에는 버튼을 두지 않는다
+  page(`routeToPlace(0);`);
+  assert.deepStrictEqual(JSON.parse(page(`JSON.stringify(routes)`)), [{ name: '국립광주과학관', address: '전남광주통합특별시 북구', lat: 35.22, lng: 126.89 }]);
+  assert.notStrictEqual(page(`currentMode`), 'places');
+  page(`delete window.AndroidBridge; goHome();`);
+  page(`currentMode = 'places'; places = { topic: '과학관', rows: ${JSON.stringify(rows)}, sample: true, message: '' }; render();`);
+  assert.ok(!stageHtml().includes('여기로 안내')); // 브라우저 미리보기에서는 내비가 없다
+  page(`goHome();`);
+});

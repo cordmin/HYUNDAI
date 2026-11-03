@@ -764,8 +764,33 @@
       background: var(--glass);
       border: 1px solid var(--line);
     }
-    .place-name { font-size: calc(15 * var(--u)); font-weight: 700; line-height: 1.3; }
-    .place-address { margin-top: calc(2 * var(--u)); font-size: calc(13 * var(--u)); color: var(--muted); }
+    .place-name { display: block; font-size: calc(15 * var(--u)); font-weight: 700; line-height: 1.3; }
+    .place-address { display: block; margin-top: calc(2 * var(--u)); font-size: calc(13 * var(--u)); color: var(--muted); }
+    /* 누르면 그곳으로 길 안내를 시작하는 장소 */
+    .place-row.place-go {
+      display: flex;
+      align-items: center;
+      gap: calc(10 * var(--u));
+      min-height: calc(44 * var(--u));
+      color: var(--ink);
+      text-align: left;
+      font: inherit;
+      cursor: pointer;
+    }
+    .place-go:hover { background: var(--glass-hover); }
+    .place-text { flex: 1; min-width: 0; }
+    /* 길 안내 화살표. 같은 글자가 장소마다 되풀이되지 않게 그림으로 둔다 */
+    .place-action {
+      flex-shrink: 0;
+      width: calc(34 * var(--u));
+      height: calc(34 * var(--u));
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--lilac);
+      color: var(--on-lilac);
+    }
+    .place-action svg { width: calc(16 * var(--u)); height: calc(16 * var(--u)); }
 
   </style>
 </head>
@@ -2420,7 +2445,7 @@
       return rows
         .filter(row => PLACE_TYPES.includes(String(row.contenttypeid)))
         .slice(0, PLACE_LIMIT)
-        .map(row => ({ name: row.title, address: row.addr1 || '' }));
+        .map(row => ({ name: row.title, address: row.addr1 || '', lat: Number(row.mapy), lng: Number(row.mapx) })); // 관광공사 좌표: mapy가 위도, mapx가 경도
     }
 
     async function searchPlaces(topic) {
@@ -2449,6 +2474,19 @@
       render();
     }
 
+    // 좌표가 있고 차의 내비에 닿을 수 있을 때만 길 안내를 건다. 브라우저 미리보기의 예시 장소는 이름과 주소만 보여 준다.
+    function canRoute(row) {
+      return !!window.AndroidBridge && Number.isFinite(row.lat) && Number.isFinite(row.lng) && row.lat !== 0 && row.lng !== 0;
+    }
+
+    // 고른 곳으로 Pleos 내비 길 안내를 시작하고 첫 화면으로 돌아간다. 안내가 시작되면 첫 화면이 도착까지 남은 시간에 맞춘 수업을 보여 준다.
+    function routeToPlace(index) {
+      const row = places.rows[index];
+      if (!row || !canRoute(row) || isDrivingMode) return;
+      window.AndroidBridge.startRoute(JSON.stringify({ name: row.name, address: row.address, lat: row.lat, lng: row.lng }));
+      goHome();
+    }
+
     function openPlaces() {
       stopSpeech();
       currentMode = 'places';
@@ -2470,7 +2508,9 @@
             </div>
             ${places.message ? `<div class="settings-message">${escapeHtml(places.message)}</div>` : ''}
             <div class="place-list">
-              ${places.rows.map(row => `<div class="place-row"><div class="place-name">${escapeHtml(row.name)}</div><div class="place-address">${escapeHtml(row.address)}</div></div>`).join('')}
+              ${places.rows.map((row, i) => canRoute(row)
+                ? `<button class="place-row place-go" aria-label="${escapeHtml(row.name)} 여기로 안내" onclick="routeToPlace(${i})"><span class="place-text"><span class="place-name">${escapeHtml(row.name)}</span><span class="place-address">${escapeHtml(row.address)}</span></span><span class="place-action" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 11 22 2l-9 19-2-8z"/></svg></span></button>`
+                : `<div class="place-row"><span class="place-name">${escapeHtml(row.name)}</span><span class="place-address">${escapeHtml(row.address)}</span></div>`).join('')}
             </div>
           </div>
         </div>

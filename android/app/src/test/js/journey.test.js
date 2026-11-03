@@ -994,6 +994,7 @@ test('끝까지 못 들은 수업은 다음 이동에서 멈춘 곳부터 잇고
   assert.strictEqual(resume.short, false);
   page(`openLessons();`);
   assert.ok(stageHtml().includes('지난번 멈춘 곳부터: 소수는 어디까지 있을까'));
+  assert.strictEqual(stageHtml().split(`startLesson('prime'`).length - 1, 1); // 같은 수업을 목록에 두 번 두지 않는다
   page(`startLesson('prime', true);`);
   assert.strictEqual(page(`lessonRun.pieces[0].id`), 'b4');
   assert.strictEqual(page(`lessonRun.heard.length`), 6);
@@ -1306,6 +1307,7 @@ test('30분 이동은 동백꽃 뒤에 쉬지 않고 다른 수업을 이어 듣
   page(`onLessonSpeech({ event: 'ended' });`); // 잠깐 보여 준 뒤 넘어간다. 주차 중이어도 사람이 그대로 있다
   assert.strictEqual(page(`lessonRun.done`), false);
   assert.strictEqual(page(`lessonRun.lesson.id`), 'ai');
+  assert.notStrictEqual(page(`lessonRun.pieces[0].kind`), '복습'); // 방금 들은 동백꽃을 「지난 시간에는」으로 되풀이하지 않는다
   assert.ok(stageHtml().includes('기술 수업'));
   assert.ok(!stageHtml().includes('2교시'));
   page(`goHome(); demoMinutes = null;`);

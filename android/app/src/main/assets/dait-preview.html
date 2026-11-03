@@ -980,7 +980,7 @@
           ? `<div class="card-label">${escapeHtml(info.prepLabel)}</div>${bigWordHtml(info.prep, info.prepSub)}<div class="card-sub">${ieumLine}</div>`
           : progress.homework
             ? `<div class="card-label">이음 ${progress.ieum} · 숙제</div><div class="card-text">${escapeHtml(progress.homework.title)}</div><button class="card-btn quiet" onclick="doneHomework()">했어요</button>`
-            : `<div class="card-label">배움과 이어진 수</div><div class="card-text">${ieumLine}</div><button class="card-btn quiet" onclick="openLessons()">다른 수업 보기</button>`;
+            : `<div class="card-label">배움과 이어진 수</div><div class="card-text">${ieumLine}</div>`; // 수업 목록은 위쪽 「다른 수업」 버튼 하나로 연다
       container.innerHTML = `
         <div class="home-top">
           ${getDaitLogoHtml()}
@@ -1701,7 +1701,7 @@
                 </button>
                 <button class="card-btn quiet" onclick="toggleLessonArm('${stopped.id}', true)">${stopReserved && reserved === stopped ? '예약 취소' : '출발하면 듣기'}</button>
               </div>` : ''}
-              ${Lesson.bySubject(lessons, lessonSubject).map(lesson => `<div class="lesson-row">
+              ${Lesson.bySubject(lessons, lessonSubject).filter(lesson => lesson !== stopped).map(lesson => `<div class="lesson-row">
                 <button class="choice-chip" onclick="startLesson('${lesson.id}')">
                   ${LESSON_PLAY_ICON}
                   <span class="lesson-text">
@@ -1714,7 +1714,7 @@
             </div>
             <div class="lesson-side">
               <div class="card-label">배움과 이어진 수</div>
-              ${progress.ieum ? `<div class="card-focus">이음 ${progress.ieum}</div>` : '<div class="card-sub">수업을 마치면 이음이 하나씩 쌓여요</div>'}
+              ${progress.ieum ? `<div class="card-focus">이음 ${progress.ieum}</div>` : '<div class="card-sub">수업을 마치면 이음이 쌓여요</div>'}
               ${mileage ? `<div class="card-sub">${escapeHtml(mileage)}</div>` : ''}
               ${progress.homework ? `<div class="card-label">숙제</div><div class="card-sub">${escapeHtml(progress.homework.title)}</div><button class="card-btn" onclick="doneHomework()">했어요</button>` : ''}
               ${answers.length ? '<div class="card-label">남긴 답</div>' : ''}
@@ -1833,8 +1833,10 @@
     // 멈춘 곳부터 이을 때는 복습 없이 멈춘 조각부터 말하고, 앞에서 들은 조각도 들은 것으로 센다.
     function startPeriod(trip) {
       const before = trip.resume ? Lesson.resumeHeard(trip.lesson, trip.resume) : [];
+      // 쉬지 않고 이어 붙인 수업은 앞 수업을 방금 들었으므로 그 복습을 붙이지 않는다.
+      const records = trip.number > 1 && !trip.rest ? [] : lessonProgress().records;
       const pieces = trip.resume ? Lesson.resumePlan(trip.lesson, trip.resume, trip.minutes)
-        : Lesson.plan(trip.lesson, DAIT_LESSONS, trip.minutes, lessonProgress().records);
+        : Lesson.plan(trip.lesson, DAIT_LESSONS, trip.minutes, records);
       const run = {
         lesson: trip.lesson, trip, pieces: Lesson.withBreak(pieces, trip), plannedSeconds: Lesson.lessonSeconds([...before, ...pieces]), short: Lesson.isShort([...before, ...pieces]),
         index: 0, heard: before, heardBefore: before.length, answers: [], meters: 0, lastMeters: null, lastMetersAt: 0,

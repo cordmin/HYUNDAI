@@ -1,0 +1,46 @@
+{
+  "created": "2026-11-04",
+  "status": "구상 시안, 팀 확정 아님",
+  "files": [
+    {
+      "file": "dait-logo-reference.png",
+      "bytes": 106422,
+      "sha256": "efb0b356aeabf3f97949d612452c5bc5136fa061d69af0372075f49023eaf939"
+    },
+    {
+      "file": "dait-bird-perched-v5.png",
+      "bytes": 615620,
+      "sha256": "d8bdab4b27fd210d36a3e4194ab5fbc7fc91d16aa1f5931364a6f1704f6bac17"
+    },
+    {
+      "file": "dait-bird-final-v1.png",
+      "bytes": 187929,
+      "sha256": "54c21d9cfeb7f4be3d6af20d0bb405bf4ae29c85e7e45c0bd44b2afcc3488b3b"
+    },
+    {
+      "file": "dait-bird-final-v1.svg",
+      "bytes": 7042,
+      "sha256": "bc7ce3e6aec22f5b4f709b2a574bea30b6e66cfe82b244b1eda41c10c79210cd"
+    },
+    {
+      "file": "dait-bird-final-calm-v2.png",
+      "bytes": 167000,
+      "sha256": "ce7260b63cdd0f70a697b3559e7da388bf350066553725f06e1acdfb529aa2d2"
+    },
+    {
+      "file": "dait-bird-final-calm-v2.svg",
+      "bytes": 7180,
+      "sha256": "ba252370ada0360e89f3f2952d272eb1c2e9595cb416723e63898b5c5b62bf22"
+    },
+    {
+      "file": "logo-to-bird.html",
+      "bytes": 14413,
+      "sha256": "ceaa837c0d627de3dfda84e95ce49147664eb34a40cfdee10fd4fc3bc1a34982"
+    },
+    {
+      "file": "../handoff/요청.md",
+      "bytes": 7300,
+      "sha256": "22dde6410d5a4129ec398e4c6ff629b4c931fbba4d5f6ff31ab6fda7449664d1"
+    }
+  ]
+}

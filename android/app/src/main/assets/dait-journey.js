@@ -381,7 +381,7 @@
     return patternFor(ctx.trips, { from: ctx.place, day: ctx.day, min: ctx.min });
   }
 
-  const Journey = { flows: FLOWS, tierFor, isDone, isQuiet, start, next, skip, listenSpec, interpret, pickRule, pickQuestion, ruleStep, nextSchoolDay, isSchoolDay, intro, nextDayStep, subjectClips, subjectStep, placeLabel, finishTrip, patternFor, guessMode };
+  const Journey = { flows: FLOWS, tierFor, isDone, isQuiet, start, next, skip, listenSpec, interpret, pickRule, pickQuestion, ruleStep, nextSchoolDay, isSchoolDay, intro, nextDayStep, subjectClips, subjectStep, placeLabel, distanceM, finishTrip, patternFor, guessMode };
   root.Journey = Journey;
   if (typeof module !== 'undefined') module.exports = Journey;
 })(typeof window !== 'undefined' ? window : globalThis);

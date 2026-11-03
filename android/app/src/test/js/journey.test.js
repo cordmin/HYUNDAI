@@ -1361,3 +1361,24 @@ test('가 볼 만한 곳을 누르면 그곳으로 내비 길 안내를 시작�
   assert.ok(!stageHtml().includes('여기로 안내')); // 브라우저 미리보기에서는 내비가 없다
   page(`goHome();`);
 });
+
+test('가 볼 만한 곳은 지금 위치, 없으면 학교에서 가까운 순으로 줄 세우고 거리를 붙인다', () => {
+  const rows = [
+    { name: '먼 곳', address: '가', lat: 35.0, lng: 127.5 },
+    { name: '좌표 없음', address: '나', lat: 0, lng: 0 },
+    { name: '가까운 곳', address: '다', lat: 37.51, lng: 127.01 }
+  ];
+  const run = setup => JSON.parse(page(`${setup}; var near = nearestFirst(${JSON.stringify(rows)}); carSpot = null; routePlaces = {}; tripSpots = {};
+    JSON.stringify({ names: near.rows.map(row => row.name), from: near.from, km: near.rows[0].km })`));
+  const none = run('carSpot = null; routePlaces = {}; tripSpots = {}');
+  assert.deepStrictEqual(none.names, ['먼 곳', '좌표 없음', '가까운 곳']); // 기준이 없으면 받은 차례 그대로
+  assert.strictEqual(none.from, '');
+  const car = run('carSpot = { lat: 37.5, lng: 127.0 }');
+  assert.deepStrictEqual(car.names, ['가까운 곳', '먼 곳', '좌표 없음']);
+  assert.strictEqual(car.from, '지금 위치에서 가까운 순');
+  assert.ok(car.km > 1 && car.km < 2, String(car.km));
+  const school = run('carSpot = null; routePlaces = { school: { lat: 35.01, lng: 127.49 } }');
+  assert.deepStrictEqual(school.names[0], '먼 곳');
+  assert.strictEqual(school.from, '학교에서 가까운 순');
+  assert.strictEqual(page(`kmText(1.234) + ' ' + kmText(12.6)`), '1.2km 13km');
+});

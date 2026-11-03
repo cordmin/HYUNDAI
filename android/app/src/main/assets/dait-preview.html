@@ -2444,8 +2444,22 @@
       const rows = items && items.item ? [].concat(items.item) : [];
       return rows
         .filter(row => PLACE_TYPES.includes(String(row.contenttypeid)))
-        .slice(0, PLACE_LIMIT)
         .map(row => ({ name: row.title, address: row.addr1 || '', lat: Number(row.mapy), lng: Number(row.mapx) })); // 관광공사 좌표: mapy가 위도, mapx가 경도
+    }
+
+    // 차의 지금 위치(다니는 길 기억을 켠 경우), 없으면 학교 위치에서 가까운 순으로 줄 세우고 직선거리를 붙인다.
+    // 둘 다 모르면 받은 차례(이름순) 그대로 둔다. 실제 길로 걸리는 시간은 길 안내를 누르면 내비가 보여 준다.
+    function nearestFirst(rows) {
+      const school = knownSpots().school;
+      const origin = carSpot || school;
+      if (!origin) return { rows, from: '' };
+      const measured = rows.map(row => ({ ...row, km: row.lat && row.lng ? Journey.distanceM(origin, row) / 1000 : null }));
+      measured.sort((a, b) => (a.km === null) - (b.km === null) || a.km - b.km);
+      return { rows: measured, from: carSpot ? '지금 위치에서 가까운 순' : '학교에서 가까운 순' };
+    }
+
+    function kmText(km) {
+      return km < 10 ? `${km.toFixed(1)}km` : `${Math.round(km)}km`;
     }
 
     async function searchPlaces(topic) {
@@ -2458,13 +2472,13 @@
       }
       const region = schoolRegion();
       const query = new URLSearchParams({
-        numOfRows: '30', pageNo: '1', MobileOS: 'AND', MobileApp: 'DAIT', _type: 'json', arrange: 'A', keyword: topic,
+        numOfRows: '100', pageNo: '1', MobileOS: 'AND', MobileApp: 'DAIT', _type: 'json', arrange: 'A', keyword: topic,
         ...(region ? { lDongRegnCd: region.code } : {})
       }).toString();
       let next;
       try {
-        const rows = tourRows(JSON.parse(await tourBody(query)));
-        next = { topic, rows, sample: false, message: rows.length > 0 ? '' : '찾는 곳이 없어요' };
+        const near = nearestFirst(tourRows(JSON.parse(await tourBody(query))));
+        next = { topic, rows: near.rows.slice(0, PLACE_LIMIT), near: near.from, sample: false, message: near.rows.length > 0 ? '' : '찾는 곳이 없어요' };
       } catch (e) {
         next = { topic, rows: [], sample: false, message: '지금은 찾을 수 없어요' };
       }
@@ -2507,9 +2521,10 @@
               ${PLACE_TOPICS.map(topic => `<button class="choice-chip" onclick="searchPlaces('${topic}')"${topic === places.topic ? ' aria-pressed="true"' : ''}>${topic}</button>`).join('')}
             </div>
             ${places.message ? `<div class="settings-message">${escapeHtml(places.message)}</div>` : ''}
+            ${places.near && places.rows.length ? `<div class="card-sub">${escapeHtml(places.near)}</div>` : ''}
             <div class="place-list">
               ${places.rows.map((row, i) => canRoute(row)
-                ? `<button class="place-row place-go" aria-label="${escapeHtml(row.name)} 여기로 안내" onclick="routeToPlace(${i})"><span class="place-text"><span class="place-name">${escapeHtml(row.name)}</span><span class="place-address">${escapeHtml(row.address)}</span></span><span class="place-action" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 11 22 2l-9 19-2-8z"/></svg></span></button>`
+                ? `<button class="place-row place-go" aria-label="${escapeHtml(row.name)} 여기로 안내" onclick="routeToPlace(${i})"><span class="place-text"><span class="place-name">${escapeHtml(row.name)}</span><span class="place-address">${typeof row.km === 'number' ? `약 ${kmText(row.km)} · ` : ''}${escapeHtml(row.address)}</span></span><span class="place-action" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 11 22 2l-9 19-2-8z"/></svg></span></button>`
                 : `<div class="place-row"><span class="place-name">${escapeHtml(row.name)}</span><span class="place-address">${escapeHtml(row.address)}</span></div>`).join('')}
             </div>
           </div>

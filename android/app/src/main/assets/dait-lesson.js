@@ -6,6 +6,7 @@
   const LONG_TRIP_MINUTES = 40; // 이 시간부터 수업 하나 대신 학교처럼 교시로 나눈다
   const PERIOD_MINUTES = 15; // 몇 교시가 들어가는지 셀 때 한 교시로 치는 길이
   const BREAK_MINUTES = 10; // 교시 사이 쉬는 시간. 쉬는 시간 내용이 오기 전까지는 말하지 않는다
+  const FOLLOW_SECONDS = 3; // 짧은 이동에서 수업을 이어 붙일 때, 다음 수업으로 넘어가는 것을 화면에 보여 주는 틈
   const DEFAULT_MINUTES = 15; // 목적지가 없을 때의 보통 길이
   const SHORT_UNDER_MINUTES = 10; // 이보다 짧은 시간에는 짧은 판이 있는 수업을 짧은 판으로 듣는다
   const MIN_LESSON_MINUTES = 5; // 이보다 짧은 이동에는 수업을 권하지 않는다. 필수 조각이 들어가더라도 그렇다
@@ -163,22 +164,41 @@
     return first ? [first, ...order.filter(lesson => lesson !== first)] : order;
   }
 
-  function periodShare(minutes, periods) {
-    return (minutes - (periods - 1) * BREAK_MINUTES) / periods;
+  // 교시 사이 쉬는 시간(분). 짧은 이동에서 이어 붙인 수업은 쉬지 않고 바로 넘어간다.
+  function restOf(trip) {
+    return trip.rest === undefined ? BREAK_MINUTES : trip.rest;
+  }
+
+  function periodShare(minutes, periods, rest) {
+    return (minutes - (periods - 1) * rest) / periods;
   }
 
   // 시간을 교시에 고르게 나눈다. 뒤에 줄 선 수업은 later에 두었다가 도착이 늦어지면 교시로 되살린다.
   // count는 지금 이어 들을 뒤 교시 수다. 수업이 모자라면 시간이 남아도 같은 수업을 다시 넣지 않는다.
+  // 긴 이동이 아니어도 첫 수업이 다 들어가고 5분 넘게 남으면, 남은 시간에 들어가는 다른 수업을 쉬지 않고 이어 붙인다.
   function planTrip(order, minutes) {
+    const follow = followTrip(order, minutes);
+    if (follow) return follow;
     const total = Math.max(1, Math.min(order.length, periodCount(minutes)));
-    return { lesson: order[0], later: order.slice(1), count: total - 1, number: 1, minutes: periodShare(minutes, total) };
+    return { lesson: order[0], later: order.slice(1), count: total - 1, number: 1, minutes: periodShare(minutes, total, BREAK_MINUTES), rest: BREAK_MINUTES };
+  }
+
+  // 첫 수업은 들어가는 만큼 다 듣고, 남은 시간은 뒤 수업 몫(laterMinutes)으로 떼어 둔다.
+  function followTrip(order, minutes) {
+    if (isLongTrip(minutes) || order.length < 2 || !fits(order[0], minutes)) return null;
+    const own = totalSeconds(assemble(order[0], minutes)) / 60;
+    const left = minutes - own;
+    const next = left >= MIN_LESSON_MINUTES ? order.slice(1).find(lesson => fits(lesson, left)) : null;
+    if (!next) return null;
+    const later = [next, ...order.slice(1).filter(lesson => lesson !== next)];
+    return { lesson: order[0], later, count: 1, number: 1, minutes: own, laterMinutes: left, rest: 0 };
   }
 
   // 쉬는 시간이 끝나면 남은 시간을 남은 교시에 다시 나눈다. 앞 교시가 짧았으면 뒤 교시가 그만큼 길어진다.
   function nextPeriod(trip, remainingSeconds) {
     const [lesson, ...later] = trip.later;
     const count = trip.count - 1;
-    return { ...trip, lesson, later, count, number: trip.number + 1, minutes: periodShare(remainingSeconds / 60, count + 1) };
+    return { ...trip, lesson, later, count, number: trip.number + 1, minutes: periodShare(remainingSeconds / 60, count + 1, restOf(trip)), laterMinutes: undefined };
   }
 
   function periods(trip) {
@@ -190,18 +210,27 @@
   }
 
   // 쉬는 시간은 말 없는 조각이다. 내용이 오면 음원만 붙이면 된다.
+  // 이어 붙인 수업은 쉬지 않고, 다음 수업 이름만 잠깐 보여 준다.
   function withBreak(pieces, trip) {
     if (!trip.count) return pieces;
+    const next = trip.later[0];
+    if (!restOf(trip)) {
+      const taste = isShort(orderFor(next, trip.laterMinutes || trip.minutes)) ? ' 맛보기' : '';
+      return [...pieces, { id: 'break', kind: '쉬는시간', line: `이어서 ${next.subject} 수업${taste}이에요`, text: '', seconds: FOLLOW_SECONDS }];
+    }
     const line = `쉬는 시간이에요. 다음은 ${trip.number + 1}교시 ${trip.later[0].subject}`;
     return [...pieces, { id: 'break', kind: '쉬는시간', line, text: '', seconds: BREAK_MINUTES * 60 }];
   }
 
   // 뒤에 몇 교시를 남길지 정한다. 줄어들 때는 필수 조각이 들어가는 한 남기고,
-  // 새 교시를 되살릴 때는 한 교시 길이가 온전히 남아야 한다.
+  // 새 교시를 되살릴 때는 한 교시 길이가 온전히 남아야 한다. 이어 붙인 수업은 남은 시간에 그 수업이 들어가면 되살린다.
   function laterCount(trip, mustSeconds, plannedSeconds, budget) {
-    const room = Math.floor((budget - plannedSeconds) / ((PERIOD_MINUTES + BREAK_MINUTES) * 60));
+    const rest = restOf(trip) * 60;
+    const spare = budget - plannedSeconds;
+    const room = rest ? Math.floor(spare / (PERIOD_MINUTES * 60 + rest))
+      : Number(!!trip.later[0] && spare >= MIN_LESSON_MINUTES * 60 && fits(trip.later[0], spare / 60));
     let count = Math.min(trip.later.length, Math.max(trip.count, room));
-    const need = kept => trip.later.slice(0, kept).reduce((sum, lesson) => sum + BREAK_MINUTES * 60 + totalSeconds(required(lesson)), mustSeconds);
+    const need = kept => trip.later.slice(0, kept).reduce((sum, lesson) => sum + rest + totalSeconds(required(lesson)), mustSeconds);
     while (count > 0 && need(count) > budget) count--;
     return count;
   }
@@ -218,7 +247,7 @@
     const count = laterCount(trip, must, totalSeconds(own.slice(index + 1)), remainingSeconds - ARRIVAL_MARGIN_S);
     const kept = { ...trip, count };
     if (isBreak(now)) return { pieces: withBreak(own, kept), count };
-    const held = trip.later.slice(0, count).reduce((sum, item) => sum + BREAK_MINUTES * 60 + totalSeconds(assemble(item, trip.minutes)), 0);
+    const held = trip.later.slice(0, count).reduce((sum, item) => sum + restOf(trip) * 60 + totalSeconds(assemble(item, trip.laterMinutes || trip.minutes)), 0);
     const room = count ? Math.max(remainingSeconds - held, must + ARRIVAL_MARGIN_S) : remainingSeconds;
     return { pieces: withBreak(fitRemaining(own, index, room, lesson).pieces, kept), count };
   }
@@ -356,7 +385,7 @@
 
   const Lesson = {
     TIME_CHOICES, LONG_CHOICES, LONG_TRIP_MINUTES, BREAK_MINUTES, DEFAULT_MINUTES, SHORT_UNDER_MINUTES, assemble, fits, recommend, minutesFor, plan, lessonSeconds, fitRemaining,
-    speechSeconds, totalSeconds, required, shortOrder, isShort, recap, shortEnd, isQuestion, isClosing, isLongTrip, periodCount, tripOrder, planTrip, nextPeriod, periods, isBreak, withBreak, fitTrip,
+    speechSeconds, totalSeconds, required, shortOrder, isShort, recap, shortEnd, isQuestion, isClosing, isLongTrip, periodCount, tripOrder, planTrip, nextPeriod, periods, restOf, isBreak, withBreak, fitTrip,
     resumePoint, resumeFresh, resumeFits, resumePlan, resumeHeard, keepResume, RESUME_DAYS,
     subjects, bySubject, unvoiced, countsAsFinished, monthOf, normalize, finishLesson, finishHomework, forgetAnswers, mileageLine
   };

@@ -238,6 +238,38 @@ test('40분은 국어, 쉬는 시간, 기술이고 합쳐도 40분을 넘지 않
   assert.ok(total <= 40 * 60, String(total));
 });
 
+test('40분이 안 되는 이동에서 첫 수업 뒤에 5분 넘게 남으면 다른 수업을 쉬지 않고 이어 붙인다', () => {
+  const fill = minutes => {
+    const trip = Lesson.planTrip(Lesson.tripOrder(lessons, []), minutes);
+    const seconds = Lesson.totalSeconds(Lesson.assemble(trip.lesson, trip.minutes))
+      + Lesson.periods(trip).slice(1).reduce((sum, item) => sum + Lesson.totalSeconds(Lesson.assemble(item, trip.laterMinutes)), 0);
+    return { trip, minutes: seconds / 60 };
+  };
+  const thirty = fill(30);
+  assert.strictEqual(thirty.trip.rest, 0);
+  assert.deepStrictEqual(Lesson.periods(thirty.trip).map(item => item.id), ['dongbaek', 'ai']);
+  assert.ok(thirty.minutes > 28 && thirty.minutes <= 30, String(thirty.minutes)); // 전에는 동백꽃 하나로 약 21분
+  assert.strictEqual(fill(20).trip.count, 0); // 동백꽃이 20분을 다 채우면 이어 붙이지 않는다
+  assert.strictEqual(fill(40).trip.rest, Lesson.BREAK_MINUTES); // 40분부터는 지금처럼 교시와 쉬는 시간
+  const prime = Lesson.planTrip(Lesson.tripOrder(lessons, [], 'prime'), 20);
+  assert.deepStrictEqual(Lesson.periods(prime).map(item => item.id), ['prime', 'dongbaek']); // 고른 수업이 먼저다
+  const pieces = Lesson.withBreak(Lesson.assemble(prime.lesson, prime.minutes), prime);
+  const turn = pieces[pieces.length - 1];
+  assert.ok(Lesson.isBreak(turn));
+  assert.strictEqual(turn.line, '이어서 국어 수업이에요');
+  assert.ok(Lesson.speechSeconds(turn) < 10); // 쉬는 시간 10분이 아니라 잠깐 보여 주고 넘어간다
+});
+
+test('이어 붙인 수업은 도착이 앞당겨지면 빠지고, 늦어지면 되살아난다', () => {
+  const trip = Lesson.planTrip(Lesson.tripOrder(lessons, []), 30);
+  const pieces = Lesson.withBreak(Lesson.assemble(trip.lesson, trip.minutes), trip);
+  assert.strictEqual(Lesson.fitTrip(pieces, 0, 30 * 60, trip.lesson, trip).count, 1);
+  const early = Lesson.fitTrip(pieces, 0, 10 * 60, trip.lesson, trip); // 두 수업의 필수 조각이 다 들어가지 않는 시간
+  assert.strictEqual(early.count, 0);
+  assert.ok(!early.pieces.some(Lesson.isBreak));
+  assert.strictEqual(Lesson.fitTrip(pieces, 0, 30 * 60, trip.lesson, { ...trip, count: 0 }).count, 1);
+});
+
 test('3시간은 들어가는 만큼 교시를 잡되 같은 수업을 되풀이하지 않는다', () => {
   const picked = Lesson.periods(Lesson.planTrip(Lesson.tripOrder(lessons, []), 180)).map(item => item.id);
   assert.strictEqual(picked.length, lessons.length);

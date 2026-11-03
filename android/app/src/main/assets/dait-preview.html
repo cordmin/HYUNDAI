@@ -1515,10 +1515,11 @@
         return;
       }
       const player = document.getElementById('audioPlayer');
+      const seq = speechSeq; // 재생 실패 알림이 늦게 와도 그사이 시작한 다음 말을 끝내지 않게 한다
       player.src = clip.startsWith('lesson/') ? `voices/${clip}.m4a` : clip.includes('/') ? `voices/${clip}.wav` : `voices/${voice}/${clip}.wav`;
       player.play().catch(e => {
         console.log('Audio error:', e);
-        window.onSpeechEvent(JSON.stringify({ event: 'ended', seq: speechSeq }));
+        window.onSpeechEvent(JSON.stringify({ event: 'ended', seq }));
       });
     }
 
@@ -1698,11 +1699,10 @@
       render();
     }
 
-    // 긴 이동이면 교시를 짜고, 아니면 고른 수업 하나로 교시 하나를 짠다.
+    // 고른 수업을 맨 앞에 두고 다른 수업을 줄 세운다. 긴 이동이면 교시로 나누고,
+    // 짧은 이동이어도 고른 수업 뒤에 5분 넘게 남으면 다른 수업을 쉬지 않고 이어 붙인다.
     function lessonTripFor(lessonId) {
-      const lesson = DAIT_LESSONS.find(item => item.id === lessonId);
-      const order = Lesson.isLongTrip(lessonMinutes) ? Lesson.tripOrder(DAIT_LESSONS, lessonProgress().records, lessonId) : [lesson];
-      return Lesson.planTrip(order, lessonMinutes);
+      return Lesson.planTrip(Lesson.tripOrder(DAIT_LESSONS, lessonProgress().records, lessonId), lessonMinutes);
     }
 
     // 출발하면 들려주기를 수업에도 쓴다. 마이크는 답을 남기기로 한 사람에게만 묻는다.
@@ -1772,11 +1772,12 @@
           </div>
           <div class="lesson-pick">
             <div class="lesson-main">
-              <div class="main-question">${eta === null ? '몇 분 수업을 들을까요?' : `도착까지 ${Lesson.minutesFor(eta)}분, ${periods.length > 1 ? `${periods.length}교시로 들어요` : '이 수업을 들어요'}`}</div>
+              <div class="main-question">${eta === null ? '몇 분 수업을 들을까요?' : `도착까지 ${Lesson.minutesFor(eta)}분, ${periods.length > 1 ? (trip.rest ? `${periods.length}교시로 들어요` : '수업을 이어 들어요') : '이 수업을 들어요'}`}</div>
               ${eta === null ? `<div class="lesson-times">
                 ${choices.map(minutes => `<button class="choice-chip" aria-pressed="${minutes === lessonMinutes}" onclick="pickLessonTime(${minutes})">${minutes}분</button>`).join('')}
               </div>` : ''}<!-- 길 안내 중에는 남은 시간이 위 문장에 있으므로 고를 버튼을 두지 않는다 -->
-              ${periods.length > 1 ? `<div class="card-sub">${periods.map((lesson, i) => `${i + 1}교시 ${escapeHtml(lesson.subject)}`).join(' · ')} · 쉬는 시간 ${Lesson.BREAK_MINUTES}분</div>` : ''}
+              ${periods.length > 1 && trip.rest ? `<div class="card-sub">${periods.map((lesson, i) => `${i + 1}교시 ${escapeHtml(lesson.subject)}`).join(' · ')} · 쉬는 시간 ${trip.rest}분</div>` : ''}
+              ${periods.length > 1 && !trip.rest ? '<div class="card-sub">고른 수업이 끝나고 남는 시간은 다른 수업으로 이어 채워요</div>' : ''}
               ${showSubjects ? `<div class="lesson-subjects">
                 ${['', ...subjects].map(subject => `<button class="choice-chip" aria-pressed="${subject === lessonSubject}" data-subject="${escapeHtml(subject)}" onclick="pickLessonSubject(this.dataset.subject)">${escapeHtml(subject || '전체')}</button>`).join('')}
               </div>` : ''}
@@ -1848,10 +1849,11 @@
       `;
     }
 
+    // 이어 붙인 수업(쉬는 시간 없음)은 교시라고 부르지 않는다.
     function lessonLabel(run, resting) {
-      const { number, count } = run.trip;
-      if (resting) return `${number}교시 마침`;
-      return number > 1 || count > 0 ? `${number}교시 ${run.lesson.subject}` : `${run.lesson.subject} 수업`;
+      const { number, count, rest } = run.trip;
+      if (resting) return rest ? `${number}교시 마침` : `${run.lesson.subject} 수업 마침`;
+      return rest && (number > 1 || count > 0) ? `${number}교시 ${run.lesson.subject}` : `${run.lesson.subject} 수업`;
     }
 
     // 이음이 늘면 로고의 i 점이 시작 화면처럼 튀어 오른다. 다시 그려도 되풀이하지 않게 처음 한 번만 움직이고,
@@ -2035,7 +2037,7 @@
     }
 
     function lessonMainLabel(run) {
-      if (isLessonResting()) return '다음 교시 듣기';
+      if (isLessonResting()) return run.trip.rest ? '다음 교시 듣기' : '다음 수업 듣기';
       return run.paused || run.stopped ? '이어 듣기' : '일시정지';
     }
 
@@ -2055,7 +2057,7 @@
       if (!run || run.done || info.event === 'listening') return;
       if (run.paused && info.event !== 'stopped') { run.wait = { then: () => onLessonSpeech(info), left: 0 }; return; } // 일시정지와 거의 같이 조각이 끝났으면 이어 듣기를 누른 뒤에 넘어간다
       const piece = run.pieces[run.index];
-      if (Lesson.isBreak(piece) && !isDrivingMode) { endLesson(); return; } // 쉬는 시간이 끝났을 때 주차 중이면 사람 없는 차에서 말을 시작하지 않는다
+      if (Lesson.isBreak(piece) && !isDrivingMode && run.trip.rest) { endLesson(); return; } // 쉬는 시간이 끝났을 때 주차 중이면 사람 없는 차에서 말을 시작하지 않는다. 바로 이어 붙인 수업은 사람이 그대로 있다
       if (info.event === 'stopped') {
         run.stopped = true; // 음악이나 통화가 소리를 돌려주지 않으면 사람이 이어 듣기를 누를 때까지 멈춘다
         renderStage();
@@ -2758,7 +2760,7 @@
       document.getElementById('demoDrive').classList.toggle('on', isDriving);
       if (isDriving && (isParkedScreen() || (departing && currentMode === 'lesson' && isDialogueDone()))) goHome();
       trackTrip(isDriving);
-      if (!isDriving && isLessonResting()) endLesson(); // 쉬는 시간에 주차하면 내린 것으로 보고 수업을 닫는다
+      if (!isDriving && isLessonResting() && lessonRun.trip.rest) endLesson(); // 쉬는 시간에 주차하면 내린 것으로 보고 수업을 닫는다
       if (departing && armed) startArmed();
       else if (departing && speechPhase === 'idle') advanceWithoutMic();
       updateDriveScreen();

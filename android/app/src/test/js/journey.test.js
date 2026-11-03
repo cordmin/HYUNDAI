@@ -1192,7 +1192,8 @@ test('수업 예약은 30분이 지나면 풀려 고르는 화면에도 바로 �
 
 test('예약할 때 고른 시간을 쓰되, 출발할 때 남은 시간을 알면 그 시간을 쓴다', () => {
   page(`localStorage.values.clear(); openLessons(); pickLessonTime(30); toggleLessonArm('ai'); window.setDrivingMode(true);`);
-  assert.strictEqual(page(`lessonRun.trip.minutes`), 30);
+  assert.strictEqual(page(`lessonRun.lesson.id`), 'ai');
+  assert.ok(Math.abs(page(`lessonRun.trip.minutes + lessonRun.trip.laterMinutes`) - 30) < 0.01); // AI 수업 뒤 남는 시간은 이어 붙일 수업 몫
   page(`window.setDrivingMode(false); goHome(); openLessons(); toggleLessonArm('ai'); goHome(); demoMinutes = 45; window.setDrivingMode(true);`);
   assert.strictEqual(page(`lessonRun.trip.count`), 1); // 40분이 넘으면 교시로 듣는다
   page(`window.setDrivingMode(false); goHome(); demoMinutes = null;`);
@@ -1297,4 +1298,21 @@ test('출발하면 듣기를 예약하면 첫 화면 로고의 점이 깜빡인�
   page(`toggleLessonArm('dongbaek'); goHome();`);
   assert.ok(stageHtml().includes('dait-brand-badge waiting'));
   page(`disarm(); localStorage.values.clear(); goHome();`);
+});
+
+test('30분 이동은 동백꽃 뒤에 쉬지 않고 다른 수업을 이어 듣고, 주차 중이어도 끊지 않는다', () => {
+  page(`localStorage.values.clear(); demoMinutes = 30; openLessons();`);
+  assert.ok(stageHtml().includes('도착까지 30분, 수업을 이어 들어요'));
+  assert.ok(stageHtml().includes('고른 수업이 끝나고 남는 시간은 다른 수업으로 이어 채워요'));
+  assert.ok(!stageHtml().includes('교시'));
+  page(`startLesson('dongbaek'); while (!isLessonResting()) skipQuestion();`);
+  assert.ok(stageHtml().includes('이어서 기술 수업이에요'));
+  assert.ok(stageHtml().includes('국어 수업 마침'));
+  assert.ok(stageHtml().includes('다음 수업 듣기'));
+  page(`onLessonSpeech({ event: 'ended' });`); // 잠깐 보여 준 뒤 넘어간다. 주차 중이어도 사람이 그대로 있다
+  assert.strictEqual(page(`lessonRun.done`), false);
+  assert.strictEqual(page(`lessonRun.lesson.id`), 'ai');
+  assert.ok(stageHtml().includes('기술 수업'));
+  assert.ok(!stageHtml().includes('2교시'));
+  page(`goHome(); demoMinutes = null;`);
 });

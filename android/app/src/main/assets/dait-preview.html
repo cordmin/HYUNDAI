@@ -1750,9 +1750,9 @@
           <div class="lesson-pick">
             <div class="lesson-main">
               <div class="main-question">${eta === null ? '몇 분 수업을 들을까요?' : `도착까지 ${Lesson.minutesFor(eta)}분, ${periods.length > 1 ? `${periods.length}교시로 들어요` : '이 수업을 들어요'}`}</div>
-              <div class="lesson-times">
+              ${eta === null ? `<div class="lesson-times">
                 ${choices.map(minutes => `<button class="choice-chip" aria-pressed="${minutes === lessonMinutes}" onclick="pickLessonTime(${minutes})">${minutes}분</button>`).join('')}
-              </div>
+              </div>` : ''}<!-- 길 안내 중에는 남은 시간이 위 문장에 있으므로 고를 버튼을 두지 않는다 -->
               ${periods.length > 1 ? `<div class="card-sub">${periods.map((lesson, i) => `${i + 1}교시 ${escapeHtml(lesson.subject)}`).join(' · ')} · 쉬는 시간 ${Lesson.BREAK_MINUTES}분</div>` : ''}
               ${showSubjects ? `<div class="lesson-subjects">
                 ${['', ...subjects].map(subject => `<button class="choice-chip" aria-pressed="${subject === lessonSubject}" data-subject="${escapeHtml(subject)}" onclick="pickLessonSubject(this.dataset.subject)">${escapeHtml(subject || '전체')}</button>`).join('')}

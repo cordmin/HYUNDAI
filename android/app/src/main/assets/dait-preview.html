@@ -647,6 +647,17 @@
       100% { r: 24px; stroke-width: 0.4px; opacity: 0; }
     }
 
+    /* 이음이 늘 때 수업 끝 화면의 로고: 시작 화면의 점 움직임을 그대로 쓴다 */
+    .ieum-logo { width: calc(120 * var(--u)); height: auto; margin-bottom: calc(10 * var(--u)); overflow: visible; }
+    .ieum-logo .ieum-dot, .ieum-logo .ieum-ripple { transform-origin: 62px 7.5px; }
+    .ieum-logo .ieum-ripple { opacity: 0; }
+    .ieum-logo.pop .ieum-dot { animation: dotPopIn 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both; }
+    .ieum-logo.pop .ieum-ripple { animation: rippleExpand 0.75s cubic-bezier(0.1, 0.8, 0.25, 1) 0.32s both; }
+    .ieum-logo.pop.calm .ieum-ripple { animation: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .ieum-logo.pop .ieum-dot, .ieum-logo.pop .ieum-ripple { animation: none; }
+    }
+
     /* School Settings: 왼쪽 학교 찾기, 오른쪽 설정 목록 */
     .settings-grid {
       flex: 1;
@@ -936,11 +947,13 @@
     const ROUTE_SWAP_MS = 3000;
 
     // DAIT 공식 확정 캘리그래피 로고 (시안 2 커넥티드 리본 + i Dot)
+    const DAIT_LOGO_PATH = 'M10 26 C12 10, 16 6, 22 6 C28 6, 32 12, 30 20 C28 28, 20 28, 16 28 C26 28, 38 28, 42 20 C44 14, 48 14, 50 18 C52 24, 48 28, 54 28 C60 28, 62 18, 62 14 C62 26, 68 28, 72 28 C76 28, 80 18, 80 10 M74 16 h12';
+
     function getDaitLogoHtml() {
       return `
         <div class="dait-brand-badge" onclick="event.stopPropagation(); playSplashIntro();">
           <svg width="94" height="28" viewBox="0 0 100 32" fill="none">
-            <path d="M10 26 C12 10, 16 6, 22 6 C28 6, 32 12, 30 20 C28 28, 20 28, 16 28 C26 28, 38 28, 42 20 C44 14, 48 14, 50 18 C52 24, 48 28, 54 28 C60 28, 62 18, 62 14 C62 26, 68 28, 72 28 C76 28, 80 18, 80 10 M74 16 h12" 
+            <path d="${DAIT_LOGO_PATH}"
                   stroke="url(#flowGradBadge)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
             <circle cx="62" cy="7.5" r="2.8" fill="#38BDF8"/>
             <defs>
@@ -1801,6 +1814,7 @@
       const piece = run.pieces[run.index];
       const resting = !run.done && Lesson.isBreak(piece);
       const title = run.done ? lessonDoneLine(run) : run.stopped ? '수업을 잠시 멈췄어요' : piece.line;
+      const celebrate = run.done && run.trip.earned > 0;
       const back = '<button class="primary-btn secondary" onclick="prevLessonPiece()">이전</button>';
       const buttons = run.done ? '<button class="primary-btn" onclick="handlePrimaryAction()">마치기</button>'
         : `${resting ? '' : back}<button class="primary-btn" onclick="lessonMainAction()">${lessonMainLabel(run)}</button>`;
@@ -1812,7 +1826,9 @@
           </div>
           <div class="dialogue-card">
             <div class="card-center">
+              ${celebrate ? ieumLogoHtml(run) : ''}
               <div class="main-question">${escapeHtml(title)}</div>
+              ${celebrate ? `<div class="card-sub">지금까지 이음 ${lessonProgress().ieum}</div>` : ''}
               ${run.done || resting ? '' : run.paused ? '<div class="card-sub">잠시 멈췄어요</div>' : piece.voiced ? '' : '<div class="card-sub">음원 준비 중</div>'}
               <div id="heardLine" class="heard-bubble"${heard || speechPhase === 'listening' ? '' : ' hidden'}>${escapeHtml(heardLineText())}</div>
             </div>
@@ -1826,6 +1842,27 @@
       const { number, count } = run.trip;
       if (resting) return `${number}교시 마침`;
       return number > 1 || count > 0 ? `${number}교시 ${run.lesson.subject}` : `${run.lesson.subject} 수업`;
+    }
+
+    // 이음이 늘면 로고의 i 점이 시작 화면처럼 튀어 오른다. 다시 그려도 되풀이하지 않게 처음 한 번만 움직이고,
+    // 주행 중에는 물결 없이 점만 짧게 움직인다.
+    function ieumLogoHtml(run) {
+      const pop = !run.celebrated;
+      run.celebrated = true;
+      return `
+        <svg class="ieum-logo${pop ? ' pop' : ''}${isDrivingMode ? ' calm' : ''}" viewBox="0 0 100 32" fill="none" aria-hidden="true">
+          <path d="${DAIT_LOGO_PATH}" stroke="url(#flowGradIeum)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle class="ieum-ripple" cx="62" cy="7.5" r="3" fill="none" stroke="#38BDF8" stroke-width="2"/>
+          <circle class="ieum-dot" cx="62" cy="7.5" r="2.8" fill="#38BDF8"/>
+          <defs>
+            <linearGradient id="flowGradIeum" x1="0" y1="0" x2="100" y2="0" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#38BDF8"/>
+              <stop offset="0.6" stop-color="#FFFFFF"/>
+              <stop offset="1" stop-color="#38BDF8"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      `;
     }
 
     function lessonDoneLine(run) {

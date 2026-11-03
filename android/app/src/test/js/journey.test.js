@@ -856,6 +856,10 @@ test('긴 이동은 교시마다 다른 수업을 듣고, 마친 교시는 저�
   page(`window.setDrivingMode(false);`);
   assert.strictEqual(page(`lessonRun.done`), true);
   assert.ok(stageHtml().includes('이음 +2'));
+  assert.ok(stageHtml().includes('지금까지 이음 2'));
+  assert.ok(/class="ieum-logo[^"]*\bpop\b/.test(stageHtml())); // 이음이 늘면 로고 점이 튀어 오른다
+  page(`render();`);
+  assert.ok(stageHtml().includes('class="ieum-logo"')); // 다시 그려도 되풀이하지 않는다
   assert.strictEqual(page(`lessonProgress().ieum`), 2);
   assert.strictEqual(page(`lessonProgress().records.filter(record => record.finished).length`), 2);
   assert.ok(page(`lessonProgress().homework.title`).includes('점순이'));

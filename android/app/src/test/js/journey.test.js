@@ -1333,3 +1333,12 @@ test('학교를 등록한 첫 화면은 오늘의 수업을 크게 두고, 옆�
   else if (shown.mode === 'morning') assert.ok(shown.html.includes('준비물'));
   else assert.ok(shown.html.includes('수업을 마치면 이음이 쌓여요'));
 });
+
+test('가 볼 만한 곳은 관광공사의 지금 시도 코드로 찾는다. 전남과 광주는 합쳐진 코드, 세종은 36110', () => {
+  const codes = JSON.parse(page(`
+    var saved = school;
+    var found = ['전라남도 목포시', '광주광역시 북구', '전남광주통합특별시 여수시', '세종특별자치시 한누리대로', '서울특별시 종로구'].map(address => { school = { name: 'A', address }; return schoolRegion().code; });
+    school = saved;
+    JSON.stringify(found)`));
+  assert.deepStrictEqual(codes, ['12', '12', '12', '36110', '11']);
+});

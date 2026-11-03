@@ -179,25 +179,6 @@
       width: calc(62 * var(--u));
       height: calc(19 * var(--u));
     }
-    .dait-brand-badge { position: relative; }
-    /* 이음 수는 i 점 바로 위에 띄운다. 글자를 가리지 않고, 시작 화면에서 로고가 날아와 앉는 자리도 바꾸지 않는다 */
-    .brand-ieum {
-      position: absolute;
-      left: calc(38.4 * var(--u));
-      bottom: calc(100% - 1 * var(--u));
-      transform: translateX(-50%);
-      min-width: calc(16 * var(--u));
-      height: calc(16 * var(--u));
-      padding: 0 calc(4 * var(--u));
-      border-radius: calc(8 * var(--u));
-      background: var(--lilac);
-      color: var(--on-lilac);
-      font-size: calc(11 * var(--u));
-      font-weight: 700;
-      line-height: calc(16 * var(--u));
-      text-align: center;
-      pointer-events: none;
-    }
     .dait-brand-badge .brand-dot { transform-origin: 62px 7.5px; }
     .dait-brand-badge.waiting .brand-dot { animation: brandBreath 2.4s ease-in-out infinite; }
     @keyframes brandBreath {
@@ -977,9 +958,8 @@
     // DAIT 공식 확정 캘리그래피 로고 (시안 2 커넥티드 리본 + i Dot)
     const DAIT_LOGO_PATH = 'M10 26 C12 10, 16 6, 22 6 C28 6, 32 12, 30 20 C28 28, 20 28, 16 28 C26 28, 38 28, 42 20 C44 14, 48 14, 50 18 C52 24, 48 28, 54 28 C60 28, 62 18, 62 14 C62 26, 68 28, 72 28 C76 28, 80 18, 80 10 M74 16 h12';
 
-    // 첫 화면 로고: i 점 위에 모은 이음 수를 달고, 「출발하면 듣기」를 예약해 두면 점이 숨 쉬듯 깜빡인다.
+    // 첫 화면 로고: 「출발하면 듣기」를 예약해 두면 i 점이 숨 쉬듯 깜빡인다.
     function getDaitLogoHtml() {
-      const ieum = lessonProgress().ieum;
       return `
         <div class="dait-brand-badge${armed ? ' waiting' : ''}" onclick="event.stopPropagation(); playSplashIntro();">
           <svg width="94" height="28" viewBox="0 0 100 32" fill="none">
@@ -994,7 +974,6 @@
               </linearGradient>
             </defs>
           </svg>
-          ${ieum ? `<span class="brand-ieum" aria-label="이음 ${ieum}">${ieum}</span>` : ''}
         </div>
       `;
     }

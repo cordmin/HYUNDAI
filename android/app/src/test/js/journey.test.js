@@ -1291,12 +1291,10 @@ test('학교가 없으면 주행 화면도 등하교 대신 수업의 질문을 
   page(`school = null; window.setDrivingMode(false); render();`);
 });
 
-test('첫 화면 로고는 모은 이음 수를 달고, 출발하면 듣기를 예약하면 점이 깜빡인다', () => {
+test('출발하면 듣기를 예약하면 첫 화면 로고의 점이 깜빡인다', () => {
   page(`localStorage.values.clear(); goHome();`);
-  assert.ok(!stageHtml().includes('brand-ieum')); // 이음이 없으면 숫자를 달지 않는다
   assert.ok(!stageHtml().includes('dait-brand-badge waiting'));
-  page(`writeStored(LESSON_KEY, { ...lessonProgress(), ieum: 2 }); toggleLessonArm('dongbaek'); goHome();`);
-  assert.ok(stageHtml().includes('<span class="brand-ieum" aria-label="이음 2">2</span>'));
+  page(`toggleLessonArm('dongbaek'); goHome();`);
   assert.ok(stageHtml().includes('dait-brand-badge waiting'));
   page(`disarm(); localStorage.values.clear(); goHome();`);
 });

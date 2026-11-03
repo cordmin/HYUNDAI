@@ -36,8 +36,9 @@ def lesson_catalog(lesson_id):
     return dict(model=base['model'], style=base['style'], lines=lines, max_seconds=180)
 
 
-def export_clips(data):
-    target = studio.ROOT / 'android/app/src/main/assets/voices/lesson'
+def export_clips(data, target=None):
+    if target is None:
+        target = studio.ROOT / 'android/app/src/main/assets/voices/lesson'
     target.mkdir(parents=True, exist_ok=True)
     count = 0
     for line in data['lines']:

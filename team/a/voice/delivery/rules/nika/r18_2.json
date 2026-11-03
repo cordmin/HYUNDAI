@@ -1,0 +1,12 @@
+{
+  "id": "r18_2",
+  "text": "좋아요. 꼭 해 봐요.",
+  "source_sha256": "accd1dfbb8b7062a01ddcfa8affe11129a0aec4c6e76673c65b07e4ed04e1833",
+  "fingerprint": "2be5ec58b38c5721fc9b237d85bf16742f54943e8db183062137b54716471724",
+  "review": "generated_not_listening_reviewed",
+  "duration": 2.12,
+  "sample_rate": 24000,
+  "peak": 25012,
+  "rms": 3267.97,
+  "sha256": "accd1dfbb8b7062a01ddcfa8affe11129a0aec4c6e76673c65b07e4ed04e1833"
+}

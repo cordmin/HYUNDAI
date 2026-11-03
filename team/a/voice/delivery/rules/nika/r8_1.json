@@ -1,0 +1,12 @@
+{
+  "id": "r8_1",
+  "text": "오늘도 수고했어요. 시험 준비하다 쉴 때 뭐 하고 싶어요?",
+  "source_sha256": "07cb2fda2b468786f31d8ad7ef59536d8a8d9bbe7e6cac480159f54b8ac09423",
+  "fingerprint": "59c09a9b4aed5df56da0b3e77bcb4ed4b7c8e978d442f2fc0c06e099d182b998",
+  "review": "generated_not_listening_reviewed",
+  "duration": 5.04,
+  "sample_rate": 24000,
+  "peak": 15561,
+  "rms": 2650.71,
+  "sha256": "07cb2fda2b468786f31d8ad7ef59536d8a8d9bbe7e6cac480159f54b8ac09423"
+}

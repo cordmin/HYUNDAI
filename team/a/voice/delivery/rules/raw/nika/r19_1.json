@@ -1,0 +1,14 @@
+{
+  "duration": 4.84,
+  "sample_rate": 24000,
+  "peak": 20850,
+  "rms": 3011.52,
+  "sha256": "dbd5ba4298dcbe7191edc5839fb8489cb7acbd470f950c16545e56dc1f8aeb0d",
+  "id": "r19_1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오랜만에 학교 가는 날이네요. 제일 보고 싶은 친구가 있어요?",
+  "fingerprint": "9cf330a491f3b36f180551fde4b7631d31142d56df43775ac8670a62e28d92b2",
+  "generated_at": "2026-11-03T23:00:40+0900",
+  "review": "generated_not_listening_reviewed"
+}

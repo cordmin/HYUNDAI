@@ -1,0 +1,14 @@
+{
+  "duration": 5.48,
+  "sample_rate": 24000,
+  "peak": 20257,
+  "rms": 3088.52,
+  "sha256": "9672d2b20e61f3e5e0e55b2bd8790ac34f7ff244a6a773f37a43477eea76a124",
+  "id": "r5_1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "곧 시험이네요. 컴퓨터용 사인펜이랑 바늘 시계 챙겨 뒀어요?",
+  "fingerprint": "7cab7bec874e8c3966577e4706e6f2f2096c880f8bd0faffb1d3ebffdc37133e",
+  "generated_at": "2026-11-03T22:58:09+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 9.24,
+  "sample_rate": 24000,
+  "peak": 15995,
+  "rms": 2548.47,
+  "sha256": "1444ef4613d2ff5e84388d4e5cc94d4f3175ea55037f82379b59cb374665d0e2",
+  "id": "r3_1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "시험 끝났네요. 정말 수고했어요. 오늘은 시험 얘기 말고, 제일 하고 싶은 거 하나만 말해 줄래요?",
+  "fingerprint": "1fab35248cc896104a623cb4366afd07fcd3113c50dc2b56ccd7d3f59adc33dd",
+  "generated_at": "2026-11-03T22:57:44+0900",
+  "review": "generated_not_listening_reviewed"
+}

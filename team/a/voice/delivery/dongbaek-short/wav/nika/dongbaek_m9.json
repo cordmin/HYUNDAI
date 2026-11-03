@@ -1,0 +1,14 @@
+{
+  "duration": 32.0,
+  "sample_rate": 24000,
+  "peak": 19984,
+  "rms": 2511.43,
+  "sha256": "dfc0c6b69e7b63533f46accd00f91caf35e599046b1eaeae55ac01e68622ce45",
+  "id": "dongbaek_m9",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "같은 감자 장면을 점순이가 자기 입으로 들려준다면 무엇이 달라질까요? 소년의 이야기에서는 자존심이 상한 까닭을 알 수 있었습니다. 점순이의 이야기에서는 감자를 가져온 까닭이나 거절당했을 때의 느낌이 더 드러날 수 있겠지요. 어느 대목을 더 듣고 싶은지 속으로 하나만 떠올려 보세요. 우리가 상상한 속마음과 작품에 실제로 적힌 말은 구별해 주세요. 운전 중에는 대답하지 않으셔도 괜찮습니다.",
+  "fingerprint": "fd9c434e51c8a5b136108c6ac171eff346c85c49e0ec41531ca5ed81a27dd5f0",
+  "generated_at": "2026-11-03T22:44:31+0900",
+  "review": "generated_not_listening_reviewed"
+}

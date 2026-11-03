@@ -1,0 +1,94 @@
+{
+  "source": "team/a/lessons/인공지능-짧은판.csv",
+  "measured": true,
+  "choices": [
+    {
+      "minutes": 5,
+      "fits": true,
+      "seconds": 282.68,
+      "pieces": [
+        "m1",
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m6",
+        "m7",
+        "m8",
+        "m11"
+      ]
+    },
+    {
+      "minutes": 6,
+      "fits": true,
+      "seconds": 349.20000000000005,
+      "pieces": [
+        "m1",
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m6",
+        "m7",
+        "m8",
+        "m9",
+        "m10",
+        "m11"
+      ]
+    },
+    {
+      "minutes": 7,
+      "fits": true,
+      "seconds": 349.20000000000005,
+      "pieces": [
+        "m1",
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m6",
+        "m7",
+        "m8",
+        "m9",
+        "m10",
+        "m11"
+      ]
+    },
+    {
+      "minutes": 8,
+      "fits": true,
+      "seconds": 349.20000000000005,
+      "pieces": [
+        "m1",
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m6",
+        "m7",
+        "m8",
+        "m9",
+        "m10",
+        "m11"
+      ]
+    },
+    {
+      "minutes": 9,
+      "fits": true,
+      "seconds": 349.20000000000005,
+      "pieces": [
+        "m1",
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m6",
+        "m7",
+        "m8",
+        "m9",
+        "m10",
+        "m11"
+      ]
+    }
+  ]
+}

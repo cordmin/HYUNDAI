@@ -1,0 +1,12 @@
+{
+  "id": "r11_1",
+  "text": "오늘 체험학습 어땠어요? 제일 기억나는 장면 하나만 들려줘요.",
+  "source_sha256": "2f9c23ff864f6861f8bdf161c9c543433aecd9926f0fc5a5f10ef40f6b89476a",
+  "fingerprint": "6ce92dd6d07c25954e04400d5668734eb4fca96558bc353034e1f069f9d672ad",
+  "review": "generated_not_listening_reviewed",
+  "duration": 5.68,
+  "sample_rate": 24000,
+  "peak": 25089,
+  "rms": 3984.88,
+  "sha256": "2f9c23ff864f6861f8bdf161c9c543433aecd9926f0fc5a5f10ef40f6b89476a"
+}

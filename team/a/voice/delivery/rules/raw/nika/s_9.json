@@ -1,0 +1,14 @@
+{
+  "duration": 1.44,
+  "sample_rate": 24000,
+  "peak": 26306,
+  "rms": 3090.47,
+  "sha256": "934d463f9ca24dd74c59276f89e703bbd0bda1404e82720242d93a40e703d08d",
+  "id": "s_9",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "도덕",
+  "fingerprint": "be040218a78ab6797af932759c2af20cd41869e8e17fd06ecb24ee78c3ebfbef",
+  "generated_at": "2026-11-03T23:04:25+0900",
+  "review": "generated_not_listening_reviewed"
+}

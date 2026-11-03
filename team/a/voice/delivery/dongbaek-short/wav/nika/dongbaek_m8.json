@@ -1,0 +1,14 @@
+{
+  "duration": 22.24,
+  "sample_rate": 24000,
+  "peak": 26500,
+  "rms": 2682.68,
+  "sha256": "436b8cfb66a27b50b9c9d64b782cb7b10c5dd5b09f9be8f3b84d37acf0cc709d",
+  "id": "dongbaek_m8",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이야기 속 소년과 작가 김유정은 같은 사람이 아닙니다. 소년은 점순이가 미워해서 괴롭힌다고 생각합니다. 하지만 독자는 감자를 건네던 모습과 거절 뒤의 표정에서 다른 마음도 짐작합니다. 말하는 소년이 이해한 것과 독자가 해석하는 것 사이에 차이가 있는 것이지요.",
+  "fingerprint": "7732ed7a317a1294a955cc93772b440106911787537f86e2fc60a71abd15b878",
+  "generated_at": "2026-11-03T22:45:23+0900",
+  "review": "generated_not_listening_reviewed"
+}

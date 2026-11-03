@@ -1,0 +1,14 @@
+{
+  "duration": 2.68,
+  "sample_rate": 24000,
+  "peak": 18759,
+  "rms": 3433.64,
+  "sha256": "1d71481c945befee7e35442c3ec573902ad31bf1c4ef0e6642af61fe2076eb0f",
+  "id": "r21_2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘 하루 충분히 즐겨요.",
+  "fingerprint": "cb17fea08b8c30af78ea587cf40788b19fa72c65ced9e84cea263daf4d18a780",
+  "generated_at": "2026-11-03T23:01:10+0900",
+  "review": "generated_not_listening_reviewed"
+}

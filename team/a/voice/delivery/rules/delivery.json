@@ -1,0 +1,9 @@
+{
+  "zip": "team\\a\\voice\\delivery\\L7-rules-partial.zip",
+  "sha256": "37319f10c341d31ec27a94176b20a0d250125fd9d104ee493c68cb19a0ed727f",
+  "files": 149,
+  "complete": 72,
+  "missing": 69,
+  "speech_seconds": 244.32,
+  "status": "partial_daily_quota_exhausted"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "s_9",
+  "text": "도덕",
+  "source_sha256": "934d463f9ca24dd74c59276f89e703bbd0bda1404e82720242d93a40e703d08d",
+  "fingerprint": "be040218a78ab6797af932759c2af20cd41869e8e17fd06ecb24ee78c3ebfbef",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.44,
+  "sample_rate": 24000,
+  "peak": 26306,
+  "rms": 3090.47,
+  "sha256": "934d463f9ca24dd74c59276f89e703bbd0bda1404e82720242d93a40e703d08d"
+}

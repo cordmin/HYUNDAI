@@ -1,0 +1,12 @@
+{
+  "id": "r7_2",
+  "text": "말해 줘서 고마워요. 오늘 하나씩만 해 봐요.",
+  "source_sha256": "7dae7d4d4234a8375601212e64609a942cb660336273a378974dc3e0ea9c7975",
+  "fingerprint": "5cf8cd38f87104d721a60d78b9b116bd1bb5b5cff8ecaa0fd28934885a9efeff",
+  "review": "generated_not_listening_reviewed",
+  "duration": 4.8,
+  "sample_rate": 24000,
+  "peak": 27718,
+  "rms": 3406.55,
+  "sha256": "7dae7d4d4234a8375601212e64609a942cb660336273a378974dc3e0ea9c7975"
+}

@@ -1,0 +1,96 @@
+{
+  "source_sha256": "92cfdad7eea408410f7b31e4bd5c6b3a86657e8e21db7a2454fd5522f2f55be6",
+  "expected": 11,
+  "exported": 11,
+  "review": "generated_not_listening_reviewed",
+  "clips": [
+    {
+      "id": "ai_m1",
+      "duration": 34.32,
+      "sample_rate": 24000,
+      "peak": 21991,
+      "rms": 2518.21,
+      "sha256": "2efe2849dda355706eee22e0016fc7b47d667132b569dd1bfa79aba6a6985833"
+    },
+    {
+      "id": "ai_m2",
+      "duration": 31.6,
+      "sample_rate": 24000,
+      "peak": 19882,
+      "rms": 2790.77,
+      "sha256": "489d5bfa4b9b3f1b18cd75aaf77fefd1ef25f3c091225231efcd1a52e0a53fba"
+    },
+    {
+      "id": "ai_m3",
+      "duration": 31.6,
+      "sample_rate": 24000,
+      "peak": 25247,
+      "rms": 2973.69,
+      "sha256": "f74633a80131863637b686671186f9912c6fcaedb0152ad36a9dd756c3ff4b0a"
+    },
+    {
+      "id": "ai_m4",
+      "duration": 20.96,
+      "sample_rate": 24000,
+      "peak": 26668,
+      "rms": 4050.26,
+      "sha256": "633ea2e5108eb7cefb03cbfcded44cc096ec7defccd63b35f8d8f78bd2269278"
+    },
+    {
+      "id": "ai_m5",
+      "duration": 29.72,
+      "sample_rate": 24000,
+      "peak": 18646,
+      "rms": 2675.71,
+      "sha256": "b9c7bb633539c149be26d533d3908652d1dc4793293b77202632918be4f3d254"
+    },
+    {
+      "id": "ai_m6",
+      "duration": 30.64,
+      "sample_rate": 24000,
+      "peak": 24487,
+      "rms": 2625.64,
+      "sha256": "485acaecdc3c5d886bdf66f48da02741787ef6095f8f248c429c2a84ad440026"
+    },
+    {
+      "id": "ai_m7",
+      "duration": 32.0,
+      "sample_rate": 24000,
+      "peak": 25000,
+      "rms": 2667.63,
+      "sha256": "cb13feb369dd08ae998af9a771716bd9b76196cdc8aef78f173a3d755319a878"
+    },
+    {
+      "id": "ai_m8",
+      "duration": 29.72,
+      "sample_rate": 24000,
+      "peak": 20341,
+      "rms": 2742.18,
+      "sha256": "9b939d9be1967c5767c0c81776c6cdde075e044b9109a81581738ec3c62ab21b"
+    },
+    {
+      "id": "ai_m9",
+      "duration": 26.96,
+      "sample_rate": 24000,
+      "peak": 28188,
+      "rms": 3481.16,
+      "sha256": "8fdbcc59d7f6c5002d149a6f1f58e5e8b2eb3ed7b6269c8d6febc3da717f3196"
+    },
+    {
+      "id": "ai_m10",
+      "duration": 30.56,
+      "sample_rate": 24000,
+      "peak": 27570,
+      "rms": 3373.27,
+      "sha256": "1de09b3fd8b6c959eb2f020033f430430352fc3162e56a5e2655fee78a5b7864"
+    },
+    {
+      "id": "ai_m11",
+      "duration": 33.12,
+      "sample_rate": 24000,
+      "peak": 27939,
+      "rms": 2883.7,
+      "sha256": "73102aacf2ea7c92c2cf4496fc2d6445c2c51ec0debd4f79db2e3049e75f813b"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "s_6",
+  "text": "체육",
+  "source_sha256": "0169aaed7b038b8579656ab6d8b4b83c16a9f92b9cb873020492edfd69079748",
+  "fingerprint": "92c5804705969aaad1e5c0807cd2ec342fc78208f54dd59e92a08a257e6c2425",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.04,
+  "sample_rate": 24000,
+  "peak": 9538,
+  "rms": 1670.56,
+  "sha256": "0169aaed7b038b8579656ab6d8b4b83c16a9f92b9cb873020492edfd69079748"
+}

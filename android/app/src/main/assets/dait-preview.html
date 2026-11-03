@@ -129,6 +129,7 @@
     }
     body.driving .demo-panel { z-index: 10000; }
     body.real-driving .demo-panel { display: none; } /* 실제 주행 중에는 문장 하나와 큰 버튼 둘만 */
+    body.release .demo-panel { display: none; } /* 제출용 앱에는 시연 조작을 두지 않는다 */
     .demo-panel button {
       height: 24px;
       padding: 0 10px;
@@ -3300,6 +3301,9 @@
         }, 200);
       }
     }
+
+    // 제출용 앱에는 시연 버튼 줄을 두지 않는다. 브라우저 미리보기와 개발용 앱에만 보인다.
+    if (window.AndroidBridge && window.AndroidBridge.isDebugBuild && !window.AndroidBridge.isDebugBuild()) document.body.classList.add('release');
 
     // Initial render and signature splash intro
     render();

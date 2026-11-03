@@ -174,6 +174,10 @@ class MainActivity : Activity() {
             }.start()
         }
 
+        // 개발용 앱인지 알려 준다. 화면은 제출용 앱에서 시연 버튼 줄을 숨긴다.
+        @JavascriptInterface
+        fun isDebugBuild(): Boolean = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+
         @JavascriptInterface
         fun toggleDrivingSim() {
             runOnUiThread {

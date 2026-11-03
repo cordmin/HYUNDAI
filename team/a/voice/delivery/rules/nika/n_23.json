@@ -1,0 +1,12 @@
+{
+  "id": "n_23",
+  "text": "이십삼 분",
+  "source_sha256": "f2d5ecce5e5619ca66433434df7a4b6c2019900307a90008c0e9f5aefde6df87",
+  "fingerprint": "7e940c4485ac1bfd5449836067e830e4d9f14cc713d8853a680f80594be815fe",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.48,
+  "sample_rate": 24000,
+  "peak": 14318,
+  "rms": 2483.2,
+  "sha256": "f2d5ecce5e5619ca66433434df7a4b6c2019900307a90008c0e9f5aefde6df87"
+}

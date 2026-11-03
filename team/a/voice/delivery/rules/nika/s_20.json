@@ -1,0 +1,12 @@
+{
+  "id": "s_20",
+  "text": "봉사활동",
+  "source_sha256": "ef045b9676a6a19a6d6d14464cb152dd9c583d7077801bd9f98938338e5eb6e5",
+  "fingerprint": "242d8cfdaf4c75f5a00b102edc410fd72b787b33bcb1fb04290d6ff755a6b62f",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.44,
+  "sample_rate": 24000,
+  "peak": 26100,
+  "rms": 4089.14,
+  "sha256": "ef045b9676a6a19a6d6d14464cb152dd9c583d7077801bd9f98938338e5eb6e5"
+}

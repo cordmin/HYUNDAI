@@ -1,0 +1,12 @@
+{
+  "id": "n_1",
+  "text": "일 분",
+  "source_sha256": "7f0fab14059c9a4e09ac5ef878563d4ddd730bc6b6d37452c1eb344ed8d4b432",
+  "fingerprint": "3e9ea05b2d61e1dd768c07d33e4fd69ddffdf226bc8814fb1e298cc911edd90e",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.08,
+  "sample_rate": 24000,
+  "peak": 13756,
+  "rms": 2048.99,
+  "sha256": "7f0fab14059c9a4e09ac5ef878563d4ddd730bc6b6d37452c1eb344ed8d4b432"
+}

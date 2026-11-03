@@ -1,0 +1,12 @@
+{
+  "id": "s_17",
+  "text": "창체",
+  "source_sha256": "d8a7598e68fec8e280f75b7ed6381cb960d0bc78043eca0a6d9351ce89489996",
+  "fingerprint": "c10aea089bcbb1674f9175aafface46ea9065122e2d79d6e03f58283cdb82428",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.6,
+  "sample_rate": 24000,
+  "peak": 6273,
+  "rms": 1067.16,
+  "sha256": "d8a7598e68fec8e280f75b7ed6381cb960d0bc78043eca0a6d9351ce89489996"
+}

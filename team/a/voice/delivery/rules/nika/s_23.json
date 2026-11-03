@@ -1,0 +1,12 @@
+{
+  "id": "s_23",
+  "text": "즐거운 생활",
+  "source_sha256": "9221178d2517ef8a526b1c8b3dfeb5ce250516916c55c89b088b5d3d793831ea",
+  "fingerprint": "bc68997cc00813aac24cbd6f5fd48a01552e7bb11cd68264881b43f181e49f41",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.6,
+  "sample_rate": 24000,
+  "peak": 20348,
+  "rms": 3912.94,
+  "sha256": "9221178d2517ef8a526b1c8b3dfeb5ce250516916c55c89b088b5d3d793831ea"
+}

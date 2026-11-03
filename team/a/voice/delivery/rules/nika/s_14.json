@@ -1,0 +1,12 @@
+{
+  "id": "s_14",
+  "text": "진로",
+  "source_sha256": "8b1de2b33fe7c8bcd133caf74b63cc9f841ab4a8578f97209c633f314f9b7c49",
+  "fingerprint": "a21978b78a784fc553e1816f5187e035990f0c91fa53d4444441a1e33d5590f5",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.12,
+  "sample_rate": 24000,
+  "peak": 13505,
+  "rms": 2115.08,
+  "sha256": "8b1de2b33fe7c8bcd133caf74b63cc9f841ab4a8578f97209c633f314f9b7c49"
+}

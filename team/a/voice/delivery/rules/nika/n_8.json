@@ -1,0 +1,12 @@
+{
+  "id": "n_8",
+  "text": "팔 분",
+  "source_sha256": "80be5ffe0f2d710ece5aecea1d573352b0da1222f2ee235cd10649a124f1fe5c",
+  "fingerprint": "15311ba140f45d4718a6df38f72adf4936ef0435fef326e97f715e7587593ebf",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.12,
+  "sample_rate": 24000,
+  "peak": 15395,
+  "rms": 2940.09,
+  "sha256": "80be5ffe0f2d710ece5aecea1d573352b0da1222f2ee235cd10649a124f1fe5c"
+}

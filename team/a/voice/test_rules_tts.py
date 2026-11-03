@@ -30,6 +30,13 @@ with tempfile.TemporaryDirectory() as directory:
         assert report['exported'] == 1
         assert report['clips'][0]['sample_rate'] == 24000
         assert report['clips'][0]['source_sha256'] == info['sha256']
+        # An identical 24k take needs no write, including when a player holds it open.
+        wav.write_bytes((root / 'delivery/nika/n_15.wav').read_bytes())
+        info = dict(task.studio.audio_info(wav), fingerprint=task.studio.fingerprint(one, line, 'Nika'),
+                    review='generated_not_listening_reviewed')
+        meta.write_text(json.dumps(info), encoding='utf-8')
+        with patch.object(task.shutil, 'copyfile', side_effect=AssertionError('Unnecessary overwrite')):
+            assert task.export(one, 'same-source')['exported'] == 1
         one['lines'] = [dict(line, text='바뀐 대사')]
         assert task.export(one, 'changed-source')['missing'] == ['n_15']
 print('L7 pinned number transcript, PCM24k export and stale-take rejection passed')

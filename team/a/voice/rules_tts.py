@@ -53,7 +53,8 @@ def export(data, source_hash):
         studio.audio_info(wav)
         output = destination / wav.name
         if info['sample_rate'] == 24000:
-            shutil.copyfile(wav, output)
+            if not output.is_file() or hashlib.sha256(output.read_bytes()).hexdigest() != info['sha256']:
+                shutil.copyfile(wav, output)
         else:
             subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(wav), '-ar', '24000',
                             '-ac', '1', '-c:a', 'pcm_s16le', str(output)], check=True)

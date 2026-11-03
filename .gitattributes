@@ -12,6 +12,9 @@ gradlew text eol=lf
 *.wav binary
 *.png binary
 *.jar binary
+# Keep pinned TTS source bytes stable for source_sha256 receipts.
+team/a/lessons/*짧은판.csv -text whitespace=cr-at-eol
+team/a/voice/rules-script.csv -text whitespace=cr-at-eol
 # Preserve the original vendor license text, including its whitespace.
 research/PLEOS-SDK-LICENSE.txt -whitespace
 research/pleos-system-image.xml -whitespace

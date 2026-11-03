@@ -1,0 +1,14 @@
+{
+  "duration": 1.72,
+  "sample_rate": 24000,
+  "peak": 22799,
+  "rms": 3819.86,
+  "sha256": "d34aef36e8ffd10759cdd6ec91692cf751c1703ccc75d562f5758403179c6062",
+  "id": "s_18",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "자율활동",
+  "fingerprint": "2b36016346a9ef860b9f4467a2f6ff7541cba44c4c66c8ca5c81c9a2661f31cd",
+  "generated_at": "2026-11-03T23:39:13+0900",
+  "review": "generated_not_listening_reviewed"
+}

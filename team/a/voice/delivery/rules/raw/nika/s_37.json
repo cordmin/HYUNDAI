@@ -1,0 +1,14 @@
+{
+  "duration": 1.04,
+  "sample_rate": 24000,
+  "peak": 14432,
+  "rms": 2175.45,
+  "sha256": "be6612897d9d8792db7add5b5020476f3be64c496dd5cd5275654869e9e34e98",
+  "id": "s_37",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "지리",
+  "fingerprint": "db78f2116380ea9af7826763376260550fca9f09cad361805571f1ccbf34e0a6",
+  "generated_at": "2026-11-03T23:41:38+0900",
+  "review": "generated_not_listening_reviewed"
+}

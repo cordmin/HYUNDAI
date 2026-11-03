@@ -1,0 +1,14 @@
+{
+  "duration": 1.08,
+  "sample_rate": 24000,
+  "peak": 20227,
+  "rms": 2694.98,
+  "sha256": "577fbd804a14b0b1d220fcb2e88f84e4908a6a82a3978d543e3f512edb471278",
+  "id": "s_5",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "과학",
+  "fingerprint": "ae2bd4d4dc9194f1457737a7bb2d4e61d22e20687af7aed20f74e78057eea5d8",
+  "generated_at": "2026-11-03T23:04:01+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "s_31",
+  "text": "공통수학",
+  "source_sha256": "965e93bb5f33e60aeb7d73b1b4f77f0a544ad1b36d8d17046d1f94e10ec776d6",
+  "fingerprint": "100532710e193aa82120c132c4556d7c12bb1f9daba22c3a28a7fbbbcfe3c22b",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.24,
+  "sample_rate": 24000,
+  "peak": 14945,
+  "rms": 2330.86,
+  "sha256": "965e93bb5f33e60aeb7d73b1b4f77f0a544ad1b36d8d17046d1f94e10ec776d6"
+}

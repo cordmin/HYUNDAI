@@ -1,0 +1,12 @@
+{
+  "id": "n_45",
+  "text": "사십오 분",
+  "source_sha256": "75708c2cb94dd63ae6986f0e86eb8524f704b4ac60cb7f4315a6cf3bf4f36498",
+  "fingerprint": "ebb4a3be37811ed5ed50b3ecd52305dc910a26fda031db15dd09463df9aa0ad5",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.4,
+  "sample_rate": 24000,
+  "peak": 14681,
+  "rms": 1737.28,
+  "sha256": "75708c2cb94dd63ae6986f0e86eb8524f704b4ac60cb7f4315a6cf3bf4f36498"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "n_4",
+  "text": "사 분",
+  "source_sha256": "0bacc32ab397eb200327bd6f9ac9b7f8015c30b70328d4311ac87184e6884d77",
+  "fingerprint": "005702e67ddf7e077b399c54146adfcb565768e5dbc615a6855d34e6d2fbd6e8",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.2,
+  "sample_rate": 24000,
+  "peak": 22102,
+  "rms": 3664.65,
+  "sha256": "0bacc32ab397eb200327bd6f9ac9b7f8015c30b70328d4311ac87184e6884d77"
+}

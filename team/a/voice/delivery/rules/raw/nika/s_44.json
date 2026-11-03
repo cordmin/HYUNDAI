@@ -1,0 +1,14 @@
+{
+  "duration": 2.0,
+  "sample_rate": 24000,
+  "peak": 23912,
+  "rms": 2952.54,
+  "sha256": "7b6887941801a949936239beb306864f6597d40a9c453d28448e767d3587d99e",
+  "id": "s_44",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "화법과 작문",
+  "fingerprint": "e153738318e616dec6e99d002295574f1ad3fecc61a148f34afedf2ad0fbc12d",
+  "generated_at": "2026-11-03T23:42:23+0900",
+  "review": "generated_not_listening_reviewed"
+}

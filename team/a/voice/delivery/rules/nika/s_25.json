@@ -1,0 +1,12 @@
+{
+  "id": "s_25",
+  "text": "스포츠",
+  "source_sha256": "49b79a98d2ef4724dff45ddb5bedb78f4c657cd272b8272fb446941f5105d5ea",
+  "fingerprint": "4ec69ee6bc73b5e008f222ea54e2c2a70f5d29fec8a8c8ae9acd87d9e965d89d",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.12,
+  "sample_rate": 24000,
+  "peak": 19574,
+  "rms": 2194.2,
+  "sha256": "49b79a98d2ef4724dff45ddb5bedb78f4c657cd272b8272fb446941f5105d5ea"
+}

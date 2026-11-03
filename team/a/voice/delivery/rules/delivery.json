@@ -1,0 +1,9 @@
+{
+  "zip": "team\\a\\voice\\delivery\\L7-rules.zip",
+  "sha256": "24097a04906502c9ed7ea38fde7f458c56fda8dda43dcaeba51e5438a9e919b4",
+  "files": 287,
+  "complete": 141,
+  "missing": 0,
+  "speech_seconds": 340.52,
+  "status": "production_complete_listening_and_app_integration_pending"
+}

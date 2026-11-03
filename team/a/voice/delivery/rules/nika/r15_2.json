@@ -1,0 +1,12 @@
+{
+  "id": "r15_2",
+  "text": "즐겁게 보내고 와요.",
+  "source_sha256": "e5be1eac8f56a33e6dfe60d4800f8f4a77ce995cdce81101c903e2b0a1533655",
+  "fingerprint": "23acd4d628affe4cc99e1cffc1c9479d425696cfd19ac056c5960806eca6e54b",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.84,
+  "sample_rate": 24000,
+  "peak": 27405,
+  "rms": 4054.25,
+  "sha256": "e5be1eac8f56a33e6dfe60d4800f8f4a77ce995cdce81101c903e2b0a1533655"
+}

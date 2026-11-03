@@ -1,0 +1,14 @@
+{
+  "duration": 24.4,
+  "sample_rate": 24000,
+  "peak": 28259,
+  "rms": 2864.89,
+  "sha256": "0d63922c12ced2afddc1a13f908c3ee5bac0d94d3e7db41a2d3390b2d6cdb3e8",
+  "id": "dongbaek_m6",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "소년은 점순이의 말을 가난을 들추는 말로 받아들였습니다. 닭싸움이 되풀이되자 소년은 점순이네 수탉을 죽입니다. 땅과 집을 잃을까 겁이 나 울지요. 점순이는 어른들에게 이르지 않겠다고 합니다. 둘은 노란 꽃밭에 함께 쓰러졌다가 어머니의 부름에 서로 다른 쪽으로 기어갑니다.",
+  "fingerprint": "1aef826f20adea0645daf83c7e90c04029c925c4850d5ba2fe87e8e1b84ab189",
+  "generated_at": "2026-11-03T22:45:16+0900",
+  "review": "generated_not_listening_reviewed"
+}

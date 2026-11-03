@@ -1,0 +1,12 @@
+{
+  "id": "r6_1",
+  "text": "곧 시험이네요. 오늘은 새로운 것보다 아는 것을 한 번 더 봐요.",
+  "source_sha256": "0420480e95e2a89cf717253a47925257d7d5efa664499f095084b66fee8a5d7d",
+  "fingerprint": "3fbe524b3dc81c54ee7933f0fe41894c7dcbbd569329b6777f360960322f4e0a",
+  "review": "generated_not_listening_reviewed",
+  "duration": 6.36,
+  "sample_rate": 24000,
+  "peak": 18338,
+  "rms": 3009.47,
+  "sha256": "0420480e95e2a89cf717253a47925257d7d5efa664499f095084b66fee8a5d7d"
+}

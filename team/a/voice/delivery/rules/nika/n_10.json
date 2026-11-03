@@ -1,0 +1,12 @@
+{
+  "id": "n_10",
+  "text": "십 분",
+  "source_sha256": "457241940e37981f24c0362a5ddb5acb393500213b41f585d1d8ae2ac6187343",
+  "fingerprint": "7b65318804cb6a76ea6f03765c7271055beb7028eaf7f56ce87bfe8a4af45445",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.12,
+  "sample_rate": 24000,
+  "peak": 10843,
+  "rms": 2005.39,
+  "sha256": "457241940e37981f24c0362a5ddb5acb393500213b41f585d1d8ae2ac6187343"
+}

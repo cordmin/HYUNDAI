@@ -1,0 +1,14 @@
+{
+  "duration": 5.44,
+  "sample_rate": 24000,
+  "peak": 20627,
+  "rms": 3036.85,
+  "sha256": "d8e330332f559986fd62df82e569677c8b71feed5cf7313559ed6bd09d91cf33",
+  "id": "r12_1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "곧 체육대회네요. 체육복은 오늘 저녁에 미리 챙겨 둬요.",
+  "fingerprint": "99a5cf879c85bbcd31d378bb0278c28429743f00b36e260e4d8354b694f01156",
+  "generated_at": "2026-11-03T22:59:24+0900",
+  "review": "generated_not_listening_reviewed"
+}

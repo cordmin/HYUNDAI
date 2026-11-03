@@ -1,0 +1,14 @@
+{
+  "duration": 2.24,
+  "sample_rate": 24000,
+  "peak": 16097,
+  "rms": 2829.66,
+  "sha256": "a1f4205dc2d7fbdc1132af314f8dff7a8e5d88271f9e11fee0c3736a6532c914",
+  "id": "s_16",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "창의적 체험활동",
+  "fingerprint": "0158a3c7b1b0840496068e68192bedc386461ebd86086709c982464f2356445a",
+  "generated_at": "2026-11-03T23:39:00+0900",
+  "review": "generated_not_listening_reviewed"
+}

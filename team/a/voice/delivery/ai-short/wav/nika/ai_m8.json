@@ -1,0 +1,14 @@
+{
+  "duration": 29.72,
+  "sample_rate": 24000,
+  "peak": 20341,
+  "rms": 2742.18,
+  "sha256": "9b939d9be1967c5767c0c81776c6cdde075e044b9109a81581738ec3c62ab21b",
+  "id": "ai_m8",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "언어 모델은 존재하지 않는 책이나 출처를 그럴듯하게 말할 수도 있습니다. 자신 있게 틀린다는 말은 모델이 사람처럼 확신을 느낀다는 뜻이 아닙니다. 표현은 단정적인데 내용은 틀릴 수 있다는 뜻입니다. 출처를 붙였더라도 그 자료가 실제로 있는지, 답을 뒷받침하는지 확인해야 합니다. 지금 차 안에서 검색하라는 뜻은 아닙니다. 주차한 뒤 확인할 일을 정해 두면 됩니다.",
+  "fingerprint": "d8a642de99f59ddd3f072756e45663d1a9f0ba40189aa2ac87d4ffd45392e397",
+  "generated_at": "2026-11-03T22:52:48+0900",
+  "review": "generated_not_listening_reviewed"
+}

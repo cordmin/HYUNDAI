@@ -1,0 +1,12 @@
+{
+  "id": "s_29",
+  "text": "통합과학",
+  "source_sha256": "a1c5e001e2112b1f65b9ca804a60feda7f91c50742489a950a18157adaf689e6",
+  "fingerprint": "8bbfa510bf920f641ba62fc4f58635b73879fbbd201f08856966746fa718f1b0",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.64,
+  "sample_rate": 24000,
+  "peak": 12869,
+  "rms": 1849.83,
+  "sha256": "a1c5e001e2112b1f65b9ca804a60feda7f91c50742489a950a18157adaf689e6"
+}

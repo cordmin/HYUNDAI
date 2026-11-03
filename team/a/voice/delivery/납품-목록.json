@@ -1,0 +1,73 @@
+{
+  "dongbaek": {
+    "path": "team\\a\\voice\\delivery\\dongbaek-short.zip",
+    "files": 50,
+    "sha256": "d30ca8f56c327caac951acc2d4e1737d2285013b37c5e7b23d8b403b0f3856dc",
+    "speech_seconds": 378.0,
+    "choices": [
+      {
+        "minutes": 5,
+        "seconds": 272.44,
+        "fits": true
+      },
+      {
+        "minutes": 6,
+        "seconds": 355.36,
+        "fits": true
+      },
+      {
+        "minutes": 7,
+        "seconds": 396,
+        "fits": true
+      },
+      {
+        "minutes": 8,
+        "seconds": 396,
+        "fits": true
+      },
+      {
+        "minutes": 9,
+        "seconds": 396,
+        "fits": true
+      }
+    ]
+  },
+  "ai": {
+    "path": "team\\a\\voice\\delivery\\ai-short.zip",
+    "files": 50,
+    "sha256": "76eac7a986561e5daa8c1c2efea1830b0c37a408d3d56a36993ba7aa750713dc",
+    "speech_seconds": 331.2,
+    "choices": [
+      {
+        "minutes": 5,
+        "seconds": 282.68,
+        "fits": true
+      },
+      {
+        "minutes": 6,
+        "seconds": 349.20000000000005,
+        "fits": true
+      },
+      {
+        "minutes": 7,
+        "seconds": 349.20000000000005,
+        "fits": true
+      },
+      {
+        "minutes": 8,
+        "seconds": 349.20000000000005,
+        "fits": true
+      },
+      {
+        "minutes": 9,
+        "seconds": 349.20000000000005,
+        "fits": true
+      }
+    ]
+  },
+  "combined": {
+    "path": "team\\a\\voice\\delivery\\L6-짧은판-납품.zip",
+    "sha256": "96beffa8578492571a5204a8774695d2032c23d81d6f521678bfbcfb6d206597",
+    "bytes": 36760130
+  }
+}

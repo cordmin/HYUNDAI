@@ -1,0 +1,14 @@
+{
+  "duration": 1.6,
+  "sample_rate": 24000,
+  "peak": 14486,
+  "rms": 2752.58,
+  "sha256": "399249779dd98c54f5ed71ce959d78f0fd4eb4f12c7ace2a9f632a0bb145558f",
+  "id": "s_22",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "슬기로운 생활",
+  "fingerprint": "d0fe654820654b5c46a2414e206f9d8f4a4c207ba8aced431b8228aa838dd3eb",
+  "generated_at": "2026-11-03T23:40:03+0900",
+  "review": "generated_not_listening_reviewed"
+}

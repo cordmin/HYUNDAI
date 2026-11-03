@@ -1,0 +1,12 @@
+{
+  "id": "r22_1",
+  "text": "오늘은 공개수업이 있어요. 평소처럼 하면 돼요.",
+  "source_sha256": "1d578577209cb5129fbf86cce2d2f996973db60545831ab8d73a380240e87949",
+  "fingerprint": "55b3e4074a86c0d1acf9418e00178e09307d6e81905c51e4a88084bb2fd78b1c",
+  "review": "generated_not_listening_reviewed",
+  "duration": 4.2,
+  "sample_rate": 24000,
+  "peak": 18775,
+  "rms": 3348.31,
+  "sha256": "1d578577209cb5129fbf86cce2d2f996973db60545831ab8d73a380240e87949"
+}

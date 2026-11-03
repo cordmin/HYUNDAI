@@ -1,0 +1,12 @@
+{
+  "id": "s_4",
+  "text": "사회",
+  "source_sha256": "bb79b03f29fb340b211aae07d947eca92b6fa1c6d0ac76c538dc2a979c7279e0",
+  "fingerprint": "6a8f53717284f3133b20843822f31bbfa8e8b56c70472b2c3394c82ed46fc1b2",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.24,
+  "sample_rate": 24000,
+  "peak": 21164,
+  "rms": 3144.67,
+  "sha256": "bb79b03f29fb340b211aae07d947eca92b6fa1c6d0ac76c538dc2a979c7279e0"
+}

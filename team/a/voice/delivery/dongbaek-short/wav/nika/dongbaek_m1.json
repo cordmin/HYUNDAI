@@ -1,0 +1,14 @@
+{
+  "duration": 40.0,
+  "sample_rate": 24000,
+  "peak": 20550,
+  "rms": 2901.49,
+  "sha256": "8505720e37772fb98a2eb845ceea0437b9a474e4dd453c7eabc77c5c9dfa785e",
+  "id": "dongbaek_m1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "안녕하세요, 다잇입니다. 짧은 국어 시간입니다. 오늘은 김유정의 소설 동백꽃을 듣겠습니다. 오늘의 질문은 점순이는 왜 자꾸 닭싸움을 붙였을까입니다. 구운 감자를 건네는 장면과 닭싸움, 그리고 노란 꽃밭의 결말을 따라가겠습니다. 이야기를 들려주는 소년은 점순이의 마음을 직접 알지 못합니다. 우리도 한 가지 답을 미리 정하기보다 인물의 말과 행동에서 단서를 찾아보겠습니다. 운전에 집중하며 편하게 들어 주세요. 대답하지 않으셔도 괜찮습니다.",
+  "fingerprint": "651fde0cecccf836f9ae963a0e7bc69f6900a3d67a972e8f64a5ac76cedf6eca",
+  "generated_at": "2026-11-03T22:42:57+0900",
+  "review": "generated_not_listening_reviewed"
+}

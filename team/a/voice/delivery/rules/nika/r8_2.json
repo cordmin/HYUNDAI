@@ -1,0 +1,12 @@
+{
+  "id": "r8_2",
+  "text": "좋아요. 쉬는 것도 준비예요.",
+  "source_sha256": "5af6aca811193cef033f27ca917f95a207475e715d0837bd66cf659202cee8bd",
+  "fingerprint": "c3f4e51bef4ab04c333056c4edb923d167e7fe7bdd90c2f8bff8bfb3a1ef633f",
+  "review": "generated_not_listening_reviewed",
+  "duration": 3.84,
+  "sample_rate": 24000,
+  "peak": 23330,
+  "rms": 2493.36,
+  "sha256": "5af6aca811193cef033f27ca917f95a207475e715d0837bd66cf659202cee8bd"
+}

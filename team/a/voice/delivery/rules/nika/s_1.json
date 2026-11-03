@@ -1,0 +1,12 @@
+{
+  "id": "s_1",
+  "text": "국어",
+  "source_sha256": "7374faae8adc1fb972bd692594d562d808378e65168fbe7bdb31c8751b265eb3",
+  "fingerprint": "ca61bb03de40c6f71c42145248f41959bdcee2a7fb35f56e3ef483ce9f66cba8",
+  "review": "generated_not_listening_reviewed",
+  "duration": 0.92,
+  "sample_rate": 24000,
+  "peak": 23676,
+  "rms": 3190.12,
+  "sha256": "7374faae8adc1fb972bd692594d562d808378e65168fbe7bdb31c8751b265eb3"
+}

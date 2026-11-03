@@ -1,0 +1,12 @@
+{
+  "id": "s_8",
+  "text": "미술",
+  "source_sha256": "cfe6dc3ecbf66084ee50c912e90f004d96ae76375c02f7278f5cd8da9b4bae8d",
+  "fingerprint": "3e55d0c38f473760e8c7ab4ef116ce1c0cf74d1057b5002fb27a3345be02a5ff",
+  "review": "generated_not_listening_reviewed",
+  "duration": 0.96,
+  "sample_rate": 24000,
+  "peak": 15171,
+  "rms": 2545.1,
+  "sha256": "cfe6dc3ecbf66084ee50c912e90f004d96ae76375c02f7278f5cd8da9b4bae8d"
+}

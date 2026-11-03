@@ -1,0 +1,12 @@
+{
+  "id": "n_6",
+  "text": "육 분",
+  "source_sha256": "b66fbdb534e353a331e33de49817445c36ac38a9afd46380feb64fb49869354b",
+  "fingerprint": "48f5200d3e7e21e0075bb85b8c7c04a0f55851ef98e71cc334094712f84f121b",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.36,
+  "sample_rate": 24000,
+  "peak": 11026,
+  "rms": 1617.6,
+  "sha256": "b66fbdb534e353a331e33de49817445c36ac38a9afd46380feb64fb49869354b"
+}

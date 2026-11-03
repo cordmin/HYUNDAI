@@ -1382,3 +1382,8 @@ test('가 볼 만한 곳은 지금 위치, 없으면 학교에서 가까운 순�
   assert.strictEqual(school.from, '학교에서 가까운 순');
   assert.strictEqual(page(`kmText(1.234) + ' ' + kmText(12.6)`), '1.2km 13km');
 });
+
+test('학교를 등록하기 전 첫 화면에서도 가 볼 만한 곳으로 갈 수 있다', () => {
+  page(`localStorage.values.clear(); school = null; goHome();`);
+  assert.ok(stageHtml().includes('aria-label="가 볼 만한 곳" onclick="openPlaces()"'));
+});

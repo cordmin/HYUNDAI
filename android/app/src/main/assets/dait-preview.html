@@ -224,14 +224,6 @@
     .icon-btn:hover { background: var(--glass-hover); }
     .icon-btn svg { width: calc(20 * var(--u)); height: calc(20 * var(--u)); }
 
-    .home-grid {
-      flex: 1;
-      min-height: 0;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      grid-template-rows: repeat(2, minmax(0, 1fr));
-      gap: calc(10 * var(--u));
-    }
     .home-card {
       min-width: 0;
       min-height: 0;
@@ -282,17 +274,6 @@
     .card-big.size-3 { font-size: calc(20 * var(--u)); }
     .card-big.size-4 { font-size: calc(17 * var(--u)); }
     .card-big .card-sub { letter-spacing: 0; }
-    .card-ask {
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      font-size: calc(15 * var(--u));
-      font-weight: 700;
-      line-height: 1.3;
-    }
     .card-sub {
       margin-top: calc(2 * var(--u));
       font-size: calc(13 * var(--u));
@@ -324,8 +305,6 @@
       border-color: rgba(255, 255, 255, 0.18);
       cursor: pointer;
     }
-    .home-card.start.afternoon { background: linear-gradient(150deg, #E4835A 0%, #C2527F 58%, #7A4BB5 100%); }
-    .home-card.start.weekend { background: linear-gradient(150deg, #7C7FE0 0%, #6A55C8 58%, #4A3FA0 100%); }
 
     /* 학교 등록 전 첫 화면: 빈 칸 없이 수업의 질문 하나를 크게 보여 준다 */
     .question-home {
@@ -349,6 +328,11 @@
     .question-actions .card-btn { margin-top: 0; flex: 1; }
     .question-side { min-height: 0; display: flex; flex-direction: column; gap: calc(10 * var(--u)); }
     .question-side .home-card { flex: 1; }
+    /* 등하교 대화 카드: 누르면 대화를 시작하고, 아래 버튼으로 출발할 때 들려주기를 고른다 */
+    .home-card.talk-card { cursor: pointer; }
+    .home-card.talk-card .card-focus { font-size: calc(19 * var(--u)); }
+    .talk-actions { margin-top: auto; display: flex; gap: calc(6 * var(--u)); }
+    .talk-actions .card-btn { margin-top: 0; flex: 1; font-size: calc(13 * var(--u)); }
     .question-times { margin-top: auto; display: flex; gap: calc(6 * var(--u)); }
     .question-times .choice-chip { min-width: 0; font-size: calc(14 * var(--u)); }
     .register-line {
@@ -370,55 +354,9 @@
     }
     .register-line b { color: var(--lilac); font-weight: 800; }
     .home-card.start .card-label { color: rgba(255, 255, 255, 0.85); }
-    .start-arrow {
-      margin-top: auto;
-      align-self: flex-end;
-      width: calc(36 * var(--u));
-      height: calc(36 * var(--u));
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.92);
-      color: #3A2F80;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .start-arrow svg { width: calc(18 * var(--u)); height: calc(18 * var(--u)); }
-
-    /* 어디로 카드: 네이버앱의 예약 카드처럼 왼쪽 세로줄 */
-    .place-mark {
-      margin-top: calc(6 * var(--u));
-      padding-left: calc(8 * var(--u));
-      border-left: calc(2 * var(--u)) solid #5FD6B4;
-    }
-    .place-mark .card-text {
-      margin-top: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .subject-grid {
-      flex: 1;
-      min-height: 0;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      align-content: center;
-      justify-items: center;
-      row-gap: calc(8 * var(--u));
-      font-size: calc(22 * var(--u));
-      font-weight: 800;
-      line-height: 1.2;
-      letter-spacing: -0.5px;
-    }
 
     /* 좁고 긴 창에서는 두 줄로 놓고 내려서 본다 */
     @container (max-width: 520px) {
-      .home-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-template-rows: none;
-        grid-auto-rows: calc(130 * var(--u));
-        overflow-y: auto;
-      }
       .settings-grid { grid-template-columns: minmax(0, 1fr); overflow-y: auto; }
       .place-list { grid-template-columns: minmax(0, 1fr); }
     }
@@ -1018,18 +956,31 @@
       renderDialogueFlow(stageArea);
     }
 
-    // --- 첫 화면: 인사 두 줄과 작은 카드 여섯 장 ---
+    // --- 학교 등록 후 첫 화면: 오늘의 수업을 크게, 옆에 등하교 대화와 그날 챙길 것 ---
+    // 시간표와 급식은 화면에 두지 않는다. 시간표는 등교 첫 말과 하교 질문에서 그대로 쓴다.
     function renderHome(container) {
       if (!school) { renderQuestionHome(container); return; }
       const trip = currentTrip();
       const info = homeInfo(trip);
       const isMorning = trip.mode === 'morning';
+      const weekend = trip.kind === 'weekend';
       const other = isMorning ? 'afternoon' : 'morning';
-      const startClass = trip.kind === 'weekend' ? ' weekend' : (isMorning ? '' : ' afternoon');
-      const startLabel = !school ? '학교 등록하기'
-        : trip.kind === 'weekend' ? `${(schoolPlan() || { label: '다음 수업일' }).label} 준비 듣기`
-        : `${isMorning ? '등교' : '하교'} 대화 시작하기`;
+      const startLabel = weekend ? `${(schoolPlan() || { label: '다음 수업일' }).label} 준비 듣기` : `${isMorning ? '등교' : '하교'} 대화 시작하기`;
+      const { lesson, reserved } = homeLesson();
+      const progress = lessonProgress();
       const now = new Date();
+      const where = !weekend && trip.minutes !== null ? ` · ${isMorning ? '학교' : '집'}까지 ${trip.minutes}분` : '';
+      const armTalk = weekend || reserved ? '' : `<button class="card-btn${armed ? ' quiet' : ''}" onclick="event.stopPropagation(); toggleArm('${trip.mode}')">${armLabel(trip)}</button>`;
+      const otherTalk = trip.known || Journey.start(other, { ...journeyContext(), rule: ruleFor(other) }) === 'SILENT' ? ''
+        : `<button class="card-btn quiet" onclick="event.stopPropagation(); startFlow('${other}')">${other === 'morning' ? '등교' : '하교'} 대화</button>`;
+      const ieumLine = progress.ieum ? `이음 ${progress.ieum}` : '수업을 마치면 이음이 쌓여요';
+      const side = weekend
+        ? `<div class="card-label">쉬는 날</div><div class="card-focus">가 볼 만한 곳</div><div class="card-sub">${ieumLine}</div><button class="card-btn quiet" onclick="openPlaces()">찾아보기</button>`
+        : isMorning
+          ? `<div class="card-label">${escapeHtml(info.prepLabel)}</div>${bigWordHtml(info.prep, info.prepSub)}<div class="card-sub">${ieumLine}</div>`
+          : progress.homework
+            ? `<div class="card-label">이음 ${progress.ieum} · 숙제</div><div class="card-text">${escapeHtml(progress.homework.title)}</div><button class="card-btn quiet" onclick="doneHomework()">했어요</button>`
+            : `<div class="card-label">배움과 이어진 수</div><div class="card-text">${ieumLine}</div><button class="card-btn quiet" onclick="openLessons()">다른 수업 보기</button>`;
       container.innerHTML = `
         <div class="home-top">
           ${getDaitLogoHtml()}
@@ -1038,7 +989,7 @@
             <div class="home-desc">${escapeHtml(info.desc)}</div>
           </div>
           <div class="home-tools">
-            <button class="card-btn" onclick="openLessons()">${armed && armed.lesson ? '수업 예약' : '수업 듣기'}</button>
+            <button class="card-btn" onclick="openLessons()">${reserved ? '수업 예약' : '다른 수업'}</button>
             <button class="icon-btn" aria-label="가 볼 만한 곳" onclick="openPlaces()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
             </button>
@@ -1047,52 +998,49 @@
             </button>
           </div>
         </div>
-
-        <div class="home-grid">
-          <div class="home-card start${startClass}" onclick="${school ? `startFlow('${trip.mode}')` : 'openSettings()'}">
-            <div class="card-label">${now.getMonth() + 1}월 ${now.getDate()}일 ${WEEKDAYS[now.getDay()]}</div>
-            <div class="card-focus">${escapeHtml(startLabel)}</div>
-            <div class="start-arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+        <div class="question-home">
+          ${lessonCardHtml(lesson, reserved)}
+          <div class="question-side">
+            <div class="home-card talk-card" onclick="startFlow('${trip.mode}')">
+              <div class="card-label">${now.getMonth() + 1}월 ${now.getDate()}일 ${WEEKDAYS[now.getDay()]}${escapeHtml(where)}</div>
+              <div class="card-focus">${escapeHtml(startLabel)}</div>
+              <div class="card-sub">${escapeHtml(info.question)}</div>
+              ${armTalk || otherTalk ? `<div class="talk-actions">${armTalk}${otherTalk}</div>` : ''}
             </div>
-          </div>
-
-          ${tripCardHtml(trip)}
-
-          <div class="home-card">
-            <div class="card-label">${escapeHtml(info.prepLabel)}</div>
-            ${bigWordHtml(info.prep, info.prepSub)}
-          </div>
-
-          <div class="home-card">
-            <div class="card-label">${escapeHtml(info.scheduleLabel)}</div>
-            ${info.subjects.length > 0
-              ? `<div class="subject-grid">${[...new Set(info.subjects.map(shortSubject))].map(c => `<span>${escapeHtml(c)}</span>`).join('')}</div>`
-              : bigWordHtml(school ? '확인 필요' : '등록 필요')}
-          </div>
-
-          <div class="home-card">
-            <div class="card-label">${escapeHtml(info.mealLabel)}</div>
-            ${bigWordHtml(info.meal)}
-          </div>
-
-          <div class="home-card">
-            <div class="card-label">오늘의 질문</div>
-            <div class="card-ask">${escapeHtml(info.question)}</div>
-            ${trip.known || Journey.start(other, { ...journeyContext(), rule: ruleFor(other) }) === 'SILENT' ? '' : `<button class="card-btn quiet" onclick="startFlow('${other}')">${other === 'morning' ? '등교' : '하교'} 대화</button>`}
+            <div class="home-card">${side}</div>
           </div>
         </div>
       `;
     }
 
-    // 학교를 등록하지 않은 사람에게는 빈 칸 대신 바로 들을 수 있는 수업의 질문을 보여 준다.
-    function renderQuestionHome(container) {
+    // 남은 시간을 알면 그 시간에, 모르면 고른 시간(처음에는 15분)에 맞춘 수업 하나를 고른다. 예약한 수업이 있으면 그 수업이다.
+    function homeLesson() {
       const eta = remainMinutes();
       if (eta !== null) lessonMinutes = Lesson.minutesFor(eta);
       else if (!Lesson.TIME_CHOICES.includes(lessonMinutes)) lessonMinutes = Lesson.DEFAULT_MINUTES;
-      const progress = lessonProgress();
       const reserved = armed && armed.lesson ? DAIT_LESSONS.find(item => item.id === armed.lesson) : null;
-      const lesson = reserved || Lesson.recommend(DAIT_LESSONS, lessonMinutes, progress.records)[0];
+      return { reserved, lesson: reserved || Lesson.recommend(DAIT_LESSONS, lessonMinutes, lessonProgress().records)[0] };
+    }
+
+    // 수업 카드: 두 첫 화면이 함께 쓴다. 수업의 질문으로 바로 시작한다.
+    function lessonCardHtml(lesson, reserved) {
+      return `<div class="home-card start question-card">
+        ${lesson ? `
+          <div class="card-label">${escapeHtml(lesson.subject)}</div>
+          <div class="question-title">${escapeHtml(lesson.question)}</div>
+          <div class="question-promise">${escapeHtml(lessonPromise(lesson, lessonMinutes))}</div>
+          <div class="question-actions">
+            <button class="card-btn" onclick="startLesson('${lesson.id}')">듣기</button>
+            <button class="card-btn quiet" onclick="toggleLessonArm('${lesson.id}')">${reserved ? '수업 예약 취소' : '출발하면 듣기'}</button>
+          </div>` : '<div class="question-title">이번 길은 짧아서 다음에 들려 드릴게요</div>'}
+      </div>`;
+    }
+
+    // 학교를 등록하지 않은 사람에게는 빈 칸 대신 바로 들을 수 있는 수업의 질문을 보여 준다.
+    function renderQuestionHome(container) {
+      const eta = remainMinutes();
+      const { lesson, reserved } = homeLesson();
+      const progress = lessonProgress();
       const times = eta !== null ? `<div class="card-focus">${Lesson.minutesFor(eta)}분</div><div class="card-sub">도착까지</div>`
         : `<div class="question-times">${Lesson.TIME_CHOICES.map(minutes => `<button class="choice-chip" aria-pressed="${minutes === lessonMinutes}" onclick="pickLessonTime(${minutes})">${minutes}</button>`).join('')}</div>`;
       container.innerHTML = `
@@ -1106,16 +1054,7 @@
           </div>
         </div>
         <div class="question-home">
-          <div class="home-card start question-card">
-            ${lesson ? `
-              <div class="card-label">${escapeHtml(lesson.subject)}</div>
-              <div class="question-title">${escapeHtml(lesson.question)}</div>
-              <div class="question-promise">${escapeHtml(lessonPromise(lesson, lessonMinutes))}</div>
-              <div class="question-actions">
-                <button class="card-btn" onclick="startLesson('${lesson.id}')">듣기</button>
-                <button class="card-btn quiet" onclick="toggleLessonArm('${lesson.id}')">${reserved ? '수업 예약 취소' : '출발하면 듣기'}</button>
-              </div>` : '<div class="question-title">이번 길은 짧아서 다음에 들려 드릴게요</div>'}
-          </div>
+          ${lessonCardHtml(lesson, reserved)}
           <div class="question-side">
             <div class="home-card">
               <div class="card-label">듣는 시간(분)</div>
@@ -1143,42 +1082,11 @@
       return `<div class="card-big size-${size}"><span>${escapeHtml(word)}</span>${sub ? `<div class="card-sub">${escapeHtml(sub)}</div>` : ''}</div>`;
     }
 
-    // 시간표 카드에는 두 글자로 줄여 넣는다. 한 글자로 줄이면 국수, 도미처럼 다른 낱말로 읽힌다.
-    function shortSubject(name) {
-      return name.split(/[·\s]/)[0].slice(0, 2);
-    }
-
-    // 어디로 카드. 네이버앱의 예약 카드처럼 장소 한 줄, 시간 한 줄, 버튼 하나.
-    function tripCardHtml(trip) {
-      if (!school) {
-        return `<div class="home-card">
-          <div class="card-label">학교</div>
-          <div class="card-focus">등록 전</div>
-          <button class="card-btn" onclick="startFlow('${trip.mode}')">예시로 듣기</button>
-        </div>`;
-      }
-      if (trip.kind === 'weekend') {
-        return `<div class="home-card">
-          <div class="card-label">쉬는 날</div>
-          <div class="card-focus">가 볼 만한 곳</div>
-          <button class="card-btn" onclick="openPlaces()">찾아보기</button>
-        </div>`;
-      }
-      const place = trip.mode === 'morning' ? school.name : '집';
-      return `<div class="home-card">
-        <div class="card-label">어디로</div>
-        <div class="place-mark">
-          <div class="card-text">${escapeHtml(place)}</div>
-          ${trip.minutes !== null ? `<div class="card-sub">${trip.minutes}분 남음</div>` : ''}
-        </div>
-        <button class="card-btn${armed ? ' quiet' : ''}" onclick="toggleArm('${trip.mode}')">${armLabel(trip)}</button>
-      </div>`;
-    }
-
+    // 대화 카드의 예약 버튼. 수업 카드의 「출발하면 듣기」와 헷갈리지 않게 「대화」라고 쓴다. 수업을 예약하면 이 버튼은 숨긴다.
     function armLabel(trip) {
-      if (armed) return armed.lesson ? '수업 예약 취소' : '출발하면 들려줄게요';
+      if (armed) return '출발하면 대화할게요';
       if (routePlaceFor(trip.mode) && !naviInfo) return trip.mode === 'morning' ? '학교로 안내' : '집으로 안내';
-      return '출발하면 듣기';
+      return '출발하면 대화';
     }
 
     function renderDialogueFlow(container) {

@@ -141,13 +141,6 @@ test('쉬는 날에는 할 말이 없는 하교 대화 버튼을 보여 주지 �
   assert.ok(!shown.includes('하교 대화'));
 });
 
-test('시간표 카드의 과목 이름은 두 글자로 줄인다', () => {
-  assert.strictEqual(page(`shortSubject('국어')`), '국어');
-  assert.strictEqual(page(`shortSubject('기술·가정')`), '기술');
-  assert.strictEqual(page(`shortSubject('자율·자치활동')`), '자율');
-  assert.strictEqual(page(`shortSubject('진로와 직업')`), '진로');
-});
-
 test('남은 시간을 기획안 표의 네 구간으로 나눈다', () => {
   assert.deepStrictEqual([null, 12, 10, 9.9, 5, 4.9, 2.1, 2, 0].map(Journey.tierFor),
     ['full', 'full', 'full', 'medium', 'medium', 'brief', 'brief', 'arrive', 'arrive']);
@@ -1263,7 +1256,8 @@ test('시간이 모자라 시작하지 못한 수업 예약은 첫 화면에서 
 
 test('수업 예약은 등하교 예약과 말이 다르고, 시간을 바꾸면 예약 시간도 따라간다', () => {
   page(`arm({ mode: 'lesson', lesson: 'ai', minutes: 60 });`);
-  assert.strictEqual(page(`armLabel({ mode: 'morning' })`), '수업 예약 취소');
+  assert.ok(page(`lessonCardHtml(DAIT_LESSONS[2], DAIT_LESSONS[2])`).includes('수업 예약 취소')); // 수업 카드
+  assert.strictEqual(page(`armLabel({ mode: 'morning' })`), '출발하면 대화할게요'); // 대화 카드는 「대화」라고 쓴다
   page(`pickLessonTime(15);`);
   assert.strictEqual(page(`armed.minutes`), 15);
   page(`disarm(); currentMode = null; render(); lessonMinutes = 15;`);
@@ -1315,4 +1309,24 @@ test('30분 이동은 동백꽃 뒤에 쉬지 않고 다른 수업을 이어 듣
   assert.ok(stageHtml().includes('기술 수업'));
   assert.ok(!stageHtml().includes('2교시'));
   page(`goHome(); demoMinutes = null;`);
+});
+
+test('학교를 등록한 첫 화면은 오늘의 수업을 크게 두고, 옆에 등하교 대화와 그날 챙길 것을 둔다', () => {
+  const shown = JSON.parse(page(`
+    localStorage.values.clear();
+    school = { name: 'A', kind: '중학교', grade: '1' };
+    schoolDays = { [toYmd(new Date())]: { subjects: ['국어', '체육'], meal: '카레' } }; schoolEvents = {};
+    goHome();
+    var homeTrip = currentTrip();
+    var homeOut = JSON.stringify({ html: document.getElementById('stageArea').innerHTML, mode: homeTrip.mode, weekend: homeTrip.kind === 'weekend', question: homeInfo(homeTrip).question });
+    school = null; schoolDays = {}; goHome();
+    homeOut`));
+  assert.ok(shown.html.includes('question-card')); // 등록 전 화면과 같은 수업 카드
+  assert.ok(shown.html.includes('talk-card'));
+  assert.ok(shown.html.includes(shown.question)); // 오늘의 질문은 대화 카드에 남는다
+  assert.ok(!shown.html.includes('카레')); // 급식과 시간표는 화면에 두지 않는다
+  assert.ok(!shown.html.includes('시간표</div>'));
+  if (shown.weekend) assert.ok(shown.html.includes('가 볼 만한 곳'));
+  else if (shown.mode === 'morning') assert.ok(shown.html.includes('준비물'));
+  else assert.ok(shown.html.includes('수업을 마치면 이음이 쌓여요'));
 });

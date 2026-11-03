@@ -2583,7 +2583,7 @@
             <div class="settings-side">
               <button class="setting-row" onclick="toggleQuestions()"><span>질문</span>${onOff(QUESTIONS_KEY)}</button>
               ${micState() === 'none' ? '' : `<button class="setting-row" onclick="toggleVoiceAnswers()"><span>말로 답하기</span>${onOff(VOICE_KEY)}</button>`}
-              <button class="setting-row" onclick="toggleLessonRecord()"><span>수업 답 글로 남기기</span><span class="setting-state">${lessonRecordLabel()}</span></button>
+              <button class="setting-row" onclick="toggleLessonRecord()"><span>수업 대답 기록</span><span class="setting-state">${lessonRecordLabel()}</span></button>
               <div class="card-sub">${lessonRecordNote() || '켜면 수업 발문에 말한 답을 이 차 안에만 글로 남겨요. 녹음 파일은 만들지 않고 서버로 보내지 않아요.'}</div>
               ${locationState() === 'none' ? '' : `<button class="setting-row" onclick="toggleTripMemory()"><span>다니는 길 기억</span><span class="setting-state">${tripMemoryState()}</span></button>`}
               ${canSaveSpot('school') ? '<button class="setting-row" onclick="saveSpot(\'school\')"><span>지금 위치를 학교로</span></button>' : ''}

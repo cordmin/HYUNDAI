@@ -1039,7 +1039,7 @@ test('답 기록은 설정 화면에서 켜고, 마이크를 쓸 수 없으면 �
   page(`localStorage.values.clear(); openLessons();`);
   assert.ok(!stageHtml().includes('글로 남기기')); // 수업 고르는 화면에는 두지 않는다
   page(`writeStored(LESSON_RECORD_KEY, true); openSettings();`);
-  assert.ok(stageHtml().includes('<span>수업 답 글로 남기기</span><span class="setting-state">켜짐</span></button>'));
+  assert.ok(stageHtml().includes('<span>수업 대답 기록</span><span class="setting-state">켜짐</span></button>'));
   assert.ok(stageHtml().includes('마이크를 쓸 수 없어 지금은 답을 남기지 못해요.'));
   page(`localStorage.values.clear(); goHome();`);
 });

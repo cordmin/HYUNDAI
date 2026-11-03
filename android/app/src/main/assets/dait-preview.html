@@ -964,15 +964,12 @@
       const info = homeInfo(trip);
       const isMorning = trip.mode === 'morning';
       const weekend = trip.kind === 'weekend';
-      const other = isMorning ? 'afternoon' : 'morning';
       const startLabel = weekend ? `${(schoolPlan() || { label: '다음 수업일' }).label} 준비 듣기` : `${isMorning ? '등교' : '하교'} 대화 시작하기`;
       const { lesson, reserved } = homeLesson();
       const progress = lessonProgress();
       const now = new Date();
       const where = !weekend && trip.minutes !== null ? ` · ${isMorning ? '학교' : '집'}까지 ${trip.minutes}분` : '';
       const armTalk = weekend || reserved ? '' : `<button class="card-btn${armed ? ' quiet' : ''}" onclick="event.stopPropagation(); toggleArm('${trip.mode}')">${armLabel(trip)}</button>`;
-      const otherTalk = trip.known || Journey.start(other, { ...journeyContext(), rule: ruleFor(other) }) === 'SILENT' ? ''
-        : `<button class="card-btn quiet" onclick="event.stopPropagation(); startFlow('${other}')">${other === 'morning' ? '등교' : '하교'} 대화</button>`;
       const ieumLine = progress.ieum ? `이음 ${progress.ieum}` : '수업을 마치면 이음이 쌓여요';
       const side = weekend
         ? `<div class="card-label">쉬는 날</div><div class="card-focus">가 볼 만한 곳</div><div class="card-sub">${ieumLine}</div><button class="card-btn quiet" onclick="openPlaces()">찾아보기</button>`
@@ -1005,7 +1002,7 @@
               <div class="card-label">${now.getMonth() + 1}월 ${now.getDate()}일 ${WEEKDAYS[now.getDay()]}${escapeHtml(where)}</div>
               <div class="card-focus">${escapeHtml(startLabel)}</div>
               <div class="card-sub">${escapeHtml(info.question)}</div>
-              ${armTalk || otherTalk ? `<div class="talk-actions">${armTalk}${otherTalk}</div>` : ''}
+              ${armTalk ? `<div class="talk-actions">${armTalk}</div>` : ''}
             </div>
             <div class="home-card">${side}</div>
           </div>

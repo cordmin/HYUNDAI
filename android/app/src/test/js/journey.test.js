@@ -1326,6 +1326,7 @@ test('학교를 등록한 첫 화면은 오늘의 수업을 크게 두고, 옆�
   assert.ok(shown.html.includes('question-card')); // 등록 전 화면과 같은 수업 카드
   assert.ok(shown.html.includes('talk-card'));
   assert.ok(shown.html.includes(shown.question)); // 오늘의 질문은 대화 카드에 남는다
+  assert.ok(!/>(등교|하교) 대화<\/button>/.test(shown.html)); // 오후에 「등교 대화」처럼 반대쪽 대화 버튼을 두지 않는다
   assert.ok(!shown.html.includes('카레')); // 급식과 시간표는 화면에 두지 않는다
   assert.ok(!shown.html.includes('시간표</div>'));
   if (shown.weekend) assert.ok(shown.html.includes('가 볼 만한 곳'));

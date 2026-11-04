@@ -5,6 +5,7 @@ import android.app.Instrumentation
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
+import android.media.MediaPlayer
 import android.os.Bundle
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
@@ -20,10 +21,14 @@ class OfflineVoiceCheck : Instrumentation() {
     private val subject = JSONArray(listOf("체육", "과학", "독서", "책", "국어", "수학", "미술", "그만", "쉬고 싶어", "<UNK>")).toString()
 
     private var focusCheck = false
+    private var naviCheck = false
+    private var naviSeconds = 40L
 
     override fun onCreate(arguments: Bundle?) {
         super.onCreate(arguments)
         focusCheck = arguments?.getString("check") == "focus"
+        naviCheck = arguments?.getString("check") == "navlive"
+        naviSeconds = arguments?.getString("seconds")?.toLongOrNull() ?: 40
         start()
     }
 
@@ -49,12 +54,68 @@ class OfflineVoiceCheck : Instrumentation() {
         runOnMainSync { session.release() }
     }
 
+    // A long lesson clip should pick up a little before where guidance cut in, not from the start.
+    private fun checkLessonRewind(): String {
+        val events = LinkedBlockingQueue<String>()
+        lateinit var session: VoiceSession
+        runOnMainSync {
+            session = VoiceSession(targetContext, null) { events.add(it.getString("event")) }
+            session.speak(listOf("lesson/ai_b1"), "", 2)
+        }
+        val playerField = VoiceSession::class.java.getDeclaredField("player").apply { isAccessible = true }
+        fun position(): Int { var at = -1; runOnMainSync { at = (playerField.get(session) as MediaPlayer).currentPosition }; return at }
+        val audio = targetContext.getSystemService(AudioManager::class.java)
+        val guidance = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+            .setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE).build())
+            .build()
+        Thread.sleep(8000)
+        check(audio.requestAudioFocus(guidance) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) { "guidance focus refused" }
+        check(events.poll(3, TimeUnit.SECONDS) == "paused") { "lesson did not pause" }
+        val cut = position()
+        Thread.sleep(1000)
+        audio.abandonAudioFocusRequest(guidance)
+        check(events.poll(3, TimeUnit.SECONDS) == "resumed") { "lesson did not resume" }
+        val back = position()
+        runOnMainSync { session.release() }
+        check(back in cut - 3500..cut - 2500) { "lesson resumed at $back ms after cut at $cut ms" }
+        return "lesson cut at $cut ms, resumed at $back ms"
+    }
+
+    // Plays a lesson clip, asks the real Pleos navigation for a route, and logs what the voice did meanwhile.
+    private fun watchRealGuidance(): String {
+        val log = java.util.Collections.synchronizedList(mutableListOf<String>())
+        val begin = System.currentTimeMillis()
+        fun note(what: String) { log.add("${(System.currentTimeMillis() - begin) / 100 / 10.0}s $what") }
+        lateinit var session: VoiceSession
+        lateinit var navi: NaviBridge
+        runOnMainSync {
+            navi = NaviBridge(targetContext) { note("navi " + it.optString("event") + " " + it.optString("status")) }
+            navi.connect()
+            session = VoiceSession(targetContext, null) { note("voice " + it.getString("event")) }
+            session.speak(listOf("lesson/ai_b1", "lesson/ai_b2", "lesson/ai_b3", "lesson/ai_b4"), "", 3)
+        }
+        Thread.sleep(4000)
+        runOnMainSync {
+            navi.startRoute(JSONObject().put("lat", 37.5796).put("lng", 126.9770).put("name", "경복궁"))
+        }
+        note("route requested")
+        Thread.sleep(naviSeconds * 1000)
+        runOnMainSync { session.release(); navi.release() }
+        return log.joinToString("; ")
+    }
+
     override fun onStart() {
         val report = Bundle()
+        if (naviCheck) {
+            report.putString("stream", watchRealGuidance())
+            finish(Activity.RESULT_OK, report)
+            return
+        }
         if (focusCheck) {
             try {
                 checkFocusYield()
-                report.putString("stream", "Focus check passed: paused, resumed, ended.")
+                val lesson = checkLessonRewind()
+                report.putString("stream", "Focus check passed: paused, resumed, ended; $lesson.")
                 finish(Activity.RESULT_OK, report)
             } catch (failure: Throwable) {
                 report.putString("stream", "FAIL: ${failure.message}")

@@ -1,0 +1,100 @@
+<!-- 안티그래비티가 그린 차분한 새 calm-v2 원본 (2026-11-04 가져옴, 구상 단계·팀 확정 아님). 그림: dait-bird-final-calm-v2.png -->
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Deeper, calmer navy gradients -->
+    <linearGradient id="headGrad" x1="555" y1="200" x2="685" y2="370" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#24507A"/>
+      <stop offset="100%" stop-color="#183858"/>
+    </linearGradient>
+    <linearGradient id="wingGrad" x1="660" y1="275" x2="880" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#25527C"/>
+      <stop offset="100%" stop-color="#173654"/>
+    </linearGradient>
+    <linearGradient id="tailGrad" x1="840" y1="405" x2="1020" y2="495" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#16334E"/>
+      <stop offset="50%" stop-color="#234E78"/>
+      <stop offset="100%" stop-color="#2E6292"/>
+    </linearGradient>
+    <linearGradient id="bellyGrad" x1="565" y1="360" x2="845" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F2F9FE"/>
+      <stop offset="55%" stop-color="#DCEFFE"/>
+      <stop offset="100%" stop-color="#B4DDF8"/>
+    </linearGradient>
+    <linearGradient id="ribbonGrad" x1="528" y1="260" x2="1018" y2="472" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="30%" stop-color="#8ADCFD"/>
+      <stop offset="55%" stop-color="#FFFFFF"/>
+      <stop offset="82%" stop-color="#BAE6FD"/>
+      <stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <linearGradient id="branchGrad" x1="560" y1="546" x2="876" y2="546" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#15263B"/>
+      <stop offset="55%" stop-color="#2C4F72"/>
+      <stop offset="100%" stop-color="#203C58"/>
+    </linearGradient>
+    <!-- Calmer eye halo with reduced spread -->
+    <radialGradient id="eyeHaloGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.52"/>
+      <stop offset="55%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Calmer ribbon glow filter -->
+    <filter id="calmGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.8"/>
+    </filter>
+  </defs>
+
+  <!-- Solid #0B1220 background -->
+  <rect x="0" y="0" width="1920" height="1080" fill="#0B1220"/>
+
+  <!-- Centered single bird & branch, height ~55% of 1080px (356 * 1.66 = 591px = 54.7%) -->
+  <g transform="translate(960, 540) scale(1.66) translate(-770, -374)">
+    
+  <!-- Branch -->
+  <line x1="564" y1="534" x2="880" y2="534" stroke="url(#branchGrad)" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- Sculpted deeper-navy tail feather with gently forked tip -->
+  <path d="M 836 438 L 884 398 C 930 416, 976 442, 1022 474 C 1028 478, 1026 486, 1016 486 L 992 485 L 1002 499 C 1006 505, 998 511, 987 507 C 934 486, 878 462, 836 438 Z" fill="url(#tailGrad)"/>
+  <path d="M 868 420 C 912 440, 954 462, 992 485" stroke="#10273E" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.65"/>
+  <path d="M 868 420 C 912 440, 954 462, 992 485" stroke="#3E76A8" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.32" transform="translate(0, 2)"/>
+
+  <!-- Plump, elongated-teardrop pale sky-tinted white belly -->
+  <path d="M 555 322 C 572 406, 646 488, 742 488 C 816 488, 868 450, 884 398 L 855 352 L 635 352 L 580 322 Z" fill="url(#bellyGrad)"/>
+  <!-- Soft lower belly shading -->
+  <path d="M 592 412 C 646 476, 742 488, 806 472 C 852 458, 874 426, 884 398 C 856 434, 798 462, 726 462 C 658 462, 614 438, 592 412 Z" fill="#B5E0FA" opacity="0.36"/>
+
+  <!-- Upper back bridge (deep navy) -->
+  <path d="M 674 224 C 736 242, 828 308, 886 399 L 884 398 L 762 282 C 722 272, 690 282, 666 306 L 658 276 Z" fill="#163452"/>
+
+  <!-- Plump folded wing fill -->
+  <path d="M 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 C 722 348, 738 380, 756 380 C 774 380, 794 352, 812 352 C 832 352, 858 384, 884 398 C 864 344, 820 296, 762 282 C 722 272, 690 282, 666 306 L 648 318 Z" fill="url(#wingGrad)"/>
+  <!-- Soft upper seam of the folded wing -->
+  <path d="M 672 304 C 694 280, 726 272, 762 282 C 820 296, 864 344, 884 398" stroke="#112A42" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+  <path d="M 676 304 C 698 282, 728 276, 760 286 C 816 300, 858 344, 880 394" stroke="#31689A" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.42"/>
+  <path d="M 734 322 C 770 348, 814 366, 860 380" stroke="#3E78AC" stroke-width="7.5" stroke-linecap="round" fill="none" opacity="0.22"/>
+
+  <!-- Smaller, forward-listening head (deep navy fill) -->
+  <path d="M 556 266 C 568 222, 594 200, 628 202 C 672 204, 696 226, 688 260 C 682 288, 668 304, 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 L 664 372 C 604 370, 566 352, 555 324 C 549 308, 550 286, 556 266 Z" fill="url(#headGrad)"/>
+
+  <!-- Small dark beak tilted slightly downward/forward in an attentive listening posture -->
+  <path d="M 523 284 L 558 266 L 555 292 Z" fill="#1F3D5C"/>
+
+  <!-- ONE single unbroken ribbon with calmer, softer glow -->
+  <path d="M 528 282 L 556 266 C 568 222, 594 200, 628 202 C 672 204, 696 226, 688 260 C 682 288, 668 304, 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 C 722 348, 738 380, 756 380 C 774 380, 794 352, 812 352 C 832 352, 858 384, 884 398 C 930 416, 976 442, 1018 472" stroke="#38BDF8" stroke-width="14.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.14" filter="url(#calmGlow)"/>
+  <path d="M 528 282 L 556 266 C 568 222, 594 200, 628 202 C 672 204, 696 226, 688 260 C 682 288, 668 304, 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 C 722 348, 738 380, 756 380 C 774 380, 794 352, 812 352 C 832 352, 858 384, 884 398 C 930 416, 976 442, 1018 472" stroke="url(#ribbonGrad)" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Short glowing white 't' crossbar clearly intersecting ('十') the tail ribbon just before it ends -->
+  <path d="M 956 453.5 L 996 453.5" stroke="#38BDF8" stroke-width="11.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.20" filter="url(#calmGlow)"/>
+  <path d="M 956 453.5 L 996 453.5" stroke="#FFFFFF" stroke-width="7.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Smaller, calmer glowing i-dot Eye inside the head -->
+  <circle cx="608" cy="262" r="18" fill="url(#eyeHaloGrad)"/>
+  <circle cx="608" cy="262" r="11.0" fill="#38BDF8" opacity="0.90"/>
+  <circle cx="608" cy="262" r="5.2" fill="#FFFFFF"/>
+
+  <!-- Neatly standing legs on the branch (poised, natural-length stance) -->
+  <path d="M 706 482 L 686 525 M 678 538 C 677 524, 694 522, 704 529" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M 774 472 L 750 525 M 742 538 C 741 524, 758 522, 768 529" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  </g>
+</svg>

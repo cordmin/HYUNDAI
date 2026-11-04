@@ -945,6 +945,7 @@
     function render() {
       renderStage();
       syncJourney();
+      saveSchoolBrief();
     }
 
     function renderStage() {
@@ -2075,6 +2076,84 @@
       if (school && trip.kind !== 'weekend' && !(naviInfo && !trip.known)) return null; // 학교가 없는 사람에게는 등하교를 묻지 않는다
       const minutes = Lesson.minutesFor(remainMinutes());
       return stoppedLesson(minutes) || Lesson.recommend(DAIT_LESSONS, minutes, lessonProgress().records)[0] || null;
+    }
+
+    // ========================================================
+    // Gleo 음성 비서 (assets/schema.json)
+    // Gleo가 부른 기능을 처리하고 AndroidBridge.gleoRespond로 답한다. message는 Gleo 규칙대로 영어 한 문장이다.
+    // 다음 수업일 준비(GET_SCHOOL_PREP)는 앱을 띄우지 않고 Kotlin이 남겨 둔 요약으로 답한다.
+    // ========================================================
+    function gleoReply(functionName, status, message, mode) {
+      if (window.AndroidBridge && AndroidBridge.gleoRespond) AndroidBridge.gleoRespond(JSON.stringify({ functionName, status, message, mode: mode || 'voice' }));
+    }
+
+    window.onGleoAction = function(functionName, paramsText) {
+      let params = {};
+      try { params = JSON.parse(paramsText) || {}; } catch (e) {}
+      if (functionName === 'START_LESSON') gleoStartLesson(params);
+      else if (functionName === 'CONTROL_LESSON') gleoControlLesson(params);
+      else gleoReply(functionName, 'fail', 'DAIT does not know this request.');
+    };
+
+    // 길 안내 중이면 도착까지 남은 시간을 넘지 않게 듣는다. 수업이 바로 말을 시작하므로 Gleo는 말하지 않는다.
+    function gleoStartLesson(params) {
+      const fn = 'START_LESSON';
+      const run = lessonRun;
+      if (run && !run.done && currentMode === 'lesson') {
+        if (run.paused || run.stopped || isLessonResting()) { gleoResume(run); gleoReply(fn, 'success', 'Resumed the DAIT lesson.', 'silent'); }
+        else gleoReply(fn, 'success', 'A DAIT lesson is already playing.', 'beep');
+        return;
+      }
+      const eta = remainMinutes();
+      const asked = Math.floor(Number(params.minutes));
+      const wanted = asked > 0 ? asked : null;
+      lessonMinutes = eta !== null ? Math.min(Lesson.minutesFor(eta), wanted || Infinity) : (wanted || Lesson.DEFAULT_MINUTES);
+      const lesson = Lesson.forRequest(DAIT_LESSONS, lessonMinutes, lessonProgress().records, params.subject);
+      if (!lesson) { gleoReply(fn, 'fail', 'There is no DAIT lesson that fits this time.'); return; }
+      const before = lessonRun;
+      const asking = pendingStart;
+      startLesson(lesson.id);
+      if (lessonRun && lessonRun !== before && !lessonRun.done) gleoReply(fn, 'success', `Started the ${lesson.subject} lesson.`, 'silent');
+      else if (pendingStart && pendingStart !== asking) gleoReply(fn, 'asking', 'Please allow the microphone on the DAIT screen first.'); // 답 남기기를 켰는데 마이크 허락을 묻는 중
+      else gleoReply(fn, 'fail', 'DAIT could not start a lesson for this time.');
+    }
+
+    // 쉬는 시간이면 다음 교시를 시작한다.
+    function gleoResume(run) {
+      if (isLessonResting()) nextLessonPiece();
+      else if (run.stopped) playLessonPiece();
+      else if (run.paused) resumeLesson();
+    }
+
+    function gleoControlLesson(params) {
+      const fn = 'CONTROL_LESSON';
+      const run = lessonRun;
+      if (!run || run.done || currentMode !== 'lesson') { gleoReply(fn, 'fail', 'No DAIT lesson is playing right now.'); return; }
+      if (params.command === 'pause') {
+        if (run.paused || run.stopped) gleoReply(fn, 'success', 'The DAIT lesson is already paused.', 'beep');
+        else if (isLessonResting()) gleoReply(fn, 'fail', 'The DAIT lesson is on a break now.');
+        else { pauseLesson(); gleoReply(fn, 'success', 'Paused the DAIT lesson.', 'beep'); }
+      } else if (params.command === 'resume') {
+        gleoResume(run);
+        gleoReply(fn, 'success', 'Resumed the DAIT lesson.', 'silent');
+      } else gleoReply(fn, 'asking', 'Should DAIT pause or resume the lesson?');
+    }
+
+    // 다가오는 수업일 몇 날을 바뀔 때만 앱에 남긴다. 물은 때가 오후면 Kotlin이 오늘 다음 수업일을 고르고, 「오늘·내일」도 그때 붙인다.
+    const GLEO_BRIEF_DAYS = 3;
+    let savedBrief = '';
+    function saveSchoolBrief() {
+      if (!window.AndroidBridge || !AndroidBridge.saveSchoolBrief) return;
+      const today = toYmd(new Date());
+      const days = !school ? [] : Object.keys(schoolDays).sort().filter(ymd => ymd >= today && isClassDay(ymd)).slice(0, GLEO_BRIEF_DAYS).map(ymd => {
+        const day = schoolDays[ymd];
+        const rule = Journey.pickRule(DAIT_RULES.rules, { mode: 'morning', level: schoolLevel(), ymd, events: schoolEvents });
+        const ruleFits = !!rule && (ymd === today || rule.eventYmd === ymd); // 첫 화면과 같은 기준: 다른 날의 일정은 미리 말하지 않는다
+        const hasPe = day.subjects.some(subject => subject.replace(/[^가-힣]/g, '').startsWith('체육'));
+        return { ymd, prep: ruleFits && rule.prep ? rule.prep : hasPe ? '체육복' : '', notice: ruleFits ? rule.title : '', meal: day.meal || '', subjects: day.subjects };
+      });
+      const text = JSON.stringify({ registered: !!school, days });
+      if (text !== savedBrief) { savedBrief = text; AndroidBridge.saveSchoolBrief(text); }
     }
 
     // ========================================================

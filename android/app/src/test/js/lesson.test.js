@@ -438,3 +438,39 @@ test('고른 수업은 교시 시간에 맞지 않아도 다른 수업으로 바
   assert.strictEqual(order[0].id, 'heavy');
   assert.deepStrictEqual(order.filter(line => line.id === 'heavy').length, 1);
 });
+
+test('Gleo로 부른 수업은 말한 과목 가운데 추천 수업이고, 과목이 없으면 전체 추천의 맨 앞이다', () => {
+  assert.strictEqual(Lesson.forRequest(lessons, 15, [], '수학').subject, '수학');
+  assert.strictEqual(Lesson.forRequest(lessons, 15, []), Lesson.recommend(lessons, 15, [])[0]);
+  assert.strictEqual(Lesson.forRequest(lessons, 15, [], '체육'), null);
+  assert.strictEqual(Lesson.forRequest(lessons, 3, []), null); // 너무 짧은 이동에는 수업이 없다
+});
+
+test('Gleo 설명서(schema.json)는 문서 규칙을 지키고 앱과 맞는다', () => {
+  const assets = path.join(__dirname, '../../main/assets');
+  const schema = JSON.parse(fs.readFileSync(path.join(assets, 'schema.json'), 'utf8'));
+  const gradle = fs.readFileSync(path.join(__dirname, '../../../build.gradle'), 'utf8');
+  const manifest = fs.readFileSync(path.join(__dirname, '../../main/AndroidManifest.xml'), 'utf8');
+  const page = fs.readFileSync(path.join(assets, 'dait-preview.html'), 'utf8');
+  const kotlin = fs.readFileSync(path.join(__dirname, '../../main/java/io/dait/app/GleoBridge.kt'), 'utf8');
+  assert.strictEqual(schema.packageName, gradle.match(/applicationId '([^']+)'/)[1]);
+  assert.strictEqual(schema.version, gradle.match(/versionName '([^']+)'/)[1]);
+  assert.ok(schema.actionCalls.length <= 3);
+  const english = text => /^[\x20-\x7e]+$/.test(text);
+  assert.ok(english(schema.appDescription));
+  for (const { type, function: fn } of schema.actionCalls) {
+    assert.strictEqual(type, 'function');
+    assert.match(fn.name, /^[A-Z_]+$/);
+    assert.ok(english(fn.description), fn.name);
+    for (const [key, prop] of Object.entries(fn.parameters.properties)) {
+      assert.ok(['string', 'number', 'boolean', 'array'].includes(prop.type), key);
+      assert.ok(english(prop.description), key);
+    }
+    // 화면 띄우기는 앱 화면이, 방송은 받는 부분이 그 이름을 받아야 한다.
+    const filter = fn.component === 'service' ? manifest.slice(manifest.indexOf('.GleoReceiver')) : manifest.slice(0, manifest.indexOf('.GleoReceiver'));
+    assert.ok(filter.includes(`<action android:name="${fn.name}" />`), fn.name);
+    assert.ok(page.includes(`'${fn.name}'`) || kotlin.includes(`"${fn.name}"`), fn.name);
+  }
+  const start = schema.actionCalls.find(call => call.function.name === 'START_LESSON').function;
+  assert.deepStrictEqual(start.parameters.properties.subject.enum, Lesson.subjects(lessons)); // 수업이 늘면 설명서도 고친다
+});

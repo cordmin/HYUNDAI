@@ -23,7 +23,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.CAR_LAUNCHER" />
             </intent-filter>
+            <!-- Gleo가 assets/schema.json의 START_LESSON으로 앱을 연다. -->
+            <intent-filter>
+                <action android:name="START_LESSON" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
+        <!-- 화면을 띄우지 않는 Gleo 부름. 내비가 앞에 있어도 그대로 둔다. -->
+        <receiver android:name=".GleoReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="GET_SCHOOL_PREP" />
+                <action android:name="CONTROL_LESSON" />
+            </intent-filter>
+        </receiver>
         <service android:name=".JourneyService" android:exported="false" android:foregroundServiceType="mediaPlayback|microphone|location" />
     </application>
 </manifest>

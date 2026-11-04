@@ -305,6 +305,11 @@
     return subject ? lessons.filter(lesson => lesson.subject === subject) : lessons;
   }
 
+  // Gleo로 수업을 부를 때: 말한 과목이 있으면 그 과목 가운데, 없으면 전체에서 맨 앞 추천 수업. 없으면 null.
+  function forRequest(lessons, minutes, records, subject) {
+    return bySubject(recommend(lessons, minutes, records), subject || '')[0] || null;
+  }
+
   // 음원이 없는 조각의 이름. 제출용 앱을 만들기 전에 확인한다.
   function unvoiced(lessons) {
     return lessons.flatMap(lesson => lesson.pieces.filter(piece => !piece.voiced).map(piece => piece.clip));
@@ -387,7 +392,7 @@
     TIME_CHOICES, LONG_CHOICES, LONG_TRIP_MINUTES, BREAK_MINUTES, DEFAULT_MINUTES, SHORT_UNDER_MINUTES, assemble, fits, recommend, minutesFor, plan, lessonSeconds, fitRemaining,
     speechSeconds, totalSeconds, required, shortOrder, isShort, recap, shortEnd, isQuestion, isClosing, isLongTrip, periodCount, tripOrder, planTrip, nextPeriod, periods, restOf, isBreak, withBreak, fitTrip,
     resumePoint, resumeFresh, resumeFits, resumePlan, resumeHeard, keepResume, RESUME_DAYS,
-    subjects, bySubject, unvoiced, countsAsFinished, monthOf, normalize, finishLesson, finishHomework, forgetAnswers, mileageLine
+    subjects, bySubject, forRequest, unvoiced, countsAsFinished, monthOf, normalize, finishLesson, finishHomework, forgetAnswers, mileageLine
   };
   root.Lesson = Lesson;
   if (typeof module !== 'undefined') module.exports = Lesson;

@@ -5,9 +5,12 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.car.Car
 import android.car.drivingstate.CarUxRestrictionsManager
+import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
@@ -15,6 +18,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 
 class MainActivity : Activity() {
     private lateinit var webView: WebView
@@ -30,6 +34,10 @@ class MainActivity : Activity() {
     private var hasSpeechModel = false
     private var speechInput: LocalVoiceInput? = null
     private var journeyActive = false
+    private var pageReady = false
+    private val gleoWaiting = mutableListOf<String>()
+    private val gleoGuards = mutableMapOf<String, Runnable>()
+    private val handler = Handler(Looper.getMainLooper())
 
     private val restrictionListener = CarUxRestrictionsManager.OnUxRestrictionsChangedListener { value ->
         runOnUiThread { applyPlatformRestriction(value.isRequiresDistractionOptimization) }
@@ -55,6 +63,11 @@ class MainActivity : Activity() {
                     super.onPageFinished(view, url)
                     applyPlatformRestriction(isRestricted)
                     navi?.requestPlaces()
+                    pageReady = true
+                    // Gleo에는 이미 답했으므로, 내비의 남은 시간이 화면에 올 틈을 두고 수업을 고른다.
+                    val waiting = gleoWaiting.toList()
+                    gleoWaiting.clear()
+                    if (waiting.isNotEmpty()) handler.postDelayed({ waiting.forEach { callPage(it) } }, GLEO_WAKE_DELAY_MS)
                 }
             }
             addJavascriptInterface(WebAppInterface(), "AndroidBridge")
@@ -74,6 +87,50 @@ class MainActivity : Activity() {
         doors = DoorBridge(this) { callPage("window.onDoorOpened && window.onDoorOpened();") }.also { it.connect() }
         location = LocationBridge(this) { lat, lng -> callPage("window.onCarLocation && window.onCarLocation($lat, $lng);") }
         connectCarService()
+        currentRef = WeakReference(this)
+        // 최근 앱 목록에서 다시 열거나 시스템이 되살린 화면은 지난 Gleo 부름을 다시 하지 않는다.
+        val fromHistory = intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY != 0
+        if (savedInstanceState == null && !fromHistory) handleLaunch(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleLaunch(intent)
+    }
+
+    // Gleo는 START_LESSON을 화면 띄우기로 부른다. 첫 실행이면 화면이 다 열린 뒤에 넘긴다.
+    private fun handleLaunch(intent: Intent?) {
+        if (intent?.action != Gleo.START_LESSON) return
+        handleGleo(Gleo.START_LESSON, Gleo.params(intent))
+        setIntent(Intent(intent).setAction(null))
+    }
+
+    // 화면이 답하지 못하고 Gleo가 기다리다 끊지 않게, 6초 안에 답이 없으면 앱이 대신 실패로 답한다.
+    // 꺼져 있던 앱은 화면이 열리는 데 6초 넘게 걸리므로(에뮬레이터 확인) 수업 시작은 연다고 먼저 답하고 화면이 열리면 시작한다.
+    fun handleGleo(functionName: String, params: JSONObject): Boolean {
+        if (isDestroyed) return false
+        runOnUiThread {
+            val script = "window.onGleoAction && window.onGleoAction(${JSONObject.quote(functionName)}, ${JSONObject.quote(params.toString())});"
+            if (!pageReady) {
+                if (functionName == Gleo.START_LESSON) {
+                    Gleo.respond(this, Gleo.response(functionName, "success", "Opening DAIT to start the lesson.", "beep"))
+                    gleoWaiting.add(script)
+                } else {
+                    Gleo.respond(this, Gleo.response(functionName, "fail", "No DAIT lesson is playing right now."))
+                }
+                return@runOnUiThread
+            }
+            gleoGuards.remove(functionName)?.let { handler.removeCallbacks(it) }
+            val guard = Runnable {
+                gleoGuards.remove(functionName)
+                Gleo.respond(this, Gleo.response(functionName, "fail", "DAIT could not finish the request in time."))
+            }
+            gleoGuards[functionName] = guard
+            handler.postDelayed(guard, GLEO_GUARD_MS)
+            callPage(script)
+        }
+        return true
     }
 
     override fun onResume() {
@@ -91,6 +148,13 @@ class MainActivity : Activity() {
     }
 
     override fun onDestroy() {
+        if (currentRef.get() === this) currentRef = WeakReference(null)
+        // 화면이 닫혀도 기다리는 Gleo에는 답한다.
+        gleoGuards.forEach { (name, guard) ->
+            handler.removeCallbacks(guard)
+            Gleo.respond(this, Gleo.response(name, "fail", "DAIT was closed before it could finish the request."))
+        }
+        gleoGuards.clear()
         JourneyService.stop(this)
         voice?.release()
         voice = null
@@ -248,6 +312,22 @@ class MainActivity : Activity() {
             runOnUiThread { if (on && locationGranted()) location?.start() else location?.stop() }
         }
 
+        // 화면이 Gleo 부름에 답한다. 답이 늦어 이미 실패로 답한 부름이면 버린다.
+        @JavascriptInterface
+        fun gleoRespond(responseJson: String) {
+            val response = JSONObject(responseJson)
+            runOnUiThread {
+                val guard = gleoGuards.remove(response.optString("functionName")) ?: return@runOnUiThread
+                handler.removeCallbacks(guard)
+                Gleo.respond(this@MainActivity, response)
+            }
+        }
+
+        @JavascriptInterface
+        fun saveSchoolBrief(json: String) {
+            Gleo.saveBrief(this@MainActivity, json)
+        }
+
         @JavascriptInterface
         fun setJourneyActive(active: Boolean) {
             runOnUiThread {
@@ -265,5 +345,9 @@ class MainActivity : Activity() {
     companion object {
         private const val MIC_REQUEST = 1
         private const val LOCATION_REQUEST = 2
+        private const val GLEO_GUARD_MS = 6000L
+        private const val GLEO_WAKE_DELAY_MS = 2000L
+        private var currentRef = WeakReference<MainActivity>(null)
+        val current: MainActivity? get() = currentRef.get()
     }
 }

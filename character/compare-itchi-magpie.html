@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>잇찌와 오프닝 까치 비교</title>
+<style>
+  body { margin: 0; background: #060B16; color: #E0F2FE; font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 22px 16px 44px; }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  h2 { font-size: 17px; margin: 28px 0 8px; color: #BAE6FD; }
+  p, li { font-size: 14px; line-height: 1.65; color: #CFE6F7; }
+  .muted { color: #8FB3D1; font-size: 13px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .panel { background: #0B1220; border: 1px solid #1E2B44; border-radius: 14px; padding: 10px; }
+  .panel b { display: block; font-size: 15px; margin: 2px 2px 8px; }
+  canvas, iframe { width: 100%; display: block; border-radius: 10px; background: #0B1220; }
+  iframe { border: 0; aspect-ratio: 1116 / 632; }
+  .strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .strip figure { margin: 0; background: #0B1220; border: 1px solid #1E2B44; border-radius: 10px; padding: 6px; }
+  .strip figcaption { font-size: 12px; color: #9CC3E0; margin-top: 4px; line-height: 1.4; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { border-bottom: 1px solid #1E2B44; padding: 8px 6px; text-align: left; vertical-align: top; line-height: 1.55; }
+  th { color: #BAE6FD; font-weight: 700; white-space: nowrap; }
+  button { background: #132544; color: #E0F2FE; border: 1px solid #2A3A55; border-radius: 8px; padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>잇찌와 오프닝 까치 비교</h1>
+  <p class="muted">왼쪽: 팀에서 받은 오프닝(<code>received/dait_magpie_logo.html</code>, 2026-11-05 카카오톡으로 받음)의 까치. 오른쪽: 확정한 잇찌(<code>dait-bird-final-calm-v2.svg</code>). 둘 다 이 페이지가 각 파일의 코드로 직접 그린 그림이다.</p>
+
+  <h2>1. 앉은 모습 나란히</h2>
+  <p class="muted">까치는 오프닝에서 내려앉아 날개를 접은 순간(1.37초), 잇찌는 확정 그림 그대로. 두 그림 모두 부리 끝에서 꼬리 끝까지의 길이를 같게 맞췄다.</p>
+  <div class="pair">
+    <div class="panel"><b>오프닝 까치</b><canvas id="stillMagpie" width="900" height="560"></canvas></div>
+    <div class="panel"><b>잇찌</b><canvas id="stillItchi" width="900" height="560"></canvas></div>
+  </div>
+
+  <h2>2. 겹쳐 보기</h2>
+  <p class="muted">부리 끝과 꼬리 끝을 맞춰 겹쳤다. 하늘색이 잇찌, 주황 선이 까치 몸의 윤곽이다.</p>
+  <div class="panel" style="max-width:720px"><canvas id="overlay" width="900" height="560"></canvas></div>
+
+  <h2>3. 오프닝 장면 따라가기</h2>
+  <div class="strip" id="strip"></div>
+
+  <h2>4. 움직임 나란히</h2>
+  <div class="pair">
+    <div class="panel"><b>오프닝: 까치 → 글자 Dait (4.8초, 소리 있음)</b>
+      <iframe id="liveMagpie" src="received/dait_magpie_logo.html"></iframe>
+      <button onclick="document.getElementById('liveMagpie').contentWindow.document.querySelector('canvas').click()">다시 재생(소리)</button>
+    </div>
+    <div class="panel"><b>잇찌: 로고 → 잇찌 (앱 수업 끝 화면의 앞부분)</b>
+      <iframe src="logo-to-bird.html" style="aspect-ratio: 1100 / 700"></iframe>
+    </div>
+  </div>
+
+  <h2>잇찌에 맞춘 오프닝 시안 (2026-11-05)</h2>
+  <p class="muted">받은 오프닝의 움직임·시간·소리는 그대로 두고 새의 몸, 리본, 눈, t 가로줄을 잇찌로 바꿨다. 날갯짓 날개는 받은 파일의 까치 날개(흰 무늬 띠)를 그대로 쓰고(잇찌의 모티브는 까치, 2026-11-05), 내려앉을 때 잇찌 다리가 내려온다. 파일: <code>itchi-opening.html</code></p>
+  <div class="pair">
+    <div class="panel"><b>받은 오프닝(까치)</b>
+      <iframe id="liveA" src="received/dait_magpie_logo.html"></iframe>
+      <button onclick="document.getElementById('liveA').contentWindow.document.querySelector('canvas').click()">다시 재생(소리)</button>
+    </div>
+    <div class="panel"><b>잇찌에 맞춘 오프닝</b>
+      <iframe id="liveB" src="itchi-opening.html"></iframe>
+      <button onclick="document.getElementById('liveB').contentWindow.document.querySelector('canvas').click()">다시 재생(소리)</button>
+    </div>
+  </div>
+  <button onclick="['liveA','liveB'].forEach(id => document.getElementById(id).contentWindow.document.querySelector('canvas').click())">둘 다 같이 다시 재생</button>
+
+  <h2>5. 달라 보이는 점</h2>
+  <p>겹쳐 보면 두 새의 윤곽이 거의 겹친다. 오프닝 까치는 잇찌(calm-v2)를 바탕으로 날갯짓을 더한 같은 새로 보인다(만든 과정은 확인 안 함).</p>
+  <table>
+    <tr><th>무엇</th><th>오프닝 까치</th><th>잇찌(calm-v2)</th></tr>
+    <tr><td>몸 윤곽·색</td><td colspan="2">머리 위 리본, 뒤통수 D 말림, 가슴 물결 두 번, 꼬리 끝 t 가로줄, 남색 등과 흰 배, 하늘색 빛 눈까지 거의 같다.</td></tr>
+    <tr><td>배</td><td>배 아래가 조금 더 둥글게 처지고 더 하얗다</td><td>배가 조금 더 짧고 아래쪽에 옅은 하늘색 그늘</td></tr>
+    <tr><td>다리·가지</td><td>없다. 글자 줄 위에 내려앉는다</td><td>다리 둘과 가지가 있다</td></tr>
+    <tr><td>날개</td><td>날갯짓하는 날개가 따로 있다. 펼치면 흰 무늬 띠가 보여 까치답다</td><td>접힌 날개 한 장뿐(그래서 날갯짓을 못 함). 요청 7로 날개 편 자세를 받는 중</td></tr>
+    <tr><td>로고로 바뀌는 방식</td><td>몸 색이 꼬리부터 빠지고 몸의 선이 「Dait」 글자로 다시 펴진다. 눈이 i 점으로 날아간다</td><td>로고 획이 구부러져 새가 되고, 거꾸로 펴져 로고로 돌아간다. 눈이 i 점에서 날아온다</td></tr>
+    <tr><td>방향</td><td>새 → 로고</td><td>로고 → 새 → 로고(수업 끝 화면)</td></tr>
+    <tr><td>끝 글자</td><td>「Dait」 글자 모양</td><td>앱 시작 화면의 로고 획(DAIT_LOGO_PATH)</td></tr>
+    <tr><td>소리</td><td>날갯짓 바람 소리, 「통」, 「딩」(코드로 만든 소리)</td><td>없음</td></tr>
+    <tr><td>그리는 방식</td><td>캔버스에 점 좌표로 그림(원본 영상에서 잰 값)</td><td>SVG 도형(부위별로 나눌 수 있음)</td></tr>
+  </table>
+  <p class="muted">확인 안 함: 오프닝 끝 글자 「Dait」가 앱 로고 획과 똑같은 모양인지, 원본 영상이 어느 것인지.</p>
+</div>
+
+<!-- 까치 그림은 받은 파일의 그리기 코드를 그대로 빌려 쓴다 -->
+<script>
+// 재생 칸 안의 페이지를 칸 크기에 꼭 맞게: 안내 글을 숨기고 그림만 칸 너비로
+function fitLive(fr){ try { const d = fr.contentDocument; const st = d.createElement("style"); st.textContent = "html,body{min-height:0!important;height:auto;overflow:hidden;gap:0} body>p{display:none} canvas{width:100vw!important;height:auto}"; d.head.appendChild(st); } catch (e) {} }
+document.querySelectorAll("iframe:not(#src)").forEach(fr => { fr.setAttribute("scrolling", "no"); fr.addEventListener("load", () => fitLive(fr)); if (fr.contentDocument && fr.contentDocument.readyState === "complete") fitLive(fr); });
+</script>
+<iframe id="src" src="received/dait_magpie_logo.html?export=1" style="display:none"></iframe>
+<script>
+const load = src => new Promise(res => { const im = new Image(); im.onload = () => res(im); im.src = src; });
+// 까치(1116×632 장면 좌표): 부리 끝과 꼬리 끝
+const M_BEAK = [318.6, 224.4], M_TAIL = [786.0, 408.9];
+// 잇찌(calm-v2 원본 1920×1080 화면 좌표로 바꿔 씀): 부리 끝 (523,284), 꼬리 끝 (1028,478)
+const toItchi = ([x, y]) => [960 + (x - 770) * 1.66, 540 + (y - 374) * 1.66];
+const I_BEAK = toItchi([523, 284]), I_TAIL = toItchi([1028, 478]);
+
+// 이미지 im에서 부리 끝·꼬리 끝(a, b)을 캔버스의 같은 자리(A, B)에 오도록 그린다(회전 없이 크기와 위치만)
+function drawFit(ctx, im, a, b, A, B, alpha = 1, w = im.naturalWidth, h = im.naturalHeight) {
+  const s = Math.hypot(B[0] - A[0], B[1] - A[1]) / Math.hypot(b[0] - a[0], b[1] - a[1]);
+  const midSrc = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], midDst = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2];
+  ctx.save(); ctx.globalAlpha = alpha;
+  ctx.translate(midDst[0], midDst[1]); ctx.scale(s, s); ctx.translate(-midSrc[0], -midSrc[1]);
+  ctx.drawImage(im, 0, 0, w, h); ctx.restore();
+}
+const A = [150, 230], B = [750, 390]; // 캔버스 위의 부리 끝·꼬리 끝 자리(대략 두 새의 기울기 평균)
+
+document.getElementById('src').addEventListener('load', async e => {
+  const w = e.target.contentWindow;
+  const frame = async n => load(w.renderFrame(n));
+  const itchi = await load('dait-bird-final-calm-v2.svg');
+  const magpie = await frame(83);
+
+  // 1. 나란히
+  const c1 = document.getElementById('stillMagpie').getContext('2d');
+  c1.fillStyle = '#0B1220'; c1.fillRect(0, 0, 900, 560); drawFit(c1, magpie, M_BEAK, M_TAIL, A, B);
+  const c2 = document.getElementById('stillItchi').getContext('2d');
+  c2.fillStyle = '#0B1220'; c2.fillRect(0, 0, 900, 560); drawFit(c2, itchi, I_BEAK, I_TAIL, A, B, 1, 1920, 1080);
+
+  // 2. 겹쳐 보기: 잇찌는 그대로, 까치는 윤곽만 주황으로
+  const c3 = document.getElementById('overlay').getContext('2d');
+  c3.fillStyle = '#0B1220'; c3.fillRect(0, 0, 900, 560);
+  drawFit(c3, itchi, I_BEAK, I_TAIL, A, B, 0.85, 1920, 1080);
+  const tmp = document.createElement('canvas'); tmp.width = 900; tmp.height = 560;
+  const t = tmp.getContext('2d'); drawFit(t, magpie, M_BEAK, M_TAIL, A, B);
+  const px = t.getImageData(0, 0, 900, 560), d = px.data, out = c3.getImageData(0, 0, 900, 560), o = out.data;
+  const lum = i => d[i] + d[i + 1] + d[i + 2];
+  for (let y = 1; y < 559; y++) for (let x = 1; x < 899; x++) {
+    const i = (y * 900 + x) * 4, on = lum(i) > 90;
+    const edge = on && (lum(i - 4) <= 90 || lum(i + 4) <= 90 || lum(i - 3600) <= 90 || lum(i + 3600) <= 90);
+    if (edge) { o[i] = 255; o[i + 1] = 150; o[i + 2] = 60; o[i + 3] = 255; }
+  }
+  c3.putImageData(out, 0, 0);
+
+  // 3. 장면 따라가기
+  const strip = document.getElementById('strip');
+  for (const [n, cap] of [[12, '0.2초 오른쪽 위에서 날아옴'], [40, '0.7초 날갯짓하며 내려옴'], [83, '1.4초 내려앉아 날개 접음'], [100, '1.7초 꼬리·배부터 색이 빠짐'], [118, '2.0초 선이 글자로, 눈이 떠오름'], [154, '2.6초 「통!」 착지'], [170, '2.8초 한 번 튀어 오름'], [287, '4.8초 끝: Dait 글자']]) {
+    const f = document.createElement('figure'), cv = document.createElement('canvas');
+    cv.width = 558; cv.height = 316; cv.getContext('2d').drawImage(await frame(n), 0, 0, 558, 316);
+    f.appendChild(cv); const fc = document.createElement('figcaption'); fc.textContent = cap; f.appendChild(fc); strip.appendChild(f);
+  }
+});
+</script>
+</body>
+</html>

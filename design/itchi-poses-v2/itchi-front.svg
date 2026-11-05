@@ -1,0 +1,102 @@
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Deeper, calmer navy gradients matching calm-v2 -->
+    <linearGradient id="front-headGrad" x1="555" y1="200" x2="685" y2="370" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#24507A"/>
+      <stop offset="100%" stop-color="#183858"/>
+    </linearGradient>
+    <linearGradient id="front-wingGrad" x1="660" y1="275" x2="880" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#25527C"/>
+      <stop offset="100%" stop-color="#173654"/>
+    </linearGradient>
+    <linearGradient id="front-wingBackGrad" x1="610" y1="220" x2="850" y2="380" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1D4164"/>
+      <stop offset="100%" stop-color="#122B43"/>
+    </linearGradient>
+    <linearGradient id="front-tailGrad" x1="840" y1="405" x2="1020" y2="495" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#16334E"/>
+      <stop offset="50%" stop-color="#234E78"/>
+      <stop offset="100%" stop-color="#2E6292"/>
+    </linearGradient>
+    <linearGradient id="front-bellyGrad" x1="565" y1="360" x2="845" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F2F9FE"/>
+      <stop offset="55%" stop-color="#DCEFFE"/>
+      <stop offset="100%" stop-color="#B4DDF8"/>
+    </linearGradient>
+    <linearGradient id="front-ribbonGrad" x1="528" y1="260" x2="1018" y2="472" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="30%" stop-color="#8ADCFD"/>
+      <stop offset="55%" stop-color="#FFFFFF"/>
+      <stop offset="82%" stop-color="#BAE6FD"/>
+      <stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <linearGradient id="front-branchGrad" x1="560" y1="546" x2="876" y2="546" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#15263B"/>
+      <stop offset="55%" stop-color="#2C4F72"/>
+      <stop offset="100%" stop-color="#203C58"/>
+    </linearGradient>
+    <radialGradient id="front-eyeHaloGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.52"/>
+      <stop offset="55%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="front-calmGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.8"/>
+    </filter>
+  </defs>
+  <rect id="bg" x="0" y="0" width="1920" height="1080" fill="#0B1220"/>
+  <g transform="translate(960, 540) scale(1.66) translate(-770, -374)">
+    <g id="branch">
+      <line x1="564" y1="534" x2="880" y2="534" stroke="url(#front-branchGrad)" stroke-width="12" stroke-linecap="round"/>
+    </g>
+    <g id="tail">
+      <path d="M 762 454 L 806 412 C 850 428, 894 452, 938 482 C 944 486, 942 494, 932 494 L 910 493 L 918 505 C 921 510, 914 515, 905 511 C 862 493, 810 474, 762 454 Z" fill="url(#front-tailGrad)"/>
+      <path d="M 796 436 C 836 452, 874 470, 910 493" stroke="#10273E" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.65"/>
+      <path d="M 796 436 C 836 452, 874 470, 910 493" stroke="#3E76A8" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.32" transform="translate(0, 2)"/>
+    </g>
+    <g id="wing-back">
+      <path d="M 644 304 C 612 324, 604 378, 622 424 C 630 442, 646 436, 650 416 L 656 318 Z" fill="url(#front-wingBackGrad)"/>
+      <path d="M 640 308 C 616 328, 610 376, 624 418" stroke="#31689A" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.40"/>
+    </g>
+    <g id="body">
+      <!-- Sleeker adult-bird front body matching calm-v2 proportions -->
+      <path d="M 632 320 C 618 396, 654 486, 720 486 C 786 486, 822 398, 806 320 L 774 304 L 666 304 Z" fill="url(#front-bellyGrad)"/>
+      <path d="M 638 412 C 662 466, 704 486, 752 476 C 786 468, 804 436, 810 398 C 790 434, 758 460, 718 460 C 678 460, 652 438, 638 412 Z" fill="#B5E0FA" opacity="0.36"/>
+    </g>
+    <g id="wing">
+      <path d="M 794 304 C 826 324, 836 378, 816 424 C 808 442, 792 434, 788 412 L 782 318 Z" fill="url(#front-wingGrad)"/>
+      <path d="M 798 308 C 822 328, 828 376, 814 418" stroke="#31689A" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.42"/>
+    </g>
+    <g id="head">
+      <!-- Compact, poised adult-bird head -->
+      <path d="M 632 322 C 638 296, 650 280, 652 256 C 652 216, 678 198, 718 198 C 758 198, 784 216, 784 256 C 786 280, 798 296, 806 322 C 786 352, 754 366, 718 366 C 682 366, 652 352, 632 322 Z" fill="url(#front-headGrad)"/>
+    </g>
+    <g id="beak">
+      <!-- Clean small central triangle beak, no cyan bar above -->
+      <path d="M 709 272 L 727 272 L 718 295 Z" fill="#18324C"/>
+      <path d="M 711 273 L 725 273 L 718 291 Z" fill="#23486E"/>
+    </g>
+    <g id="ribbon">
+      <!-- Unbroken ribbon: top of head contour -> right cheek rounded D-curl -> two gentle waves across chest -> curves smoothly around side to tail -->
+      <path d="M 654 248 C 658 214, 682 198, 718 198 C 758 198, 784 218, 784 254 C 784 282, 768 302, 742 314 C 710 328, 652 332, 652 356 C 652 372, 672 374, 686 358 C 698 344, 710 344, 722 358 C 734 372, 748 374, 762 360 C 774 348, 786 352, 796 376 C 804 396, 816 414, 836 424 C 870 440, 904 458, 936 480" stroke="#38BDF8" stroke-width="14.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.14" filter="url(#front-calmGlow)"/>
+      <path d="M 654 248 C 658 214, 682 198, 718 198 C 758 198, 784 218, 784 254 C 784 282, 768 302, 742 314 C 710 328, 652 332, 652 356 C 652 372, 672 374, 686 358 C 698 344, 710 344, 722 358 C 734 372, 748 374, 762 360 C 774 348, 786 352, 796 376 C 804 396, 816 414, 836 424 C 870 440, 904 458, 936 480" stroke="url(#front-ribbonGrad)" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    <g id="t-bar">
+      <!-- Clearly intersects ('十') the tail ribbon at (891.5, 453.0) -->
+      <path d="M 872 454.5 L 912 454.5" stroke="#38BDF8" stroke-width="11.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.20" filter="url(#front-calmGlow)"/>
+      <path d="M 872 454.5 L 912 454.5" stroke="#FFFFFF" stroke-width="7.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    <g id="eyes">
+      <circle cx="686" cy="256" r="16" fill="url(#front-eyeHaloGrad)"/>
+      <circle cx="686" cy="256" r="10.0" fill="#38BDF8" opacity="0.90"/>
+      <circle cx="686" cy="256" r="4.8" fill="#FFFFFF"/>
+      <circle cx="750" cy="256" r="16" fill="url(#front-eyeHaloGrad)"/>
+      <circle cx="750" cy="256" r="10.0" fill="#38BDF8" opacity="0.90"/>
+      <circle cx="750" cy="256" r="4.8" fill="#FFFFFF"/>
+    </g>
+    <g id="legs">
+      <path d="M 706 482 L 686 525 M 678 538 C 677 524, 694 522, 704 529" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M 774 472 L 750 525 M 742 538 C 741 524, 758 522, 768 529" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+  </g>
+</svg>

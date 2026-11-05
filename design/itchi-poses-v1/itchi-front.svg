@@ -1,0 +1,96 @@
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="front-headGrad" x1="555" y1="200" x2="725" y2="370" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#24507A"/>
+      <stop offset="100%" stop-color="#183858"/>
+    </linearGradient>
+    <linearGradient id="front-wingGrad" x1="640" y1="260" x2="880" y2="410" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#25527C"/>
+      <stop offset="100%" stop-color="#173654"/>
+    </linearGradient>
+    <linearGradient id="front-wingBackGrad" x1="600" y1="220" x2="850" y2="380" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1D4164"/>
+      <stop offset="100%" stop-color="#122B43"/>
+    </linearGradient>
+    <linearGradient id="front-tailGrad" x1="780" y1="405" x2="1020" y2="510" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#16334E"/>
+      <stop offset="50%" stop-color="#234E78"/>
+      <stop offset="100%" stop-color="#2E6292"/>
+    </linearGradient>
+    <linearGradient id="front-bellyGrad" x1="565" y1="350" x2="845" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F2F9FE"/>
+      <stop offset="55%" stop-color="#DCEFFE"/>
+      <stop offset="100%" stop-color="#B4DDF8"/>
+    </linearGradient>
+    <linearGradient id="front-ribbonGrad" x1="528" y1="240" x2="1018" y2="475" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="30%" stop-color="#8ADCFD"/>
+      <stop offset="55%" stop-color="#FFFFFF"/>
+      <stop offset="82%" stop-color="#BAE6FD"/>
+      <stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <linearGradient id="front-branchGrad" x1="560" y1="534" x2="880" y2="534" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#15263B"/>
+      <stop offset="55%" stop-color="#2C4F72"/>
+      <stop offset="100%" stop-color="#203C58"/>
+    </linearGradient>
+    <radialGradient id="front-eyeHaloGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.52"/>
+      <stop offset="55%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="front-calmGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.8"/>
+    </filter>
+  </defs>
+  <rect id="bg" x="0" y="0" width="1920" height="1080" fill="#0B1220"/>
+  <g transform="translate(960, 540) scale(1.66) translate(-770, -374)">
+    <g id="branch">
+      <line x1="564" y1="534" x2="880" y2="534" stroke="url(#front-branchGrad)" stroke-width="12" stroke-linecap="round"/>
+    </g>
+    <g id="tail">
+      <path d="M 754 462 L 826 420 C 864 434, 902 456, 938 482 C 943 486, 941 493, 932 493 L 912 492 L 920 504 C 923 509, 916 514, 907 510 C 862 492, 804 476, 754 462 Z" fill="url(#front-tailGrad)"/>
+      <path d="M 795 442 C 835 458, 875 474, 912 492" stroke="#10273E" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.65"/>
+    </g>
+    <g id="wing-back">
+      <path d="M 632 308 C 594 328, 586 388, 608 436 C 618 454, 636 448, 642 426 L 648 320 Z" fill="url(#front-wingBackGrad)"/>
+      <path d="M 628 312 C 598 332, 592 386, 610 430" stroke="#31689A" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.4"/>
+    </g>
+    <g id="body">
+      <path d="M 616 322 C 600 402, 646 488, 720 488 C 794 488, 838 404, 822 322 L 784 304 L 654 304 Z" fill="url(#front-bellyGrad)"/>
+      <path d="M 624 416 C 652 472, 704 488, 756 478 C 796 468, 818 436, 824 398 C 802 436, 764 462, 718 462 C 674 462, 642 442, 624 416 Z" fill="#B5E0FA" opacity="0.36"/>
+    </g>
+    <g id="wing">
+      <path d="M 804 308 C 842 328, 852 388, 830 436 C 820 454, 802 446, 796 424 L 788 320 Z" fill="url(#front-wingGrad)"/>
+      <path d="M 808 312 C 838 332, 844 386, 826 430" stroke="#31689A" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.42"/>
+    </g>
+    <g id="head">
+      <path d="M 616 324 C 620 296, 636 280, 640 258 C 640 212, 672 194, 718 194 C 764 194, 796 212, 796 258 C 800 280, 816 296, 822 324 C 798 352, 762 364, 718 364 C 674 364, 638 352, 616 324 Z" fill="url(#front-headGrad)"/>
+    </g>
+    <g id="beak">
+      <path d="M 706 276 L 730 276 L 718 302 Z" fill="#18324C"/>
+      <path d="M 709 277 L 727 277 L 718 298 Z" fill="#23486E"/>
+    </g>
+    <g id="ribbon">
+      <!-- Natural front-view ribbon: starts along top of beak, sweeps around outer head contour (avoiding center forehead), D-curl on shoulder, 2 waves across chest, out along tail -->
+      <path d="M 708 275 L 726 275 C 704 268, 650 258, 644 238 C 648 206, 680 194, 720 194 C 766 194, 796 216, 796 258 C 794 288, 774 308, 748 320 C 718 334, 668 340, 686 364 C 698 378, 710 352, 726 352 C 742 352, 754 380, 770 380 C 786 380, 798 356, 812 356 C 824 356, 824 402, 834 422 C 870 438, 904 456, 936 480" stroke="#38BDF8" stroke-width="14.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.14" filter="url(#front-calmGlow)"/>
+      <path d="M 708 275 L 726 275 M 644 242 C 648 208, 680 194, 720 194 C 766 194, 796 216, 796 258 C 794 288, 774 308, 748 320 C 718 334, 668 340, 686 364 C 698 378, 710 352, 726 352 C 742 352, 754 380, 770 380 C 786 380, 798 356, 812 356 C 824 356, 824 402, 834 422 C 870 438, 904 456, 936 480" stroke="url(#front-ribbonGrad)" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    <g id="t-bar">
+      <path d="M 884 462 L 922 462" stroke="#38BDF8" stroke-width="11.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.20" filter="url(#front-calmGlow)"/>
+      <path d="M 884 462 L 922 462" stroke="#FFFFFF" stroke-width="7.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    <g id="eyes">
+      <circle cx="680" cy="256" r="17" fill="url(#front-eyeHaloGrad)"/>
+      <circle cx="680" cy="256" r="10.5" fill="#38BDF8" opacity="0.90"/>
+      <circle cx="680" cy="256" r="5.0" fill="#FFFFFF"/>
+      <circle cx="756" cy="256" r="17" fill="url(#front-eyeHaloGrad)"/>
+      <circle cx="756" cy="256" r="10.5" fill="#38BDF8" opacity="0.90"/>
+      <circle cx="756" cy="256" r="5.0" fill="#FFFFFF"/>
+    </g>
+    <g id="legs">
+      <path d="M 706 482 L 686 525 M 678 538 C 677 524, 694 522, 704 529" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M 774 472 L 750 525 M 742 538 C 741 524, 758 522, 768 529" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+  </g>
+</svg>

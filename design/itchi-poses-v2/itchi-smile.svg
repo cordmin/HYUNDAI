@@ -1,0 +1,101 @@
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Deeper, calmer navy gradients matching calm-v2 -->
+    <linearGradient id="smile-headGrad" x1="555" y1="200" x2="685" y2="370" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#24507A"/>
+      <stop offset="100%" stop-color="#183858"/>
+    </linearGradient>
+    <linearGradient id="smile-wingGrad" x1="660" y1="275" x2="880" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#25527C"/>
+      <stop offset="100%" stop-color="#173654"/>
+    </linearGradient>
+    <linearGradient id="smile-wingBackGrad" x1="610" y1="220" x2="850" y2="380" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1D4164"/>
+      <stop offset="100%" stop-color="#122B43"/>
+    </linearGradient>
+    <linearGradient id="smile-tailGrad" x1="840" y1="405" x2="1020" y2="495" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#16334E"/>
+      <stop offset="50%" stop-color="#234E78"/>
+      <stop offset="100%" stop-color="#2E6292"/>
+    </linearGradient>
+    <linearGradient id="smile-bellyGrad" x1="565" y1="360" x2="845" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F2F9FE"/>
+      <stop offset="55%" stop-color="#DCEFFE"/>
+      <stop offset="100%" stop-color="#B4DDF8"/>
+    </linearGradient>
+    <linearGradient id="smile-ribbonGrad" x1="528" y1="260" x2="1018" y2="472" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="30%" stop-color="#8ADCFD"/>
+      <stop offset="55%" stop-color="#FFFFFF"/>
+      <stop offset="82%" stop-color="#BAE6FD"/>
+      <stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <linearGradient id="smile-branchGrad" x1="560" y1="546" x2="876" y2="546" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#15263B"/>
+      <stop offset="55%" stop-color="#2C4F72"/>
+      <stop offset="100%" stop-color="#203C58"/>
+    </linearGradient>
+    <radialGradient id="smile-eyeHaloGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.52"/>
+      <stop offset="55%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="smile-calmGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.8"/>
+    </filter>
+  </defs>
+  <rect id="bg" x="0" y="0" width="1920" height="1080" fill="#0B1220"/>
+  <g transform="translate(960, 540) scale(1.66) translate(-770, -374)">
+    <g id="branch">
+      <line x1="564" y1="534" x2="880" y2="534" stroke="url(#smile-branchGrad)" stroke-width="12" stroke-linecap="round"/>
+    </g>
+    <g id="tail">
+      <path d="M 836 438 L 884 398 C 930 416, 976 442, 1022 474 C 1028 478, 1026 486, 1016 486 L 992 485 L 1002 499 C 1006 505, 998 511, 987 507 C 934 486, 878 462, 836 438 Z" fill="url(#smile-tailGrad)"/>
+      <path d="M 868 420 C 912 440, 954 462, 992 485" stroke="#10273E" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.65"/>
+      <path d="M 868 420 C 912 440, 954 462, 992 485" stroke="#3E76A8" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.32" transform="translate(0, 2)"/>
+    </g>
+    <g id="body">
+      <!-- Very subtly puffed belly (+4px lower curve compared to calm-v2 488 -> 492) keeping adult proportions -->
+      <path d="M 553 322 C 569 409, 644 492, 742 492 C 818 492, 869 451, 884 398 L 855 352 L 635 352 L 580 322 Z" fill="url(#smile-bellyGrad)"/>
+      <path d="M 590 414 C 645 480, 742 492, 806 475 C 852 460, 874 427, 884 398 C 856 435, 798 465, 726 465 C 658 465, 613 440, 590 414 Z" fill="#B5E0FA" opacity="0.36"/>
+      <path d="M 674 224 C 736 242, 828 308, 886 399 L 884 398 L 762 282 C 722 272, 690 282, 666 306 L 658 276 Z" fill="#163452"/>
+    </g>
+    <g id="wing">
+      <path d="M 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 C 722 348, 738 380, 756 380 C 774 380, 794 352, 812 352 C 832 352, 858 384, 884 398 C 864 344, 820 296, 762 282 C 722 272, 690 282, 666 306 L 648 318 Z" fill="url(#smile-wingGrad)"/>
+      <path d="M 672 304 C 694 280, 726 272, 762 282 C 820 296, 864 344, 884 398" stroke="#112A42" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <path d="M 676 304 C 698 282, 728 276, 760 286 C 816 300, 858 344, 880 394" stroke="#31689A" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.42"/>
+      <path d="M 734 322 C 770 348, 814 366, 860 380" stroke="#3E78AC" stroke-width="7.5" stroke-linecap="round" fill="none" opacity="0.22"/>
+    </g>
+    <g id="head">
+      <!-- 3/4 turned head (~45 deg toward viewer) with far cheek contour and compact adult proportions -->
+      <path d="M 558 262 C 562 220, 594 200, 630 202 C 672 204, 696 226, 688 260 C 682 288, 668 304, 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 L 664 372 C 604 370, 566 352, 555 322 C 548 302, 552 280, 558 262 Z" fill="url(#smile-headGrad)"/>
+    </g>
+    <g id="beak">
+      <!-- Short triangle beak between & below the two eyes, pointing diagonally forward (bottom-left) -->
+      <path d="M 585 272 L 604 275 L 579 294 Z" fill="#162E47"/>
+      <path d="M 587 273 L 601 275 L 582 291 Z" fill="#22466B"/>
+    </g>
+    <g id="ribbon">
+      <path d="M 556 268 C 560 222, 592 200, 628 202 C 672 204, 696 226, 688 260 C 682 288, 668 304, 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 C 722 348, 738 380, 756 380 C 774 380, 794 352, 812 352 C 832 352, 858 384, 884 398 C 930 416, 976 442, 1018 472" stroke="#38BDF8" stroke-width="14.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.14" filter="url(#smile-calmGlow)"/>
+      <path d="M 556 268 C 560 222, 592 200, 628 202 C 672 204, 696 226, 688 260 C 682 288, 668 304, 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 C 722 348, 738 380, 756 380 C 774 380, 794 352, 812 352 C 832 352, 858 384, 884 398 C 930 416, 976 442, 1018 472" stroke="url(#smile-ribbonGrad)" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    <g id="t-bar">
+      <path d="M 956 444.8 L 996 444.8" stroke="#38BDF8" stroke-width="11.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.20" filter="url(#smile-calmGlow)"/>
+      <path d="M 956 444.8 L 996 444.8" stroke="#FFFFFF" stroke-width="7.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    <g id="eyes">
+      <!-- Far eye crescent (smaller, near cheek contour) -->
+      <circle cx="576" cy="256" r="14" fill="url(#smile-eyeHaloGrad)"/>
+      <path d="M 567 259 C 571 248, 581 248, 585 259" stroke="#38BDF8" stroke-width="5.2" stroke-linecap="round" fill="none"/>
+      <path d="M 569 258 C 572 250, 580 250, 583 258" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <!-- Near eye crescent -->
+      <circle cx="626" cy="260" r="18" fill="url(#smile-eyeHaloGrad)"/>
+      <path d="M 615 263 C 620 250, 632 250, 637 263" stroke="#38BDF8" stroke-width="6.0" stroke-linecap="round" fill="none"/>
+      <path d="M 617 262 C 621 252, 631 252, 635 262" stroke="#FFFFFF" stroke-width="2.9" stroke-linecap="round" fill="none"/>
+    </g>
+    <g id="legs">
+      <path d="M 706 482 L 686 525 M 678 538 C 677 524, 694 522, 704 529" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M 774 472 L 750 525 M 742 538 C 741 524, 758 522, 768 529" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+  </g>
+</svg>

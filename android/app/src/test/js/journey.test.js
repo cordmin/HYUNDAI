@@ -848,11 +848,13 @@ test('긴 이동은 교시마다 다른 수업을 듣고, 마친 교시는 저�
   hearPeriod();
   page(`window.setDrivingMode(false);`);
   assert.strictEqual(page(`lessonRun.done`), true);
-  assert.ok(stageHtml().includes('이음 +2'));
-  assert.ok(stageHtml().includes('지금까지 이음 2'));
-  assert.ok(/class="ieum-logo[^"]*\bpop\b/.test(stageHtml())); // 이음이 늘면 로고 점이 튀어 오른다
+  assert.ok(stageHtml().includes('깃털 +2'));
+  assert.ok(stageHtml().includes('모은 깃털 2개'));
+  assert.ok(!stageHtml().includes('이음'));
+  assert.ok(stageHtml().includes('data-play="1"')); // 깃털이 늘면 로고가 잇찌가 되었다가 돌아간다
+  assert.strictEqual((stageHtml().match(/class="it-feather"/g) || []).length, 2); // 받은 깃털 수만큼
   page(`render();`);
-  assert.ok(stageHtml().includes('class="ieum-logo"')); // 다시 그려도 되풀이하지 않는다
+  assert.ok(stageHtml().includes('data-play="0"')); // 다시 그려도 되풀이하지 않는다
   assert.strictEqual(page(`lessonProgress().ieum`), 2);
   assert.strictEqual(page(`lessonProgress().records.filter(record => record.finished).length`), 2);
   assert.ok(page(`lessonProgress().homework.title`).includes('점순이'));
@@ -1333,7 +1335,7 @@ test('학교를 등록한 첫 화면은 오늘의 수업을 크게 두고, 옆�
   assert.ok(!shown.html.includes('시간표</div>'));
   if (shown.weekend) assert.ok(shown.html.includes('가 볼 만한 곳'));
   else if (shown.mode === 'morning') assert.ok(shown.html.includes('준비물'));
-  else assert.ok(shown.html.includes('수업을 마치면 이음이 쌓여요'));
+  else assert.ok(shown.html.includes('모은 깃털') && shown.html.includes('수업을 마치면 하나씩 받아요') && !shown.html.includes('배움과 이어진 수') && !shown.html.includes('itchi')); // 잇찌는 로고가 변한 모습이라 카드에 따로 두지 않는다
 });
 
 test('가 볼 만한 곳은 관광공사의 지금 시도 코드로 찾는다. 전남과 광주는 합쳐진 코드, 세종은 36110', () => {

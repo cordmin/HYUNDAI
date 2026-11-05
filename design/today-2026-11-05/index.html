@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026-11-05 작업 정리: 깃털과 잇찌</title>
+<style>
+  body { margin: 0; background: #060B16; color: #E0F2FE; font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; line-height: 1.65; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 18px 48px; }
+  h1 { font-size: 24px; margin: 0 0 4px; }
+  h2 { font-size: 18px; margin: 34px 0 10px; color: #BAE6FD; }
+  p, li { font-size: 14.5px; color: #CFE6F7; }
+  .muted { color: #8FB3D1; font-size: 13px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .row4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  figure { margin: 0; background: #0B1220; border: 1px solid #1E2B44; border-radius: 12px; padding: 8px; }
+  figure img { width: 100%; display: block; border-radius: 8px; }
+  figcaption { font-size: 12.5px; color: #9CC3E0; margin-top: 6px; }
+  .tag { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 6px; margin-right: 6px; }
+  .before { background: #CBD5E1; color: #0B1220; } .after { background: #7DD3FC; color: #0B1220; }
+  iframe { width: 100%; height: 640px; border: 1px solid #1E2B44; border-radius: 12px; background: #060B16; }
+  a { color: #7DD3FC; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>2026-11-05 작업 정리: 보상 「깃털」과 캐릭터 「잇찌」</h1>
+  <p class="muted">앱 담당 교사와 Claude가 하루 동안 한 일. 사진은 브라우저 미리보기(앱 창 665×420)에서 찍었다. 에뮬레이터 화면은 확인 안 함.</p>
+
+  <h2>오늘 정한 것</h2>
+  <ul>
+    <li>보상 이름은 <b>깃털</b>(전 이름 「이음」). 첫 화면·수업 화면의 보상 칸 이름은 「모은 깃털」, 내용은 「1개」.</li>
+    <li>캐릭터 새의 이름은 <b>잇찌</b>, 모티브는 <b>까치</b>. 잇찌는 로고 옆에 따로 있는 캐릭터가 아니라 로고가 변한 모습이다(로고 → 새, 새 → 로고).</li>
+    <li>깃털은 잇찌가 주는 것이 아니라 아이가 받아 잇찌 날개로 모이는 것. 잇찌는 말하지 않고 몸짓으로 마음을 보여 준다.</li>
+    <li>날개를 펴면 까치처럼 흰 무늬 띠가 보인다(팀에서 받은 오프닝의 까치 날개). 접힌 날개의 어깨 흰 무늬는 어색해서 넣지 않는다.</li>
+    <li>정면 잇찌: 리본은 몸 윤곽을 따라 한 줄로, 부리는 세모의 양쪽 윗선이 빛나는 모양(「나」).</li>
+  </ul>
+
+  <h2>앱 ① 시작 화면</h2>
+  <p>전: 로고를 손글씨처럼 쓴 뒤 점이 톡 찍히고 위로 올라간다. 후: 잇찌가 까치 날갯짓으로 오른쪽 위에서 날아와 다리를 내리고 앉았다가, 리본이 펴지며 다잇 로고로 바뀐다. 그다음은 전과 같다(점, 소리, 위로). 화면을 누르면 건너뛴다. 움직임 줄이기 설정이면 전처럼.</p>
+  <div class="row4">
+    <figure><img src="before-splash-a.png" alt=""><figcaption><span class="tag before">전</span>0.6초 로고 쓰는 중</figcaption></figure>
+    <figure><img src="before-splash-b.png" alt=""><figcaption><span class="tag before">전</span>1.3초 점이 찍힘</figcaption></figure>
+    <figure><img src="after-splash-a.png" alt=""><figcaption><span class="tag after">후</span>0.5초 날아오는 잇찌</figcaption></figure>
+    <figure><img src="after-splash-b.png" alt=""><figcaption><span class="tag after">후</span>1.5초 앉음</figcaption></figure>
+  </div>
+  <div class="row4" style="margin-top:8px">
+    <figure><img src="after-splash-c.png" alt=""><figcaption><span class="tag after">후</span>2.2초 몸이 빠지며 리본이 펴짐</figcaption></figure>
+    <figure><img src="after-splash-d.png" alt=""><figcaption><span class="tag after">후</span>2.7초 로고가 됨(이후 전과 같음)</figcaption></figure>
+  </div>
+
+  <h2>앱 ② 수업 끝 화면</h2>
+  <p>전: 로고의 점이 톡 튀고 「이음 +1」. 후: 로고가 잇찌로 바뀌고, 「깃털 +1」 글자에서 깃털이 비틀리며 솟아올라 그네 타듯 내려와 잇찌 날개에 스며든다. 깃털이 닿기 직전 잇찌가 까치 날개를 반쯤 펴서 받고, 날개가 반짝이고 웃는 눈으로 깡충 뛴 뒤 고개를 갸웃하고 다시 로고로 돌아간다(약 8~9초, 처음 한 번만, 주행 화면에는 없음).</p>
+  <div class="pair">
+    <figure><img src="before-end.png" alt=""><figcaption><span class="tag before">전</span>로고 점 톡, 「이음 +1」</figcaption></figure>
+    <figure><img src="after-end-a.png" alt=""><figcaption><span class="tag after">후</span>로고가 잇찌로 바뀐 장면, 「깃털 +1」, 「모은 깃털 1개」</figcaption></figure>
+  </div>
+  <p class="muted">깃털이 날아오는 장면과 날개로 받는 장면은 아래 행동 시안의 「깃털 받기」 카드에서 움직이는 그대로 볼 수 있다.</p>
+
+  <h2>캐릭터 시안(움직이는 그대로)</h2>
+  <p>아래 칸은 실제 시안 페이지를 그대로 띄운 것이다. 자세 그림은 미리보기 주소로 열어야 보인다:
+    <a href="../../character/itchi-actions.html">행동 시안</a> ·
+    <a href="../../character/itchi-opening.html">잇찌 오프닝 시안</a> ·
+    <a href="../../character/compare-itchi-magpie.html">받은 오프닝과 비교</a></p>
+  <iframe src="../../character/itchi-actions.html" title="잇찌 행동 시안"></iframe>
+
+  <h2>남은 일</h2>
+  <ul>
+    <li>안티그래비티 요청 8(자세 그림 v3: 까치 날개 흰 무늬, 정면 목, t 가로줄, 몸 비율)은 대기 중. 안티그래비티를 다시 켜고 「요청 파일 처리해」라고 하면 이어서 처리된다.</li>
+    <li>행동 시안 중 앱에 넣을 곳 더 정하기: 쉬는 시간 꾸벅꾸벅, 첫 화면 눈 맞추기 등. 자세 그림(정면 등)을 앱에 넣으려면 그림 파일을 앱에 함께 넣어야 한다.</li>
+    <li>에뮬레이터에서 새 시작 화면과 수업 끝 화면 확인, 사람 검수.</li>
+    <li>깃털로 무엇을 할지(배지, 잇찌가 자라는 모습 등)는 보상 체계 안 뒤에.</li>
+  </ul>
+</div>
+</body>
+</html>

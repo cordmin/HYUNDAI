@@ -1,6 +1,6 @@
 {
   "created": "2026-11-04",
-  "status": "2026-11-04 결정: calm-v2로 확정. final-v1은 비교용",
+  "status": "2026-11-04 결정: calm-v2로 확정. final-v1은 비교용. 2026-11-05 이름 잇찌, 행동 시안 itchi-actions.html, 받은 오프닝 비교 compare-itchi-magpie.html, 잇찌 오프닝 시안 itchi-opening.html · 2026-11-05 모티브는 까치로 결정",
   "files": [
     {
       "file": "dait-logo-reference.png",
@@ -39,8 +39,28 @@
     },
     {
       "file": "../handoff/요청.md",
-      "bytes": 7300,
-      "sha256": "22dde6410d5a4129ec398e4c6ff629b4c931fbba4d5f6ff31ab6fda7449664d1"
+      "bytes": 18203,
+      "sha256": "ceb47feb1883a36e95ef6112efdf610d8d7870d3a2aa076c09c112454c8b414e"
+    },
+    {
+      "file": "itchi-actions.html",
+      "bytes": 37455,
+      "sha256": "37f0c6b63f71795216337f0a566a664d2aaadaea065bac6ae15a7c748707b93a"
+    },
+    {
+      "file": "itchi-opening.html",
+      "bytes": 57656,
+      "sha256": "4562e78387e150084ae4a838fca3db763e75d857ac12ab6f7504602ca556667f"
+    },
+    {
+      "file": "compare-itchi-magpie.html",
+      "bytes": 11125,
+      "sha256": "67fca64a6d969acbc773e4000ee94ee7450b6cd064b66a868cfbf8cbb5b37e8d"
+    },
+    {
+      "file": "received/dait_magpie_logo.html",
+      "bytes": 52372,
+      "sha256": "24be917ccba5db3f35998a430def98bdc30e4a89f27c6cf201d8502a713fdd71"
     }
   ]
 }

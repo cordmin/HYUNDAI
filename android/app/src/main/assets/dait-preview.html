@@ -595,16 +595,9 @@
       100% { r: 24px; stroke-width: 0.4px; opacity: 0; }
     }
 
-    /* 이음이 늘 때 수업 끝 화면의 로고: 시작 화면의 점 움직임을 그대로 쓴다 */
-    .ieum-logo { width: calc(120 * var(--u)); height: auto; margin-bottom: calc(10 * var(--u)); overflow: visible; }
-    .ieum-logo .ieum-dot, .ieum-logo .ieum-ripple { transform-origin: 62px 7.5px; }
-    .ieum-logo .ieum-ripple { opacity: 0; }
-    .ieum-logo.pop .ieum-dot { animation: dotPopIn 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s both; }
-    .ieum-logo.pop .ieum-ripple { animation: rippleExpand 0.75s cubic-bezier(0.1, 0.8, 0.25, 1) 0.32s both; }
-    .ieum-logo.pop.calm .ieum-ripple { animation: none; }
-    @media (prefers-reduced-motion: reduce) {
-      .ieum-logo.pop .ieum-dot, .ieum-logo.pop .ieum-ripple { animation: none; }
-    }
+    /* 수업 끝 화면의 잇찌: 로고 획이 이어져 잇찌가 되고, 깃털을 내려놓은 뒤 다시 로고로 돌아간다.
+       움직임은 itchiPlay가 그린다. 잇찌는 말하지 않는다(말풍선·입 모양 없음). */
+    .itchi { width: calc(200 * var(--u)); height: auto; margin-bottom: calc(6 * var(--u)); overflow: visible; }
 
     /* School Settings: 왼쪽 학교 찾기, 오른쪽 설정 목록 */
     .settings-grid {
@@ -795,6 +788,28 @@
   </style>
 </head>
 <body>
+
+  <!-- 잇찌: 다잇 로고의 리본 한 획이 이어져 된 새(character/dait-bird-final-calm-v2.svg의 선과 색을 그대로 씀).
+       새의 색과 깃털 그림은 여기에 한 번만 두고, 수업 끝 화면(itchiHtml)이 빌려 쓴다. -->
+  <svg class="itchi-sprite" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="itchiLogo" x1="485" y1="0" x2="1062" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#38BDF8"/><stop offset="0.5" stop-color="#FFFFFF"/><stop offset="1" stop-color="#38BDF8"/></linearGradient>
+      <linearGradient id="itchiHead" x1="555" y1="200" x2="685" y2="370" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#24507A"/><stop offset="100%" stop-color="#183858"/></linearGradient>
+      <linearGradient id="itchiWing" x1="660" y1="275" x2="880" y2="400" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#25527C"/><stop offset="100%" stop-color="#173654"/></linearGradient>
+      <linearGradient id="itchiTail" x1="840" y1="405" x2="1020" y2="495" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#16334E"/><stop offset="50%" stop-color="#234E78"/><stop offset="100%" stop-color="#2E6292"/></linearGradient>
+      <linearGradient id="itchiBelly" x1="565" y1="360" x2="845" y2="500" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#F2F9FE"/><stop offset="55%" stop-color="#DCEFFE"/><stop offset="100%" stop-color="#B4DDF8"/></linearGradient>
+      <linearGradient id="itchiRibbon" x1="528" y1="260" x2="1018" y2="472" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#38BDF8"/><stop offset="30%" stop-color="#8ADCFD"/><stop offset="55%" stop-color="#FFFFFF"/><stop offset="82%" stop-color="#BAE6FD"/><stop offset="100%" stop-color="#FFFFFF"/></linearGradient>
+      <linearGradient id="itchiBranch" x1="560" y1="546" x2="876" y2="546" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#15263B"/><stop offset="55%" stop-color="#2C4F72"/><stop offset="100%" stop-color="#203C58"/></linearGradient>
+      <radialGradient id="itchiEyeHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#38BDF8" stop-opacity="0.52"/><stop offset="55%" stop-color="#38BDF8" stop-opacity="0.16"/><stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/></radialGradient>
+      <linearGradient id="itchiFeather" x1="0" y1="0" x2="84" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#38BDF8"/><stop offset="60%" stop-color="#BAE6FD"/><stop offset="100%" stop-color="#FFFFFF"/></linearGradient>
+      <filter id="itchiGlow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3.8"/></filter>
+    </defs>
+    <!-- 깃털: 리본과 같은 하늘색에서 흰색으로. 깃대 하나와 끝의 작은 갈라짐 -->
+    <symbol id="itchi-feather" viewBox="-4 -16 92 32">
+      <path d="M 0 0 C 18 -13, 50 -15, 84 -2 L 76 0 L 84 3 C 52 13, 20 11, 0 0 Z" fill="url(#itchiFeather)"/>
+      <path d="M -2 0 C 26 -1, 56 -1, 80 0" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.9"/>
+    </symbol>
+  </svg>
 
   <!-- Pleos Display (Pure App Window) -->
   <div class="pleos-display">
@@ -997,14 +1012,14 @@
       const now = new Date();
       const where = !weekend && trip.minutes !== null ? ` · ${isMorning ? '학교' : '집'}까지 ${trip.minutes}분` : '';
       const armTalk = weekend || reserved ? '' : `<button class="card-btn${armed ? ' quiet' : ''}" onclick="event.stopPropagation(); toggleArm('${trip.mode}')">${armLabel(trip)}</button>`;
-      const ieumLine = progress.ieum ? `이음 ${progress.ieum}` : '수업을 마치면 이음이 쌓여요';
+      const ieumLine = featherLine(progress);
       const side = weekend
         ? `<div class="card-label">쉬는 날</div><div class="card-focus">가 볼 만한 곳</div><div class="card-sub">${ieumLine}</div><button class="card-btn quiet" onclick="openPlaces()">찾아보기</button>`
         : isMorning
           ? `<div class="card-label">${escapeHtml(info.prepLabel)}</div>${bigWordHtml(info.prep, info.prepSub)}<div class="card-sub">${ieumLine}</div>`
           : progress.homework
-            ? `<div class="card-label">이음 ${progress.ieum} · 숙제</div><div class="card-text">${escapeHtml(progress.homework.title)}</div><button class="card-btn quiet" onclick="doneHomework()">했어요</button>`
-            : `<div class="card-label">배움과 이어진 수</div><div class="card-text">${ieumLine}</div>`; // 수업 목록은 위쪽 「다른 수업」 버튼 하나로 연다
+            ? `<div class="card-label">${progress.ieum ? `모은 깃털 ${progress.ieum}개 · ` : ''}숙제</div><div class="card-text">${escapeHtml(progress.homework.title)}</div><button class="card-btn quiet" onclick="doneHomework()">했어요</button>`
+            : `<div class="card-label">모은 깃털</div><div class="card-text">${featherCount(progress)}</div>`; // 수업 목록은 위쪽 「다른 수업」 버튼 하나로 연다
       container.innerHTML = `
         <div class="home-top">
           ${getDaitLogoHtml()}
@@ -1088,8 +1103,8 @@
               ${times}
             </div>
             <div class="home-card">
-              <div class="card-label">배움과 이어진 수</div>
-              <div class="card-text">${progress.ieum ? `이음 ${progress.ieum}` : '수업을 마치면 이음이 쌓여요'}</div>
+              <div class="card-label">모은 깃털</div>
+              <div class="card-text">${featherCount(progress)}</div>
               <button class="card-btn quiet" onclick="openLessons()">다른 수업 보기</button>
             </div>
           </div>
@@ -1740,8 +1755,8 @@
               </div>`).join('')}
             </div>
             <div class="lesson-side">
-              <div class="card-label">배움과 이어진 수</div>
-              ${progress.ieum ? `<div class="card-focus">이음 ${progress.ieum}</div>` : '<div class="card-sub">수업을 마치면 이음이 쌓여요</div>'}
+              <div class="card-label">모은 깃털</div>
+              ${progress.ieum ? `<div class="card-focus">${featherCount(progress)}</div>` : `<div class="card-sub">${featherCount(progress)}</div>`}
               ${mileage ? `<div class="card-sub">${escapeHtml(mileage)}</div>` : ''}
               ${progress.homework ? `<div class="card-label">숙제</div><div class="card-sub">${escapeHtml(progress.homework.title)}</div><button class="card-btn" onclick="doneHomework()">했어요</button>` : ''}
               ${answers.length ? '<div class="card-label">남긴 답</div>' : ''}
@@ -1772,9 +1787,9 @@
           </div>
           <div class="dialogue-card">
             <div class="card-center">
-              ${celebrate ? ieumLogoHtml(run) : ''}
+              ${celebrate ? itchiHtml(run) : ''}
               <div class="main-question">${escapeHtml(title)}</div>
-              ${celebrate ? `<div class="card-sub">지금까지 이음 ${lessonProgress().ieum}</div>` : ''}
+              ${celebrate ? `<div class="card-sub">모은 깃털 ${lessonProgress().ieum}개</div>` : ''}
               ${run.done || resting ? '' : run.paused ? '<div class="card-sub">잠시 멈췄어요</div>' : piece.voiced ? '' : '<div class="card-sub">음원 준비 중</div>'}
               <div id="heardLine" class="heard-bubble"${heard || speechPhase === 'listening' ? '' : ' hidden'}>${escapeHtml(heardLineText())}</div>
             </div>
@@ -1782,6 +1797,7 @@
           <div class="bottom-bar">${buttons}</div>
         </div>
       `;
+      if (celebrate && container.querySelector) ITCHI.play(container.querySelector('.itchi'));
     }
 
     // 이어 붙인 수업(쉬는 시간 없음)은 교시라고 부르지 않는다.
@@ -1791,29 +1807,374 @@
       return rest && (number > 1 || count > 0) ? `${number}교시 ${run.lesson.subject}` : `${run.lesson.subject} 수업`;
     }
 
-    // 이음이 늘면 로고의 i 점이 시작 화면처럼 튀어 오른다. 다시 그려도 되풀이하지 않게 처음 한 번만 움직이고,
-    // 주행 중에는 물결 없이 점만 짧게 움직인다.
-    function ieumLogoHtml(run) {
-      const pop = !run.celebrated;
-      run.celebrated = true;
+    // 잇찌는 따로 앉아 있는 캐릭터가 아니라 로고가 변한 모습이다. 깃털이 늘면 수업 끝 화면의 로고가
+    // 잇찌가 되고(로고 획이 끊기지 않고 구부러짐), 아이가 받은 깃털이 「깃털 +1」 글자에서 날아올라 잇찌 날개에 스며든 뒤
+    // 다시 로고로 돌아간다. 깃털은 잇찌가 주는 것이 아니라 잇찌에게 모이는 것이고, 화면에 남지 않는다.
+    // 움직임은 character/logo-to-bird.html을 옮긴 것이다.
+    // 처음 한 번만 움직인다. 주행 중이거나 움직임 줄이기 설정이면 끝 모습(로고)만 그린다.
+    // opts.splash: 앱 시작 화면용(깃털 없음, 시작 화면 로고와 같은 자리에 겹치도록 viewBox를 로고 좌표에 맞춤)
+    function itchiHtml(run, opts = {}) {
+      const play = !opts.splash && !run.celebrated && !isDrivingMode;
+      if (play) run.celebrated = true;
+      const feathers = Math.min(run.trip.earned, 3); // 한 번에 셋까지만 그린다
       return `
-        <svg class="ieum-logo${pop ? ' pop' : ''}${isDrivingMode ? ' calm' : ''}" viewBox="0 0 100 32" fill="none" aria-hidden="true">
-          <path d="${DAIT_LOGO_PATH}" stroke="url(#flowGradIeum)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle class="ieum-ripple" cx="62" cy="7.5" r="3" fill="none" stroke="#38BDF8" stroke-width="2"/>
-          <circle class="ieum-dot" cx="62" cy="7.5" r="2.8" fill="#38BDF8"/>
-          <defs>
-            <linearGradient id="flowGradIeum" x1="0" y1="0" x2="100" y2="0" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#38BDF8"/>
-              <stop offset="0.6" stop-color="#FFFFFF"/>
-              <stop offset="1" stop-color="#38BDF8"/>
-            </linearGradient>
-          </defs>
+        <svg class="${opts.splash ? 'itchi-splash' : 'itchi'}" viewBox="${opts.splash ? `${ITCHI.lx(0)} ${ITCHI.ly(0)} ${6.4 * 100} ${6.4 * 34}` : '420 180 700 380'}" role="img" aria-label="${opts.splash ? '잇찌가 날아와 다잇 로고가 돼요' : '로고가 잇찌가 되어 깃털을 물어 왔어요'}" data-feathers="${feathers}" data-play="${play ? 1 : 0}" overflow="visible">
+          <line class="it-branch" x1="722" y1="534" x2="722" y2="534" stroke="url(#itchiBranch)" stroke-width="12" stroke-linecap="round" opacity="0"/>
+          <g class="it-bob">
+            ${ITCHI.wings('far')}
+            <g class="it-tail" opacity="0">
+              <path d="M 836 438 L 884 398 C 930 416, 976 442, 1022 474 C 1028 478, 1026 486, 1016 486 L 992 485 L 1002 499 C 1006 505, 998 511, 987 507 C 934 486, 878 462, 836 438 Z" fill="url(#itchiTail)"/>
+              <path d="M 868 420 C 912 440, 954 462, 992 485" stroke="#10273E" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.65"/>
+            </g>
+            <g class="it-belly" opacity="0">
+              <path d="M 555 322 C 572 406, 646 488, 742 488 C 816 488, 868 450, 884 398 L 855 352 L 635 352 L 580 322 Z" fill="url(#itchiBelly)"/>
+              <path d="M 592 412 C 646 476, 742 488, 806 472 C 852 458, 874 426, 884 398 C 856 434, 798 462, 726 462 C 658 462, 614 438, 592 412 Z" fill="#B5E0FA" opacity="0.36"/>
+            </g>
+            <g class="it-wing" opacity="0">
+              <path d="M 674 224 C 736 242, 828 308, 886 399 L 884 398 L 762 282 C 722 272, 690 282, 666 306 L 658 276 Z" fill="#163452"/>
+              <path d="M 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 C 722 348, 738 380, 756 380 C 774 380, 794 352, 812 352 C 832 352, 858 384, 884 398 C 864 344, 820 296, 762 282 C 722 272, 690 282, 666 306 L 648 318 Z" fill="url(#itchiWing)"/>
+              <path d="M 672 304 C 694 280, 726 272, 762 282 C 820 296, 864 344, 884 398" stroke="#112A42" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+              <path d="M 734 322 C 770 348, 814 366, 860 380" stroke="#3E78AC" stroke-width="7.5" stroke-linecap="round" fill="none" opacity="0.22"/>
+              <path class="it-shine" d="M 734 322 C 770 348, 814 366, 860 380" stroke="#BAE6FD" stroke-width="9" stroke-linecap="round" fill="none" opacity="0" filter="url(#itchiGlow)"/>
+            </g>
+            <g class="it-head" opacity="0">
+              <path d="M 556 266 C 568 222, 594 200, 628 202 C 672 204, 696 226, 688 260 C 682 288, 668 304, 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 L 664 372 C 604 370, 566 352, 555 324 C 549 308, 550 286, 556 266 Z" fill="url(#itchiHead)"/>
+              <path d="M 523 284 L 558 266 L 555 292 Z" fill="#1F3D5C"/>
+            </g>
+            <path class="it-glow" stroke="#38BDF8" stroke-width="14.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0" filter="url(#itchiGlow)"/>
+            <path class="it-logo" d="${ITCHI_LOGO_D}" stroke="url(#itchiLogo)" stroke-width="16.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <path class="it-rb" stroke="url(#itchiRibbon)" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0"/>
+            <path class="it-bar" d="M ${ITCHI.lx(74)} ${ITCHI.ly(16)} L ${ITCHI.lx(86)} ${ITCHI.ly(16)}" stroke="#FFFFFF" stroke-width="14.5" stroke-linecap="round" fill="none"/>
+            <g class="it-eye">
+              <circle class="it-halo" cx="${ITCHI.lx(62)}" cy="${ITCHI.ly(7.5)}" r="18" fill="url(#itchiEyeHalo)" opacity="0.5"/>
+              <circle class="it-iris" cx="${ITCHI.lx(62)}" cy="${ITCHI.ly(7.5)}" r="17.9" fill="#38BDF8"/>
+              <circle class="it-core" cx="${ITCHI.lx(62)}" cy="${ITCHI.ly(7.5)}" r="8.5" fill="#FFFFFF"/>
+            </g>
+            ${ITCHI.wings('near')}
+            <g class="it-legs" opacity="0">
+              <path d="M 706 482 L 686 525 M 678 538 C 677 524, 694 522, 704 529" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              <path d="M 774 472 L 750 525 M 742 538 C 741 524, 758 522, 768 529" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </g>
+          </g>
+          ${Array.from({ length: feathers }, () => `<g class="it-fly">${'<use class="it-trail" href="#itchi-feather" x="-72" y="-25" width="144" height="50" opacity="0"/>'.repeat(3)}<use class="it-feather" href="#itchi-feather" x="-72" y="-25" width="144" height="50" opacity="0"/></g>`).join('')}
         </svg>
       `;
     }
 
+    // 로고 획과 잇찌 리본을 같은 구간끼리 짝지어, 구간마다 같은 개수의 점을 맞춘다(character/logo-to-bird.html과 같음).
+    // 로고: D 오름 / D 위 / D 닫힘 / 밑줄 / a 오름 / a 내림 / i 오름 / i 내림 / t
+    // 잇찌: 부리·이마 / 정수리 / 뒤통수 내림 / D 말림 아래 / 말림에서 올라옴 / 물결 내림 / 물결 오름 / 꼬리 뿌리로 / 꼬리 윗선
+    const ITCHI = (() => {
+      const LOGO = ['M10 26 C12 10, 16 6, 22 6', 'M22 6 C28 6, 32 12, 30 20', 'M30 20 C28 28, 20 28, 16 28',
+        'M16 28 C26 28, 38 28, 42 20', 'M42 20 C44 14, 48 14, 50 18', 'M50 18 C52 24, 48 28, 54 28',
+        'M54 28 C60 28, 62 18, 62 14', 'M62 14 C62 26, 68 28, 72 28', 'M72 28 C76 28, 80 18, 80 10'];
+      const BIRD = ['M 528 282 L 556 266 C 568 222, 594 200, 628 202', 'M 628 202 C 672 204, 696 226, 688 260', 'M 688 260 C 682 288, 668 304, 648 318',
+        'M 648 318 C 622 338, 628 372, 664 372', 'M 664 372 C 684 372, 688 348, 704 348', 'M 704 348 C 722 348, 738 380, 756 380',
+        'M 756 380 C 774 380, 794 352, 812 352', 'M 812 352 C 832 352, 858 384, 884 398', 'M 884 398 C 930 416, 976 442, 1018 472'];
+      // 로고 좌표 → 잇찌 좌표: 로고 가운데(48,17)를 잇찌 리본 가운데(773,337)에 맞추고 6.4배
+      const lx = x => 6.4 * (x - 48) + 773, ly = y => 6.4 * (y - 17) + 337;
+      const PER = 32;
+      const clamp = x => Math.max(0, Math.min(1, x));
+      const mix = (a, b, t) => a + (b - a) * t;
+      const inOut = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      const outBack = t => { const c = 1.5; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+      const win = (T, s, d) => clamp((T - s) / d);
+      const MORPH = 700, SPREAD = 650, MDUR = 1250, FULL = 3300; // 로고 → 잇찌 장면 시간(밀리초)
+      const DOT0 = [lx(62), ly(7.5)], EYE = [608, 262];
+      const BAR0 = [[lx(74), ly(16)], [lx(86), ly(16)]], BAR1 = [[956, 453.5], [996, 453.5]];
+      // 실제 시간표: 로고 → 잇찌(1.25배 빠르게) → 깃털이 위에서 내려와 날개에 스며듦 → 잇찌 → 로고
+      const FWD = FULL / 1.25, LEAD = 150, FLY = 2900, STAGGER = 520, HOLD = 1100, BACK = 1800;
+      const WING = [800, 338, 28]; // 깃털이 스며드는 날개 자리와 날개 결의 기울기
+      let A = null, B = null;
+
+      // 까치 날갯짓 날개: 잇찌의 모티브는 까치다(2026-11-05). 팀에서 받은 오프닝(character/received/dait_magpie_logo.html)의
+      // 까치 날개(흰 무늬 띠)를 모양·색 그대로 쓴다. 날개 좌표는 까치 그림 기준이라 부리 끝·꼬리 끝을 맞춰 잇찌 좌표로 옮긴다.
+      const WINGS = {"near":[280.3,7.5,279.2,0.9,277.6,-0.2,34.2,-12.9,32.2,-10.9,31.5,-4.5,29.8,39.1,42.7,59.7,44.1,58.7,46.4,37.7,46,30.9,47.7,27.5,70.8,38.6,73.2,40.9,77.1,41.5,100.9,50,112.9,55.6,157.8,65.7,187.4,68.1,190.5,70.5,195.8,79.2,197.2,83.3,200.6,87.1,201.8,90.8,204.7,92.1,213.7,79.1,220.1,67.5,228,61.4,230.8,61.9,248.7,77,251.2,77.2,252.3,73.3,253.8,49.8,256.8,47.7,260.5,49.3,265.3,53.6,269.5,52.5,270.1,49.1,280.5,23.1],"panel":[263.4,24.3,262.4,16.1,259.6,11.7,254.4,7.3,248.4,4.9,235.9,3.4,199.8,2.9,163.4,4.3,107.7,8.5,73.8,9.7,71.7,10.9,73.9,13.5,86.1,21.5,99.7,28.4,124.9,38.2,162.3,48.6,207.8,56.6,230.2,51.5,246.9,43.8,257.9,34.5,261.1,30.2],"far":[241.3,62,240,60.1,235,57.7,205.6,48.1,195,43.4,159.4,34.1,157.4,30.9,160,19.7,159.3,8.8,148.6,2.3,143.4,1.2,135.7,-2.5,125.4,-4.6,111.4,-9.6,90.2,-14.8,62.2,-19.8,22.1,-24.5,20.4,-26,20.1,-35.1,18.6,-36.5,11.5,-33.4,9.7,-31.5,2.2,30.3,2.6,32.3,3.7,33.3,240.1,62.6],"fstripe":[146.7,24.4,146.2,17.9,140.4,11.6,119.5,7.9,95.4,6.4,21,5.9,19.8,7.6,20.9,12.4,31.9,18.3,55.9,18.9,73.8,20.9,76.7,22,110.7,25.7,141.3,31.3,143.3,30.3]};
+      const IA = [523, 284], IB = [1028, 478], MA = [318.6, 224.4], MB = [786.0, 408.9];
+      const I_S = Math.hypot(MB[0] - MA[0], MB[1] - MA[1]) / Math.hypot(IB[0] - IA[0], IB[1] - IA[1]);
+      const I_R = Math.atan2(MB[1] - MA[1], MB[0] - MA[0]) - Math.atan2(IB[1] - IA[1], IB[0] - IA[0]);
+      const m2i = ([x, y]) => { const dx = (x - MA[0]) / I_S, dy = (y - MA[1]) / I_S, c = Math.cos(-I_R), sn = Math.sin(-I_R); return [IA[0] + c * dx - sn * dy, IA[1] + sn * dx + c * dy]; };
+      const ROOT_FAR = m2i([520, 214]), ROOT_NEAR = m2i([545, 262]);
+      const pts = flat => flat.reduce((o, v, i) => o + (i % 2 ? ',' : ' ') + v, '').trim();
+      function wings(which) {
+        return which === 'far'
+          ? `<g class="it-wfar" style="display:none"><polygon points="${pts(WINGS.far)}" fill="rgb(32,64,91)" opacity="0.9"/><polygon points="${pts(WINGS.fstripe)}" fill="rgb(160,194,217)"/></g>`
+          : `<g class="it-wnear" style="display:none"><polygon points="${pts(WINGS.near)}" fill="rgb(30,63,90)"/><polygon points="${pts(WINGS.panel)}" fill="rgb(213,236,247)"/></g>`;
+      }
+      // k: +1 날개 위, -1 아래, 0 옆면. g: 0 접힘 ~ 1 활짝
+      function setWings(svg, k, g) {
+        const phi = k > 0 ? mix(-8, 58.5, k) : mix(-8, -57, -k), len = k > 0 ? 0.7 + 0.3 * k : 0.7 - 0.42 * k, vk = Math.sign(k || 1) * Math.max(0.05, Math.abs(k));
+        const deg = I_R * 180 / Math.PI;
+        [['it-wnear', ROOT_NEAR, g, 0], ['it-wfar', ROOT_FAR, Math.pow(g, 1.5), 4]].forEach(([c, root, gg, extra]) => {
+          const el = svg.querySelector('.' + c);
+          if (!el) return;
+          if (gg <= 0.01) { el.style.display = 'none'; return; }
+          el.style.display = '';
+          el.setAttribute('transform', `translate(${root[0].toFixed(1)} ${root[1].toFixed(1)}) rotate(${(-(phi + extra) + deg).toFixed(2)}) scale(${(gg * len / I_S).toFixed(3)} ${(gg * vk / I_S).toFixed(3)})`);
+        });
+      }
+
+      function sample(svg, list, map) {
+        const pts = [];
+        list.forEach((d, k) => {
+          const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          p.setAttribute('d', d);
+          svg.appendChild(p);
+          const L = p.getTotalLength();
+          for (let i = k ? 1 : 0; i <= PER; i++) {
+            const q = p.getPointAtLength(L * i / PER);
+            pts.push(map(q.x, q.y));
+          }
+          p.remove();
+        });
+        return pts;
+      }
+
+      // sx·sy가 다르면 깃털이 긴 축을 따라 비틀려 뒤집히는 것처럼 보인다
+      function place([x, y, r, sx = 1, sy = 1], s = 1) {
+        return `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${r.toFixed(1)}) scale(${(s * sx).toFixed(3)} ${(s * sy).toFixed(3)})`;
+      }
+      const bez = (a, b, c, d, u) => {
+        const v = 1 - u;
+        return [v * v * v * a[0] + 3 * v * v * u * b[0] + 3 * v * u * u * c[0] + u * u * u * d[0],
+          v * v * v * a[1] + 3 * v * v * u * b[1] + 3 * v * u * u * c[1] + u * u * u * d[1]];
+      };
+      const RISE = 0.32, LAND = 0.88; // 깃털 하나의 시간 나눔: 솟아오름 / 그네 타듯 내려옴 / 날개에 스며듦
+      const ROLL = 180 + WING[2]; // 내려올 때 깃털이 향하는 방향(날개 결과 나란함)
+      // 깃털 i의 모습(f: 0~1) = [x, y, 기울기, 가로 비율, 세로 비율, 크기]
+      // 1) 「깃털 +1」 글자(S)에서 휘리릭 솟아 잇찌 위로 오른다. 처음엔 빠르고 꼭대기에서도 멈추지 않고 날아오던 쪽으로 이어 흔들리며, 긴 축으로 한 바퀴 비틀린다.
+      // 2) 그다음은 실제 깃털처럼 좌우로 그네 타듯 흔들리며 천천히 내려온다. 흔들림 끝에서는 살짝 떠오르고,
+      //    움직이는 쪽으로 기울며, 몸통이 조금씩 비틀린다. 흔들림은 날개에 가까워질수록 작아진다.
+      function featherPose(S, i, f) {
+        const k = i * 36, TOP = [930 - k, 168 + k * 0.5], C2 = [1090 - k, 150];
+        if (f < RISE) {
+          const p = f / RISE, e = p + 0.3 * p * (1 - p); // 꼭대기에서도 힘이 조금만 빠지고 멈추지 않는다
+          const C1 = [S[0] + 190, S[1] - 170];
+          const [x, y] = bez(S, C1, C2, TOP, e), [x2, y2] = bez(S, C1, C2, TOP, Math.min(1, e + 0.01));
+          const along = Math.atan2(y2 - y, x2 - x) * 180 / Math.PI;
+          return [x, y, along, 1, Math.cos(2 * Math.PI * e), mix(0.5, 1.2, e)];
+        }
+        // 내려오는 길의 뼈대: 꼭대기에서 날아오던 방향과 빠르기를 그대로 이어받아 왼쪽으로 흘렀다가
+        // 둥글게 돌아 날개 위에서 내려앉는다. 그 위에 그네 같은 흔들림이 서서히 붙었다가 잦아든다.
+        const p = Math.min(1, (f - RISE) / (LAND - RISE));
+        const dx = TOP[0] - C2[0], dy = TOP[1] - C2[1], len = Math.hypot(dx, dy);
+        const K1 = [TOP[0] + dx / len * 197, TOP[1] + dy / len * 197], K2 = [WING[0] + 40, WING[1] - 140];
+        const [bx, by] = bez(TOP, K1, K2, WING, p);
+        const th = 2 * Math.PI * 2 * p, ramp = Math.pow(Math.sin(Math.PI / 2 * Math.min(1, p / 0.25)), 2), swing = ramp * (1 - p);
+        const x = bx - 110 * swing * Math.sin(th);
+        const y = by - 24 * swing * Math.pow(Math.sin(th), 2);
+        const r = mix(174, ROLL, p * p) + 30 * swing * Math.cos(th);
+        return [x, y, r, 1, 0.78 + 0.22 * Math.cos(2 * th), 1.2 - 0.1 * p];
+      }
+
+      // T: 로고(0) → 잇찌(FULL) 장면의 시각
+      function draw(svg, T, lw = 16.6) {
+        const $ = c => svg.querySelector('.' + c);
+        const pAll = win(T, MORPH, MDUR + SPREAD);
+        let d = '';
+        for (let i = 0; i < A.length; i++) {
+          const p = inOut(win(T, MORPH + SPREAD * i / A.length, MDUR));
+          d += (i ? 'L' : 'M') + mix(A[i][0], B[i][0], p).toFixed(1) + ' ' + mix(A[i][1], B[i][1], p).toFixed(1);
+        }
+        const pc = inOut(pAll);
+        ['it-rb', 'it-logo', 'it-glow'].forEach(c => $(c).setAttribute('d', d));
+        $('it-rb').setAttribute('stroke-width', mix(lw, 10.5, pc));
+        $('it-logo').setAttribute('stroke-width', mix(lw, 10.5, pc));
+        $('it-logo').setAttribute('opacity', pc >= 1 ? 0 : 1);
+        $('it-rb').setAttribute('opacity', pc);
+        $('it-glow').setAttribute('opacity', 0.14 * pc);
+        // t 가로줄은 꼬리를 따라 내려가 꼬리 리본을 가로지른다
+        const pb = inOut(win(T, MORPH + SPREAD * 0.8, MDUR));
+        $('it-bar').setAttribute('d', `M ${mix(BAR0[0][0], BAR1[0][0], pb).toFixed(1)} ${mix(BAR0[0][1], BAR1[0][1], pb).toFixed(1)} L ${mix(BAR0[1][0], BAR1[1][0], pb).toFixed(1)} ${mix(BAR0[0][1], BAR1[0][1], pb).toFixed(1)}`);
+        $('it-bar').setAttribute('stroke-width', mix(lw * 0.873, 7.8, pb));
+        // i 점은 톡 튄 뒤 포물선을 그리며 눈 자리로
+        const pop = win(T, 250, 380), popS = 1 + 0.4 * Math.sin(Math.PI * pop);
+        const pj = inOut(win(T, MORPH + 150, 950)), u = 1 - pj, C = [720, 90];
+        const x = u * u * DOT0[0] + 2 * u * pj * C[0] + pj * pj * EYE[0];
+        const y = u * u * DOT0[1] + 2 * u * pj * C[1] + pj * pj * EYE[1];
+        ['it-halo', 'it-iris', 'it-core'].forEach(c => { $(c).setAttribute('cx', x); $(c).setAttribute('cy', y); });
+        $('it-iris').setAttribute('r', mix(17.9, 11, pj) * popS);
+        $('it-core').setAttribute('r', mix(8.5, 5.2, pj) * popS);
+        $('it-halo').setAttribute('opacity', 0.5 + 0.5 * Math.sin(Math.PI * pop) + 0.5 * pj);
+        // 리본이 자리 잡은 곳부터 색이 차오른다: 머리 → 날개·등 → 배 → 꼬리
+        [['it-head', 1450, 622, 280], ['it-wing', 1750, 760, 330], ['it-belly', 1900, 720, 420], ['it-tail', 2150, 900, 440]].forEach(([c, start, ax, ay]) => {
+          const k = win(T, start, 560), s = mix(0.6, 1, outBack(k));
+          $(c).setAttribute('opacity', clamp(k * 1.5));
+          $(c).setAttribute('transform', `translate(${ax} ${ay}) scale(${s}) translate(${-ax} ${-ay})`);
+        });
+        // 가지가 그어지고 다리를 내려 앉으며 몸이 살짝 눌렸다 돌아온다
+        const br = inOut(win(T, 2350, 520));
+        $('it-branch').setAttribute('x1', mix(722, 564, br));
+        $('it-branch').setAttribute('x2', mix(722, 880, br));
+        $('it-branch').setAttribute('opacity', br > 0 ? 1 : 0);
+        const lg = win(T, 2650, 320);
+        $('it-legs').setAttribute('opacity', lg);
+        $('it-legs').setAttribute('transform', `translate(0 ${((1 - inOut(lg)) * -14).toFixed(1)})`);
+        const settle = win(T, 2850, 450);
+        $('it-bob').setAttribute('transform', `translate(0 ${(6 * Math.sin(Math.PI * settle) * (1 - settle * 0.4)).toFixed(2)})`);
+      }
+
+      // t: 실제로 흐른 시간. 깃털 i는 글자에서 솟아올라 그네 타듯 내려와 날개에 닿고, 작아지며 스며든다.
+      // 솟아오르는 동안만 옅은 잔상 셋이 뒤따른다. 닿으면 날개 결이 한 번 밝아지고 잇찌가 살짝 몸을 낮춘다.
+      function feathers(svg, t, S) {
+        let shine = 0, target = null, landed = -1, wingOpen = 0;
+        svg.querySelectorAll('.it-fly').forEach((g, i) => {
+          const f = (t - FWD - LEAD - i * STAGGER) / FLY;
+          const main = g.querySelector('.it-feather'), trails = g.querySelectorAll('.it-trail');
+          const hide = () => { main.setAttribute('opacity', 0); trails.forEach(el => el.setAttribute('opacity', 0)); };
+          wingOpen = Math.max(wingOpen, clamp((f - (LAND - 0.16)) / 0.08) * (1 - clamp((f - (LAND + 0.05)) / 0.08))); // 날개에 닿기 조금 전부터 펴서 받는다
+          if (f < 0 || f >= 1) return hide();
+          if (f < LAND) {
+            const [x, y, r, sx, sy, size] = featherPose(S, i, f);
+            if (!target) target = [x, y]; // 먼저 날아온 깃털을 본다
+            const op = clamp(f * 14);
+            main.setAttribute('transform', place([x, y, r, sx, sy], size));
+            main.setAttribute('opacity', op.toFixed(3));
+            const trailOn = clamp((RISE + 0.08 - f) / 0.08); // 솟아오를 때만, 내려오기 시작하면 사라진다
+            trails.forEach((el, k) => {
+              const [tx, ty, tr, tsx, tsy, ts] = featherPose(S, i, Math.max(0, f - 0.018 * (k + 1)));
+              el.setAttribute('transform', place([tx, ty, tr, tsx, tsy], ts * (0.94 - 0.08 * k)));
+              el.setAttribute('opacity', (op * [0.32, 0.18, 0.08][k] * clamp(f * 20) * trailOn).toFixed(3));
+            });
+          } else {
+            const p = (f - LAND) / (1 - LAND);
+            main.setAttribute('transform', place([WING[0] + 6 * p, WING[1] + 4 * p, ROLL, 1, mix(1, 0.6, p)], mix(1.1, 0.3, p)));
+            main.setAttribute('opacity', (1 - p).toFixed(3));
+            trails.forEach(el => el.setAttribute('opacity', 0));
+            shine = Math.max(shine, Math.sin(Math.PI * p));
+          }
+        });
+        svg.querySelectorAll('.it-fly').forEach((g, i) => { // 가장 최근에 날개에 닿은 시각
+          const at = FWD + LEAD + i * STAGGER + FLY * LAND;
+          if (t >= at) landed = Math.max(landed, at);
+        });
+        svg.querySelector('.it-shine').setAttribute('opacity', (0.9 * shine).toFixed(3));
+        return { target, landed, wingOpen };
+      }
+
+      // 잇찌의 작은 행동(잇찌 모습으로 머무는 동안만). 그림이 옆모습이라 눈동자와 몸짓으로 마음을 보여 준다.
+      // - 숨 쉬듯 몸이 아주 조금 오르내린다
+      // - 깃털이 날아오면 눈동자가 깃털을 따라가고, 몸도 깃털 쪽으로 살짝 기운다
+      // - 처음과 끝에 한 번씩 눈을 깜빡인다
+      // - 깃털이 날개에 닿으면 웃는 눈(^)이 되어 깡충 뛴다
+      // - 로고로 돌아가기 전에 고개를 갸웃하고 앞(보는 사람 쪽)을 본다
+      const FEET = [720, 534];
+      function alive(svg, t, back0, seen) {
+        const eye = svg.querySelector('.it-eye'), core = svg.querySelector('.it-core'), bob = svg.querySelector('.it-bob');
+        if (t < FWD || t >= back0) { eye.removeAttribute('transform'); setWings(svg, 0, 0); return; }
+        const w = clamp((t - FWD) / 300) * clamp((back0 - t) / 300); // 시작과 끝은 부드럽게
+        const breath = 1.6 * Math.sin(2 * Math.PI * (t - FWD) / 1300);
+        const ago = seen.landed < 0 ? -1 : t - seen.landed;
+        const hop = ago >= 0 && ago < 380 ? -12 * Math.sin(Math.PI * ago / 380) : 0;
+        const settle = ago >= 0 && ago < 140 ? 3 * Math.sin(Math.PI * ago / 140) : 0; // 닿는 순간 살짝 눌림
+        // 기울기: 깃털 쪽으로 몸을 기울이고, 끝에는 갸웃한다
+        let lean = 0, gaze = [-0.6, 0.5]; // 아무것도 없을 때는 앞을 본다
+        if (seen.target) {
+          const dx = seen.target[0] - EYE[0], dy = seen.target[1] - EYE[1], d = Math.hypot(dx, dy) || 1;
+          gaze = [dx / d, dy / d];
+          lean = 5 * clamp((seen.target[0] - 640) / 350) - 2.5 * clamp((640 - seen.target[0]) / 300);
+        }
+        const tilt = inOut(clamp((t - (back0 - 1000)) / 350)) * (1 - clamp((t - (back0 - 300)) / 300));
+        lean = mix(lean, -8, tilt);
+        bob.setAttribute('transform', `translate(0 ${((breath + hop + settle) * w).toFixed(2)}) rotate(${(lean * w).toFixed(2)} ${FEET[0]} ${FEET[1]})`);
+        setWings(svg, 0.55 + 0.25 * Math.sin(t / 90), 0.6 * seen.wingOpen * w); // 까치 날개를 펴서 깃털을 받는다
+        core.setAttribute('cx', (EYE[0] + 4.5 * gaze[0] * w).toFixed(1));
+        core.setAttribute('cy', (EYE[1] + 4.5 * gaze[1] * w).toFixed(1));
+        // 눈: 깜빡임과 웃는 눈. 웃는 눈은 눈을 납작하게 눌러 위로 둥근 모양을 만든다
+        const blink = (at, len = 160) => { const k = (t - at) / len; return k > 0 && k < 1 ? Math.sin(Math.PI * k) : 0; };
+        const shut = Math.max(blink(FWD + 350), blink(back0 - 650), blink(back0 - 450));
+        const smile = ago >= 0 ? Math.sin(Math.PI * clamp(ago / 900)) : 0;
+        const sy = Math.max(0.08, 1 - 0.92 * shut - 0.55 * smile);
+        eye.setAttribute('transform', `translate(${EYE[0]} ${EYE[1]}) scale(1 ${sy.toFixed(3)}) translate(${-EYE[0]} ${-EYE[1]})`);
+      }
+
+      // 「깃털 +1」 글자의 끝을 잇찌 그림 좌표로 바꾼다. 찾지 못하면 그림 아래 오른쪽에서 날아오른다.
+      function startPoint(svg) {
+        try {
+          const q = svg.parentElement.querySelector('.main-question'), m = svg.getScreenCTM();
+          const r = q.getBoundingClientRect();
+          const pt = new DOMPoint(r.right - r.height * 0.8, r.top + r.height / 2).matrixTransform(m.inverse());
+          if (isFinite(pt.x) && isFinite(pt.y)) return [pt.x, pt.y];
+        } catch (e) { /* 아래 기본값 */ }
+        return [960, 640];
+      }
+
+      function play(svg) {
+        if (!svg || typeof svg.querySelector !== 'function') return;
+        const still = svg.getAttribute('data-play') !== '1'
+          || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+        if (still) return; // 끝 모습(로고)은 처음부터 그려져 있다
+        if (!A) {
+          A = sample(svg, LOGO, (x, y) => [lx(x), ly(y)]);
+          B = sample(svg, BIRD, (x, y) => [x, y]);
+        }
+        const n = Number(svg.getAttribute('data-feathers')) || 1;
+        const back0 = FWD + LEAD + STAGGER * (n - 1) + FLY + HOLD, end = back0 + BACK;
+        const S = startPoint(svg);
+        let t0 = null;
+        const step = ts => {
+          if (!svg.isConnected) return; // 화면이 바뀌면 멈춘다
+          if (t0 === null) t0 = ts;
+          const t = Math.min(ts - t0, end);
+          const T = t < FWD ? t * 1.25 : t < back0 ? FULL : FULL * (1 - inOut(clamp((t - back0) / BACK)));
+          draw(svg, T);
+          alive(svg, t, back0, feathers(svg, t, S));
+          if (t < end) requestAnimationFrame(step);
+          else draw(svg, 0);
+        };
+        requestAnimationFrame(step);
+      }
+
+      // 앱 시작: 잇찌가 날갯짓하며 오른쪽 위에서 날아와 앉았다가, 다시 다잇 로고로 바뀐다
+      // (팀에서 받은 오프닝 「새 → 로고」 생각을 잇찌로, character/itchi-opening.html). 끝나면 done()을 부른다.
+      function splash(svg, done) {
+        if (!A) { A = sample(svg, LOGO, (x, y) => [lx(x), ly(y)]); B = sample(svg, BIRD, (x, y) => [x, y]); }
+        const FLYIN = 1300, REST = 250, TURN = 1300, LW = 3.8 * 6.4; // LW: 시작 화면 로고 굵기를 잇찌 좌표로
+        const bob = svg.querySelector('.it-bob'), legs = svg.querySelector('.it-legs'), branch = svg.querySelector('.it-branch');
+        let t0 = null, stopped = false;
+        const step = ts => {
+          if (stopped || !svg.isConnected) return;
+          if (t0 === null) t0 = ts;
+          const t = ts - t0;
+          if (t < FLYIN + REST) {
+            draw(svg, FULL, LW);
+            const p = clamp(t / FLYIN), e = 1 - Math.pow(1 - p, 3), land = Math.sin(Math.PI * clamp((t - FLYIN) / REST));
+            const lean = -18 * (1 - e) * (1 - e) + 6 * Math.sin(Math.PI * e) * (1 - e);
+            bob.setAttribute('transform', `translate(${(560 * (1 - e)).toFixed(1)} ${(-330 * (1 - e) * (1 - e) + 4 * land).toFixed(1)}) rotate(${lean.toFixed(2)} 720 534) translate(720 534) scale(${mix(0.65, 1, e).toFixed(3)} ${(mix(0.65, 1, e) * (1 - 0.05 * land)).toFixed(3)}) translate(-720 -534)`);
+            legs.setAttribute('opacity', clamp((t - FLYIN * 0.7) / (FLYIN * 0.3)).toFixed(3));
+            setWings(svg, Math.cos(2 * Math.PI * t / 310), 1 - clamp((t - FLYIN * 0.78) / (FLYIN * 0.22)));
+          } else {
+            const k = clamp((t - FLYIN - REST) / TURN);
+            bob.removeAttribute('transform');
+            setWings(svg, 0, 0);
+            draw(svg, FULL * (1 - inOut(k)), LW);
+            if (k >= 1) { stopped = true; done(); return; }
+          }
+          branch.setAttribute('opacity', 0); // 시작 화면에는 가지가 없다
+          requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+        return () => { stopped = true; };
+      }
+
+      return { lx, ly, play, wings, splash };
+    })();
+    const ITCHI_LOGO_D = DAIT_LOGO_PATH.replace(/ M74 16 h12$/, '')
+      .replace(/(-?\d+(?:\.\d+)?)[ ,]\s*(-?\d+(?:\.\d+)?)/g, (_, x, y) => `${ITCHI.lx(+x).toFixed(1)} ${ITCHI.ly(+y).toFixed(1)}`);
+
+    // 보상 이름은 깃털이다(2026-11-05 결정). 기기에 남는 값의 이름(ieum)은 이미 쌓인 기록을 잃지 않게 그대로 둔다.
+    // 다른 내용 아래 한 줄로 붙을 때(오전 준비물, 쉬는 날)
+    function featherLine(progress) {
+      return progress.ieum ? `모은 깃털 ${progress.ieum}개` : '수업을 마치면 깃털을 받아요';
+    }
+
+    // 「모은 깃털」 칸 이름 아래에 올 때. 이름과 같은 말을 되풀이하지 않는다.
+    function featherCount(progress) {
+      return progress.ieum ? `${progress.ieum}개` : '수업을 마치면 하나씩 받아요';
+    }
+
     function lessonDoneLine(run) {
-      return run.trip.earned ? `배움과 이어졌어요, 이음 +${run.trip.earned}` : '수업을 멈췄어요. 다음에 이어 가요';
+      return run.trip.earned ? `배움과 이어졌어요, 깃털 +${run.trip.earned}` : '수업을 멈췄어요. 다음에 이어 가요';
     }
 
     function isLessonResting() {
@@ -2051,7 +2412,7 @@
       if (hasArrived) closeAfterArrival();
     }
 
-    // 교시마다 한 번만 남긴다. 마친 교시는 저마다 이음과 숙제가 된다.
+    // 교시마다 한 번만 남긴다. 마친 교시는 저마다 깃털과 숙제가 된다.
     function saveLesson(run) {
       if (run.saved) return;
       run.saved = true;
@@ -3364,41 +3725,72 @@
         card.style.opacity = '0';
       });
 
+      // 잇찌 장면(2026-11-05): 잇찌가 날갯짓하며 날아와 앉았다가 다잇 로고로 바뀐다. 그 뒤는 원래처럼 점이 톡 찍히고
+      // 로고가 위로 올라간다. 움직임 줄이기 설정이면 잇찌 장면 없이 원래 장면만. 화면을 누르면 언제든 건너뛴다.
+      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const logoSvg = document.getElementById('splashLogoSvg');
+      if (!reduce && logoSvg && typeof ITCHI !== 'undefined') {
+        ribbon.style.transition = 'none'; ribbon.style.opacity = '0';
+        crossbar.style.transition = 'none'; crossbar.style.opacity = '0';
+        if (aura) aura.style.opacity = '0.5';
+        const holder = document.createElement('div');
+        holder.className = 'splash-itchi-holder';
+        holder.innerHTML = itchiHtml({ celebrated: true, trip: { earned: 0 } }, { splash: true });
+        holder.style.cssText = `position:absolute;left:${logoSvg.offsetLeft}px;top:${logoSvg.offsetTop}px;width:${logoSvg.offsetWidth}px;height:${logoSvg.offsetHeight}px;pointer-events:none`;
+        brand.appendChild(holder);
+        const svg = holder.querySelector('svg');
+        svg.style.cssText = 'width:100%;height:100%;overflow:visible';
+        splashItchiCancel = ITCHI.splash(svg, () => {
+          splashItchiCancel = null;
+          holder.remove();
+          ribbon.style.opacity = ''; crossbar.style.opacity = '';
+          if (aura) { aura.style.transition = 'opacity 0.3s ease'; aura.style.opacity = '0.9'; }
+          logoSteps(true);
+        });
+        return;
+      }
+      logoSteps(false);
+
+      // written: 로고가 이미 그려진 상태(잇찌가 로고로 바뀐 뒤)면 손글씨 단계를 건너뛰고 점 찍기부터
+      function logoSteps(written) {
+      const shift = written ? 1120 : 0;
+      const at = (ms, fn) => introTimers.push(setTimeout(fn, Math.max(0, ms - shift)));
+
       // SVG 스트로크 대시 설정 (전체 길이 측정)
       const ribbonLength = ribbon.getTotalLength ? ribbon.getTotalLength() : 380;
       ribbon.style.transition = 'none';
       ribbon.style.strokeDasharray = ribbonLength;
-      ribbon.style.strokeDashoffset = ribbonLength;
+      ribbon.style.strokeDashoffset = written ? 0 : ribbonLength;
 
       const crossbarLength = crossbar.getTotalLength ? crossbar.getTotalLength() : 20;
       crossbar.style.transition = 'none';
       crossbar.style.strokeDasharray = crossbarLength;
-      crossbar.style.strokeDashoffset = crossbarLength;
+      crossbar.style.strokeDashoffset = written ? 0 : crossbarLength;
 
       // 동기식 리플로우 강제 (트랜지션 보장)
       void ribbon.getBoundingClientRect();
 
       // 1. 손글씨 쓰듯 캘리그래피 스트로크 스르륵 써내려가기 (0 ~ 1.05s)
-      requestAnimationFrame(() => {
+      if (!written) requestAnimationFrame(() => {
         ribbon.style.transition = 'stroke-dashoffset 1.05s cubic-bezier(0.42, 0, 0.18, 1)';
         ribbon.style.strokeDashoffset = '0';
       });
 
       // 2. t 가로획 연결 (0.92s)
-      introTimers.push(setTimeout(() => {
+      if (!written) at(920, () => {
         crossbar.style.transition = 'stroke-dashoffset 0.18s ease-out';
         crossbar.style.strokeDashoffset = '0';
-      }, 920));
+      });
 
       // 3. i 위에 점(Dot) 하나 마지막으로 딱! 찍히며 충격파 확산 (1.12s)
-      introTimers.push(setTimeout(() => {
+      at(1120, () => {
         if (dotGroup) dotGroup.classList.add('pop');
         if (dotRipple) dotRipple.classList.add('expand');
         playChimeSound();
-      }, 1120));
+      });
 
       // 4. 로고가 작아지며 화면 위쪽 제자리로 미끄러져 간다 (1.62s)
-      introTimers.push(setTimeout(() => {
+      at(1620, () => {
         const targetBadge = document.querySelector('.dait-brand-badge');
         if (targetBadge) {
           const from = brand.getBoundingClientRect();
@@ -3412,10 +3804,10 @@
           aura.style.transition = 'opacity 0.5s ease';
           aura.style.opacity = '0';
         }
-      }, 1620));
+      });
 
       // 5. 로고가 닿으면 덮개를 걷고 카드가 차례로 들어온다 (2.2s)
-      introTimers.push(setTimeout(() => {
+      at(2200, () => {
         overlay.style.transition = 'opacity 0.25s ease';
         overlay.style.opacity = '0';
         cards.forEach((card, idx) => {
@@ -3425,10 +3817,10 @@
             card.style.opacity = '1';
           }, idx * 45));
         });
-      }, 2200));
+      });
 
       // 6. 카드 스타일과 스플래시 정리 (3s)
-      introTimers.push(setTimeout(() => {
+      at(3000, () => {
         cards.forEach((card) => {
           card.style.transition = '';
           card.style.transform = '';
@@ -3436,8 +3828,11 @@
         });
         overlay.style.display = 'none';
         finishIntro();
-      }, 3000));
+      });
+      }
     }
+
+    let splashItchiCancel = null; // 시작 화면 잇찌 장면을 멈추는 함수
 
     function finishIntro() {
       isIntroPlaying = false;
@@ -3447,6 +3842,9 @@
 
     function skipSplashIntro() {
       clearIntroTimers();
+      if (splashItchiCancel) { splashItchiCancel(); splashItchiCancel = null; }
+      document.querySelectorAll('.splash-itchi-holder').forEach(h => h.remove());
+      ['splashRibbonPath', 'splashCrossbarPath'].forEach(id => { const el = document.getElementById(id); if (el) { el.style.opacity = ''; el.style.strokeDashoffset = '0'; } });
       const overlay = document.getElementById('splashOverlay');
       const cards = document.querySelectorAll('.home-card');
       cards.forEach((card) => {

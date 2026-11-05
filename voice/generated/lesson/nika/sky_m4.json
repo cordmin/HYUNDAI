@@ -1,0 +1,14 @@
+{
+  "duration": 23.2,
+  "sample_rate": 24000,
+  "peak": 24426,
+  "rms": 3313.35,
+  "sha256": "fa70dbdefebf2132d02adb859b9683244addf95a0154cbbb8607375941af3f17",
+  "id": "sky_m4",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "낮에 해가 없는 쪽의 하늘을 바라볼 때 눈으로 들어오는 빛은 무엇일까요? 바로 공기 알갱이들이 사방으로 흩어 놓은 파란빛입니다. 하늘 자체가 파란 물감으로 칠해진 것이 아니라, 온 하늘에서 흩어진 파란빛이 우리 눈으로 들어오기 때문에 낮 하늘이 파랗게 보입니다.",
+  "fingerprint": "f157d8f166951f119147233afcf948906351e20d8e6b89ae98e9e08809e12bb4",
+  "generated_at": "2026-11-06T00:26:21+0900",
+  "review": "generated_not_listening_reviewed"
+}

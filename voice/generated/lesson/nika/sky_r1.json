@@ -1,0 +1,14 @@
+{
+  "duration": 20.28,
+  "sample_rate": 24000,
+  "peak": 22636,
+  "rms": 3272.72,
+  "sha256": "03b4888d7737877a9ee01f758d2ebc7c561f64e69fee4efa531a934182d2aba1",
+  "id": "sky_r1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "지난 시간에는 낮 하늘이 파랗고 노을이 붉은 까닭을 알아보았습니다. 공기가 파란빛을 많이 흩어 놓아 낮 하늘은 파랗고, 저녁에는 먼 길을 오는 동안 파란빛이 흩어져 붉은빛이 남았지요. 그 이야기를 떠올리면서 오늘 수업을 시작해 볼게요.",
+  "fingerprint": "a2d87c81ddd9eb515236b6ddbea4eb3e974a10fa2879e871a87b14bcff6f64cb",
+  "generated_at": "2026-11-06T00:20:01+0900",
+  "review": "generated_not_listening_reviewed"
+}

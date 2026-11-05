@@ -15,7 +15,9 @@ spec.loader.exec_module(lesson_voice)
 class LessonVoiceCheck(unittest.TestCase):
     def test_catalog_and_stale_transcript(self):
         data = lesson_voice.lesson_catalog('ai')
-        self.assertEqual(len(data['lines']), 22)
+        self.assertEqual(len(data['lines']), 33)
+        sky_data = lesson_voice.lesson_catalog('sky')
+        self.assertEqual(len(sky_data['lines']), 45)
         line = data['lines'][0]
         changed = dict(line, text=line['text'] + ' 변경')
         self.assertNotEqual(studio.fingerprint(data, line, 'Nika'), studio.fingerprint(data, changed, 'Nika'))

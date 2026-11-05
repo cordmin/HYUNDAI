@@ -1,0 +1,14 @@
+{
+  "duration": 30.76,
+  "sample_rate": 24000,
+  "peak": 24052,
+  "rms": 2875.67,
+  "sha256": "c55c1fefcd8168f160e8e105e8b29eb2392df06a88c1cacfb4e2e370336f5143",
+  "id": "sky_b8",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이제 세 번째 걸음, 노을로 가 보겠습니다. 해가 머리 위에 있을 때 햇빛은 비교적 짧은 길을 지나 우리에게 옵니다. 하지만 해가 지평선 가까이 내려가면 햇빛은 공기층을 비스듬히 뚫고 들어오게 됩니다. 머리 위에서 올 때보다 훨씬 긴 거리를 공기 속에서 지나야 하는 것입니다. 낮은 지름길로 오고, 저녁은 먼 길을 돌아오는 셈이죠. 이 길이의 차이가 하늘의 색을 바꿉니다.",
+  "fingerprint": "19e4d0e740519a6df77941ad78a252129601721e87b36c07b94002ccab0b5dc2",
+  "generated_at": "2026-11-06T00:22:56+0900",
+  "review": "generated_not_listening_reviewed"
+}

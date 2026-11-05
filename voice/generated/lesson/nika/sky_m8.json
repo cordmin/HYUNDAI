@@ -1,0 +1,14 @@
+{
+  "duration": 25.12,
+  "sample_rate": 24000,
+  "peak": 18323,
+  "rms": 2536.84,
+  "sha256": "327516179b4b1aeb03c473ca49fd91938b4db7cc2bca83726f8061578b7d983c",
+  "id": "sky_m8",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "저녁 햇빛이 먼 길을 오는 동안, 잘 흩어지는 파란빛은 오는 길에 대부분 옆으로 흩어져 사라집니다. 그러면 우리 눈까지 곧장 도착하는 빛에는 잘 흩어지지 않는 주황빛과 빨간빛이 남습니다. 낮의 파란 하늘과 저녁의 붉은 노을은 같은 원리가 빛의 길이에 따라 다르게 나타난 모습입니다.",
+  "fingerprint": "9424dc88f7fd5d8867988b2b91e194e4e327242b81ad01330177e90d69145879",
+  "generated_at": "2026-11-06T00:26:54+0900",
+  "review": "generated_not_listening_reviewed"
+}

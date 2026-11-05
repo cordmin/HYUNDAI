@@ -1,0 +1,14 @@
+{
+  "duration": 30.8,
+  "sample_rate": 24000,
+  "peak": 26796,
+  "rms": 3080.95,
+  "sha256": "004cc8501b5a56182ffa3fdc323dbef93026503dcbbb14d0da61fe2c200a4411",
+  "id": "sky_i2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘 이야기는 세 걸음으로 나누어 갑니다. 첫 번째 걸음은 햇빛의 정체를 아는 것입니다. 두 번째 걸음은 그 햇빛이 공기를 만났을 때 어떤 일이 벌어지는지 살펴보는 것이고요. 마지막 걸음에서는 저녁이 되면 왜 색이 달라지는지 확인합니다. 어려운 식이나 숫자는 하나도 필요하지 않습니다. 머릿속에 그림 하나만 그릴 수 있으면 충분합니다. 그럼 첫 번째 걸음부터 시작해 볼게요.",
+  "fingerprint": "a07f2041498af8cd78797e012c46ad3d1b7b72d3c8921c1da552799f6e8fca42",
+  "generated_at": "2026-11-06T00:20:39+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 32.44,
+  "sample_rate": 24000,
+  "peak": 17411,
+  "rms": 2134.39,
+  "sha256": "fe274e039212c161ff561bf7acb73ee980e18201036f2f8bcab1acddc190a7bd",
+  "id": "sky_b11",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "구름은 왜 하얄까요? 구름을 이루는 물방울은 공기 알갱이보다 훨씬 큽니다. 이렇게 큰 알갱이는 빛의 색을 가리지 않고 여러 색을 비슷하게 흩어 줍니다. 모든 색이 고르게 섞여 오면 다시 하얗게 보입니다. 맨 처음에 말씀드린 하얀 햇빛과 같은 이치입니다. 비구름이 어두운 까닭은 구름이 두꺼워서 빛이 아래까지 잘 내려오지 못하기 때문입니다. 알갱이의 크기에 따라 하늘의 색이 달라지는 것입니다.",
+  "fingerprint": "6e129a69680c81a228bbbe64f873a925e5ec46c2c3808af63a9ba473e31c4407",
+  "generated_at": "2026-11-06T00:23:56+0900",
+  "review": "generated_not_listening_reviewed"
+}

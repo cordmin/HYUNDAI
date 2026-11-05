@@ -1,0 +1,14 @@
+{
+  "duration": 17.44,
+  "sample_rate": 24000,
+  "peak": 23679,
+  "rms": 2811.97,
+  "sha256": "932f37c66f8b7e6a7a34ba0dc9ea771d976547a182ac9f89ec5374baf3a6a7e3",
+  "id": "sky_m9",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "누군가 왜 낮 하늘은 파랗고 노을은 붉은지 묻는다면, 파장이라는 말을 쓰지 않고 어떻게 설명하시겠어요? 잘 흩어지는 색과 끝까지 남는 색을 떠올려 보세요. 운전 중에는 대답하지 않으셔도 괜찮습니다.",
+  "fingerprint": "389d7eda514082e1f79ca95349f2bee48207d7d29e4c3c221107fc0e66e6e58c",
+  "generated_at": "2026-11-06T00:27:00+0900",
+  "review": "generated_not_listening_reviewed"
+}

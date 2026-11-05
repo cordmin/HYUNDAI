@@ -59,10 +59,10 @@ Android 앱은 메뉴에서 상황을 선택하는 대신 **등교 준비 / 하�
 
 ## 수업 음원 생산 (2026-11-03)
 
-현재 앱 목록은 동백꽃·소수·인공지능 세 편이다. 하늘색·물가 원고는 `lessons/`에 보관하며 앱 목록에서는 제외했다. 인공지능 작업용 대본은 `lessons/인공지능.csv`이며 교사 검수 전이다.
+현재 앱 목록은 동백꽃·소수·인공지능·하늘색 네 편이다. 물가 원고는 `lessons/`에 보관하며 앱 목록에서는 제외했다. 과학(하늘색) 작업용 대본은 `lessons/하늘색.csv`이며 교사 검수 전이다.
 
 ```powershell
-python tools/generate-lesson-voices.py ai
+python tools/generate-lesson-voices.py sky
 powershell -ExecutionPolicy Bypass -File tools/Measure-Lesson-Voice.ps1
 ```
 

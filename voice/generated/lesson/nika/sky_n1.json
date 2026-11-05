@@ -1,0 +1,14 @@
+{
+  "duration": 30.6,
+  "sample_rate": 24000,
+  "peak": 26433,
+  "rms": 3004.68,
+  "sha256": "b6fbaea46865afe73c2aca6001408eed0c35b075848dced7eb42d147ce5770fb",
+  "id": "sky_n1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "뉴턴의 실험에는 뒷이야기가 있습니다. 프리즘이 햇빛에 색을 입힌 것이 아니냐는 의심이 있었기 때문입니다. 뉴턴은 펼쳐진 무지개빛을 두 번째 프리즘에 통과시켜 다시 하나로 모아 보았습니다. 그러자 다시 하얀빛이 되었습니다. 색은 유리가 만든 것이 아니라 처음부터 햇빛 안에 들어 있었다는 증거입니다. 하나의 실험으로 끝내지 않고 거꾸로도 해 보는 것, 그것이 뉴턴의 힘이었습니다.",
+  "fingerprint": "818c54ec561890f8e4c6dac661a0f4c5fdc1e75f7bafaf0af17bfce6b684f490",
+  "generated_at": "2026-11-06T00:20:59+0900",
+  "review": "generated_not_listening_reviewed"
+}

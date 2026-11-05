@@ -815,7 +815,7 @@ test('남은 시간이 40분이면 고르는 화면이 2교시로 짜고, 39분�
   assert.ok(!stageHtml().includes('교시'));
   page(`goHome(); demoMinutes = 40; openLessons();`);
   assert.ok(stageHtml().includes('도착까지 40분, 2교시로 들어요'));
-  assert.ok(stageHtml().includes('1교시 국어 · 2교시 기술 · 쉬는 시간 10분'));
+  assert.ok(stageHtml().includes('1교시 과학 · 2교시 국어 · 쉬는 시간 10분'));
   page(`goHome(); demoMinutes = null;`);
 });
 
@@ -823,10 +823,10 @@ test('목적지가 없어도 고르는 화면에서 긴 이동을 고를 수 있
   page(`localStorage.values.clear(); openLessons();`);
   assert.ok(stageHtml().includes('pickLessonTime(60)'));
   page(`pickLessonTime(90);`);
-  assert.ok(stageHtml().includes('3교시 수학'));
+  assert.ok(stageHtml().includes('4교시 수학'));
   page(`startLesson('ai');`);
   assert.strictEqual(page(`lessonRun.lesson.id`), 'ai');
-  assert.strictEqual(page(`lessonRun.trip.count`), 2);
+  assert.strictEqual(page(`lessonRun.trip.count`), 3);
   assert.strictEqual(lessonIds().slice(-1)[0], 'break');
   page(`goHome();`);
 });
@@ -837,14 +837,14 @@ test('긴 이동은 교시마다 다른 수업을 듣고, 마친 교시는 저�
   assert.strictEqual(page(`lessonProgress().ieum`), 1); // 쉬는 시간이 시작될 때 바로 남긴다
   assert.strictEqual(page(`lessonRun.done`), false);
   assert.strictEqual(page(`journeyActive`), true);
-  assert.ok(stageHtml().includes('쉬는 시간이에요. 다음은 2교시 기술'));
+  assert.ok(stageHtml().includes('쉬는 시간이에요. 다음은 2교시 과학'));
   assert.ok(!stageHtml().includes('음원 준비 중'));
   assert.ok(!stageHtml().includes('다시 듣기'));
   page(`window.setDrivingMode(true);`);
   hearLesson('ended');
-  assert.strictEqual(page(`lessonRun.lesson.id`), 'ai');
+  assert.strictEqual(page(`lessonRun.lesson.id`), 'sky');
   assert.strictEqual(page(`lessonRun.pieces[0].clip`), 'lesson/dongbaek_r1'); // 마친 앞 교시의 복습
-  assert.ok(stageHtml().includes('2교시 기술'));
+  assert.ok(stageHtml().includes('2교시 과학'));
   hearPeriod();
   page(`window.setDrivingMode(false);`);
   assert.strictEqual(page(`lessonRun.done`), true);
@@ -858,7 +858,7 @@ test('긴 이동은 교시마다 다른 수업을 듣고, 마친 교시는 저�
   assert.strictEqual(page(`lessonProgress().ieum`), 2);
   assert.strictEqual(page(`lessonProgress().records.filter(record => record.finished).length`), 2);
   assert.ok(page(`lessonProgress().homework.title`).includes('점순이'));
-  assert.ok(page(`lessonProgress().homeworkNext[0].title`).includes('AI의 답'));
+  assert.ok(page(`lessonProgress().homeworkNext[0].title`).includes('하늘색'));
   page(`goHome(); demoMinutes = null;`);
   assert.strictEqual(page(`lessonProgress().records.length`), 2);
 });
@@ -892,7 +892,7 @@ test('주행 중 쉬는 시간도 문장 하나와 버튼 둘이고, 이전은 �
     var realGet = document.getElementById; var driveShown = {};
     document.getElementById = id => (id.startsWith('drive') ? (driveShown[id] = driveShown[id] || {}) : realGet(id));
     updateDriveScreen(lessonRun.pieces[lessonRun.index].line);`);
-  assert.strictEqual(page(`driveShown.driveSentence.textContent`), '쉬는 시간이에요. 다음은 2교시 기술');
+  assert.strictEqual(page(`driveShown.driveSentence.textContent`), '쉬는 시간이에요. 다음은 2교시 과학');
   assert.strictEqual(page(`driveShown.driveReplay.disabled`), true);
   assert.strictEqual(page(`driveShown.driveNext.textContent`), '다음 교시 듣기');
   page(`document.getElementById = realGet; window.setDrivingMode(false); goHome(); demoMinutes = null;`);
@@ -1129,15 +1129,15 @@ test('과목 칩은 한 과목에 수업이 여럿일 때만 두고, 고른 시�
   assert.ok(stageHtml().includes('AI는 왜 자신 있게 틀릴까요?</span>')); // 카드 큰 글은 수업의 질문
   assert.ok(/기술 · 약 \d+분 · AI는 왜 자신 있게 틀릴까/.test(stageHtml()));
   page(`DAIT_LESSONS.push({ ...DAIT_LESSONS.find(lesson => lesson.id === 'ai'), id: 'ai2', title: '둘째 기술 수업' }); render();`);
-  for (const name of ['전체', '국어', '수학', '기술']) assert.ok(stageHtml().includes(`>${name}</button>`), name);
+  for (const name of ['전체', '국어', '수학', '기술', '과학']) assert.ok(stageHtml().includes(`>${name}</button>`), name);
   page(`pickLessonSubject('기술');`);
   assert.ok(stageHtml().includes('둘째 기술 수업'));
   assert.ok(!stageHtml().includes('동백꽃과 점순이'));
   assert.ok(stageHtml().includes('aria-pressed="true" data-subject="기술"'));
-  page(`DAIT_LESSONS.pop(); var longOnly = { ...DAIT_LESSONS.find(lesson => lesson.id === 'ai'), subject: '과학' }; longOnly.pieces = longOnly.pieces.filter(piece => !piece.short);
+  page(`DAIT_LESSONS.pop(); var longOnly = { ...DAIT_LESSONS.find(lesson => lesson.id === 'ai'), subject: '사회' }; longOnly.pieces = longOnly.pieces.filter(piece => !piece.short);
     DAIT_LESSONS.push({ ...longOnly, id: 'sci1' }, { ...longOnly, id: 'sci2' });
-    goHome(); demoMinutes = 9; openLessons(); pickLessonSubject('과학'); demoMinutes = 5; pickLessonTime(5);`); // 고른 과목이 시간에 들어가지 않으면 전체로 돌아간다. 짧은 판이 없는 수업은 5분에 들어가지 않는다
-  assert.ok(!stageHtml().includes('>과학</button>'));
+    goHome(); demoMinutes = 9; openLessons(); pickLessonSubject('사회'); demoMinutes = 5; pickLessonTime(5);`); // 고른 과목이 시간에 들어가지 않으면 전체로 돌아간다. 짧은 판이 없는 수업은 5분에 들어가지 않는다
+  assert.ok(!stageHtml().includes('>사회</button>'));
   assert.strictEqual(page(`lessonSubject`), '');
   assert.ok(stageHtml().includes('소수는 어디까지'));
   page(`DAIT_LESSONS.pop(); DAIT_LESSONS.pop(); goHome(); demoMinutes = null;`);
@@ -1271,7 +1271,7 @@ test('수업 예약은 등하교 예약과 말이 다르고, 시간을 바꾸면
 test('학교 등록 전 첫 화면은 빈 칸 없이 수업의 질문을 보여 주고, 도착 시간을 모르면 도착을 약속하지 않는다', () => {
   page(`localStorage.values.clear(); goHome(); demoMinutes = null; lessonMinutes = 15; renderStage();`);
   const html = page(`document.getElementById('stageArea').innerHTML`);
-  assert.ok(html.includes('점순이는 왜 자꾸 닭싸움을 붙였을까?'));
+  assert.ok(html.includes('왜 낮 하늘은 파랗고 노을은 붉을까?'));
   assert.ok(html.includes('분이면 답을 알게 돼요'));
   assert.ok(!html.includes('등록 필요'));
   assert.ok(!html.includes('하교 대화'));
@@ -1305,14 +1305,14 @@ test('30분 이동은 동백꽃 뒤에 쉬지 않고 다른 수업을 이어 듣
   assert.ok(stageHtml().includes('고른 수업이 끝나고 남는 시간은 다른 수업으로 이어 채워요'));
   assert.ok(!stageHtml().includes('교시'));
   page(`startLesson('dongbaek'); while (!isLessonResting()) skipQuestion();`);
-  assert.ok(stageHtml().includes('이어서 기술 수업 맛보기예요')); // 남은 약 9분은 AI 짧은 판으로 채운다
+  assert.ok(stageHtml().includes('이어서 과학 수업 맛보기예요')); // 남은 약 9분은 과학 짧은 판으로 채운다
   assert.ok(stageHtml().includes('국어 수업 마침'));
   assert.ok(stageHtml().includes('다음 수업 듣기'));
   page(`onLessonSpeech({ event: 'ended' });`); // 잠깐 보여 준 뒤 넘어간다. 주차 중이어도 사람이 그대로 있다
   assert.strictEqual(page(`lessonRun.done`), false);
-  assert.strictEqual(page(`lessonRun.lesson.id`), 'ai');
+  assert.strictEqual(page(`lessonRun.lesson.id`), 'sky');
   assert.notStrictEqual(page(`lessonRun.pieces[0].kind`), '복습'); // 방금 들은 동백꽃을 「지난 시간에는」으로 되풀이하지 않는다
-  assert.ok(stageHtml().includes('기술 수업'));
+  assert.ok(stageHtml().includes('과학 수업'));
   assert.ok(!stageHtml().includes('2교시'));
   page(`goHome(); demoMinutes = null;`);
 });
@@ -1391,3 +1391,4 @@ test('학교를 등록하기 전 첫 화면에서도 가 볼 만한 곳으로 �
   page(`localStorage.values.clear(); school = null; goHome();`);
   assert.ok(stageHtml().includes('aria-label="가 볼 만한 곳" onclick="openPlaces()"'));
 });
+

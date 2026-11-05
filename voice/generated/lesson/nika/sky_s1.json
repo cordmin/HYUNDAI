@@ -1,0 +1,14 @@
+{
+  "duration": 17.16,
+  "sample_rate": 24000,
+  "peak": 23741,
+  "rms": 3350.66,
+  "sha256": "019bcb33fa21e39bc52eea94298b11787ca51391029bc447b0505e48ab4f1d87",
+  "id": "sky_s1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "곧 도착이네요. 오늘의 핵심만 정리할게요. 공기는 파란빛을 많이 흩어 놓아서 낮 하늘은 파랗고, 저녁에는 파란빛이 먼저 흩어져 붉은빛이 남습니다. 남은 이야기는 다음 이동에서 이어 가요.",
+  "fingerprint": "5159a1292605e36cbbccd4d2902f2c26e6003814e6a0cc67504e35a9bee67bbf",
+  "generated_at": "2026-11-06T00:25:49+0900",
+  "review": "generated_not_listening_reviewed"
+}

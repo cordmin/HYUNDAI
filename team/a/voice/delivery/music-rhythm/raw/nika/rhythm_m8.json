@@ -1,0 +1,14 @@
+{
+  "duration": 37.88,
+  "sample_rate": 24000,
+  "peak": 26676,
+  "rms": 2869.97,
+  "sha256": "74e1b48c7e325488026b8cfdfef0cfbcaec0d96b029d05fefef57c14a555dc97",
+  "id": "rhythm_m8",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "쉬기로 한 시간을 없애고 다음 소리를 당기면, 원래 정한 리듬과 달라집니다. 같은 소리를 같은 횟수만큼 내도 언제 시작하고 얼마 동안 이어 가는지에 따라 리듬이 달라질 수 있습니다. 쉼은 연주를 깜빡해서 생긴 빈칸일 수도 있지만, 악곡에서 정해 놓은 쉼은 의도한 음악의 일부입니다. 말할 때 어디에서 잠깐 멈추느냐에 따라 문장의 느낌이 달라지는 것과 비슷하게 생각할 수 있습니다. 다만 말과 음악이 언제나 같은 규칙으로 움직인다는 뜻은 아닙니다.",
+  "fingerprint": "a4a032d39b0038b43cbd38201ed59b2263ce98577d01d2fe97b88aa37f3c79b4",
+  "generated_at": "2026-11-06T00:13:48+0900",
+  "review": "generated_not_listening_reviewed"
+}

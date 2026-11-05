@@ -1,0 +1,14 @@
+{
+  "duration": 29.28,
+  "sample_rate": 24000,
+  "peak": 24190,
+  "rms": 2659.34,
+  "sha256": "424a6826b88e67cef1dc5344f17082ce243190810fa15b5e6aa1bc0e871c1823",
+  "id": "rhythm_e3",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "두 예시에서 템포가 같은지 확인하려고 합니다. 위에 얹은 소리의 총개수와, 아래에서 일정하게 울리는 기준 소리의 간격 가운데 무엇을 비교하면 좋을까요? 총개수만 세면 첫 박을 나눈 예시가 더 빨라졌다고 착각할 수 있습니다. 무엇을 빠르기의 기준으로 삼을지 생각해 보세요. 소리를 놓치더라도 괜찮습니다. 바로 다음 설명에서 함께 정리하겠습니다.",
+  "fingerprint": "893a7bf916331fe85c2ef31c337a0c9820a00d04c32e05ccd60446986fdfdcbe",
+  "generated_at": "2026-11-06T00:14:50+0900",
+  "review": "generated_not_listening_reviewed"
+}

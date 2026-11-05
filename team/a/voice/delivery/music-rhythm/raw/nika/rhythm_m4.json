@@ -1,0 +1,14 @@
+{
+  "duration": 19.76,
+  "sample_rate": 24000,
+  "peak": 21766,
+  "rms": 2524.96,
+  "sha256": "b7c0a59ac186522edbb85205d218e3819efec40a26c16ecfe1a8a45eee08607b",
+  "id": "rhythm_m4",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "첫 번째는 네 박 동안 네 번, 두 번째는 같은 네 박 동안 다섯 번 소리가 났습니다. 두 번째를 듣고 소리가 더 촘촘하다고 말할 수 있겠지요. 그렇다면 박이 흐르는 빠르기도 반드시 빨라졌을까요? 속으로 생각해도 좋습니다.",
+  "fingerprint": "dbc85b58e25a81c3b2edcbfcc907b52a1f1cf61e51931455fa1dfd1893e58381",
+  "generated_at": "2026-11-06T00:13:08+0900",
+  "review": "generated_not_listening_reviewed"
+}

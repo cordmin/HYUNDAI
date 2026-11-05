@@ -6,7 +6,8 @@ const vm = require('node:vm');
 const Journey = require('../../main/assets/dait-journey.js');
 const data = require('../../main/assets/dait-rules.js');
 const Lesson = require('../../main/assets/dait-lesson.js');
-const DAIT_LESSONS = require('../../main/assets/dait-lessons.js');
+const APP_LESSONS = require('../../main/assets/dait-lessons.js');
+const DAIT_LESSONS = APP_LESSONS.filter(item => item.id !== 'rhythm');
 const { rules } = data;
 
 const full = { tier: 'full', school: true, hasPe: true, memory: {} };
@@ -1392,3 +1393,25 @@ test('학교를 등록하기 전 첫 화면에서도 가 볼 만한 곳으로 �
   assert.ok(stageHtml().includes('aria-label="가 볼 만한 곳" onclick="openPlaces()"'));
 });
 
+
+test('음악을 골라 재생하고 멈춤·이어 듣기·이전·완료 기록까지 연결한다', () => {
+  page(`DAIT_LESSONS.push(${JSON.stringify(APP_LESSONS.find(item => item.id === 'rhythm'))});
+    localStorage.values.clear(); demoMinutes = null; window.setDrivingMode(false);
+    openLessons(); pickLessonTime(8); pickLessonSubject('음악');`);
+  assert.ok(stageHtml().includes('같은 네 박인데 왜 다르게 들릴까?'));
+  page(`var musicCalls = [];
+    window.AndroidBridge = { micState: () => 'none', speak: clips => musicCalls.push(JSON.parse(clips)), stopSpeech() {},
+      holdSpeech: () => musicCalls.push('hold'), proceedSpeech: () => musicCalls.push('resume'), setJourneyActive() {} };
+    startLesson('rhythm');`);
+  assert.strictEqual(page('musicCalls[0][0]'), 'lesson/rhythm_m1');
+  page('pauseLesson(); resumeLesson();');
+  assert.strictEqual(page("musicCalls.includes('hold') && musicCalls.includes('resume')"), true);
+  hearLesson('ended');
+  assert.strictEqual(page('lessonRun.pieces[lessonRun.index].id'), 'm2');
+  page('lessonRun.pieceStartedAt = Date.now(); prevLessonPiece();');
+  assert.strictEqual(page('lessonRun.index'), 0);
+  hearPeriod();
+  assert.strictEqual(page('lessonRun.finished'), true);
+  assert.strictEqual(page("lessonProgress().records.some(row => row.lesson === 'rhythm' && row.finished)"), true);
+  page('goHome(); delete window.AndroidBridge;');
+});

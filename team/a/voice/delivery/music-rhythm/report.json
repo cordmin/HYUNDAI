@@ -1,0 +1,419 @@
+{
+  "review": "generated_not_listening_reviewed",
+  "expected": 29,
+  "generated": 29,
+  "sources": {
+    "team\\a\\lessons\\음악-박과리듬.csv": "78b8e2dac878aaef1ed72668fe34e0d1a22c41173c16015b206719c5bf26d8c7",
+    "team\\a\\lessons\\음악-박과리듬-확장.csv": "d8891772d531316f5d8738643493b91fc8e19223bdeff53427f4cc1c7d1fccf9"
+  },
+  "clips": [
+    {
+      "id": "m1",
+      "raw": {
+        "duration": 31.72,
+        "sample_rate": 24000,
+        "peak": 27332,
+        "rms": 3765.55,
+        "sha256": "e0ae3bfb04d9e522aff8f88af7901be01526b1f86bf090512943f930f7868b22"
+      },
+      "edited_seconds": 31.72
+    },
+    {
+      "id": "m2",
+      "raw": {
+        "duration": 36.56,
+        "sample_rate": 24000,
+        "peak": 27508,
+        "rms": 2463.91,
+        "sha256": "99ff2a5d6ad3c0f8423d688134595c94671569c5c38e20d064a33b5ff5c6ed3a"
+      },
+      "edited_seconds": 44.56
+    },
+    {
+      "id": "m3",
+      "raw": {
+        "duration": 33.56,
+        "sample_rate": 24000,
+        "peak": 24232,
+        "rms": 2615.49,
+        "sha256": "8f90242ec81865a043281e6eee2e9f1ba4d5faa493ec2e59c3b4880e9f3b1344"
+      },
+      "edited_seconds": 49.56
+    },
+    {
+      "id": "m4",
+      "raw": {
+        "duration": 19.76,
+        "sample_rate": 24000,
+        "peak": 21766,
+        "rms": 2524.96,
+        "sha256": "b7c0a59ac186522edbb85205d218e3819efec40a26c16ecfe1a8a45eee08607b"
+      },
+      "edited_seconds": 28.76
+    },
+    {
+      "id": "m5",
+      "raw": {
+        "duration": 37.52,
+        "sample_rate": 24000,
+        "peak": 25527,
+        "rms": 2960.48,
+        "sha256": "babf4a7787a28d517aa577659bb0547e5aaf83248645f8997673c6905aa31ee4"
+      },
+      "edited_seconds": 37.52
+    },
+    {
+      "id": "m6",
+      "raw": {
+        "duration": 40.6,
+        "sample_rate": 24000,
+        "peak": 27704,
+        "rms": 3068.39,
+        "sha256": "fee07bdd79cd0c42bb7910e456992374d336b58fd5dd2f4f5cbf72f16659ef0b"
+      },
+      "edited_seconds": 48.6
+    },
+    {
+      "id": "m7",
+      "raw": {
+        "duration": 20.76,
+        "sample_rate": 24000,
+        "peak": 23248,
+        "rms": 2788.46,
+        "sha256": "5283493014a85056bc17262ffb06e27f394af63115aff1644ecde7687123f4bc"
+      },
+      "edited_seconds": 29.76
+    },
+    {
+      "id": "m8",
+      "raw": {
+        "duration": 37.88,
+        "sample_rate": 24000,
+        "peak": 26676,
+        "rms": 2869.97,
+        "sha256": "74e1b48c7e325488026b8cfdfef0cfbcaec0d96b029d05fefef57c14a555dc97"
+      },
+      "edited_seconds": 37.88
+    },
+    {
+      "id": "m9",
+      "raw": {
+        "duration": 41.36,
+        "sample_rate": 24000,
+        "peak": 26159,
+        "rms": 2757.32,
+        "sha256": "834cb16db782adabf392ffdf6495532982d19e009faa6208413296e706cf8b68"
+      },
+      "edited_seconds": 41.36
+    },
+    {
+      "id": "m10",
+      "raw": {
+        "duration": 26.08,
+        "sample_rate": 24000,
+        "peak": 19165,
+        "rms": 2638.08,
+        "sha256": "742cdaded2ca9b62b2cdc0891ef13c4113395fcb1f84d8899ef21b5306463c0a"
+      },
+      "edited_seconds": 38.08
+    },
+    {
+      "id": "m11",
+      "raw": {
+        "duration": 52.84,
+        "sample_rate": 24000,
+        "peak": 26379,
+        "rms": 2733.89,
+        "sha256": "6e2ad02ad3cf7a1f71bd3585d4b42db4b19929152fcfa22fae56654fe8ba4ddc"
+      },
+      "edited_seconds": 52.84
+    },
+    {
+      "id": "e1",
+      "raw": {
+        "duration": 44.24,
+        "sample_rate": 24000,
+        "peak": 23290,
+        "rms": 2853.68,
+        "sha256": "9ef19b42a8621e965a376b7ac9d17e2d7c4c2d45015cb729eff4002e20efa4cf"
+      },
+      "edited_seconds": 68.24
+    },
+    {
+      "id": "e2",
+      "raw": {
+        "duration": 42.4,
+        "sample_rate": 24000,
+        "peak": 25685,
+        "rms": 3049.48,
+        "sha256": "7167c0b4aed36eefe59275f02e3b181cedf1dd1d2046ca537cccf80a83e7733b"
+      },
+      "edited_seconds": 58.4
+    },
+    {
+      "id": "e3",
+      "raw": {
+        "duration": 29.28,
+        "sample_rate": 24000,
+        "peak": 24190,
+        "rms": 2659.34,
+        "sha256": "424a6826b88e67cef1dc5344f17082ce243190810fa15b5e6aa1bc0e871c1823"
+      },
+      "edited_seconds": 39.28
+    },
+    {
+      "id": "e4",
+      "raw": {
+        "duration": 41.8,
+        "sample_rate": 24000,
+        "peak": 27321,
+        "rms": 2972.87,
+        "sha256": "3616c36aa742bec101201ef5672fa0f8678856d3885f137c9db32c13a4ac210b"
+      },
+      "edited_seconds": 41.8
+    },
+    {
+      "id": "e5",
+      "raw": {
+        "duration": 45.52,
+        "sample_rate": 24000,
+        "peak": 24879,
+        "rms": 2955.29,
+        "sha256": "504314285a2b61bb7a6fb6ebb9eb1bcd9920390e5fe5fd73cbd33ff83ffa2541"
+      },
+      "edited_seconds": 62.32
+    },
+    {
+      "id": "e6",
+      "raw": {
+        "duration": 41.92,
+        "sample_rate": 24000,
+        "peak": 22637,
+        "rms": 3096.85,
+        "sha256": "b24ba7c1739b66bc7b65492191d954b346bf5da32ec6cb2070dcaba1fc24618e"
+      },
+      "edited_seconds": 57.92
+    },
+    {
+      "id": "e7",
+      "raw": {
+        "duration": 30.0,
+        "sample_rate": 24000,
+        "peak": 26834,
+        "rms": 3031.91,
+        "sha256": "c5a2c1ba52bcec5adf21f86e4442f8cc2c96da635cbd58b581c3172fb3bd9617"
+      },
+      "edited_seconds": 40.0
+    },
+    {
+      "id": "e8",
+      "raw": {
+        "duration": 41.56,
+        "sample_rate": 24000,
+        "peak": 21690,
+        "rms": 2812.18,
+        "sha256": "cbeb908359d5b8e8171caa12b531a3c87de36d22513655a002d5b3420039095d"
+      },
+      "edited_seconds": 41.56
+    },
+    {
+      "id": "e9",
+      "raw": {
+        "duration": 44.16,
+        "sample_rate": 24000,
+        "peak": 20440,
+        "rms": 2686.09,
+        "sha256": "2286c9d510b7b13c0ac99e5fe439fa06a96d47b20e9d54a9274327a87d04d30c"
+      },
+      "edited_seconds": 60.16
+    },
+    {
+      "id": "e10",
+      "raw": {
+        "duration": 42.48,
+        "sample_rate": 24000,
+        "peak": 26470,
+        "rms": 3041.49,
+        "sha256": "247b7a028cbe1c4b7d34d5585903c978b5e1088267297f2141b98903d0b322f8"
+      },
+      "edited_seconds": 50.48
+    },
+    {
+      "id": "e11",
+      "raw": {
+        "duration": 45.12,
+        "sample_rate": 24000,
+        "peak": 26324,
+        "rms": 2963.04,
+        "sha256": "3a961beb541c989d7cc65dd2a3458c08efe21f2eb4142fbcd97db2a3cbb266de"
+      },
+      "edited_seconds": 53.12
+    },
+    {
+      "id": "e12",
+      "raw": {
+        "duration": 49.16,
+        "sample_rate": 24000,
+        "peak": 23681,
+        "rms": 2672.83,
+        "sha256": "be247def19fbf0901ab245766078d0243a187ad38f55e6a5c1dfed63620789d8"
+      },
+      "edited_seconds": 57.16
+    },
+    {
+      "id": "e13",
+      "raw": {
+        "duration": 29.96,
+        "sample_rate": 24000,
+        "peak": 26996,
+        "rms": 3778.24,
+        "sha256": "66d34c072d23430939de572ca68a979d813ea5bb7716f4593dca4151ba71164f"
+      },
+      "edited_seconds": 57.96
+    },
+    {
+      "id": "e14",
+      "raw": {
+        "duration": 43.32,
+        "sample_rate": 24000,
+        "peak": 24305,
+        "rms": 3003.91,
+        "sha256": "4a1baf8a55c2b37b36d48dc081814c2867a724c609356e83bfb540b4d846b458"
+      },
+      "edited_seconds": 43.32
+    },
+    {
+      "id": "e15",
+      "raw": {
+        "duration": 48.96,
+        "sample_rate": 24000,
+        "peak": 24844,
+        "rms": 2880.21,
+        "sha256": "33fce9bd6f415fb9a7721e8ab7bc7e1af62d62a7426fab14a70314bc7462e13c"
+      },
+      "edited_seconds": 48.96
+    },
+    {
+      "id": "e16",
+      "raw": {
+        "duration": 33.72,
+        "sample_rate": 24000,
+        "peak": 27395,
+        "rms": 3739.68,
+        "sha256": "8afe527d4b7c70c1636d8e4c35f96308a5b59f853c5582993b76c0ea7f5e415c"
+      },
+      "edited_seconds": 45.72
+    },
+    {
+      "id": "e17",
+      "raw": {
+        "duration": 46.36,
+        "sample_rate": 24000,
+        "peak": 26672,
+        "rms": 3172.04,
+        "sha256": "dc023c10c5a77b9c6030aa2b90b3ab0ce60450162bf5a4c0a4e83922e1ea6160"
+      },
+      "edited_seconds": 46.36
+    },
+    {
+      "id": "e18",
+      "raw": {
+        "duration": 42.2,
+        "sample_rate": 24000,
+        "peak": 20611,
+        "rms": 2574.59,
+        "sha256": "9421ae8e06f2c1d618ebadc653bbeafc2593e9327645d24cdb81c4979f707d1e"
+      },
+      "edited_seconds": 42.2
+    }
+  ],
+  "variants": [
+    {
+      "budget_minutes": 8,
+      "actual_seconds": 446.14,
+      "pieces": [
+        "m1",
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m6",
+        "m7",
+        "m8",
+        "m9",
+        "m10",
+        "m11"
+      ],
+      "omitted": [],
+      "sha256": "6ee99b7cccb4572db1a61cfcfcd95b78a346f9563323133a95495e30c9f6d09b"
+    },
+    {
+      "budget_minutes": 15,
+      "actual_seconds": 899.18,
+      "pieces": [
+        "m1",
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m6",
+        "m8",
+        "e1",
+        "e2",
+        "e3",
+        "e4",
+        "e5",
+        "e6",
+        "e7",
+        "e8",
+        "e9",
+        "e10",
+        "m10",
+        "m11"
+      ],
+      "omitted": [
+        "m9",
+        "m7"
+      ],
+      "sha256": "5cce4387af93c373b98267eb7e0b5b809bfda725d50692a4f5fbed017084d0b6"
+    },
+    {
+      "budget_minutes": 20,
+      "actual_seconds": 1192.46,
+      "pieces": [
+        "m1",
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m6",
+        "m7",
+        "m8",
+        "e1",
+        "e2",
+        "e3",
+        "e4",
+        "e5",
+        "e6",
+        "e7",
+        "e8",
+        "e9",
+        "e10",
+        "e11",
+        "e12",
+        "e13",
+        "e14",
+        "e15",
+        "m10",
+        "m11"
+      ],
+      "omitted": [
+        "m9",
+        "e18",
+        "e16",
+        "e17"
+      ],
+      "sha256": "ded264836c72fec27116af7b56daf37036c05ccdb10a63cad29cb70d0293a092"
+    }
+  ]
+}

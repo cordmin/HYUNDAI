@@ -37,5 +37,11 @@
             </intent-filter>
         </receiver>
         <service android:name=".JourneyService" android:exported="false" android:foregroundServiceType="mediaPlayback|microphone|location" />
+        <!-- 차의 미디어 화면이 다잇 수업을 오디오로 찾고, 핸들 버튼이 수업을 멈추고 잇게 한다. -->
+        <service android:name=".LessonMediaService" android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
     </application>
 </manifest>

@@ -133,6 +133,11 @@ class MainActivity : Activity() {
         return true
     }
 
+    // 핸들 버튼이나 차의 미디어 화면에서 온 재생·멈춤·이전을 화면의 수업에 넘긴다.
+    fun onMediaCommand(command: String) {
+        callPage("window.onMediaKey && window.onMediaKey(${JSONObject.quote(command)});")
+    }
+
     override fun onResume() {
         super.onResume()
         visible = true
@@ -155,6 +160,7 @@ class MainActivity : Activity() {
             Gleo.respond(this, Gleo.response(name, "fail", "DAIT was closed before it could finish the request."))
         }
         gleoGuards.clear()
+        LessonMedia.update(this, false, false, "", "")
         JourneyService.stop(this)
         voice?.release()
         voice = null
@@ -321,6 +327,12 @@ class MainActivity : Activity() {
                 handler.removeCallbacks(guard)
                 Gleo.respond(this@MainActivity, response)
             }
+        }
+
+        // 화면이 수업 상태가 바뀔 때마다 알려 준다. 차의 미디어 화면과 핸들 버튼이 이 상태를 따른다.
+        @JavascriptInterface
+        fun setLessonMedia(active: Boolean, playing: Boolean, title: String, subtitle: String) {
+            runOnUiThread { LessonMedia.update(this@MainActivity, active, playing, title, subtitle) }
         }
 
         @JavascriptInterface

@@ -2837,7 +2837,35 @@
       const next = document.getElementById('driveNext');
       next.textContent = canStart ? '듣기' : done ? '마치기' : lessonOn ? lessonMainLabel(lessonRun) : '넘기기';
       next.disabled = !inDialogue && !canStart;
+      syncLessonMedia();
     }
+
+    // ========================================================
+    // 핸들 버튼과 차의 미디어 화면 (앱의 LessonMedia.kt)
+    // 듣는 수업이 있을 때만 차가 다잇을 재생 중인 오디오로 보고, 핸들의 재생·멈춤·이전 버튼을 수업 화면의 버튼과 같게 처리한다.
+    // ========================================================
+    let sentLessonMedia = '';
+    function syncLessonMedia() {
+      if (!window.AndroidBridge || !AndroidBridge.setLessonMedia) return;
+      const run = lessonRun;
+      const active = !!run && !run.done && currentMode === 'lesson';
+      const playing = active && !run.paused && !run.stopped && !isLessonResting();
+      const title = active ? run.lesson.title : '';
+      const subtitle = active ? (isLessonResting() ? '쉬는 시간' : `${run.lesson.subject} 수업`) : '';
+      const text = JSON.stringify([active, playing, title, subtitle]);
+      if (text === sentLessonMedia) return;
+      sentLessonMedia = text;
+      AndroidBridge.setLessonMedia(active, playing, title, subtitle);
+    }
+
+    window.onMediaKey = function(command) {
+      const run = lessonRun;
+      if (!run || run.done || currentMode !== 'lesson') return;
+      if (command === 'pause') pauseLesson();
+      else if (command === 'play') gleoResume(run);
+      else if (command === 'previous') prevLessonPiece();
+      updateDriveScreen();
+    };
 
     function driveReplay() {
       if (currentMode === 'lesson') { if (!isDialogueDone()) prevLessonPiece(); }

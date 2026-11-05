@@ -19,7 +19,7 @@
             "subject": {
               "type": "string",
               "description": "School subject of the lesson when the user names one.",
-              "enum": ["국어", "수학", "기술"]
+              "enum": ["국어", "수학", "기술", "음악"]
             }
           },
           "required": []

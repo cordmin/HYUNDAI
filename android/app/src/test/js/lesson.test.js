@@ -1,7 +1,9 @@
 const test = require('node:test');
 const assert = require('node:assert');
 const Lesson = require('../../main/assets/dait-lesson.js');
-const lessons = require('../../main/assets/dait-lessons.js');
+const appLessons = require('../../main/assets/dait-lessons.js');
+// Existing scenarios retain their fixture; music is exercised separately below.
+const lessons = appLessons.filter(item => item.id !== 'rhythm');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
@@ -472,5 +474,5 @@ test('Gleo 설명서(schema.json)는 문서 규칙을 지키고 앱과 맞는다
     assert.ok(page.includes(`'${fn.name}'`) || kotlin.includes(`"${fn.name}"`), fn.name);
   }
   const start = schema.actionCalls.find(call => call.function.name === 'START_LESSON').function;
-  assert.deepStrictEqual(start.parameters.properties.subject.enum, Lesson.subjects(lessons)); // 수업이 늘면 설명서도 고친다
+  assert.deepStrictEqual(start.parameters.properties.subject.enum, Lesson.subjects(appLessons)); // 수업이 늘면 설명서도 고친다
 });

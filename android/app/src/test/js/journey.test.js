@@ -1415,3 +1415,105 @@ test('음악을 골라 재생하고 멈춤·이어 듣기·이전·완료 기록
   assert.strictEqual(page("lessonProgress().records.some(row => row.lesson === 'rhythm' && row.finished)"), true);
   page('goHome(); delete window.AndroidBridge;');
 });
+
+
+test('처음부터 듣기는 멈춤·답·중단지점을 초기화하고 현재 수업을 한 번만 완료 처리한다', () => {
+  page(`localStorage.values.clear(); demoMinutes = null; window.setDrivingMode(false);
+    openLessons(); pickLessonTime(8);
+    var restartClips = [];
+    window.AndroidBridge = { micState: () => 'none', speak: clips => restartClips.push(JSON.parse(clips)), stopSpeech() {},
+      holdSpeech() {}, proceedSpeech() {}, setJourneyActive() {} };
+    startLesson('rhythm');`);
+  assert.ok(stageHtml().includes('onclick="restartLesson()">처음부터 듣기'));
+  for (let i = 0; i < 3; i++) hearLesson('ended');
+  page(`lessonRun.answers.push({text:'이전 시도의 답'}); lessonRun.meters = 1200; pauseLesson();
+    writeStored(LESSON_KEY, Lesson.keepResume(lessonProgress(), Lesson.resumePoint(lessonRun.lesson, lessonRun.heard, toYmd(new Date()))));
+    var oldSeq = speechSeq; var oldRun = lessonRun; var beforeRestartEnd = lessonRun.trip.endsAt;
+    restartLesson();`);
+  assert.strictEqual(page('lessonRun === oldRun'), false);
+  assert.strictEqual(page('lessonRun.index'), 0);
+  assert.strictEqual(page('lessonRun.pieces[0].id'), 'm1');
+  assert.strictEqual(page('lessonRun.trip.minutes'), 8);
+  assert.ok(page('lessonRun.trip.endsAt >= beforeRestartEnd'));
+  assert.strictEqual(page('lessonRun.heard.length + lessonRun.answers.length'), 0);
+  assert.strictEqual(page('lessonRun.meters'), 1200);
+  assert.strictEqual(page('lessonRun.paused'), false);
+  assert.strictEqual(page('lessonProgress().resume'), null);
+  assert.strictEqual(page('lessonProgress().records.length'), 0);
+  assert.strictEqual(page('lessonProgress().ieum'), 0);
+  assert.strictEqual(page('restartClips.at(-1)[0]'), 'lesson/rhythm_m1');
+  page(`window.onSpeechEvent(JSON.stringify({event:'ended',seq:oldSeq}));`);
+  assert.strictEqual(page('lessonRun.index'), 0);
+  hearPeriod();
+  assert.strictEqual(page('lessonProgress().records.length'), 1);
+  assert.strictEqual(page('lessonProgress().ieum'), 1);
+  assert.ok(!stageHtml().includes('onclick="restartLesson()"'));
+  page('restartLesson(); goHome(); delete window.AndroidBridge;');
+});
+
+test('처음부터 듣기는 앞 교시의 기록을 보존하고 주행 중에는 실행하지 않는다', () => {
+  page(`localStorage.values.clear(); demoMinutes = 60; window.setDrivingMode(false); openLessons(); startLesson('rhythm');`);
+  hearPeriod();
+  page('nextLessonPiece();');
+  const firstRecord = page('JSON.stringify(lessonProgress().records)');
+  const earned = page('lessonRun.trip.earned');
+  const lessonId = page('lessonRun.lesson.id');
+  hearLesson('ended');
+  page('restartLesson();');
+  assert.strictEqual(page('lessonRun.lesson.id'), lessonId);
+  assert.strictEqual(page('lessonRun.trip.earned'), earned);
+  assert.strictEqual(page('JSON.stringify(lessonProgress().records)'), firstRecord);
+  assert.strictEqual(page('lessonRun.index'), 0);
+  page('window.setDrivingMode(true); renderStage(); var drivingRun = lessonRun; restartLesson();');
+  assert.strictEqual(page('lessonRun === drivingRun'), true);
+  assert.ok(!stageHtml().includes('onclick="restartLesson()"'));
+  page('window.setDrivingMode(false); demoMinutes = null; goHome();');
+});
+
+
+test('진행바는 음원 경계를 표시하고 구간·초 단위 탐색과 일시정지를 유지한다', () => {
+  page(`localStorage.values.clear(); demoMinutes = null; window.setDrivingMode(false);
+    openLessons(); pickLessonTime(8);
+    var seekCalls = []; window.AndroidBridge = { micState: () => 'none', speak() {}, stopSpeech() {}, holdSpeech() {}, proceedSpeech() {},
+      setJourneyActive() {}, seekSpeech: (ms, seq) => seekCalls.push({ms,seq}), reportSpeechPosition() {} };
+    startLesson('rhythm'); var seekTimeline = lessonTimeline(lessonRun);`);
+  assert.ok(stageHtml().includes('aria-label="수업 재생 위치"'));
+  assert.strictEqual(page('seekTimeline.sections.length'), 11);
+  assert.ok(Math.abs(page('seekTimeline.seconds') - 440.64) < .01);
+  page('seekLessonSection(2);');
+  assert.strictEqual(page('lessonRun.index'), 2);
+  assert.strictEqual(page('lessonRun.heard.length'), 0); // 건너뛴 조각을 들었다고 기록하지 않는다.
+  page('pauseLesson(); seekLessonAt(lessonTimeline(lessonRun).sections[2].start + 12.5);');
+  assert.strictEqual(page('lessonRun.paused'), true);
+  assert.strictEqual(page('seekCalls.at(-1).ms'), 12500);
+  assert.strictEqual(page('lessonRun.partialPiece'), 'm3');
+  page(`window.onSpeechEvent(JSON.stringify({event:'position',seq:speechSeq,position:12500}));`);
+  assert.strictEqual(page('lessonRun.positionSeconds'), 12.5);
+  page('resumeLesson();');
+  hearLesson('ended');
+  assert.strictEqual(page("lessonRun.heard.some(item => item.id === 'm3')"), false); // 조각 뒤쪽만 듣고 전체 분량을 얻지 않는다.
+  page(`seekLessonSection(lessonRun.pieces.length - 1);`);
+  hearLesson('ended');
+  assert.strictEqual(page('lessonProgress().ieum'), 0); // 마지막 구간만 들으면 수업 완료 보상이 생기지 않는다.
+  page('goHome(); delete window.AndroidBridge;');
+});
+
+test('브라우저 탐색은 새 음원 metadata 뒤에도 정확한 위치를 적용하고 생각할 틈으로도 이동한다', () => {
+  page(`localStorage.values.clear(); demoMinutes = null; window.setDrivingMode(false); openLessons(); pickLessonTime(8);
+    var audioStub = { currentTime:0, readyState:4, play: () => Promise.resolve(), pause() {}, set src(value) { this.currentTime = 0; },
+      get src() { return ''; } };
+    var beforeAudioLookup = document.getElementById;
+    document.getElementById = id => id === 'audioPlayer' ? audioStub : beforeAudioLookup(id);
+    startLesson('rhythm');
+    seekLessonAt(lessonTimeline(lessonRun).sections[2].start + 10);
+    audioStub.currentTime = 0; audioStub.onloadedmetadata();`);
+  assert.strictEqual(page('audioStub.currentTime'), 10); // 이전 readyState가 남아 있어도 새 파일에 offset을 적용한다.
+  page(`var questionSection = lessonTimeline(lessonRun).sections.find(item => item.piece.kind === '발문');
+    seekLessonAt(questionSection.start + Lesson.speechSeconds(questionSection.piece) + 3);`);
+  assert.ok(page('lessonRun.wait.endsAt - Date.now()') <= 6001);
+  assert.strictEqual(page('lessonRun.partialPiece'), page('questionSection.piece.id'));
+  page('window.setDrivingMode(true); renderStage(); var seekBeforeDriving = lessonRun.index; seekLessonSection(0);');
+  assert.strictEqual(page('lessonRun.index'), page('seekBeforeDriving'));
+  assert.ok(!stageHtml().includes('aria-label="수업 재생 위치"'));
+  page('window.setDrivingMode(false); goHome(); document.getElementById = beforeAudioLookup;');
+});

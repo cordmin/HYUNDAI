@@ -394,6 +394,19 @@
     }
     .back-btn:hover { background: var(--glass-hover); }
 
+    .lesson-progress { flex-shrink: 0; min-width: 0; }
+    .lesson-progress-times { display: flex; justify-content: space-between; gap: calc(8 * var(--u)); font-size: calc(13 * var(--u)); color: var(--muted); }
+    .lesson-progress-track { position: relative; height: calc(44 * var(--u)); display: flex; align-items: center; }
+    .lesson-progress-segments { display: flex; gap: calc(2 * var(--u)); width: 100%; height: calc(6 * var(--u)); }
+    .lesson-progress-segments span { min-width: 0; border-radius: calc(2 * var(--u)); background: linear-gradient(to right, #B8A9F5 var(--heard, 0%), rgba(255,255,255,.18) var(--heard, 0%)); }
+    .lesson-progress-track input { position: absolute; inset: 0; margin: 0; width: 100%; height: 100%; appearance: none; background: transparent; cursor: pointer; accent-color: #D4C7FF; }
+    .lesson-progress-track input::-webkit-slider-runnable-track { height: calc(6 * var(--u)); background: transparent; }
+    .lesson-progress-track input::-webkit-slider-thumb { appearance: none; width: calc(16 * var(--u)); height: calc(16 * var(--u)); border-radius: 50%; background: #E3D9FF; margin-top: calc(-5 * var(--u)); }
+    .lesson-progress-track input:focus-visible { outline: 2px solid #D4C7FF; border-radius: calc(6 * var(--u)); }
+    .lesson-sections { display: flex; gap: calc(6 * var(--u)); overflow-x: auto; padding-bottom: calc(3 * var(--u)); scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.3) transparent; }
+    .lesson-sections button { flex-shrink: 0; min-height: calc(44 * var(--u)); max-width: calc(210 * var(--u)); padding: 0 calc(10 * var(--u)); border: 1px solid var(--line); border-radius: calc(10 * var(--u)); background: var(--glass); color: var(--ink); font-size: calc(14 * var(--u)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+    .lesson-sections button[aria-current="step"] { border-color: #C4B5FD; background: rgba(167,139,250,.25); }
+
     .dialogue-card {
       background: var(--glass);
       border: 1px solid var(--line);
@@ -1468,6 +1481,7 @@
       const seq = speechSeq; // 재생 실패 알림이 늦게 와도 그사이 시작한 다음 말을 끝내지 않게 한다
       player.src = clip.startsWith('lesson/') ? `voices/${clip}.m4a` : clip.includes('/') ? `voices/${clip}.wav` : `voices/${voice}/${clip}.wav`;
       player.play().catch(e => {
+        if (e.name === 'AbortError') return; // 위치 이동이나 일시정지가 진행 중인 재생 요청을 취소할 수 있다.
         console.log('Audio error:', e);
         window.onSpeechEvent(JSON.stringify({ event: 'ended', seq }));
       });
@@ -1509,6 +1523,13 @@
     window.onSpeechEvent = function(jsonText) {
       const info = JSON.parse(jsonText);
       if (info.seq !== speechSeq) return; // 지난 말에 대한 늦은 알림
+      if (info.event === 'position') {
+        if (lessonRun && !lessonRun.done && Number.isFinite(info.position)) {
+          lessonRun.positionSeconds = info.position / 1000;
+          updateLessonProgress();
+        }
+        return;
+      }
       if (info.event === 'paused' || info.event === 'resumed') {
         speechPaused = info.event === 'paused';
         return;
@@ -1613,6 +1634,7 @@
     let lessonMinutes = Lesson.DEFAULT_MINUTES;
     let lessonSubject = ''; // 고르는 화면의 과목 칩. 빈 값은 전체
     let lessonTimer = null;
+    let lessonProgressTimer = null;
     const LESSON_RESUME_MS = 30 * 1000; // 이보다 오래 멈추면 이어 들을 때 지금 조각을 처음부터 다시 말한다
     const LESSON_BACK_MS = 3000; // 조각을 이만큼 들었으면 「이전」은 그 조각을 처음부터, 덜 들었으면 앞 조각을 말한다
     const TOP_SPEED_MPS = 50; // 이보다 빨리 줄어든 남은 거리는 달린 것이 아니라 목적지를 바꾼 것이다
@@ -1783,6 +1805,7 @@
         <div class="dialogue-wrap">
           <div class="dialogue-top">
             <button class="back-btn" onclick="goHome()">처음으로</button>
+            ${!isDrivingMode && !run.done && !resting ? '<button class="back-btn" onclick="restartLesson()">처음부터 듣기</button>' : ''}
             <span class="top-label">${escapeHtml(lessonLabel(run, resting))}</span>
           </div>
           <div class="dialogue-card">
@@ -1794,10 +1817,115 @@
               <div id="heardLine" class="heard-bubble"${heard || speechPhase === 'listening' ? '' : ' hidden'}>${escapeHtml(heardLineText())}</div>
             </div>
           </div>
+          ${!isDrivingMode && !resting ? lessonProgressHtml(run) : ''}
           <div class="bottom-bar">${buttons}</div>
         </div>
       `;
       if (celebrate && container.querySelector) ITCHI.play(container.querySelector('.itchi'));
+      tickLessonProgress();
+    }
+
+    function lessonTimeline(run) {
+      let seconds = 0;
+      const sections = run.pieces.flatMap((piece, index) => {
+        if (Lesson.isBreak(piece)) return [];
+        const section = { piece, index, start: seconds, seconds: Lesson.totalSeconds([piece]) };
+        seconds += section.seconds;
+        return [section];
+      });
+      return { sections, seconds };
+    }
+
+    function lessonTimeText(seconds) {
+      const whole = Math.max(0, Math.floor(seconds));
+      return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, '0')}`;
+    }
+
+    function lessonProgressHtml(run) {
+      const timeline = lessonTimeline(run);
+      return `<div class="lesson-progress" aria-label="수업 진행">
+        <div class="lesson-progress-times"><span id="lessonElapsed">0:00</span><span id="lessonSectionName"></span><span>${lessonTimeText(timeline.seconds)}</span></div>
+        <div class="lesson-progress-track">
+          <div class="lesson-progress-segments" aria-hidden="true">${timeline.sections.map(section => `<span data-lesson-segment="${section.index}" style="flex:${section.seconds}"></span>`).join('')}</div>
+          <input id="lessonSeek" type="range" min="0" max="${timeline.seconds}" step="0.1" value="0" aria-label="수업 재생 위치" oninput="previewLessonSeek(Number(this.value))" onchange="seekLessonAt(Number(this.value))" onblur="cancelLessonScrub()" onpointercancel="cancelLessonScrub()"${run.done ? ' disabled' : ''}>
+        </div>
+        <div class="lesson-sections" aria-label="수업 구간">${timeline.sections.map((section, n) => `<button onclick="seekLessonSection(${section.index})" data-lesson-section="${section.index}" aria-label="${n + 1}구간 ${escapeHtml(section.piece.line)}"${run.done ? ' disabled' : ''}>${n + 1}. ${escapeHtml(section.piece.line)}</button>`).join('')}</div>
+      </div>`;
+    }
+
+    function currentLessonPosition(run) {
+      const piece = run.pieces[run.index];
+      if (run.wait && Lesson.isQuestion(piece) && speechPhase !== 'speaking') {
+        const left = run.paused ? run.wait.left : Math.max(0, run.wait.endsAt - Date.now());
+        return Lesson.totalSeconds([piece]) - left / 1000;
+      }
+      if (!window.AndroidBridge && piece.voiced) {
+        const time = document.getElementById('audioPlayer').currentTime;
+        if (Number.isFinite(time)) return time;
+      }
+      return run.positionSeconds || 0;
+    }
+
+    function updateLessonProgress() {
+      const run = lessonRun;
+      if (!run || currentMode !== 'lesson' || isDrivingMode) return;
+      const timeline = lessonTimeline(run);
+      const section = timeline.sections.find(item => item.index === run.index);
+      const position = run.done ? timeline.seconds : (section ? section.start + Math.min(section.seconds, currentLessonPosition(run)) : timeline.seconds);
+      if (!run.scrubbing) {
+        const slider = document.getElementById('lessonSeek');
+        slider.value = position;
+        slider.setAttribute('aria-valuetext', `${lessonTimeText(position)} / ${lessonTimeText(timeline.seconds)}`);
+        document.getElementById('lessonElapsed').textContent = lessonTimeText(position);
+      }
+      document.getElementById('lessonSectionName').textContent = section ? `${timeline.sections.indexOf(section) + 1}/${timeline.sections.length} · ${section.piece.kind}` : '';
+      document.querySelectorAll('[data-lesson-segment]').forEach(element => {
+        const item = timeline.sections.find(section => section.index === Number(element.dataset.lessonSegment));
+        element.style.setProperty('--heard', `${Math.max(0, Math.min(100, (position - item.start) / item.seconds * 100))}%`);
+      });
+      document.querySelectorAll('[data-lesson-section]').forEach(element => element.setAttribute('aria-current', Number(element.dataset.lessonSection) === run.index ? 'step' : 'false'));
+    }
+
+    function tickLessonProgress() {
+      clearTimeout(lessonProgressTimer);
+      const run = lessonRun;
+      if (!run || currentMode !== 'lesson' || isDrivingMode) return;
+      if (!run.done && window.AndroidBridge && window.AndroidBridge.reportSpeechPosition) window.AndroidBridge.reportSpeechPosition(speechSeq);
+      updateLessonProgress();
+      if (!run.done) lessonProgressTimer = setTimeout(tickLessonProgress, 250);
+    }
+
+    function previewLessonSeek(seconds) {
+      if (!lessonRun || lessonRun.done || isDrivingMode) return;
+      lessonRun.scrubbing = true;
+      document.getElementById('lessonElapsed').textContent = lessonTimeText(seconds);
+    }
+
+    function cancelLessonScrub() {
+      if (lessonRun) lessonRun.scrubbing = false;
+      updateLessonProgress();
+    }
+
+    function seekLessonAt(seconds) {
+      const run = lessonRun;
+      if (!run || run.done || isLessonResting() || isDrivingMode || !Number.isFinite(seconds)) return;
+      const timeline = lessonTimeline(run);
+      const wanted = Math.max(0, Math.min(seconds, timeline.seconds - .05));
+      const section = timeline.sections.find(item => wanted < item.start + item.seconds);
+      if (!section) return;
+      const paused = !!run.paused;
+      stopSpeech();
+      clearTimeout(lessonTimer);
+      run.scrubbing = false;
+      run.reachedEnd = false;
+      run.index = section.index;
+      playLessonPiece(wanted - section.start);
+      if (paused) pauseLesson();
+    }
+
+    function seekLessonSection(index) {
+      const section = lessonRun && lessonTimeline(lessonRun).sections.find(item => item.index === index);
+      if (section) seekLessonAt(section.start);
     }
 
     // 이어 붙인 수업(쉬는 시간 없음)은 교시라고 부르지 않는다.
@@ -2227,7 +2355,7 @@
         : Lesson.plan(trip.lesson, DAIT_LESSONS, trip.minutes, records);
       const run = {
         lesson: trip.lesson, trip, pieces: Lesson.withBreak(pieces, trip), plannedSeconds: Lesson.lessonSeconds([...before, ...pieces]), short: Lesson.isShort([...before, ...pieces]),
-        index: 0, heard: before, heardBefore: before.length, answers: [], meters: 0, lastMeters: null, lastMetersAt: 0,
+        index: 0, heard: before, heardBefore: before.length, answers: [], meters: 0, lastMeters: null, lastMetersAt: 0, startedAt: Date.now(),
         reachedEnd: false, done: false, finished: false, stopped: false, saved: false
       };
       lessonRun = run;
@@ -2244,14 +2372,16 @@
       return eta !== null ? eta * 60 : (trip.endsAt - Date.now()) / 1000;
     }
 
-    function playLessonPiece() {
+    function playLessonPiece(offset = 0) {
       const run = lessonRun;
       if (!run || run.done) return;
       clearTimeout(lessonTimer);
       run.stopped = false;
       run.paused = false;
       run.wait = null;
-      run.pieceStartedAt = Date.now();
+      run.pieceStartedAt = Date.now() - offset * 1000;
+      run.positionSeconds = offset;
+      run.partialPiece = offset > 0 ? run.pieces[run.index].id : null;
       const piece = run.pieces[run.index];
       if (Lesson.isClosing(piece)) run.reachedEnd = true;
       if (Lesson.isBreak(piece)) {
@@ -2259,21 +2389,36 @@
         run.restedFrom = Date.now();
       }
       heard = '';
-      speakLessonPiece(piece);
+      speakLessonPiece(piece, offset);
       renderStage();
       updateDriveScreen(piece.line);
     }
 
     // 음원이 오기 전에는 대사 길이만큼 소리 없이 기다려, 흐름과 시간 맞춤을 그대로 시험한다.
-    function speakLessonPiece(piece) {
+    function speakLessonPiece(piece, offset = 0) {
+      const speechSeconds = Lesson.speechSeconds(piece);
+      if (offset >= speechSeconds && Lesson.isQuestion(piece)) {
+        lessonWait(Math.max(0, Lesson.totalSeconds([piece]) - offset) * 1000, nextLessonPiece);
+        return;
+      }
       if (piece.voiced) {
         speak([piece.clip], Lesson.isQuestion(piece) && canRecordAnswer() ? 'free' : '');
+        if (offset > 0) {
+          const seq = speechSeq;
+          if (window.AndroidBridge && window.AndroidBridge.seekSpeech) window.AndroidBridge.seekSpeech(Math.round(offset * 1000), seq);
+          else if (!window.AndroidBridge) {
+            const player = document.getElementById('audioPlayer');
+            const seek = () => { if (seq === speechSeq) player.currentTime = offset; };
+            player.onloadedmetadata = seek; // src 변경 직후에는 이전 음원의 readyState가 잠깐 남을 수 있다.
+            if (player.readyState >= 1) seek();
+          }
+        }
         return;
       }
       stopSpeech();
       speechPhase = 'speaking';
       const seq = speechSeq;
-      lessonWait(Lesson.speechSeconds(piece) * 1000, () => window.onSpeechEvent(JSON.stringify({ event: 'ended', seq })));
+      lessonWait(Math.max(0, speechSeconds - offset) * 1000, () => window.onSpeechEvent(JSON.stringify({ event: 'ended', seq })));
     }
 
     // 소리 없이 기다리는 동안(음원 없는 조각, 발문 뒤 생각할 틈)은 타이머로 잰다. 일시정지하면 남은 만큼 다시 잰다.
@@ -2312,6 +2457,23 @@
       else proceedSpeech();
       renderStage();
       updateDriveScreen();
+    }
+
+    // 현재 교시만 처음부터 다시 듣는다. 중간 시도는 기록·보상으로 확정하지 않는다.
+    function restartLesson() {
+      const run = lessonRun;
+      if (!run || run.done || isLessonResting() || isDrivingMode) return;
+      clearTimeout(lessonTimer);
+      stopSpeech();
+      const progress = lessonProgress();
+      if (progress.resume && progress.resume.lesson === run.lesson.id) {
+        writeStored(LESSON_KEY, Lesson.keepResume(progress, null));
+      }
+      const trip = { ...run.trip, resume: null };
+      // 목적지 없이 고른 시간은 새로 센다. 길 안내 중이면 실제 남은 시간으로 다시 맞춘다.
+      if (Number.isFinite(trip.endsAt)) trip.endsAt += Date.now() - run.startedAt;
+      startPeriod(trip);
+      lessonRun.meters = run.meters;
     }
 
     // 「이전」: 조각을 조금 들었으면 그 조각을 처음부터, 막 시작했으면 앞 조각을 다시 말한다. 지난 교시로는 돌아가지 않는다.
@@ -2363,7 +2525,7 @@
         return;
       }
       if (Lesson.isBreak(piece)) { nextLessonPiece(); return; }
-      if (!run.heard.includes(piece)) run.heard.push(piece);
+      if (run.partialPiece !== piece.id && !run.heard.includes(piece)) run.heard.push(piece);
       if (info.event === 'heard') {
         if (info.text.length <= 12 && Journey.isQuiet(info.text)) { endLesson(); return; }
         run.answers.push({ level: piece.level, question: piece.line, text: info.text });
@@ -3171,6 +3333,7 @@
       if (!isDriving && isLessonResting() && lessonRun.trip.rest) endLesson(); // 쉬는 시간에 주차하면 내린 것으로 보고 수업을 닫는다
       if (departing && armed) startArmed();
       else if (departing && speechPhase === 'idle') advanceWithoutMic();
+      if (currentMode === 'lesson' && lessonRun && !lessonRun.done) { lessonRun.scrubbing = false; renderStage(); }
       updateDriveScreen();
       syncJourney();
     };

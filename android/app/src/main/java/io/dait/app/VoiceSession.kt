@@ -34,6 +34,22 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
     private var listen = ""
     private var turn = 0
     private var player: MediaPlayer? = null
+    private var seekPosition = 0
+
+    fun seek(positionMs: Int, expectedTurn: Int) {
+        if (expectedTurn != turn || phase != Phase.SPEAKING) return
+        seekPosition = positionMs.coerceAtLeast(0)
+        player?.let { current ->
+            current.seekTo(seekPosition.coerceAtMost((current.duration - 1).coerceAtLeast(0)).toLong(), MediaPlayer.SEEK_CLOSEST)
+        }
+    }
+
+    fun reportPosition(expectedTurn: Int) {
+        if (expectedTurn != turn || phase != Phase.SPEAKING) return
+        player?.let { current ->
+            onEvent(JSONObject().put("event", "position").put("seq", turn).put("position", current.currentPosition))
+        }
+    }
 
     fun speak(nextClips: List<String>, nextListen: String, nextTurn: Int) {
         clear()
@@ -63,7 +79,7 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
         held = false
         suspended = false
         when (audio.requestAudioFocus(focus)) {
-            AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> resume()
+            AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> resume(rewind = false)
             AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> suspended = true
             else -> finish("stopped")
         }
@@ -97,6 +113,7 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
                     setOnCompletionListener { onClipDone() }
                     setOnErrorListener { _, _, _ -> onClipDone(); true }
                     prepare()
+                    if (seekPosition > 0) seekTo(seekPosition.coerceAtMost((duration - 1).coerceAtLeast(0)).toLong(), MediaPlayer.SEEK_CLOSEST)
                     start()
                 }
             }
@@ -114,6 +131,7 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
 
     private fun onClipDone() {
         releasePlayer()
+        seekPosition = 0
         index++
         if (!suspended && !held) playNext() // 소리를 빼앗겼거나 멈춘 사이라면 돌아왔을 때 이어 간다.
     }
@@ -146,14 +164,17 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
         emit("paused")
     }
 
-    private fun resume() {
+    private fun resume(rewind: Boolean = true) {
         suspended = false
         emit("resumed")
         if (phase == Phase.LISTENING) {
             if (!startListening()) finish("micFailed")
         } else {
             val paused = player
-            if (paused == null) playNext() else { paused.seekTo(resumePosition(paused)); paused.start() }
+            if (paused == null) playNext() else {
+                if (rewind) paused.seekTo(resumePosition(paused))
+                paused.start()
+            }
         }
     }
 
@@ -174,6 +195,7 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
         held = false
         clips = emptyList()
         index = 0
+        seekPosition = 0
     }
 
     private fun releasePlayer() {

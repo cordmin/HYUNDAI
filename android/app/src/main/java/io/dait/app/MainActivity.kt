@@ -285,6 +285,16 @@ class MainActivity : Activity() {
             runOnUiThread { voice?.proceed() }
         }
 
+        @JavascriptInterface
+        fun seekSpeech(positionMs: Int, turn: Int) {
+            runOnUiThread { voice?.seek(positionMs, turn) }
+        }
+
+        @JavascriptInterface
+        fun reportSpeechPosition(turn: Int) {
+            runOnUiThread { voice?.reportPosition(turn) }
+        }
+
         // 'none'은 음성 인식 모델이 없음, 'ask'는 아직 마이크 허락을 받지 않음,
         // 'loading'은 모델을 읽는 중, 'ready'는 들을 수 있음.
         @JavascriptInterface

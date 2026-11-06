@@ -1,0 +1,746 @@
+{
+  "baseCommit": "3f860bc3cd8bde654f25302959f985a384e72da0",
+  "method": "현행 build-lessons.js 파서·buildPiece와 dait-lesson.js 조립 함수를 그대로 호출. 수정 대사·신규 대사만 초당 4.62글자 추정, 미수정 대사는 기존 실측 음원 길이. 발문 기다림 포함. 실측·추정 구분.",
+  "current": [
+    {
+      "minutes": 5,
+      "fits": false,
+      "seconds": 399.7,
+      "spareSeconds": -99.7,
+      "ids": [
+        "i1",
+        "i2",
+        "b1",
+        "b2",
+        "b3",
+        "q1",
+        "b5",
+        "b9",
+        "b10",
+        "q3",
+        "c1",
+        "c2"
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "level": "이해"
+        },
+        {
+          "id": "q3",
+          "level": "평가"
+        }
+      ],
+      "short": false
+    },
+    {
+      "minutes": 7,
+      "fits": true,
+      "seconds": 399.7,
+      "spareSeconds": 20.3,
+      "ids": [
+        "i1",
+        "i2",
+        "b1",
+        "b2",
+        "b3",
+        "q1",
+        "b5",
+        "b9",
+        "b10",
+        "q3",
+        "c1",
+        "c2"
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "level": "이해"
+        },
+        {
+          "id": "q3",
+          "level": "평가"
+        }
+      ],
+      "short": false
+    },
+    {
+      "minutes": 8,
+      "fits": true,
+      "seconds": 474.2,
+      "spareSeconds": 5.8,
+      "ids": [
+        "i1",
+        "i2",
+        "b1",
+        "b2",
+        "b3",
+        "q1",
+        "b4",
+        "b5",
+        "b6",
+        "b9",
+        "b10",
+        "q3",
+        "c1",
+        "c2"
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "level": "이해"
+        },
+        {
+          "id": "q3",
+          "level": "평가"
+        }
+      ],
+      "short": false
+    },
+    {
+      "minutes": 10,
+      "fits": true,
+      "seconds": 598.5,
+      "spareSeconds": 1.5,
+      "ids": [
+        "i1",
+        "i2",
+        "b1",
+        "b2",
+        "b3",
+        "q1",
+        "b4",
+        "b5",
+        "b6",
+        "b7",
+        "q2",
+        "b8",
+        "b9",
+        "b10",
+        "q3",
+        "q4",
+        "c1",
+        "c2"
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "level": "이해"
+        },
+        {
+          "id": "q2",
+          "level": "분석"
+        },
+        {
+          "id": "q3",
+          "level": "평가"
+        },
+        {
+          "id": "q4",
+          "level": "창작"
+        }
+      ],
+      "short": false
+    },
+    {
+      "minutes": 12,
+      "fits": true,
+      "seconds": 711.9,
+      "spareSeconds": 8.1,
+      "ids": [
+        "i1",
+        "i2",
+        "b1",
+        "b2",
+        "b3",
+        "q1",
+        "b4",
+        "b5",
+        "b6",
+        "b7",
+        "q2",
+        "b8",
+        "b9",
+        "b10",
+        "b11",
+        "q3",
+        "b12",
+        "b13",
+        "q4",
+        "c1",
+        "c2"
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "level": "이해"
+        },
+        {
+          "id": "q2",
+          "level": "분석"
+        },
+        {
+          "id": "q3",
+          "level": "평가"
+        },
+        {
+          "id": "q4",
+          "level": "창작"
+        }
+      ],
+      "short": false
+    },
+    {
+      "minutes": 15,
+      "fits": true,
+      "seconds": 884.5,
+      "spareSeconds": 15.5,
+      "ids": [
+        "i1",
+        "i2",
+        "b1",
+        "b2",
+        "n1",
+        "n2",
+        "b3",
+        "q1",
+        "b4",
+        "n3",
+        "b5",
+        "b6",
+        "b7",
+        "q2",
+        "b8",
+        "b9",
+        "b10",
+        "b11",
+        "q3",
+        "b12",
+        "b13",
+        "b14",
+        "q4",
+        "c1",
+        "c2"
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "level": "이해"
+        },
+        {
+          "id": "q2",
+          "level": "분석"
+        },
+        {
+          "id": "q3",
+          "level": "평가"
+        },
+        {
+          "id": "q4",
+          "level": "창작"
+        }
+      ],
+      "short": false
+    },
+    {
+      "minutes": 20,
+      "fits": true,
+      "seconds": 1181.2,
+      "spareSeconds": 18.8,
+      "ids": [
+        "i1",
+        "i2",
+        "b1",
+        "b2",
+        "n1",
+        "n2",
+        "b3",
+        "q1",
+        "b4",
+        "n3",
+        "b5",
+        "n4",
+        "n5",
+        "b6",
+        "b7",
+        "n6",
+        "q2",
+        "n7",
+        "q5",
+        "b8",
+        "b9",
+        "b10",
+        "n8",
+        "b11",
+        "q3",
+        "b12",
+        "b13",
+        "n9",
+        "b14",
+        "q4",
+        "c1",
+        "c2"
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "level": "이해"
+        },
+        {
+          "id": "q2",
+          "level": "분석"
+        },
+        {
+          "id": "q5",
+          "level": "적용"
+        },
+        {
+          "id": "q3",
+          "level": "평가"
+        },
+        {
+          "id": "q4",
+          "level": "창작"
+        }
+      ],
+      "short": false
+    },
+    {
+      "minutes": 30,
+      "fits": true,
+      "seconds": 1249,
+      "spareSeconds": 551,
+      "ids": [
+        "i1",
+        "i2",
+        "b1",
+        "b2",
+        "n1",
+        "n2",
+        "b3",
+        "q1",
+        "b4",
+        "n3",
+        "b5",
+        "n4",
+        "n5",
+        "b6",
+        "b7",
+        "n6",
+        "q2",
+        "n7",
+        "q5",
+        "b8",
+        "b9",
+        "b10",
+        "n8",
+        "b11",
+        "q3",
+        "b12",
+        "b13",
+        "n9",
+        "b14",
+        "n10",
+        "q6",
+        "q4",
+        "c1",
+        "c2"
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "level": "이해"
+        },
+        {
+          "id": "q2",
+          "level": "분석"
+        },
+        {
+          "id": "q5",
+          "level": "적용"
+        },
+        {
+          "id": "q3",
+          "level": "평가"
+        },
+        {
+          "id": "q6",
+          "level": "평가"
+        },
+        {
+          "id": "q4",
+          "level": "창작"
+        }
+      ],
+      "short": false
+    }
+  ],
+  "proposal": [
+    {
+      "minutes": 5,
+      "fits": true,
+      "seconds": 269.08,
+      "spareSeconds": 30.92,
+      "ids": [
+        "m1",
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m6",
+        "m8",
+        "m10",
+        "m11"
+      ],
+      "questions": [
+        {
+          "id": "m3",
+          "level": "이해"
+        },
+        {
+          "id": "m8",
+          "level": "분석"
+        }
+      ],
+      "short": true
+    },
+    {
+      "minutes": 7,
+      "fits": true,
+      "seconds": 350.47,
+      "spareSeconds": 69.53,
+      "ids": [
+        "m1",
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m6",
+        "m7",
+        "m8",
+        "m9",
+        "m10",
+        "m11"
+      ],
+      "questions": [
+        {
+          "id": "m3",
+          "level": "이해"
+        },
+        {
+          "id": "m8",
+          "level": "분석"
+        }
+      ],
+      "short": true
+    },
+    {
+      "minutes": 8,
+      "fits": true,
+      "seconds": 350.47,
+      "spareSeconds": 129.53,
+      "ids": [
+        "m1",
+        "m2",
+        "m3",
+        "m4",
+        "m5",
+        "m6",
+        "m7",
+        "m8",
+        "m9",
+        "m10",
+        "m11"
+      ],
+      "questions": [
+        {
+          "id": "m3",
+          "level": "이해"
+        },
+        {
+          "id": "m8",
+          "level": "분석"
+        }
+      ],
+      "short": true
+    },
+    {
+      "minutes": 10,
+      "fits": true,
+      "seconds": 577.7,
+      "spareSeconds": 22.3,
+      "ids": [
+        "i1",
+        "i2",
+        "b1",
+        "b2",
+        "b3",
+        "q1",
+        "b4",
+        "b5",
+        "b6",
+        "b7",
+        "b9",
+        "b10",
+        "q3",
+        "c1",
+        "c2"
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "level": "이해"
+        },
+        {
+          "id": "q3",
+          "level": "평가"
+        }
+      ],
+      "short": false
+    },
+    {
+      "minutes": 12,
+      "fits": true,
+      "seconds": 696.5,
+      "spareSeconds": 23.5,
+      "ids": [
+        "i1",
+        "i2",
+        "b1",
+        "b2",
+        "b3",
+        "q1",
+        "b4",
+        "b5",
+        "b6",
+        "b7",
+        "q2",
+        "b8",
+        "b9",
+        "b10",
+        "b11",
+        "q3",
+        "c1",
+        "c2"
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "level": "이해"
+        },
+        {
+          "id": "q2",
+          "level": "분석"
+        },
+        {
+          "id": "q3",
+          "level": "평가"
+        }
+      ],
+      "short": false
+    },
+    {
+      "minutes": 15,
+      "fits": true,
+      "seconds": 883.03,
+      "spareSeconds": 16.97,
+      "ids": [
+        "i1",
+        "i2",
+        "b1",
+        "b2",
+        "b3",
+        "q1",
+        "b4",
+        "b5",
+        "b6",
+        "b7",
+        "q2",
+        "b8",
+        "b9",
+        "b10",
+        "b11",
+        "q3",
+        "b12",
+        "b13",
+        "b14",
+        "q4",
+        "c1",
+        "c2"
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "level": "이해"
+        },
+        {
+          "id": "q2",
+          "level": "분석"
+        },
+        {
+          "id": "q3",
+          "level": "평가"
+        },
+        {
+          "id": "q4",
+          "level": "창작"
+        }
+      ],
+      "short": false
+    },
+    {
+      "minutes": 20,
+      "fits": true,
+      "seconds": 1182.13,
+      "spareSeconds": 17.87,
+      "ids": [
+        "i1",
+        "i2",
+        "b1",
+        "b2",
+        "n1",
+        "n2",
+        "b3",
+        "q1",
+        "b4",
+        "n3",
+        "b5",
+        "n4",
+        "n5",
+        "b6",
+        "b7",
+        "n6",
+        "q2",
+        "q5",
+        "b8",
+        "b9",
+        "b10",
+        "b11",
+        "q3",
+        "b12",
+        "b13",
+        "b14",
+        "q4",
+        "c1",
+        "c2"
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "level": "이해"
+        },
+        {
+          "id": "q2",
+          "level": "분석"
+        },
+        {
+          "id": "q5",
+          "level": "적용"
+        },
+        {
+          "id": "q3",
+          "level": "평가"
+        },
+        {
+          "id": "q4",
+          "level": "창작"
+        }
+      ],
+      "short": false
+    },
+    {
+      "minutes": 30,
+      "fits": true,
+      "seconds": 1412.61,
+      "spareSeconds": 387.39,
+      "ids": [
+        "i1",
+        "i2",
+        "b1",
+        "b2",
+        "n1",
+        "n2",
+        "b3",
+        "q1",
+        "b4",
+        "n3",
+        "b5",
+        "n4",
+        "n5",
+        "b6",
+        "b7",
+        "n6",
+        "q2",
+        "n7",
+        "q5",
+        "b8",
+        "b9",
+        "b10",
+        "n8",
+        "b11",
+        "q3",
+        "b12",
+        "b13",
+        "n9",
+        "b14",
+        "n10",
+        "q6",
+        "q4",
+        "c1",
+        "c2"
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "level": "이해"
+        },
+        {
+          "id": "q2",
+          "level": "분석"
+        },
+        {
+          "id": "q5",
+          "level": "적용"
+        },
+        {
+          "id": "q3",
+          "level": "평가"
+        },
+        {
+          "id": "q6",
+          "level": "평가"
+        },
+        {
+          "id": "q4",
+          "level": "창작"
+        }
+      ],
+      "short": false
+    }
+  ],
+  "short": {
+    "pieces": 11,
+    "required": 8,
+    "requiredChars": 988,
+    "allChars": 1536,
+    "slowSpeechCharsPerSecond": 3.8,
+    "slowRequiredSeconds": 278,
+    "optionalCombinations": 8
+  },
+  "changedVoiceIds": [
+    "r1",
+    "b5",
+    "b7",
+    "q2",
+    "n7",
+    "q3",
+    "b13",
+    "b14",
+    "q6",
+    "q4",
+    "c1",
+    "c2",
+    "s1"
+  ],
+  "errors": []
+}

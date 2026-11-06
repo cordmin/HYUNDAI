@@ -82,7 +82,10 @@
     }
     svg.querySelector('.pearl-logo-outline')?.setAttribute('stroke', bright ? '#18314a' : '#ffffff');
     brand.dataset.logoOutline = needsOutline ? 'on' : 'off'; brand.dataset.logoEffect = bright ? 'shadow' : 'glow';
-    svg.style.filter = bright ? 'drop-shadow(0 2px 2px #00000040) drop-shadow(0 4px 7px #0000001a)' : 'drop-shadow(0 0 2px #ffffff7a) drop-shadow(0 0 7px #ffffff3b)';
+    // A tight, stronger first layer separates the ribbon before the softer depth/glow.
+    svg.style.filter = bright
+      ? 'drop-shadow(0 1px .8px rgba(12,24,39,.78)) drop-shadow(0 2px 2px rgba(12,24,39,.42)) drop-shadow(0 4px 5px rgba(0,0,0,.18))'
+      : 'drop-shadow(0 0 1px rgba(255,255,255,.95)) drop-shadow(0 1px 2.5px rgba(255,255,255,.6)) drop-shadow(0 0 7px rgba(255,255,255,.32))';
   }
   function refresh() { frame = 0; refreshInk(); refreshLogo(); }
   function queueRefresh() { if (!frame) frame = requestAnimationFrame(refresh); }

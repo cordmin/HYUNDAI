@@ -46,6 +46,8 @@ class MainActivity : Activity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Removed preparation feature: discard its old cached response.
+        getSharedPreferences("gleo", MODE_PRIVATE).edit().remove("schoolBrief").apply()
 
         if (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) WebView.setWebContentsDebuggingEnabled(true)
         webView = WebView(this).apply {
@@ -343,11 +345,6 @@ class MainActivity : Activity() {
         @JavascriptInterface
         fun setLessonMedia(active: Boolean, playing: Boolean, title: String, subtitle: String) {
             runOnUiThread { LessonMedia.update(this@MainActivity, active, playing, title, subtitle) }
-        }
-
-        @JavascriptInterface
-        fun saveSchoolBrief(json: String) {
-            Gleo.saveBrief(this@MainActivity, json)
         }
 
         @JavascriptInterface

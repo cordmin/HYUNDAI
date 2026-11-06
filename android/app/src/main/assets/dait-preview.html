@@ -799,6 +799,7 @@
     .place-action svg { width: calc(16 * var(--u)); height: calc(16 * var(--u)); }
 
   </style>
+  <link rel="stylesheet" href="dait-pearl.css">
 </head>
 <body>
 
@@ -869,6 +870,8 @@
         </svg>
       </div>
     </div>
+
+    <header id="pearlNav" class="pearl-nav" aria-label="앱 메뉴"></header>
 
     <!-- Main Stage -->
     <div id="stageArea" class="stage-container">
@@ -973,11 +976,12 @@
     function render() {
       renderStage();
       syncJourney();
-      saveSchoolBrief();
     }
 
     function renderStage() {
       const stageArea = document.getElementById('stageArea');
+      renderPearlNav();
+      if (currentMode === 'records') { renderRecords(stageArea); return; }
 
       // 1. Home Screen (단일 완성형 스마트 벤토)
       if (!currentMode) {
@@ -1011,58 +1015,22 @@
       renderDialogueFlow(stageArea);
     }
 
-    // --- 학교 등록 후 첫 화면: 오늘의 수업을 크게, 옆에 등하교 대화와 그날 챙길 것 ---
-    // 시간표와 급식은 화면에 두지 않는다. 시간표는 등교 첫 말과 하교 질문에서 그대로 쓴다.
+    // Pearl: 수업이 중심인 지금 화면. 학교 등록 여부와 관계없이 같은 구성을 쓴다.
     function renderHome(container) {
-      if (!school) { renderQuestionHome(container); return; }
-      const trip = currentTrip();
-      const info = homeInfo(trip);
-      const isMorning = trip.mode === 'morning';
-      const weekend = trip.kind === 'weekend';
-      const startLabel = weekend ? `${(schoolPlan() || { label: '다음 수업일' }).label} 준비 듣기` : `${isMorning ? '등교' : '하교'} 대화 시작하기`;
       const { lesson, reserved } = homeLesson();
       const progress = lessonProgress();
-      const now = new Date();
-      const where = !weekend && trip.minutes !== null ? ` · ${isMorning ? '학교' : '집'}까지 ${trip.minutes}분` : '';
-      const armTalk = weekend || reserved ? '' : `<button class="card-btn${armed ? ' quiet' : ''}" onclick="event.stopPropagation(); toggleArm('${trip.mode}')">${armLabel(trip)}</button>`;
-      const ieumLine = featherLine(progress);
-      const side = weekend
-        ? `<div class="card-label">쉬는 날</div><div class="card-focus">가 볼 만한 곳</div><div class="card-sub">${ieumLine}</div><button class="card-btn quiet" onclick="openPlaces()">찾아보기</button>`
-        : isMorning
-          ? `<div class="card-label">${escapeHtml(info.prepLabel)}</div>${bigWordHtml(info.prep, info.prepSub)}<div class="card-sub">${ieumLine}</div>`
-          : progress.homework
-            ? `<div class="card-label">${progress.ieum ? `모은 깃털 ${progress.ieum}개 · ` : ''}숙제</div><div class="card-text">${escapeHtml(progress.homework.title)}</div><button class="card-btn quiet" onclick="doneHomework()">했어요</button>`
-            : `<div class="card-label">모은 깃털</div><div class="card-text">${featherCount(progress)}</div>`; // 수업 목록은 위쪽 「다른 수업」 버튼 하나로 연다
-      container.innerHTML = `
-        <div class="home-top">
-          ${getDaitLogoHtml()}
-          <div class="home-greeting">
-            <div class="home-title">${escapeHtml(info.title)}</div>
-            <div class="home-desc">${escapeHtml(info.desc)}</div>
-          </div>
-          <div class="home-tools">
-            <button class="card-btn" onclick="openLessons()">${reserved ? '수업 예약' : '다른 수업'}</button>
-            <button class="icon-btn" aria-label="가 볼 만한 곳" onclick="openPlaces()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
-            </button>
-            <button class="icon-btn" aria-label="학교 설정" onclick="openSettings()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.82 1.17V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-2.82-1.17l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0-1.17-2.82H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.17-2.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 2.82-1.17V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 2.82 1.17l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0 1.17 2.82H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1"/></svg>
-            </button>
+      const trip = currentTrip();
+      const afterSchool = school && trip.mode === 'afternoon' && trip.kind !== 'weekend';
+      container.innerHTML = `<div class="pearl-home">
+        ${lessonCardHtml(lesson, reserved)}
+        <div class="pearl-home-footer">
+          <button class="pearl-feathers" onclick="openPearlTab('records')">모은 깃털 <strong>${progress.ieum}개</strong></button>
+          <div class="pearl-home-links">
+            ${afterSchool ? `<button class="card-btn quiet" onclick="startFlow('afternoon')">하교 대화</button>` : ''}
+            <button class="card-btn quiet" aria-label="가 볼 만한 곳" onclick="openPlaces()">가 볼 만한 곳</button>
           </div>
         </div>
-        <div class="question-home">
-          ${lessonCardHtml(lesson, reserved)}
-          <div class="question-side">
-            <div class="home-card talk-card" onclick="startFlow('${trip.mode}')">
-              <div class="card-label">${now.getMonth() + 1}월 ${now.getDate()}일 ${WEEKDAYS[now.getDay()]}${escapeHtml(where)}</div>
-              <div class="card-focus">${escapeHtml(startLabel)}</div>
-              <div class="card-sub">${escapeHtml(info.question)}</div>
-              ${armTalk ? `<div class="talk-actions">${armTalk}</div>` : ''}
-            </div>
-            <div class="home-card">${side}</div>
-          </div>
-        </div>
-      `;
+      </div>`;
     }
 
     // 남은 시간을 알면 그 시간에, 모르면 고른 시간(처음에는 15분)에 맞춘 수업 하나를 고른다. 예약한 수업이 있으면 그 수업이다.
@@ -1076,54 +1044,68 @@
 
     // 수업 카드: 두 첫 화면이 함께 쓴다. 수업의 질문으로 바로 시작한다.
     function lessonCardHtml(lesson, reserved) {
-      return `<div class="home-card start question-card">
-        ${lesson ? `
-          <div class="card-label">${escapeHtml(lesson.subject)}</div>
+      return `<div class="home-card start question-card pearl-hero">
+        ${lesson ? `<div class="pearl-hero-copy">
           <div class="question-title">${escapeHtml(lesson.question)}</div>
+          <div class="card-label">${escapeHtml(lesson.subject)} · ${escapeHtml(lesson.title)}</div>
           <div class="question-promise">${escapeHtml(lessonPromise(lesson, lessonMinutes))}</div>
           <div class="question-actions">
             <button class="card-btn" onclick="startLesson('${lesson.id}')">듣기</button>
-            <button class="card-btn quiet" onclick="toggleLessonArm('${lesson.id}')">${reserved ? '수업 예약 취소' : '출발하면 듣기'}</button>
-          </div>` : '<div class="question-title">이번 길은 짧아서 다음에 들려 드릴게요</div>'}
+            <button class="card-btn quiet" aria-pressed="${!!reserved}" onclick="toggleLessonArm('${lesson.id}')">${reserved ? '수업 예약 취소' : '출발하면 듣기'}</button>
+          </div>
+        </div><div class="pearl-wave" aria-hidden="true">${[12,24,36,48,58,64,58,48,36,24,12].map(n => `<i style="--bar:${n}"></i>`).join('')}</div>`
+        : '<div class="question-title">이번 길은 짧아서 다음에 들려 드릴게요</div>'}
       </div>`;
     }
 
-    // 학교를 등록하지 않은 사람에게는 빈 칸 대신 바로 들을 수 있는 수업의 질문을 보여 준다.
-    function renderQuestionHome(container) {
-      const eta = remainMinutes();
-      const { lesson, reserved } = homeLesson();
+    let recordTab = 'lessons';
+    function renderPearlNav() {
+      const lessonTab = currentMode === 'lessonPick' || currentMode === 'lesson';
+      const active = currentMode === 'records' ? 'records' : lessonTab ? 'lessons' : 'now';
+      const minutes = remainMinutes();
+      const eta = minutes === null ? `${lessonMinutes}분 수업` : `도착까지 ${Math.max(0, Math.ceil(minutes))}분`;
+      document.getElementById('pearlNav').innerHTML = `
+        <button class="pearl-brand" aria-label="다잇 첫 화면" onclick="goHome()">${getDaitLogoHtml()}</button>
+        <nav>${[['now','지금'],['lessons','수업'],['records','기록']].map(([id,label]) => `<button aria-current="${active === id ? 'page' : 'false'}" onclick="openPearlTab('${id}')">${label}</button>`).join('')}</nav>
+        <button class="pearl-eta" aria-label="듣는 시간" onclick="openPearlTab('lessons')"${minutes !== null ? ' disabled' : ''}>${eta}</button>
+        <button class="icon-btn" aria-label="설정" onclick="openSettings()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="17" r="2" fill="currentColor"/></svg></button>`;
+    }
+
+    function openPearlTab(tab) {
+      if (isDrivingMode) return;
+      if (tab === 'lessons' && currentMode === 'lesson' && lessonRun && !lessonRun.done) return; // 듣던 수업을 계속 보여 준다.
+      if (currentMode === 'lesson') closeLesson();
+      stopSpeech();
+      if (tab === 'lessons') { openLessons(); return; }
+      if (tab === 'records') { currentMode = 'records'; render(); return; }
+      goHome();
+    }
+
+    function selectRecordTab(tab) {
+      if (isDrivingMode) return;
+      recordTab = tab;
+      render();
+    }
+
+    const PEARL_BADGES = [
+      ['first-discovery','첫 발견'], ['korean','국어'], ['math','수학'],
+      ['exploration','탐험'], ['well-rounded-explorer','골고루 탐험가'], ['everyday-discoverer','생활 속 발견가']
+    ];
+    function renderRecords(container) {
       const progress = lessonProgress();
-      const times = eta !== null ? `<div class="card-focus">${Lesson.minutesFor(eta)}분</div><div class="card-sub">도착까지</div>`
-        : `<div class="question-times">${Lesson.TIME_CHOICES.map(minutes => `<button class="choice-chip" aria-pressed="${minutes === lessonMinutes}" onclick="pickLessonTime(${minutes})">${minutes}</button>`).join('')}</div>`;
-      container.innerHTML = `
-        <div class="home-top">
-          ${getDaitLogoHtml()}
-          <div class="home-greeting"></div>
-          <div class="home-tools">
-            <button class="icon-btn" aria-label="가 볼 만한 곳" onclick="openPlaces()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
-            </button>
-            <button class="icon-btn" aria-label="설정" onclick="openSettings()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.82 1.17V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-2.82-1.17l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0-1.17-2.82H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.17-2.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 2.82-1.17V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 2.82 1.17l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0 1.17 2.82H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1"/></svg>
-            </button>
-          </div>
+      const records = [...progress.records].reverse();
+      container.innerHTML = `<section class="pearl-records">
+        <div class="pearl-page-title"><h1>내 배움 보관함</h1><span>모은 깃털 ${progress.ieum}개</span></div>
+        <div class="pearl-record-tabs" role="tablist" aria-label="배움 기록 종류">
+          <button role="tab" aria-selected="${recordTab === 'lessons'}" onclick="selectRecordTab('lessons')">수업 기록</button>
+          <button role="tab" aria-selected="${recordTab === 'badges'}" onclick="selectRecordTab('badges')">배지</button>
         </div>
-        <div class="question-home">
-          ${lessonCardHtml(lesson, reserved)}
-          <div class="question-side">
-            <div class="home-card">
-              <div class="card-label">듣는 시간(분)</div>
-              ${times}
-            </div>
-            <div class="home-card">
-              <div class="card-label">모은 깃털</div>
-              <div class="card-text">${featherCount(progress)}</div>
-              <button class="card-btn quiet" onclick="openLessons()">다른 수업 보기</button>
-            </div>
-          </div>
+        <div class="pearl-record-body">${recordTab === 'badges'
+          ? `<p class="pearl-hint">배지 둘러보기 · 받는 방법은 준비 중이에요</p><div class="pearl-badges">${PEARL_BADGES.map(([id,name]) => `<div class="pearl-badge"><img src="badges/${id}.png" alt="${name} 배지"><span>${name}</span></div>`).join('')}</div>`
+          : `${progress.homework ? `<div class="pearl-homework"><span>숙제 · ${escapeHtml(progress.homework.title)}</span><button class="card-btn quiet" onclick="doneHomework()">했어요</button></div>` : ''}
+            ${records.length ? records.map(record => `<div class="pearl-record-row"><strong>${escapeHtml(record.title)}</strong><span>${escapeHtml(record.ymd)} · ${record.finished ? '마친 수업' : '듣던 수업'}</span></div>`).join('') : '<div class="pearl-empty">수업을 들으면 여기에 쌓여요</div>'}`}
         </div>
-        <button class="register-line" onclick="openSettings()"><span>학교를 등록하면 등하교 안내도 받아요</span><b>등록</b></button>
-      `;
+      </section>`;
     }
 
     // 도착 시간을 알 때만 도착을 약속한다. 모르면 수업 길이만 말한다.
@@ -1229,6 +1211,7 @@
     }
 
     function startFlow(mode) {
+      if (mode !== 'afternoon') return; // 등교 대화·준비물 안내는 제거했다.
       if (askMicFirst(() => startFlow(mode))) return;
       disarm();
       currentMode = mode;
@@ -1314,6 +1297,7 @@
     // 시동만으로 말을 시작하지 않는다. 주차 중에 보호자가 고른 여정만 출발할 때 시작한다.
     // ========================================================
     function toggleArm(mode) {
+      if (mode !== 'afternoon') return;
       if (armed) { disarm(); render(); return; }
       if (askMicFirst(() => toggleArm(mode))) return;
       arm({ mode });
@@ -1323,6 +1307,7 @@
     }
 
     function arm(choice) {
+      if (choice.mode !== 'lesson' && choice.mode !== 'afternoon') return;
       armed = { ...choice, timer: setTimeout(() => {
         disarm();
         refreshHomeIfIdle();
@@ -1379,7 +1364,7 @@
     function syncJourney() {
       const inDialogue = !!currentMode && !isParkedScreen();
       const finishedParked = isDialogueDone() && speechPhase === 'idle' && !isDrivingMode;
-      const active = !!armed || (inDialogue && !finishedParked) || !!(tripForDoor && tripForDoor.drove);
+      const active = !!armed || (inDialogue && !finishedParked);
       if (active === journeyActive) return;
       journeyActive = active;
       if (window.AndroidBridge) window.AndroidBridge.setJourneyActive(active);
@@ -1407,14 +1392,12 @@
 
     window.onDoorOpened = function() {
       noteTripDoor();
-      if (!tripForDoor || !tripForDoor.drove) return;
-      // 교문 앞에서 기어 D로 세운 채 내릴 수 있으므로 도착 직전이면 주차 전이라도 말한다.
+      if (!tripForDoor || !tripForDoor.drove || currentMode === 'lesson') return;
       const stoppedAtEnd = isDrivingMode && Journey.tierFor(remainMinutes()) === 'arrive';
       if (!stoppedAtEnd && (isDrivingMode || !tripForDoor.parkedAt)) return;
       clearTimeout(closeTimer);
       tripForDoor = null;
-      hasArrived = !!currentMode && !isParkedScreen(); // 아이가 내리는 순간이므로 말을 마치면 대화를 닫는다
-      speak([DAIT_RULES.extras.p_door_bag].filter(Boolean), '');
+      if (currentMode === 'afternoon') finishOnArrival();
       syncJourney();
     };
 
@@ -1737,7 +1720,7 @@
       const answers = progress.records.flatMap(record => record.answers).slice(-3).reverse();
       const mileage = km ? `이번 달 ${km}km ${Lesson.mileageLine(km)}`.trim() : '';
       container.innerHTML = `
-        <div class="dialogue-wrap">
+        <div class="dialogue-wrap pearl-picker">
           <div class="dialogue-top">
             <button class="back-btn" onclick="goHome()">처음으로</button>
             <span class="top-label">수업</span>
@@ -2596,7 +2579,7 @@
 
     // 주행 중에는 고르는 화면을 열지 않고, 가는 길에 들어갈 수업 하나를 버튼 하나로 제안한다.
     function lessonOffer(trip) {
-      if (school && trip.kind !== 'weekend' && !(naviInfo && !trip.known)) return null; // 학교가 없는 사람에게는 등하교를 묻지 않는다
+      if (school && trip.mode === 'afternoon' && trip.kind !== 'weekend' && !(naviInfo && !trip.known)) return null; // 학교가 없는 사람에게는 등하교를 묻지 않는다
       const minutes = Lesson.minutesFor(remainMinutes());
       return stoppedLesson(minutes) || Lesson.recommend(DAIT_LESSONS, minutes, lessonProgress().records)[0] || null;
     }
@@ -2604,7 +2587,6 @@
     // ========================================================
     // Gleo 음성 비서 (assets/schema.json)
     // Gleo가 부른 기능을 처리하고 AndroidBridge.gleoRespond로 답한다. message는 Gleo 규칙대로 영어 한 문장이다.
-    // 다음 수업일 준비(GET_SCHOOL_PREP)는 앱을 띄우지 않고 Kotlin이 남겨 둔 요약으로 답한다.
     // ========================================================
     function gleoReply(functionName, status, message, mode) {
       if (window.AndroidBridge && AndroidBridge.gleoRespond) AndroidBridge.gleoRespond(JSON.stringify({ functionName, status, message, mode: mode || 'voice' }));
@@ -2660,23 +2642,6 @@
         gleoResume(run);
         gleoReply(fn, 'success', 'Resumed the DAIT lesson.', 'silent');
       } else gleoReply(fn, 'asking', 'Should DAIT pause or resume the lesson?');
-    }
-
-    // 다가오는 수업일 몇 날을 바뀔 때만 앱에 남긴다. 물은 때가 오후면 Kotlin이 오늘 다음 수업일을 고르고, 「오늘·내일」도 그때 붙인다.
-    const GLEO_BRIEF_DAYS = 3;
-    let savedBrief = '';
-    function saveSchoolBrief() {
-      if (!window.AndroidBridge || !AndroidBridge.saveSchoolBrief) return;
-      const today = toYmd(new Date());
-      const days = !school ? [] : Object.keys(schoolDays).sort().filter(ymd => ymd >= today && isClassDay(ymd)).slice(0, GLEO_BRIEF_DAYS).map(ymd => {
-        const day = schoolDays[ymd];
-        const rule = Journey.pickRule(DAIT_RULES.rules, { mode: 'morning', level: schoolLevel(), ymd, events: schoolEvents });
-        const ruleFits = !!rule && (ymd === today || rule.eventYmd === ymd); // 첫 화면과 같은 기준: 다른 날의 일정은 미리 말하지 않는다
-        const hasPe = day.subjects.some(subject => subject.replace(/[^가-힣]/g, '').startsWith('체육'));
-        return { ymd, prep: ruleFits && rule.prep ? rule.prep : hasPe ? '체육복' : '', notice: ruleFits ? rule.title : '', meal: day.meal || '', subjects: day.subjects };
-      });
-      const text = JSON.stringify({ registered: !!school, days });
-      if (text !== savedBrief) { savedBrief = text; AndroidBridge.saveSchoolBrief(text); }
     }
 
     // ========================================================
@@ -2916,84 +2881,6 @@
     }
 
     // 교사 규칙이 있는 날은 첫 화면의 말도 규칙을 따른다.
-    function homeInfo(trip) {
-      const info = plainHomeInfo(trip);
-      const rule = ruleFor(trip.mode);
-      if (!rule) return info;
-      const plan = schoolPlan();
-      const ahead = !!plan && plan.ymd !== toYmd(new Date());
-      if (ahead && rule.eventYmd !== plan.ymd) return info; // 다음 수업일의 일정이 아니면 미리 말하지 않는다
-      return {
-        ...info,
-        title: ahead ? `${plan.label} ${rule.eventName}` : rule.title,
-        desc: rule.desc,
-        ...(rule.prep ? { prepLabel: '준비물', prep: rule.prep, prepSub: '학교 안내 확인' } : {})
-      };
-    }
-
-    // 오후에는 다음 수업일의 점심을 보여 준다.
-    function nextMeal() {
-      const today = toYmd(new Date());
-      const ymd = Object.keys(schoolDays).sort().find(key => key > today && isClassDay(key));
-      if (!ymd) return { mealLabel: '다음 점심', meal: '확인 필요', mealSub: '' };
-      return { mealLabel: `${dayLabel(ymd)} 점심`, meal: schoolDays[ymd].meal || '확인 필요', mealSub: '' };
-    }
-
-    function plainHomeInfo(trip) {
-      const plan = school ? schoolPlan() : null;
-      const dayWord = plan ? plan.label : (school ? '다음 수업일' : '오늘');
-      const memory = readStored(MEMORY_KEY);
-      const morningSubject = memory && memory.date === toYmd(new Date()) ? memory.subject : null;
-      const prepLine = !school ? { prep: '등록 필요', prepSub: '' }
-        : !plan ? { prep: '확인 필요', prepSub: '' }
-        : plan.hasPe ? { prep: '체육복', prepSub: '시간표 기준' }
-        : { prep: '학교 안내 확인', prepSub: '' };
-      const mealLine = !school ? { meal: '등록 필요', mealSub: '' } : { meal: plan && plan.meal ? plan.meal : '확인 필요', mealSub: '' };
-
-      const subjects = plan ? plan.subjects : [];
-      // 오늘의 질문: 시간표에서 고른다. 기획안 교사 규칙표의 과목별 질문
-      const common = {
-        question: Journey.pickQuestion(DAIT_RULES.rules, subjects, schoolLevel()),
-        scheduleLabel: `${dayWord} 시간표`,
-        subjects: subjects.slice(0, 6)
-      };
-
-      if (!school) {
-        return {
-          title: '학교를 등록해 주세요',
-          desc: '시간표와 점심으로 이야기를 시작해요',
-          prepLabel: '준비물', ...prepLine,
-          mealLabel: '점심', ...mealLine,
-          ...common
-        };
-      }
-      if (trip.mode === 'afternoon') {
-        return {
-          title: morningSubject ? `아침에 고른 ${morningSubject}, 어땠나요?` : '오늘은 어땠나요?',
-          desc: '기억나는 장면 하나만 들려줘요',
-          prepLabel: '아침에 고른 수업', prep: morningSubject || '없음', prepSub: '',
-          ...nextMeal(),
-          ...common
-        };
-      }
-      if (trip.kind === 'weekend') {
-        return {
-          title: `${dayWord} 준비 됐나요?`,
-          desc: plan ? (plan.hasPe ? '체육이 있어요. 체육복을 미리 챙겨요' : `${plan.subjects.slice(0, 3).join(' · ')}`) : '수업일이 다가오면 시간표를 보여 줘요',
-          prepLabel: `${dayWord} 준비물`, ...prepLine,
-          mealLabel: `${dayWord} 점심`, ...mealLine,
-          ...common
-        };
-      }
-      return {
-        title: trip.known ? (plan && plan.hasPe ? '체육복 챙겼나요?' : '오늘 준비 됐나요?') : `${dayWord} 준비 됐나요?`,
-        desc: !school ? '체육복을 함께 확인해요' : !plan ? '학교 정보를 확인하지 못했어요' : (plan.hasPe ? '체육복을 함께 확인해요' : (plan.subjects.slice(0, 3).join(' · ') || '학교 안내를 확인해요')),
-        prepLabel: '준비물', ...prepLine,
-        mealLabel: `${dayWord} 점심`, ...mealLine,
-        ...common
-      };
-    }
-
     // ========================================================
     // 가 볼 만한 곳 (공공데이터포털 한국관광공사 국문 관광정보)
     // 브라우저 미리보기에서는 예시를 보여 준다.
@@ -3138,10 +3025,12 @@
     }
 
     function isParkedScreen() {
-      return currentMode === 'settings' || currentMode === 'places' || currentMode === 'lessonPick';
+      return currentMode === 'settings' || currentMode === 'places' || currentMode === 'lessonPick' || currentMode === 'records';
     }
 
     function openSettings() {
+      if (isDrivingMode) return;
+      if (currentMode === 'lesson') closeLesson();
       stopSpeech();
       currentMode = 'settings';
       settings = { step: 'search', query: '', results: [], classes: [], message: '' };
@@ -3315,7 +3204,7 @@
     document.getElementById('audioPlayer').addEventListener('ended', playPreviewClip);
 
     // In-App Detection & Driving Restriction API
-    if (window.location.href.includes('android_asset') || navigator.userAgent.includes('Android')) {
+    if (window.location.href.includes('android_asset') || navigator.userAgent.includes('Android') || new URLSearchParams(window.location.search).has('app')) {
       document.body.classList.add('in-app');
     }
 
@@ -3342,12 +3231,12 @@
       const inDialogue = currentMode && !isParkedScreen();
       const trip = inDialogue ? null : currentTrip();
       const offer = inDialogue ? null : lessonOffer(trip);
-      const canStart = !inDialogue && (!!offer || trip.kind !== 'weekend');
+      const canStart = !inDialogue && (!!offer || (trip.mode === 'afternoon' && trip.kind !== 'weekend'));
       const minutes = Lesson.minutesFor(remainMinutes());
       const fromStop = !!offer && offer === stoppedLesson(minutes);
       const text = inDialogue ? (sentence || document.querySelector('.main-question')?.textContent || '')
         : offer ? (fromStop ? '지난번 멈춘 곳부터 들을까요?' : offer.question)
-        : canStart ? `${trip.mode === 'morning' ? '등교' : '하교'} 이야기를 들을까요?` : '주차 후 이어갈게요';
+        : canStart ? '하교 이야기를 들을까요?' : '주차 후 이어갈게요';
       document.getElementById('driveSentence').textContent = text;
       const paused = inDialogue && currentMode === 'lesson' && lessonRun && lessonRun.paused;
       const offerLine = !offer ? '' : fromStop ? `${offer.title} · 남은 약 ${stopMinutesLeft(offer, minutes)}분` : lessonPromise(offer, minutes);
@@ -3401,7 +3290,7 @@
         const trip = currentTrip();
         const offer = lessonOffer(trip);
         if (offer) { lessonMinutes = Lesson.minutesFor(remainMinutes()); startLesson(offer.id, offer === stoppedLesson(lessonMinutes)); }
-        else if (trip.kind !== 'weekend') startFlow(trip.mode);
+        else if (trip.mode === 'afternoon' && trip.kind !== 'weekend') startFlow('afternoon');
       } else if (isDialogueDone()) goHome();
       else if (currentMode === 'lesson') lessonMainAction();
       else skipQuestion();

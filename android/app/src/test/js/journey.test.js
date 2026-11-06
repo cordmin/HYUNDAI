@@ -11,6 +11,7 @@ const DAIT_LESSONS = APP_LESSONS.filter(item => item.id !== 'rhythm');
 const { rules } = data;
 
 const full = { tier: 'full', school: true, hasPe: true, memory: {} };
+function navHtml() { return page("document.getElementById('pearlNav').innerHTML"); }
 let page; // 화면 코드 안에서 식을 계산한다. 아래 '끝까지 실행' 시험이 준비한다.
 
 // 무엇을 불러도 빈 값을 돌려주는 가짜 화면 요소
@@ -29,6 +30,7 @@ test('화면 코드가 끝까지 실행되고 시작 화면을 그린다', () =>
   const code = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(match => match[1]).join('\n');
   const element = fakeElement();
   const stage = { innerHTML: '' };
+  const nav = { innerHTML: '' };
   const sandbox = {
     Journey, DAIT_RULES: data, Lesson, DAIT_LESSONS, console: { log() {} }, URLSearchParams, performance,
     setTimeout: () => 0, clearTimeout: () => {}, fetch: () => new Promise(() => {}),
@@ -40,7 +42,7 @@ test('화면 코드가 끝까지 실행되고 시작 화면을 그린다', () =>
     },
     navigator: { userAgent: '' },
     document: {
-      getElementById: id => (id === 'stageArea' ? stage : element),
+      getElementById: id => (id === 'stageArea' ? stage : id === 'pearlNav' ? nav : element),
       querySelector: () => null, querySelectorAll: () => [], body: element
     }
   };
@@ -48,19 +50,21 @@ test('화면 코드가 끝까지 실행되고 시작 화면을 그린다', () =>
   vm.createContext(sandbox);
   vm.runInContext(code, sandbox);
   page = source => vm.runInContext(source, sandbox);
-  assert.ok(stage.innerHTML.includes('학교를 등록하면 등하교 안내도 받아요'));
+  assert.ok(stage.innerHTML.includes('question-title'));
+  assert.ok(nav.innerHTML.includes('기록'));
+  assert.ok(!stage.innerHTML.includes('등교 대화'));
   assert.strictEqual(typeof sandbox.setDrivingMode, 'function');
 });
 
 test('주차 중에 들어 본 대화는 나중의 다른 주행에 문 열림 말을 남기지 않는다', () => {
-  page(`startFlow('morning'); goHome(); window.setDrivingMode(true); window.setDrivingMode(false);`);
+  page(`startFlow('afternoon'); goHome(); window.setDrivingMode(true); window.setDrivingMode(false);`);
   assert.strictEqual(page('tripForDoor'), null);
   page(`syncJourney();`);
   assert.strictEqual(page('journeyActive'), false);
 });
 
 test('신호 대기로 잠깐 멈췄다 다시 달리면 주차 시각을 지운다', () => {
-  page(`startFlow('morning'); window.setDrivingMode(true); window.setDrivingMode(false);`);
+  page(`startFlow('afternoon'); window.setDrivingMode(true); window.setDrivingMode(false);`);
   assert.ok(page('tripForDoor.parkedAt') > 0);
   page(`window.setDrivingMode(true);`);
   assert.strictEqual(page('tripForDoor.parkedAt'), 0);
@@ -69,10 +73,12 @@ test('신호 대기로 잠깐 멈췄다 다시 달리면 주차 시각을 지운
   page(`goHome();`);
 });
 
-test('대화를 끝까지 마친 등교도 2분 전에 준비물을 확인하고, 그 뒤에는 반복하지 않는다', () => {
-  page(`startFlow('morning'); stage = 'DONE'; speechPhase = 'idle'; demoMinutes = 2; applyNaviEta();`);
-  assert.strictEqual(page('stage'), 'ETA_SHORT');
-  page(`speechPhase = 'idle'; applyNaviEta(); demoMinutes = null; goHome();`);
+test('등교 대화는 직접 호출·예약·주행 제안 어디에서도 시작되지 않는다', () => {
+  page(`goHome(); disarm(); startFlow('morning'); toggleArm('morning'); arm({ mode: 'morning' });`);
+  assert.strictEqual(page('currentMode'), null);
+  assert.strictEqual(page('armed'), null);
+  assert.strictEqual(page('speechPhase'), 'idle');
+  assert.ok(!stageHtml().includes('오늘 챙길 것'));
 });
 
 test('2분 전에도 가족 대화는 끊지 않고, 도착하면 인사한다', () => {
@@ -86,7 +92,7 @@ test('2분 전에도 가족 대화는 끊지 않고, 도착하면 인사한다',
 });
 
 test('기어 D로 세운 채 문이 열려도 도착 직전이면 말하고, 달리는 중이면 말하지 않는다', () => {
-  page(`startFlow('morning'); window.setDrivingMode(true); demoMinutes = 8; window.onDoorOpened();`);
+  page(`startFlow('afternoon'); window.setDrivingMode(true); demoMinutes = 8; window.onDoorOpened();`);
   assert.ok(page('tripForDoor'));
   page(`demoMinutes = 2; window.onDoorOpened();`);
   assert.strictEqual(page('tripForDoor'), null);
@@ -123,7 +129,7 @@ test('일정 이름에 든 꺾쇠를 그대로 화면에 넣지 않는다', () =
     const when = toYmd(new Date());
     schoolDays[when] = { subjects: ['국어'], meal: '' };
     schoolEvents = { [when]: [{ name: '<b>시험', off: false }] };
-    startFlow('morning');
+    startFlow('afternoon');
     const shown = document.getElementById('stageArea').innerHTML;
     goHome(); school = null; schoolDays = {}; schoolEvents = {};
     shown`);
@@ -683,8 +689,8 @@ test('기억을 끄면 기록과 지정한 위치를 모두 지운다', () => {
 });
 
 test('앱을 켠 직후 고른 대화도 출발한 여정의 답으로 남는다', () => {
-  page(`writeStored(TRIP_MEMORY_KEY, true); forgetTrips(); window.setDrivingMode(true); window.setDrivingMode(false); startFlow('morning'); window.setDrivingMode(true);`);
-  assert.strictEqual(page('tripOpen.chosen'), 'morning');
+  page(`writeStored(TRIP_MEMORY_KEY, true); forgetTrips(); window.setDrivingMode(true); window.setDrivingMode(false); startFlow('afternoon'); window.setDrivingMode(true);`);
+  assert.strictEqual(page('tripOpen.chosen'), 'afternoon');
   page(`window.setDrivingMode(false); goHome(); writeStored(TRIP_MEMORY_KEY, false); forgetTrips();`);
 });
 
@@ -777,7 +783,7 @@ test('다 들은 수업 화면은 다음 출발 때 닫혀 수업 제안을 가�
 });
 
 test('등교 대화 뒤에 수업을 들으면 문 열림 말이 수업을 끊지 않는다', () => {
-  page(`startFlow('morning'); window.setDrivingMode(true); goHome(); lessonMinutes = 15; startLesson('dongbaek');`);
+  page(`startFlow('afternoon'); window.setDrivingMode(true); goHome(); lessonMinutes = 15; startLesson('dongbaek');`);
   assert.strictEqual(page(`tripForDoor`), null);
   page(`window.setDrivingMode(false); window.onDoorOpened();`);
   assert.strictEqual(page(`lessonRun.index`), 0);
@@ -1219,14 +1225,12 @@ test('수업 예약은 답 기록을 켠 사람에게만 마이크를 묻고, �
   page(`window.setDrivingMode(false);`);
 });
 
-test('등교 대화 예약은 그대로 동작하고, 수업 예약으로 바꿀 수 있다', () => {
-  page(`localStorage.values.clear(); goHome(); toggleArm('morning');`);
-  assert.strictEqual(page(`armed.mode`), 'morning');
-  assert.strictEqual(page(`armed.lesson`), undefined);
+test('하교 대화 예약은 유지하고 수업 예약으로 바꿀 수 있다', () => {
+  page(`localStorage.values.clear(); goHome(); toggleArm('afternoon');`);
+  assert.strictEqual(page(`armed.mode`), 'afternoon');
   page(`window.setDrivingMode(true);`);
-  assert.strictEqual(page(`currentMode`), 'morning');
-  assert.strictEqual(page(`lessonRun`), null);
-  page(`window.setDrivingMode(false); goHome(); toggleArm('afternoon'); openLessons(); toggleLessonArm('prime');`);
+  assert.strictEqual(page(`currentMode`), 'afternoon');
+  page(`window.setDrivingMode(false); goHome(); openLessons(); toggleLessonArm('prime');`);
   assert.strictEqual(page(`armed.mode`), 'lesson');
   page(`disarm(); goHome();`);
 });
@@ -1283,20 +1287,20 @@ test('학교 등록 전 첫 화면은 빈 칸 없이 수업의 질문을 보여 
   page(`demoMinutes = null; lessonMinutes = 15; renderStage();`);
 });
 
-test('학교가 없으면 주행 화면도 등하교 대신 수업의 질문을 묻고, 학교가 있으면 그대로 등하교를 묻는다', () => {
+test('주행 제안은 등교 대신 수업을 권하고 하교 제안은 유지한다', () => {
   page(`window.setDrivingMode(true); updateDriveScreen();`);
   assert.ok(page(`lessonOffer(currentTrip()).question`).endsWith('?'));
-  page(`school = { name: '시험학교' }; `);
-  const weekday = page(`currentTrip().kind`);
-  if (weekday !== 'weekend') assert.strictEqual(page(`lessonOffer(currentTrip())`), null);
+  page(`school = { name: '시험학교' };`);
+  assert.ok(page(`lessonOffer({ mode: 'morning', kind: 'school', known: true })`));
+  assert.strictEqual(page(`lessonOffer({ mode: 'afternoon', kind: 'home', known: true })`), null);
   page(`school = null; window.setDrivingMode(false); render();`);
 });
 
 test('출발하면 듣기를 예약하면 첫 화면 로고의 점이 깜빡인다', () => {
   page(`localStorage.values.clear(); goHome();`);
-  assert.ok(!stageHtml().includes('dait-brand-badge waiting'));
+  assert.ok(!navHtml().includes('dait-brand-badge waiting'));
   page(`toggleLessonArm('dongbaek'); goHome();`);
-  assert.ok(stageHtml().includes('dait-brand-badge waiting'));
+  assert.ok(navHtml().includes('dait-brand-badge waiting'));
   page(`disarm(); localStorage.values.clear(); goHome();`);
 });
 
@@ -1318,25 +1322,19 @@ test('30분 이동은 동백꽃 뒤에 쉬지 않고 다른 수업을 이어 듣
   page(`goHome(); demoMinutes = null;`);
 });
 
-test('학교를 등록한 첫 화면은 오늘의 수업을 크게 두고, 옆에 등하교 대화와 그날 챙길 것을 둔다', () => {
-  const shown = JSON.parse(page(`
-    localStorage.values.clear();
-    school = { name: 'A', kind: '중학교', grade: '1' };
-    schoolDays = { [toYmd(new Date())]: { subjects: ['국어', '체육'], meal: '카레' } }; schoolEvents = {};
-    goHome();
-    var homeTrip = currentTrip();
-    var homeOut = JSON.stringify({ html: document.getElementById('stageArea').innerHTML, mode: homeTrip.mode, weekend: homeTrip.kind === 'weekend', question: homeInfo(homeTrip).question });
-    school = null; schoolDays = {}; goHome();
-    homeOut`));
-  assert.ok(shown.html.includes('question-card')); // 등록 전 화면과 같은 수업 카드
-  assert.ok(shown.html.includes('talk-card'));
-  assert.ok(shown.html.includes(shown.question)); // 오늘의 질문은 대화 카드에 남는다
-  assert.ok(!/>(등교|하교) 대화<\/button>/.test(shown.html)); // 오후에 「등교 대화」처럼 반대쪽 대화 버튼을 두지 않는다
-  assert.ok(!shown.html.includes('카레')); // 급식과 시간표는 화면에 두지 않는다
-  assert.ok(!shown.html.includes('시간표</div>'));
-  if (shown.weekend) assert.ok(shown.html.includes('가 볼 만한 곳'));
-  else if (shown.mode === 'morning') assert.ok(shown.html.includes('준비물'));
-  else assert.ok(shown.html.includes('모은 깃털') && shown.html.includes('수업을 마치면 하나씩 받아요') && !shown.html.includes('배움과 이어진 수') && !shown.html.includes('itchi')); // 잇찌는 로고가 변한 모습이라 카드에 따로 두지 않는다
+test('학교를 등록해도 수업 중심 화면을 쓰고 준비물·등교 버튼은 없다', () => {
+  const shown = JSON.parse(page(`school = { name: 'A', kind: '중학교', grade: '1' };
+    schoolDays = { [toYmd(new Date())]: { subjects: ['체육'], meal: '카레' } }; schoolEvents = {};
+    goHome(); var pearlHomeSnapshot = { html: document.getElementById('stageArea').innerHTML, mode: currentTrip().mode, weekend: currentTrip().kind === 'weekend' };
+    school = null; schoolDays = {}; schoolEvents = {}; JSON.stringify(pearlHomeSnapshot)`));
+  assert.ok(shown.html.includes('question-title'));
+  assert.ok(!shown.html.includes('등교 대화'));
+  assert.ok(!shown.html.includes('준비물'));
+  assert.ok(!shown.html.includes('체육복'));
+  assert.ok(shown.html.includes('가 볼 만한 곳'));
+  assert.ok(!shown.html.includes('카레'));
+  if (shown.mode === 'afternoon' && !shown.weekend) assert.ok(shown.html.includes('하교 대화'));
+  page(`goHome();`);
 });
 
 test('가 볼 만한 곳은 관광공사의 지금 시도 코드로 찾는다. 전남과 광주는 합쳐진 코드, 세종은 36110', () => {
@@ -1516,4 +1514,47 @@ test('브라우저 탐색은 새 음원 metadata 뒤에도 정확한 위치를 �
   assert.strictEqual(page('lessonRun.index'), page('seekBeforeDriving'));
   assert.ok(!stageHtml().includes('aria-label="수업 재생 위치"'));
   page('window.setDrivingMode(false); goHome(); document.getElementById = beforeAudioLookup;');
+});
+
+
+test('기록 화면은 실제 수업 기록을 보여 주며 배지는 미획득 미리보기로 구분한다', () => {
+  page(`localStorage.values.clear(); goHome(); openPearlTab('records');`);
+  assert.ok(stageHtml().includes('수업을 들으면 여기에 쌓여요'));
+  page(`writeStored(LESSON_KEY, { ...lessonProgress(), records: [{ lesson: 'ai', title: '<b>수업', ymd: '20261106', finished: true, answers: [] }] }); render();`);
+  assert.ok(stageHtml().includes('&#60;b&#62;수업'));
+  assert.ok(!stageHtml().includes('<b>수업'));
+  page(`selectRecordTab('badges');`);
+  assert.ok(stageHtml().includes('받는 방법은 준비 중'));
+  assert.strictEqual((stageHtml().match(/<img /g) || []).length, 6);
+  page(`selectRecordTab('lessons'); goHome(); localStorage.values.clear();`);
+});
+
+test('기록 탭은 주행 중 열리지 않고 수업을 닫을 때 중단 위치를 남긴다', () => {
+  page(`lessonMinutes = 15; startLesson('ai');`);
+  page(`openPearlTab('lessons');`);
+  assert.strictEqual(page('currentMode'), 'lesson');
+  page(`window.setDrivingMode(true); openPearlTab('records');`);
+  assert.strictEqual(page('currentMode'), 'lesson');
+  page(`window.setDrivingMode(false); openPearlTab('records');`);
+  assert.strictEqual(page('currentMode'), 'records');
+  assert.strictEqual(page('lessonRun'), null);
+  assert.strictEqual(page('speechPhase'), 'idle');
+  page(`goHome(); localStorage.values.clear(); lessonMinutes = 15; startLesson('ai'); openSettings();`);
+  assert.strictEqual(page('currentMode'), 'settings');
+  assert.strictEqual(page('lessonRun'), null);
+  assert.strictEqual(page('speechPhase'), 'idle');
+  page(`goHome(); localStorage.values.clear();`);
+});
+
+test('제거한 준비물 기능은 Gleo와 문 열림으로도 말하지 않는다', () => {
+  const assets = path.join(__dirname, '../../main/assets');
+  const schema = JSON.parse(fs.readFileSync(path.join(assets, 'schema.json'), 'utf8'));
+  assert.deepStrictEqual(schema.actionCalls.map(x => x.function.name), ['START_LESSON', 'CONTROL_LESSON']);
+  const native = fs.readFileSync(path.join(__dirname, '../../main/java/io/dait/app/GleoBridge.kt'), 'utf8');
+  assert.ok(!native.includes('GET_SCHOOL_PREP'));
+  const html = fs.readFileSync(path.join(assets, 'dait-preview.html'), 'utf8');
+  assert.ok(!html.includes('function saveSchoolBrief'));
+  assert.ok(!html.includes('speak([DAIT_RULES.extras.p_door_bag]'));
+  page(`goHome(); var removedReply; window.AndroidBridge = { gleoRespond(v) { removedReply = JSON.parse(v); } }; window.onGleoAction('GET_SCHOOL_PREP', '{}'); delete window.AndroidBridge;`);
+  assert.strictEqual(page('removedReply.status'), 'fail');
 });

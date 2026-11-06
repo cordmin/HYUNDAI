@@ -32,7 +32,6 @@
         <!-- 화면을 띄우지 않는 Gleo 부름. 내비가 앞에 있어도 그대로 둔다. -->
         <receiver android:name=".GleoReceiver" android:exported="true">
             <intent-filter>
-                <action android:name="GET_SCHOOL_PREP" />
                 <action android:name="CONTROL_LESSON" />
             </intent-filter>
         </receiver>

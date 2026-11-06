@@ -14,8 +14,8 @@ android {
         applicationId 'io.dait.app'
         minSdk 28
         targetSdk 34
-        versionCode 3
-        versionName '0.3-journey'
+        versionCode 4
+        versionName '0.4-pearl'
         testInstrumentationRunner 'io.dait.app.OfflineVoiceCheck'
     }
     signingConfigs {

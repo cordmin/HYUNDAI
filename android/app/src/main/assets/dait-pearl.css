@@ -1,0 +1,100 @@
+/* Pearl reference applied to the existing native/WebView playback app. */
+:root {
+  --bg-top: #f8e9eb;
+  --bg-bottom: #e7edf5;
+  --glass: rgba(255,255,255,.4);
+  --glass-hover: rgba(255,255,255,.75);
+  --line: rgba(255,255,255,.75);
+  --ink: #172236;
+  --muted: #526175;
+  --lilac: #245ed0;
+  --lilac-hover: #174cac;
+  --on-lilac: #fff;
+}
+body { background: #e5eaf0; }
+button { color: inherit; }
+button:not(.demo-panel button) { min-height: 44px; }
+button:focus-visible, input:focus-visible { outline: 3px solid #245ed0; outline-offset: 3px; }
+.pleos-display { border: 7px solid rgba(255,255,255,.86); background: linear-gradient(120deg,var(--bg-top),var(--bg-bottom)); box-shadow: 0 18px 50px #2633491a; }
+body.in-app .pleos-display { border: 0; }
+.stage-container { padding: calc(8 * var(--u)) calc(12 * var(--u)) calc(28 * var(--u)); }
+.pearl-nav { display: flex; align-items: center; gap: calc(12 * var(--u)); padding: calc(8 * var(--u)) calc(12 * var(--u)) 0; min-height: calc(58 * var(--u)); flex-shrink: 0; }
+.pearl-brand { border: 0; background: none; cursor: pointer; padding: 0; min-height: calc(44 * var(--u)); display: flex; align-items: center; }
+.pearl-brand .dait-brand-badge { pointer-events: none; }
+.pearl-brand .dait-brand-badge svg { width: calc(70 * var(--u)); height: calc(28 * var(--u)); }
+.pearl-nav nav { display: flex; padding: calc(3 * var(--u)); border-radius: calc(16 * var(--u)); background: var(--glass); border: 1px solid var(--line); }
+.pearl-nav nav button { min-height: calc(44 * var(--u)); padding: 0 calc(15 * var(--u)); border: 0; border-radius: calc(12 * var(--u)); background: none; font-size: calc(17 * var(--u)); font-weight: 700; cursor: pointer; }
+.pearl-nav nav button[aria-current=page] { color: var(--lilac); background: #ffffff8c; box-shadow: 0 3px 12px #655a6410; }
+.pearl-eta { margin-left: auto; min-height: calc(44 * var(--u)); background: var(--glass); border: 1px solid var(--line); border-radius: calc(13 * var(--u)); padding: 0 calc(12 * var(--u)); font-size: calc(14 * var(--u)); font-weight: 700; white-space: nowrap; cursor: pointer; }
+.pearl-eta:disabled { color: var(--ink); cursor: default; opacity: 1; }
+.home-card, .dialogue-card, .settings-card, .pearl-record-row, .pearl-badge { background: var(--glass); border: 1px solid var(--line); box-shadow: 0 8px 20px #6358690b; }
+.home-card.start { background: var(--glass); }
+.pearl-home { display: flex; flex-direction: column; gap: calc(10 * var(--u)); min-height: 0; flex: 1; }
+.home-card.pearl-hero { display: flex; flex-direction: row; align-items: center; text-align: left; gap: calc(24 * var(--u)); flex: 1; padding: calc(22 * var(--u)); border-radius: calc(18 * var(--u)); }
+.pearl-hero-copy { flex: 1; min-width: 0; }
+.pearl-hero .question-title { max-width: 19em; font-size: calc(31 * var(--u)); line-height: 1.3; font-weight: 800; letter-spacing: -.6px; margin: 0 0 calc(12 * var(--u)); }
+.home-card.start.pearl-hero .card-label { color: var(--muted); font-size: calc(14 * var(--u)); margin-bottom: calc(7 * var(--u)); }
+.question-promise { color: var(--ink); font-size: calc(14 * var(--u)); }
+.question-actions { margin-top: calc(16 * var(--u)); display: flex; gap: calc(8 * var(--u)); }
+.pearl-hero .question-actions .card-btn { width: auto; flex: none; padding: 0 calc(20 * var(--u)); }
+.pearl-home-links .card-btn { width: auto; padding: 0 calc(12 * var(--u)); white-space: nowrap; }
+.card-btn, .primary-btn { min-height: calc(44 * var(--u)); background: var(--lilac); color: #fff; border: 0; border-radius: calc(12 * var(--u)); }
+.card-btn.quiet, .primary-btn.secondary { background: #e6effa; color: #354c67; border: 1px solid #dce5f0; }
+.pearl-wave { display: flex; align-items: center; justify-content: center; gap: calc(3 * var(--u)); width: calc(100 * var(--u)); flex-shrink: 0; }
+.pearl-wave i { display: block; width: calc(3 * var(--u)); height: calc(var(--bar) * var(--u)); border-radius: 10px; background: linear-gradient(#99b9f3,#2d70d8); }
+.pearl-home-footer { display: flex; align-items: center; justify-content: space-between; gap: calc(10 * var(--u)); }
+.pearl-feathers { border: 0; background: none; padding: 0 calc(6 * var(--u)); min-height: calc(44 * var(--u)); font-size: calc(14 * var(--u)); cursor: pointer; }
+.pearl-feathers strong { color: var(--lilac); margin-left: calc(7 * var(--u)); }
+.pearl-home-links { display: flex; gap: calc(8 * var(--u)); }
+.lesson-pick { display: flex; flex: 1; min-height: 0; }
+.pearl-picker .dialogue-top { display: none; }
+.lesson-main { flex: 1; min-width: 0; padding-right: calc(2 * var(--u)); }
+.lesson-side { display: none; }
+.lesson-main > .main-question { font-size: calc(23 * var(--u)); background: var(--glass); border-radius: calc(14 * var(--u)); padding: calc(10 * var(--u)); margin-bottom: calc(12 * var(--u)); }
+.lesson-row { border-radius: calc(14 * var(--u)); background: var(--glass); border: 1px solid var(--line); padding: calc(4 * var(--u)); margin-bottom: calc(7 * var(--u)); }
+.lesson-row > .choice-chip { background: none; border: 0; min-height: calc(62 * var(--u)); }
+.lesson-title { font-size: calc(18 * var(--u)); }
+.lesson-meta { color: var(--muted); }
+.lesson-play { color: var(--lilac); background: #e9f1fc; }
+.choice-chip { background: #ffffff80; color: var(--ink); border-color: #d8e0eb; }
+.choice-chip[aria-pressed=true] { background: #e0ebff; color: #1d55b6; border-color: #bdd0f0; }
+.back-btn { color: var(--muted); }
+.dialogue-top { min-height: calc(32 * var(--u)); margin-bottom: calc(7 * var(--u)); }
+.dialogue-card .main-question { font-size: calc(25 * var(--u)); }
+.heard-bubble, .school-input { color: var(--ink); background: #ffffffa0; }
+.drive-screen { background: linear-gradient(120deg,var(--bg-top),var(--bg-bottom)); }
+.pearl-nav, .pearl-records { color: var(--ink); }
+body.driving .pearl-nav { visibility: hidden; }
+.pearl-records { display: flex; flex-direction: column; gap: calc(10 * var(--u)); flex: 1; min-height: 0; }
+.pearl-page-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--glass); border: 1px solid var(--line); padding: calc(10 * var(--u)) calc(12 * var(--u)); border-radius: calc(14 * var(--u)); }
+.pearl-page-title h1 { font-size: calc(23 * var(--u)); margin: 0; }
+.pearl-page-title span { color: var(--muted); font-size: calc(14 * var(--u)); white-space: nowrap; }
+.pearl-record-tabs { display: flex; gap: calc(12 * var(--u)); }
+.pearl-record-tabs button { background: none; border: 0; border-bottom: 2px solid transparent; min-height: calc(44 * var(--u)); font-size: calc(16 * var(--u)); padding: 0 calc(8 * var(--u)); cursor: pointer; }
+.pearl-record-tabs button[aria-selected=true] { color: var(--lilac); border-bottom-color: var(--lilac); font-weight: 700; }
+.pearl-record-body { flex: 1; min-height: 0; overflow: auto; }
+.pearl-record-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: calc(13 * var(--u)); margin-bottom: calc(8 * var(--u)); border-radius: calc(14 * var(--u)); }
+.pearl-record-row strong { font-size: calc(16 * var(--u)); }
+.pearl-record-row span, .pearl-hint { font-size: calc(13 * var(--u)); color: var(--muted); }
+.pearl-hint { margin: 0 0 calc(10 * var(--u)); }
+.pearl-empty { padding: calc(40 * var(--u)) calc(12 * var(--u)); text-align: center; color: var(--muted); font-size: calc(17 * var(--u)); }
+.pearl-badges { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: calc(8 * var(--u)); }
+.pearl-badge { display: flex; flex-direction: column; align-items: center; gap: calc(7 * var(--u)); border-radius: calc(14 * var(--u)); padding: calc(10 * var(--u)); font-size: calc(14 * var(--u)); }
+.pearl-badge img { height: calc(56 * var(--u)); width: calc(56 * var(--u)); object-fit: contain; }
+.pearl-homework { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: calc(10 * var(--u)); background: var(--glass); border-radius: calc(12 * var(--u)); margin-bottom: calc(10 * var(--u)); font-size: calc(14 * var(--u)); }
+.splash-overlay { background: linear-gradient(120deg,var(--bg-top),var(--bg-bottom)); }
+@media (max-width: 600px) {
+  .pearl-nav { gap: 6px; }
+  .pearl-nav nav button { padding: 0 10px; font-size: 14px; }
+  .pearl-brand .dait-brand-badge svg { width: 52px; }
+  .pearl-eta { font-size: 12px; padding: 0 8px; }
+  .pearl-nav .icon-btn { width: 40px; height: 40px; }
+  .pearl-wave { display: none; }
+  .pearl-hero { padding: calc(17 * var(--u)); }
+  .pearl-hero .question-title { font-size: calc(27 * var(--u)); }
+  .pearl-home-footer { flex-wrap: wrap; }
+  .lesson-row { flex-wrap: wrap; }
+  .pearl-record-row { flex-direction: column; align-items: flex-start; }
+}
+/* Keep touch targets usable even when the app window is narrower than 665px. */
+button:not(.demo-panel button) { min-height: max(44px, calc(44 * var(--u))); }

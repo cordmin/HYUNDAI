@@ -1,0 +1,10 @@
+{
+  "transcript": "오늘의 질문은 점순이가 왜 닭싸움을 붙였을까였습니다. 감자를 건넸다가 거절당한 뒤의 행동을 보면 서툰 호감과 서운함이 뒤엉켰다고 해석할 수 있습니다. 그러나 좋아하는 마음이 상대를 괴롭히는 행동까지 옳게 만들지는 않습니다. 소년이 마름 집안의 눈치를 봐야 했다는 형편도 함께 보아야 합니다. 노란 꽃밭의 결말에서 마음이 가까워진 듯한 순간을 읽을 수 있지만 소년이 모든 뜻을 알아차렸다고 단정할 수는 없습니다. 마음과 말, 행동을 구별하며 읽는 것이 오늘의 핵심입니다.",
+  "issues": [],
+  "clip": "dongbaek_c1",
+  "sha256": "a98f9eeb8e38536867697eb479ccb35defeef5e1edcb8891f65ba848c5df6e3d",
+  "model": "gemini-3.8-flash",
+  "similarity": 1.0,
+  "passed": true,
+  "review_type": "AI audio review; not human listening"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "prime_c2",
+  "model": "gemini-3.8-flash-tts",
+  "voice": "Nika",
+  "text": "숙제를 하나 남기겠습니다. 차에서 내린 뒤 편한 때에, 소수가 끝없는 까닭을 함께 사는 사람에게 한 문장으로 들려주세요. 어떤 목록을 만들어도 거기에 없는 소수가 더 있다는 생각을 담아 보시면 됩니다. 숙제를 마쳤다는 표시는 나중에 주차 중 편할 때 남기시면 됩니다. 오늘 수업은 여기까지입니다. 안전하게 도착하세요.",
+  "fingerprint": "4a5dd2555a875687c44f3e24c86f5b7c746b4eeddb6c57a19d7c9b837f617b65",
+  "sha256": "b2d65e1801ee7651bac7cd4ae8044690f2e84acf96478835e2af863f62e87f96",
+  "seconds": 26.08,
+  "review": "generated_not_listening_reviewed"
+}

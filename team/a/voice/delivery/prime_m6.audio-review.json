@@ -1,0 +1,10 @@
+{
+  "transcript": "답은 목록의 소수로 나누어 떨어지지 않는다입니다. 어떤 소수로 나누어도 더한 일이 나머지로 남습니다. 그런데 이 새 수는 일보다 크므로 적어도 하나의 소수로 나누어 떨어집니다. 그 소수는 처음 목록에는 있을 수 없겠지요. 모든 소수를 빠짐없이 적었다는 가정과 어긋납니다. 그러므로 소수에는 끝이 없습니다. 새 수가 합성수여도 이 논리는 그대로 성립합니다.",
+  "issues": [],
+  "clip": "prime_m6",
+  "sha256": "9a9e19ddd0b57ee1fd38d5c5d51400ff273443864e0834d0b71bc5da64808695",
+  "model": "gemini-3.8-flash",
+  "similarity": 1.0,
+  "passed": true,
+  "review_type": "AI audio review; not human listening"
+}

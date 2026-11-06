@@ -1,0 +1,97 @@
+{
+  "recorded_date": "2026-11-03",
+  "purpose": "Dait learning reward badges",
+  "source": {
+    "file": "source/learning-badges-original.png",
+    "width": 1548,
+    "height": 983,
+    "sha256": "f7520c5934351e2d27a0f8fee4a433ef24c50235da4b6c43ed7f476a329962d7"
+  },
+  "processing": {
+    "method": "built-in image_gen individual extraction",
+    "pixel_exact_crop": false,
+    "background": "white",
+    "prompt_reference": "README.md"
+  },
+  "award_rules": null,
+  "badges": [
+    {
+      "id": "first-discovery",
+      "name": "첫 발견",
+      "source_position": {
+        "row": 1,
+        "column": 1
+      },
+      "award_rule": null,
+      "file": "first-discovery.png",
+      "width": 1296,
+      "height": 1213,
+      "sha256": "f3597adec66ff0b7622b2dd664ead6cfea744c51fe22ff714de7d9e865b9a5c6"
+    },
+    {
+      "id": "korean",
+      "name": "국어",
+      "source_position": {
+        "row": 1,
+        "column": 2
+      },
+      "award_rule": null,
+      "file": "korean.png",
+      "width": 1313,
+      "height": 1198,
+      "sha256": "851e0326f7e4a3dcea9bdd4ba170a3f996b58a4ea83113c5be89fbbe722d8568"
+    },
+    {
+      "id": "math",
+      "name": "수학",
+      "source_position": {
+        "row": 1,
+        "column": 3
+      },
+      "award_rule": null,
+      "file": "math.png",
+      "width": 1269,
+      "height": 1239,
+      "sha256": "35908918d3f5c90ffb11d7e33d05197b29db9e442f8e2e6d0823a0a90c2a9ee1"
+    },
+    {
+      "id": "exploration",
+      "name": "탐험",
+      "source_position": {
+        "row": 2,
+        "column": 1
+      },
+      "award_rule": null,
+      "file": "exploration.png",
+      "width": 1278,
+      "height": 1230,
+      "sha256": "330932033b173b29df25f15f310d9bf052daee0225cdea683430a8fa60328012"
+    },
+    {
+      "id": "well-rounded-explorer",
+      "name": "골고루 탐험가",
+      "source_position": {
+        "row": 2,
+        "column": 2
+      },
+      "award_rule": null,
+      "file": "well-rounded-explorer.png",
+      "width": 1304,
+      "height": 1206,
+      "sha256": "ce50b5233abda7047c10bba92f80178d1e52d0cfaa18feb916b40eaca4e13175"
+    },
+    {
+      "id": "everyday-discoverer",
+      "name": "생활 속 발견가",
+      "source_position": {
+        "row": 2,
+        "column": 3
+      },
+      "award_rule": null,
+      "file": "everyday-discoverer.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "fa91b8b3c4a2285518bc46afd94130768cb40da5e3bac79940fb300025cd1d39"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "transcript": "오늘 이야기는 세 걸음으로 갑니다. 첫 번째 걸음은 두 사람이 어떤 형편에서 살고 있는지 아는 것입니다. 두 번째 걸음은 구운 감자와 닭싸움이라는 두 사건을 살펴보는 것이고요. 마지막 걸음에서는 노란 꽃밭에서 끝나는 결말의 의미를 생각해 봅니다. 작품을 읽어 보지 않으셨어도 따라올 수 있도록 줄거리부터 차근차근 말씀드릴게요.",
+  "issues": [],
+  "clip": "dongbaek_i2",
+  "sha256": "cd3889e6e31cc7a49917be9d3892712580fcc8c830657bdb4b46cc84242ead8a",
+  "model": "gemini-3.8-flash",
+  "similarity": 1.0,
+  "passed": true,
+  "review_type": "AI audio review; not human listening"
+}

@@ -1,0 +1,10 @@
+{
+  "transcript": "이제 두 번째 걸음입니다. 먼저 감자 사건입니다. 어느 날 내가 울타리를 엮고 있는데 점순이가 다가옵니다. 그러고는 손에 쥐고 있던 구운 감자 세 개를 슥 내밉니다. 느 집엔 이거 없지? 이렇게 말하면서요. 그런데 나는 고개도 돌리지 않고 난 감자 안 먹는다. 너나 먹어라. 하며 밀어버립니다. 그러자 점순이의 얼굴이 빨개지고 눈에 눈물까지 어립니다. 나는 그 까닭을 전혀 알지 못합니다.",
+  "issues": [],
+  "clip": "dongbaek_b3",
+  "sha256": "ab8428a02e42fa111a5b460223d02aa0d7f23c36ff3f4b2bf8389d448acf08f2",
+  "model": "gemini-3.8-flash",
+  "similarity": 0.99333,
+  "passed": true,
+  "review_type": "AI audio review; not human listening"
+}

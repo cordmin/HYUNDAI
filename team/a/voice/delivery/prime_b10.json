@@ -1,0 +1,10 @@
+{
+  "id": "prime_b10",
+  "model": "gemini-3.8-flash-tts",
+  "voice": "Nika",
+  "text": "이렇게 일부러 반대로 가정하고 모순을 찾는 방법을 귀류법이라고 합니다. 일상에서도 비슷하게 생각합니다. 탐정이 그 사람이 범인이라고 해 보자, 그러면 그 시각에 두 곳에 있었던 셈이 된다, 그럴 수는 없다, 그러니 범인이 아니다, 하고 말하는 것과 같습니다. 직접 보여 주기 어려운 것도 반대쪽 길을 막아서 증명할 수 있습니다.",
+  "fingerprint": "1532dfc86b29197329b534cbb683bddd409e9ffc19f9322355711687dbd8b27b",
+  "sha256": "72d3df11fca005f885e24aba3bb74145f7217cc9d624eec5dcc733dd5ea4482e",
+  "seconds": 29.96,
+  "review": "generated_not_listening_reviewed"
+}

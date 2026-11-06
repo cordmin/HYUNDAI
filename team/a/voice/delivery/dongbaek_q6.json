@@ -1,0 +1,10 @@
+{
+  "id": "dongbaek_q6",
+  "model": "gemini-3.8-flash-tts",
+  "voice": "Nika",
+  "text": "점순이의 서툰 마음, 소년이 느끼는 두려움, 이야기를 들려주는 말의 맛 가운데 무엇이 가장 마음에 남았나요? 그렇게 느낀 장면 하나를 속으로 떠올려 보세요. 운전 중에는 대답하지 않으셔도 괜찮습니다.",
+  "fingerprint": "02b6fc8f12344abe9c7784af41ee66a36b22efa4d974991d6377c9adf50623d1",
+  "sha256": "e2c4deac0681718879098173953cbfa74083d5402ae1a9e2e8cbc13ed18a7903",
+  "seconds": 16.36,
+  "review": "generated_not_listening_reviewed"
+}

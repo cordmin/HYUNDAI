@@ -1,0 +1,10 @@
+{
+  "transcript": "소수의 개수와 소수가 차지하는 비율은 다릅니다. 백 이하에는 소수가 스물다섯 개 있어서 비율이 사분의 일입니다. 천 이하에는 백육십팔 개, 만 이하에는 천이백이십구 개가 있습니다. 개수는 늘지만 이 구간들에서 전체 자연수 가운데 차지하는 비율은 낮아집니다. 그렇다고 뒤로 갈수록 소수 사이의 간격이 매번 커진다는 뜻은 아닙니다. 소수가 드물어 보이는 것과 어느 순간 완전히 끝나는 것도 다른 말입니다. 이제 정말 끝이 있을 수 있는지 생각해 보겠습니다.",
+  "issues": [],
+  "clip": "prime_b6",
+  "sha256": "aa671ed73345d4e0de6b6f3cbba33fdc2b1fc2316195c4dd44a4bca01ccad5d1",
+  "model": "gemini-3.8-flash",
+  "similarity": 1.0,
+  "passed": true,
+  "review_type": "AI audio review; not human listening"
+}

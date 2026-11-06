@@ -1,0 +1,14 @@
+{
+  "duration": 4.0,
+  "sample_rate": 24000,
+  "peak": 22235,
+  "rms": 3974.34,
+  "sha256": "da4b6748087338d56f08175ce7dca589dc89b8318b363c9148f3088714a48f16",
+  "id": "r2_1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘은 시험이 있는 날이에요. 필통 챙겼어요?",
+  "fingerprint": "edd69ee068ef0018f838b056dc477da1a3dbc86feeef2d209b6028ba97101a20",
+  "generated_at": "2026-11-03T22:57:30+0900",
+  "review": "generated_not_listening_reviewed"
+}

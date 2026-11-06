@@ -1,0 +1,14 @@
+{
+  "duration": 22.48,
+  "sample_rate": 24000,
+  "peak": 27965,
+  "rms": 2921.14,
+  "sha256": "7bd50e34256c97114c22e7d563f5b5f3b2138688e359c2e568fa0a8a5c883c77",
+  "id": "sky_q3",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "여기서 생각거리를 하나 드릴게요. 지금 하늘을 굳이 보지 않으셔도 괜찮습니다. 오늘 배운 말로 맑은 날의 파란 하늘과 미세먼지 낀 날의 뿌연 하늘의 차이를 어떻게 설명하시겠어요? 함께 탄 분이 있다면 서로 설명해 보세요. 대답은 하지 않으셔도 괜찮습니다.",
+  "fingerprint": "a42bf8a1c09508ab8be738016ea056040e566a4b2a83c0dfc9efc43eeb0230a9",
+  "generated_at": "2026-11-06T00:24:44+0900",
+  "review": "generated_not_listening_reviewed"
+}

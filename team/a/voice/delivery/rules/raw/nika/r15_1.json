@@ -1,0 +1,14 @@
+{
+  "duration": 4.32,
+  "sample_rate": 24000,
+  "peak": 23276,
+  "rms": 3351.13,
+  "sha256": "6313e055a78184ff58f7cc6b33252b58ea888c3dbee74323cd1f170836cae351",
+  "id": "r15_1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘은 학교 축제 날이에요. 제일 기대되는 게 뭐예요?",
+  "fingerprint": "d9fc79c1c00c9967bd7f3c5e3c67ede3d903985cea15b59c056528cbb76bcfca",
+  "generated_at": "2026-11-03T22:59:55+0900",
+  "review": "generated_not_listening_reviewed"
+}

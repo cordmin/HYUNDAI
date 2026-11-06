@@ -9,6 +9,8 @@
 /voice/*.log
 /apk/
 /voice/*.zip
+/team/a/voice/delivery/*.zip
+/team/a/voice/delivery/**/takes/
 /android/app/src/main/assets/model-ko/
 __pycache__/
 *.py[cod]
@@ -18,3 +20,4 @@ __pycache__/
 current_api_key.txt
 *.jks
 *.keystore
+/android/keystore.properties

@@ -1,0 +1,14 @@
+{
+  "duration": 1.72,
+  "sample_rate": 24000,
+  "peak": 13212,
+  "rms": 3208.61,
+  "sha256": "e8888a390ffd7c911f740319613e73859c3547c6951b09950ea5ab6d6232da11",
+  "id": "p_day_2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "화요일은",
+  "fingerprint": "621285c52b57bfe01592da07e04fc33e6dc88aa5abc519699a984dccf26af8f1",
+  "generated_at": "2026-11-03T23:02:25+0900",
+  "review": "generated_not_listening_reviewed"
+}

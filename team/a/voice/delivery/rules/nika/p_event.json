@@ -1,0 +1,12 @@
+{
+  "id": "p_event",
+  "text": "학교 일정이 있어요.",
+  "source_sha256": "1080ea6de392aa980981e6e80ce3beb3f4f4c64cd9d4dfeb5d05512fc89ad888",
+  "fingerprint": "a8d440996f86be1ac7d588284ac610d8d7b4f97ad2caa44fc25d3c30359064a5",
+  "review": "generated_not_listening_reviewed",
+  "duration": 2.04,
+  "sample_rate": 24000,
+  "peak": 17160,
+  "rms": 2507.1,
+  "sha256": "1080ea6de392aa980981e6e80ce3beb3f4f4c64cd9d4dfeb5d05512fc89ad888"
+}

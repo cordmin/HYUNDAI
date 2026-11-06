@@ -1,0 +1,14 @@
+{
+  "duration": 4.44,
+  "sample_rate": 24000,
+  "peak": 18712,
+  "rms": 2318.41,
+  "sha256": "67516042c010425917840d991a911803f1b63ae6661e97a0f33b74f19008b1ff",
+  "id": "r4_1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘도 수고했어요. 시험 이야기는 안 해도 괜찮아요.",
+  "fingerprint": "a1381d0f1491a2aa063b14110e5a3c8e80b9c74dc6c69a0eef08e88f35fe6bc6",
+  "generated_at": "2026-11-03T22:57:55+0900",
+  "review": "generated_not_listening_reviewed"
+}

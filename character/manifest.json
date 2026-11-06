@@ -1,0 +1,66 @@
+{
+  "created": "2026-11-04",
+  "status": "2026-11-04 결정: calm-v2로 확정. final-v1은 비교용. 2026-11-05 이름 잇찌, 행동 시안 itchi-actions.html, 받은 오프닝 비교 compare-itchi-magpie.html, 잇찌 오프닝 시안 itchi-opening.html · 2026-11-05 모티브는 까치로 결정",
+  "files": [
+    {
+      "file": "dait-logo-reference.png",
+      "bytes": 106422,
+      "sha256": "efb0b356aeabf3f97949d612452c5bc5136fa061d69af0372075f49023eaf939"
+    },
+    {
+      "file": "dait-bird-perched-v5.png",
+      "bytes": 615620,
+      "sha256": "d8bdab4b27fd210d36a3e4194ab5fbc7fc91d16aa1f5931364a6f1704f6bac17"
+    },
+    {
+      "file": "dait-bird-final-v1.png",
+      "bytes": 187929,
+      "sha256": "54c21d9cfeb7f4be3d6af20d0bb405bf4ae29c85e7e45c0bd44b2afcc3488b3b"
+    },
+    {
+      "file": "dait-bird-final-v1.svg",
+      "bytes": 7042,
+      "sha256": "bc7ce3e6aec22f5b4f709b2a574bea30b6e66cfe82b244b1eda41c10c79210cd"
+    },
+    {
+      "file": "dait-bird-final-calm-v2.png",
+      "bytes": 167000,
+      "sha256": "ce7260b63cdd0f70a697b3559e7da388bf350066553725f06e1acdfb529aa2d2"
+    },
+    {
+      "file": "dait-bird-final-calm-v2.svg",
+      "bytes": 7180,
+      "sha256": "ba252370ada0360e89f3f2952d272eb1c2e9595cb416723e63898b5c5b62bf22"
+    },
+    {
+      "file": "logo-to-bird.html",
+      "bytes": 14409,
+      "sha256": "e0db674a1f0f719f0354f8e785b401d8adeb01c408b6ce383e4009d3f178ce86"
+    },
+    {
+      "file": "../handoff/요청.md",
+      "bytes": 18203,
+      "sha256": "ceb47feb1883a36e95ef6112efdf610d8d7870d3a2aa076c09c112454c8b414e"
+    },
+    {
+      "file": "itchi-actions.html",
+      "bytes": 37455,
+      "sha256": "37f0c6b63f71795216337f0a566a664d2aaadaea065bac6ae15a7c748707b93a"
+    },
+    {
+      "file": "itchi-opening.html",
+      "bytes": 57656,
+      "sha256": "4562e78387e150084ae4a838fca3db763e75d857ac12ab6f7504602ca556667f"
+    },
+    {
+      "file": "compare-itchi-magpie.html",
+      "bytes": 11125,
+      "sha256": "67fca64a6d969acbc773e4000ee94ee7450b6cd064b66a868cfbf8cbb5b37e8d"
+    },
+    {
+      "file": "received/dait_magpie_logo.html",
+      "bytes": 52372,
+      "sha256": "24be917ccba5db3f35998a430def98bdc30e4a89f27c6cf201d8502a713fdd71"
+    }
+  ]
+}

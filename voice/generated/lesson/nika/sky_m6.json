@@ -1,0 +1,14 @@
+{
+  "duration": 24.96,
+  "sample_rate": 24000,
+  "peak": 26653,
+  "rms": 3207.3,
+  "sha256": "f0d3e1b0619871196de095c121517cdd0d7936b490dd39034fcc7064baba28fe",
+  "id": "sky_m6",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "답은 까만색입니다. 공기가 거의 없는 달에서는 낮에도 하늘이 깜깜합니다. 이제 저녁노을로 가 보겠습니다. 해가 지평선 가까이 내려가면 햇빛은 공기층을 비스듬히 길게 뚫고 들어옵니다. 낮에 머리 위에서 올 때보다 공기 속에서 훨씬 먼 길을 지나와야 하는 것입니다.",
+  "fingerprint": "76cfcd9a2e254c2a190bcf47e1995b399348082aab57a27be9e130745fb2924c",
+  "generated_at": "2026-11-06T00:26:36+0900",
+  "review": "generated_not_listening_reviewed"
+}

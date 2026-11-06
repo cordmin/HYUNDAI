@@ -1,0 +1,12 @@
+{
+  "id": "r4_2",
+  "text": "집에 가서 잠깐 쉬고 시작해요.",
+  "source_sha256": "8000669375d909f577cbe03c9c4acbb2bf4616e239958bb4364044732566cd4a",
+  "fingerprint": "60feee94ac38caecfd8e80b0d169716bd20537a52188e41e3790187480d1f8d4",
+  "review": "generated_not_listening_reviewed",
+  "duration": 3.04,
+  "sample_rate": 24000,
+  "peak": 16390,
+  "rms": 1897.56,
+  "sha256": "8000669375d909f577cbe03c9c4acbb2bf4616e239958bb4364044732566cd4a"
+}

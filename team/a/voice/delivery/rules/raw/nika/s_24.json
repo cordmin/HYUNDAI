@@ -1,0 +1,14 @@
+{
+  "duration": 1.64,
+  "sample_rate": 24000,
+  "peak": 19615,
+  "rms": 3343.56,
+  "sha256": "66800c60d23545d6a7c25af224d4da7c73f4e71b58e7bfb97fbc78e7f25d74fc",
+  "id": "s_24",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "안전한 생활",
+  "fingerprint": "e93012bc668d939a96ca7b4f5e6f0158057320e4ae30095ab7698b9586ba5945",
+  "generated_at": "2026-11-03T23:40:16+0900",
+  "review": "generated_not_listening_reviewed"
+}

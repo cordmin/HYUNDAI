@@ -1,0 +1,14 @@
+{
+  "duration": 1.24,
+  "sample_rate": 24000,
+  "peak": 21164,
+  "rms": 3144.67,
+  "sha256": "bb79b03f29fb340b211aae07d947eca92b6fa1c6d0ac76c538dc2a979c7279e0",
+  "id": "s_4",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "사회",
+  "fingerprint": "6a8f53717284f3133b20843822f31bbfa8e8b56c70472b2c3394c82ed46fc1b2",
+  "generated_at": "2026-11-03T23:03:54+0900",
+  "review": "generated_not_listening_reviewed"
+}

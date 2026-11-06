@@ -1,0 +1,12 @@
+{
+  "id": "s_41",
+  "text": "지구과학",
+  "source_sha256": "35be282ae7845bccae3fb629f417557d3c7220ac83ecf582bb74519d66c89ecd",
+  "fingerprint": "dcca1c3c63e7b88ecff7014183b4961a511b421ac2ef5ff708c75de6f249da2b",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.36,
+  "sample_rate": 24000,
+  "peak": 22523,
+  "rms": 3050.31,
+  "sha256": "35be282ae7845bccae3fb629f417557d3c7220ac83ecf582bb74519d66c89ecd"
+}

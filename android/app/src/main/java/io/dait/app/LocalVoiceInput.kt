@@ -23,7 +23,8 @@ class LocalVoiceInput(context: Context, private val readyCallback: (Boolean) -> 
         }, { if (!closed) readyCallback(false) })
     }
 
-    fun start(grammar: String?, stage: TalkStage, onText: (String) -> Unit, onEmpty: () -> Unit, onPartial: (String) -> Unit): Boolean {
+    // onText gets the answer and the free-vocabulary reference; dait-journey.js decides whether it counts.
+    fun start(grammar: String?, onText: (String, String) -> Unit, onEmpty: () -> Unit): Boolean {
         stop()
         val loaded = model ?: return false
         val ticket = epoch
@@ -39,16 +40,14 @@ class LocalVoiceInput(context: Context, private val readyCallback: (Boolean) -> 
                     service = null
                     val reference = (recognizer as? ContextRecognizer)?.finishReference() ?: value
                     stop()
-                    if (value.isBlank() || !Conversation.acceptsRecognition(stage, value, reference)) onEmpty() else onText(value)
+                    if (value.isBlank()) onEmpty() else onText(value, reference)
                 }
                 override fun onResult(hypothesis: String) {
                     val value = text(hypothesis, "text")
-                    if (value.isNotBlank()) finish(value)
+                    // Road noise comes back as <UNK>; keep listening so it does not use up the child's turn.
+                    if (value.isNotBlank() && value != "<UNK>") finish(value)
                 }
-                override fun onPartialResult(hypothesis: String) {
-                    if (ticket != epoch || closed) return
-                    onPartial(text(hypothesis, "partial"))
-                }
+                override fun onPartialResult(hypothesis: String) = Unit
                 override fun onFinalResult(hypothesis: String) = finish(text(hypothesis, "text"))
                 override fun onError(exception: Exception) = finish("")
                 override fun onTimeout() = finish("") // Tentative partial words must not trigger a branch.

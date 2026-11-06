@@ -1,0 +1,12 @@
+{
+  "id": "r14_2",
+  "text": "들려줘서 고마워요. 오늘 많이 움직였으니 푹 쉬어요.",
+  "source_sha256": "f27ffed2f0eb40d1dcd51b8c014c3c37425485da0db4dc9946ed305585581469",
+  "fingerprint": "c1fa2e45cf0ed1b25341bca8e10823e429cd4d31b7ff103a0f45a02f93e3a9c2",
+  "review": "generated_not_listening_reviewed",
+  "duration": 4.68,
+  "sample_rate": 24000,
+  "peak": 24116,
+  "rms": 3528.59,
+  "sha256": "f27ffed2f0eb40d1dcd51b8c014c3c37425485da0db4dc9946ed305585581469"
+}

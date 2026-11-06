@@ -1,0 +1,14 @@
+{
+  "duration": 1.48,
+  "sample_rate": 24000,
+  "peak": 17550,
+  "rms": 2526.6,
+  "sha256": "886aacfdb23740c6250eda761daee335e858725dc9d9f29560b7be2cddc0b1f4",
+  "id": "p_have",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "수업이 있어요.",
+  "fingerprint": "5bfe606b0ebab3db35de0b1fb18874e9e1643889483f6ba693c1070e029fa4a8",
+  "generated_at": "2026-11-03T23:01:55+0900",
+  "review": "generated_not_listening_reviewed"
+}

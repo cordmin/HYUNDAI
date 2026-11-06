@@ -1,0 +1,14 @@
+{
+  "duration": 19.76,
+  "sample_rate": 24000,
+  "peak": 27152,
+  "rms": 3780.73,
+  "sha256": "06984e6c654b93ff3067f9a4e807e0e98b7c407d69b28432ffb38061d98fa2d5",
+  "id": "ai_r1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "지난 시간에 들은 수업에서 기억나는 생각 하나만 떠올려 보세요. 오늘은 다른 주제인 인공지능으로 넘어갑니다. 앞 수업을 듣지 않았어도 괜찮습니다. 인공지능이 내놓는 답을 그대로 믿어도 되는지, 답을 확인하려면 무엇을 살펴야 하는지 알아보겠습니다.",
+  "fingerprint": "0a476018157f7b1d9ce4253cd6e8183850637c50ca0c3f5d470de286e1f70a91",
+  "generated_at": "2026-11-03T10:40:34+0900",
+  "review": "generated_not_listening_reviewed"
+}

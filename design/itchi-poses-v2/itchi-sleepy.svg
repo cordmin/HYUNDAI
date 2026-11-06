@@ -1,0 +1,99 @@
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Deeper, calmer navy gradients matching calm-v2 -->
+    <linearGradient id="sleepy-headGrad" x1="555" y1="200" x2="685" y2="370" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#24507A"/>
+      <stop offset="100%" stop-color="#183858"/>
+    </linearGradient>
+    <linearGradient id="sleepy-wingGrad" x1="660" y1="275" x2="880" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#25527C"/>
+      <stop offset="100%" stop-color="#173654"/>
+    </linearGradient>
+    <linearGradient id="sleepy-wingBackGrad" x1="610" y1="220" x2="850" y2="380" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1D4164"/>
+      <stop offset="100%" stop-color="#122B43"/>
+    </linearGradient>
+    <linearGradient id="sleepy-tailGrad" x1="840" y1="405" x2="1020" y2="495" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#16334E"/>
+      <stop offset="50%" stop-color="#234E78"/>
+      <stop offset="100%" stop-color="#2E6292"/>
+    </linearGradient>
+    <linearGradient id="sleepy-bellyGrad" x1="565" y1="360" x2="845" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F2F9FE"/>
+      <stop offset="55%" stop-color="#DCEFFE"/>
+      <stop offset="100%" stop-color="#B4DDF8"/>
+    </linearGradient>
+    <linearGradient id="sleepy-ribbonGrad" x1="528" y1="260" x2="1018" y2="472" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="30%" stop-color="#8ADCFD"/>
+      <stop offset="55%" stop-color="#FFFFFF"/>
+      <stop offset="82%" stop-color="#BAE6FD"/>
+      <stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <linearGradient id="sleepy-branchGrad" x1="560" y1="546" x2="876" y2="546" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#15263B"/>
+      <stop offset="55%" stop-color="#2C4F72"/>
+      <stop offset="100%" stop-color="#203C58"/>
+    </linearGradient>
+    <radialGradient id="sleepy-eyeHaloGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.52"/>
+      <stop offset="55%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="sleepy-calmGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.8"/>
+    </filter>
+  </defs>
+  <rect id="bg" x="0" y="0" width="1920" height="1080" fill="#0B1220"/>
+  <g transform="translate(960, 540) scale(1.66) translate(-770, -374)">
+    <g id="branch">
+      <line x1="564" y1="534" x2="880" y2="534" stroke="url(#sleepy-branchGrad)" stroke-width="12" stroke-linecap="round"/>
+    </g>
+    <g id="tail">
+      <path d="M 836 446 L 884 406 C 930 424, 976 450, 1022 482 C 1028 486, 1026 494, 1016 494 L 992 493 L 1002 507 C 1006 513, 998 519, 987 515 C 934 494, 878 470, 836 446 Z" fill="url(#sleepy-tailGrad)"/>
+      <path d="M 868 428 C 912 448, 954 470, 992 493" stroke="#10273E" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.65"/>
+      <path d="M 868 428 C 912 448, 954 470, 992 493" stroke="#3E76A8" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.32" transform="translate(0, 2)"/>
+    </g>
+    <g id="body">
+      <path d="M 555 330 C 572 414, 646 494, 742 494 C 816 494, 868 456, 884 406 L 855 360 L 635 360 L 580 330 Z" fill="url(#sleepy-bellyGrad)"/>
+      <path d="M 592 420 C 646 482, 742 494, 806 478 C 852 464, 874 434, 884 406 C 856 442, 798 468, 726 468 C 658 468, 614 446, 592 420 Z" fill="#B5E0FA" opacity="0.36"/>
+      <path d="M 674 234 C 736 250, 828 316, 886 407 L 884 406 L 762 290 C 722 280, 690 290, 666 314 L 658 284 Z" fill="#163452"/>
+    </g>
+    <g id="wing">
+      <path d="M 648 326 C 622 346, 628 380, 664 380 C 684 380, 688 356, 704 356 C 722 356, 738 388, 756 388 C 774 388, 794 360, 812 360 C 832 360, 858 392, 884 406 C 864 352, 820 304, 762 290 C 722 280, 690 290, 666 314 L 648 326 Z" fill="url(#sleepy-wingGrad)"/>
+      <path d="M 672 312 C 694 288, 726 280, 762 290 C 820 304, 864 352, 884 406" stroke="#112A42" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <path d="M 676 312 C 698 290, 728 284, 760 294 C 816 308, 858 352, 880 402" stroke="#31689A" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.42"/>
+      <path d="M 734 330 C 770 356, 814 374, 860 388" stroke="#3E78AC" stroke-width="7.5" stroke-linecap="round" fill="none" opacity="0.22"/>
+    </g>
+    <g id="head" transform="translate(0, 8)">
+      <!-- 3/4 turned head (~45 deg toward viewer) with far cheek contour and compact adult proportions -->
+      <path d="M 558 262 C 562 220, 594 200, 630 202 C 672 204, 696 226, 688 260 C 682 288, 668 304, 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 L 664 372 C 604 370, 566 352, 555 322 C 548 302, 552 280, 558 262 Z" fill="url(#sleepy-headGrad)"/>
+    </g>
+    <g id="beak" transform="translate(0, 8)">
+      <!-- Short triangle beak between & below the two eyes, pointing diagonally forward (bottom-left) -->
+      <path d="M 585 272 L 604 275 L 579 294 Z" fill="#162E47"/>
+      <path d="M 587 273 L 601 275 L 582 291 Z" fill="#22466B"/>
+    </g>
+    <g id="ribbon">
+      <path d="M 556 276 C 560 230, 592 208, 628 210 C 672 212, 696 234, 688 268 C 682 296, 668 312, 648 326 C 622 346, 628 380, 664 380 C 684 380, 688 356, 704 356 C 722 356, 738 388, 756 388 C 774 388, 794 360, 812 360 C 832 360, 858 392, 884 406 C 930 424, 976 450, 1018 480" stroke="#38BDF8" stroke-width="14.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.14" filter="url(#sleepy-calmGlow)"/>
+      <path d="M 556 276 C 560 230, 592 208, 628 210 C 672 212, 696 234, 688 268 C 682 296, 668 312, 648 326 C 622 346, 628 380, 664 380 C 684 380, 688 356, 704 356 C 722 356, 738 388, 756 388 C 774 388, 794 360, 812 360 C 832 360, 858 392, 884 406 C 930 424, 976 450, 1018 480" stroke="url(#sleepy-ribbonGrad)" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    <g id="t-bar">
+      <path d="M 956 452.8 L 996 452.8" stroke="#38BDF8" stroke-width="11.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.20" filter="url(#sleepy-calmGlow)"/>
+      <path d="M 956 452.8 L 996 452.8" stroke="#FFFFFF" stroke-width="7.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    <g id="eyes" transform="translate(0, 8)">
+      <!-- Half-closed sleepy glowing eyes at the 3/4 eye positions -->
+      <circle cx="576" cy="256" r="13" fill="url(#sleepy-eyeHaloGrad)"/>
+      <path d="M 567 255 C 570 262, 582 262, 585 255 Z" fill="#38BDF8" opacity="0.88"/>
+      <path d="M 566 255 L 586 255" stroke="#FFFFFF" stroke-width="3.0" stroke-linecap="round"/>
+      <circle cx="626" cy="260" r="16" fill="url(#sleepy-eyeHaloGrad)"/>
+      <path d="M 615 259 C 620 268, 632 268, 637 259 Z" fill="#38BDF8" opacity="0.88"/>
+      <path d="M 614 259 L 638 259" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+    </g>
+    <g id="legs">
+      <path d="M 706 482 L 686 525 M 678 538 C 677 524, 694 522, 704 529" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M 774 472 L 750 525 M 742 538 C 741 524, 758 522, 768 529" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+  </g>
+</svg>

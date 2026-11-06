@@ -1,0 +1,14 @@
+{
+  "duration": 33.76,
+  "sample_rate": 24000,
+  "peak": 26849,
+  "rms": 2751.33,
+  "sha256": "1684e0a6ebf2d3d4c1ecfb44ca7dbbf2375774d023f8f6572acba14bf37b5304",
+  "id": "sky_b4",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이제 두 번째 걸음입니다. 햇빛이 지구의 공기 속으로 들어옵니다. 공기는 비어 있는 것 같지만 질소와 산소 같은 아주 작은 알갱이로 가득합니다. 햇빛이 이 작은 알갱이를 만나면 빛의 일부가 사방으로 흩어집니다. 이것을 산란이라고 합니다. 그런데 모든 색이 똑같이 흩어지지는 않습니다. 파장이 짧은 파란빛이 파장이 긴 빨간빛보다 훨씬 많이 흩어집니다. 여기에 오늘 질문의 열쇠가 있습니다.",
+  "fingerprint": "ff72358de6d372dc643b8dc21aa90ac850d35d21f1f30ba95b8c03a0b7ced047",
+  "generated_at": "2026-11-06T00:21:41+0900",
+  "review": "generated_not_listening_reviewed"
+}

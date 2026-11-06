@@ -1,0 +1,14 @@
+{
+  "duration": 34.2,
+  "sample_rate": 24000,
+  "peak": 26491,
+  "rms": 2956.39,
+  "sha256": "b98a3c825f3f4d2ae28bc2b7192b2fb28598caed7b31fdf7566bb954ab398caa",
+  "id": "sky_c1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이제 오늘의 이야기를 정리해 보겠습니다. 첫째, 하얀 햇빛에는 여러 색의 빛이 섞여 있습니다. 둘째, 공기 알갱이는 파장이 짧은 파란빛을 더 많이 흩어 놓습니다. 그래서 낮의 하늘은 파랗게 보입니다. 셋째, 저녁에는 햇빛이 공기 속을 먼 길로 지나오면서 파란빛이 먼저 흩어지고, 남은 붉은빛이 우리에게 도착합니다. 그래서 노을은 붉습니다. 이 세 문장이면 오늘의 질문에 답할 수 있습니다.",
+  "fingerprint": "00b74e6ad19cfbf9669a18c9034b9e4e3bc7fa0609047c7f276e89190de3ea6b",
+  "generated_at": "2026-11-06T00:25:34+0900",
+  "review": "generated_not_listening_reviewed"
+}

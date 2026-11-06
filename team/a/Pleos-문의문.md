@@ -1,0 +1,89 @@
+# T3 · Pleos 문의문과 회신
+
+2026-11-04. 아래 본문으로 발송했고 운영사무국 답장 세 통을 받아 맨 아래 「회신 기록」에 적었다(세 번째는 11.05 기록). 수신처는 공식 도움말에 안내된 **appdevchallenge@hyundai-partners.com**이다. 참가자 실명·연락처는 발송 계정에서 작성하며 이 공개 문서에는 넣지 않는다.
+
+## 복사할 제목
+
+[차량용 앱 개발 공모전 기술 문의] 다잇 — 음성 수업 앱의 주행 중 사용 및 SDK 제공 범위
+
+## 복사할 본문
+
+안녕하세요. Pleos Connect 차량용 앱 공모전 출품을 준비 중인 다잇 개발팀입니다.
+
+다잇은 이동 시간에 맞춰 미리 준비한 수업 음원을 재생하고, 등하교 시 학교 준비 안내와 짧은 질문을 제공하는 앱입니다. 주행 중 수업 음성을 재생하고, 아이를 포함한 동승자의 짧은 답을 기기 안에서 인식합니다. 답하지 않아도 수업은 그대로 진행되며, 운전자에게 답을 요구하지 않습니다. 현재 Pleos Connect Emulator 2.1.0(Android 14)에서 개발 중이고, 화면은 앱 안의 WebView로 구현했습니다(외부 웹 탐색 기능은 없습니다). NaviHelper로 목적지·남은 시간·거리를 받고 Vehicle State로 동승자 쪽 문 상태를 확인합니다. 현재 수업을 차량에서 즉석 생성하는 기능은 없습니다.
+
+아래 사항의 허용 범위와 필요한 신청·심사 절차를 확인하고 싶습니다.
+
+1. 카테고리와 주행 중 사용: 주 기능이 음성 교육 콘텐츠인 앱을 Music/Audio로 등록할 수 있나요? Kids 또는 다른 카테고리가 적합하다면 주행 중 음원 청취의 허용 범위도 안내 부탁드립니다. 운전자의 음성 답변과 동승자의 음성 답변에 적용되는 기준이 다른지도 궁금합니다. Music/Audio 개발 가이드의 MediaBrowserService, MediaSession, 스티어링 휠 키 요건이 공모전 제출에도 적용되는지, App Market 출시 단계의 요건인지도 알려 주세요. 수업 음원은 어느 하위 카테고리에 해당하나요?
+2. DO 선언과 화면: 현재 Android 표준 distractionOptimized 메타데이터와 CarUxRestrictionsManager를 적용하고, 주행 중 설정·검색을 닫고 짧은 문장과 재생 제어만 표시합니다. 이 방식 외에 Pleos의 별도 DO 신청·검증이 필요한가요? WebView로 만든 화면이 주행 중 제한되는 브라우저 기능의 미디어 앱에 해당하나요? 에뮬레이터 동작을 실제 차량·App Market 승인으로 볼 수 없음을 전제로 문의드립니다.
+3. 내비 화면 뒤의 음성 처리: 내비게이션이 전면에 있을 때 Foreground Service에서 교육 음원 재생과 선택적 기기 내 음성 인식을 유지할 수 있나요? 내비 안내와 통화가 오디오 포커스를 가져가면 수업을 멈추도록 했습니다. 서비스 종류·권한·음성 인식 사용 시점에 필요한 추가 조건이 있나요?
+4. 음성·위치 SDK: 프로젝트 생성 안내에 준비 중으로 표시된 TextToSpeech·SpeechToText·FusedLocation을 이번 공모전 중 사용할 수 있는지, 제공 일정이나 대체 권장 방식이 있는지 궁금합니다. 제공된다면 한국어 기기 내 모드와 Emulator 2.1.0 지원 범위도 알려 주세요. 현재는 사전 제작 음원과 Vosk 기기 내 인식을 사용합니다.
+5. 위치 권한 대체 사용: FusedLocation 제공 전 Android 기본 위치 API와 ACCESS_COARSE_LOCATION·ACCESS_FINE_LOCATION을 사용할 수 있나요? 보호자가 켠 경우에만 위치를 받아 집·학교 도착 여부를 판단하며, 내비 뒤에서 Foreground Service로 유지할 경우 사전 협의나 승인 절차가 필요한지도 문의드립니다. 위치정보 서비스 등록·신고 확인이 공모전 단계에도 필요한지 함께 알려 주세요.
+6. Gleo 연계 가능 범위: 릴리즈 노트에서 LLM SDK 제공 종료(2026-10-19)와 Gleo Interface 안내를 확인했습니다. Gleo Interface와 별개로, 앱이 Gleo 또는 Pleos 언어 모델에 텍스트 생성을 요청할 공식 방법이 남아 있나요? 없다면 현재 미지원으로 이해해도 될까요? 공모전 중 App Schema 심사·연동을 진행할 수 있는지도 궁금합니다.
+7. 차량 퍼미션: Vehicle SDK 퍼미션은 사전 협의·승인 범위에서만 선언할 수 있다고 안내되어 있습니다. 내릴 때 안내를 위해 pleos.car.permission.CAR_DOORS를 사용하려면 어떤 절차가 필요한가요? NaviHelper의 NAVI_ROUTE, NAVI_ROUTE_SEARCH에도 승인이 필요한가요? 공모전 제출에도 필요한지 함께 알려 주세요.
+
+관련 공식 문서나 신청 경로를 항목별로 안내해 주시면 개발과 제출 범위를 정하는 데 도움이 되겠습니다. 감사합니다.
+
+보낸 사람:
+
+## 검토 근거와 발송 전 확인
+
+- [프로젝트 생성·SDK 사용 신청](https://document.pleos.ai/docs/pleos-only/create-my-project): Vehicle State·NaviHelper는 사용 가능, 음성·위치 SDK는 준비 중으로 표시되어 있다(2026-11-03 확인).
+- [앱 카테고리](https://document.pleos.ai/docs/pleos-only/vehicle-app-planning-guide/app-category), [주행 규제 정책](https://document.pleos.ai/docs/pleos-only/vehicle-app-planning-guide/driving-restiction-policy): 카테고리와 주행 상태에 따른 차이가 있어 앱의 실제 허용 여부를 질문한다.
+- [공식 도움말·문의](https://appdevchallenge.auto-hmg.io/guide/help)에서 위 문의 수신처를 확인했다. SDK 기술 문의는 해당 창구에서 적절한 담당자에게 전달해 달라고 요청한다.
+- 7번 문항과 1·6번의 수정은 A01 조사(`team/a/pleos-조사.md`)를 반영한 것이다.
+- 「보낸 사람」은 비워 두었다. 보내는 사람이 직접 적는다.
+- 발송자가 회신받을 계정과 팀 정보를 확인한다. 앱 서명 키·API 키·시크릿을 첨부하지 않는다.
+- 회신을 받으면 이 문서 아래 날짜·문항별 답·공식 근거를 기록한다. 회신 전에는 정책 승인·SDK 지원 확정이라고 기획서에 쓰지 않는다.
+
+## 회신 기록
+
+2026-11-04 기록. 보낸 쪽 서명(실명·학교)은 이 공개 문서에 옮기지 않았다. 발송일과 각 답장을 받은 날짜는 확인 안 함. 근거는 공모전 운영사무국 메일 답변이며 공식 문서 주소는 답장에 없었다.
+
+### 첫 번째 답장
+
+- 공모전 출품 절차와 실제 App Market 입점 심사는 별개다. 공모전 출품을 위해 지금 App Market에 등록할 필요는 없다.
+- 미디어 앱의 세부 구현 요건(MediaBrowserService 등)이 공모전 제출 단계에도 적용되는지는 추가 확인이 필요하다.
+- Gleo Interface는 공모전 앱에서 쓸 수 있다. LLM SDK는 현재 지원하지 않는다.
+- 위 답은 App Schema 심사·연동 가능 시점이나, 별도의 Gleo·Pleos 언어 모델 텍스트 생성 경로까지 확정한 안내는 아니다.
+- 나머지는 현대자동차 측에 확인 중이며 확인되는 대로 추가 답변한다.
+
+### 두 번째 답장(추가 안내)
+
+- SDK 문서에서 안내한 user permission을 AndroidManifest에 선언하면, Connect SDK의 에뮬레이터 개발·테스트에는 별도 권한 신청·승인이 필요 없다.
+- 이 답은 개별 권한의 실제 지원이나 DO·위치정보 서비스의 별도 절차까지 확인한 답은 아니다.
+- 카테고리·DO/WebView·백그라운드 음성·SDK 일정·위치·언어 모델·개별 차량 권한은 공식 확인 후 추가 안내한다.
+
+### 세 번째 답장(확인된 사항 안내)
+
+2026-11-05 기록. 답장 첫머리의 1번 제목에 「운영진을 통한 별도 자료·승인 절차」가 있으나, 이를 묻는 추가 문의를 보냈는지는 확인 안 함.
+
+- 공모전 제공 자료는 Pleos Playground 사이트 문서가 전부다. 운영진이 따로 신청을 받아 승인하거나 자료를 전달하는 절차는 없다. SDK·에뮬레이터의 제공 상태와 이용 조건은 Playground 문서를 보라고 했다. Connect SDK와 NaviHelper는 각 공개 문서의 API 외에는 제공되지 않는다.
+- FusedLocation 대신 일반 앱의 Normal 권한 범위에서 접근할 수 있는 Android 기본 위치 API를 쓸 수 있다는 공식 답이다. 개별 API나 COARSE/FINE 권한의 실제 제공·지원 여부까지 확정한 답은 아니라고 답장에 적혀 있다.
+- 외부 라이브러리는 쓸 수 있다. Android signature·privileged 권한(시스템 앱만 받는 권한)은 쓸 수 없다. 외부 SDK·오픈소스의 약관과 출처 표시는 개발자가 지켜야 한다. Vosk의 개별 동작이나 주행 중 동승자 음성 인식 정책을 승인한 답은 아니다.
+- Music/Audio 등록 요건: 오디오 재생이 주 기능, 주행에 맞는 UI/UX, 백그라운드 재생, 차량 미디어 컨트롤 연동. 차량 탑재 Music/Audio 앱은 MediaBrowserService·MediaSession을 구현하고 스티어링 휠 키 기본 재생 제어를 지원해야 한다. 이는 App Market 등록·차량 탑재 개발정책이며 공모전 제출 단계에도 적용되는지는 확인되지 않았다. 다잇의 카테고리·하위 카테고리를 정한 답은 아니다.
+- 오디오 포커스: 재생 전에 AudioAttributes와 AudioFocusRequest로 포커스를 요청하고 상실·획득을 처리해야 한다. 권장 매핑은 GAIN 정상 재생, LOSS 즉시 중단·정지, LOSS_TRANSIENT 일시정지 후 복귀 가능, LOSS_TRANSIENT_CAN_DUCK 감쇄. Gleo 호출로 LOSS_TRANSIENT를 받으면 즉시 재생을 멈추고 필요하면 포커스를 반납한다. 이 안내가 내비 화면 뒤의 음성 인식·서비스 유지·권한을 허용한다는 뜻은 아니다.
+- 남은 질문은 현대자동차 측에 확인한 뒤 추가 안내한다.
+
+### 문항별 정리
+
+| 문항 | 확정된 답 | 아직 답이 없는 것 |
+|---|---|---|
+| 1. 카테고리와 주행 중 사용 | 공모전 출품과 App Market 입점 심사는 별개, 지금 등록 불필요. App Market·차량 탑재 Music/Audio 요건은 MediaBrowserService·MediaSession·스티어링 휠 키 재생 제어(11.05) | 카테고리·하위 분류, 운전자와 동승자 음성 응답 기준, 미디어 앱 요건의 공모전 적용 여부 |
+| 2. DO 선언과 화면 | 없음 | DO 신청·검증, WebView 화면이 브라우저 제한에 해당하는지 |
+| 3. 내비 뒤 음성 처리 | 오디오 포커스 요청·상실 처리 방식(11.05). 외부 라이브러리 사용 가능, signature·privileged 권한 불가(11.05) | Foreground Service 음원 재생·기기 내 음성 인식 허용과 조건, 주행 중 동승자 음성 인식 정책 |
+| 4. 음성·위치 SDK | 별도 제공·승인 경로 없음. 제공 상태는 Playground 문서 기준(11.05) | 준비 중 SDK 제공 일정, 한국어 기기 내 모드, 에뮬레이터 지원 |
+| 5. 위치 권한 대체 | 에뮬레이터 개발·테스트는 Manifest 선언만으로 별도 승인 불필요. 일반 앱 권한 범위의 Android 기본 위치 API 사용 가능(11.05) | COARSE/FINE 권한의 실제 지원, 내비 뒤 위치 수신, 위치정보 서비스 등록·신고 |
+| 6. Gleo 연계 | Gleo Interface 사용 가능, LLM SDK 미지원 | App Schema 심사·연동 시점, 다른 언어 모델 글 생성 경로 |
+| 7. 차량 퍼미션 | 에뮬레이터 개발·테스트는 Manifest 선언만으로 별도 승인 불필요. 공개 문서 API 외에는 제공 안 됨(11.05) | CAR_DOORS·NAVI_ROUTE·NAVI_ROUTE_SEARCH의 실제 지원과 승인 절차, 공모전 제출 때 필요한지 |
+
+### 앱 개발에 주는 뜻
+
+- 지금처럼 에뮬레이터에서 개발과 시험을 이어 간다. 다만 실제 차량·제출 단계에서 개별 권한이 허용되는지는 아직 모른다.
+- LLM SDK로 수업을 즉석 생성할 수는 없다. 다른 생성 경로가 있는지는 답이 없다. 지금 앱에는 즉석 생성 기능이 없어 바로 바뀌는 것은 없다.
+- 준비 중인 음성·위치 SDK를 따로 받을 길은 없다. 사전 제작 음원, Vosk 기기 내 인식, Android 기본 위치를 그대로 쓴다.
+- 앱 Manifest(`android/app/src/main/AndroidManifest.xml`)에는 Android signature·privileged 권한이 없다(11.05 확인). `pleos.car.permission.*` 세 권한의 보호 등급은 확인 안 함.
+- 오디오 포커스(`android/app/src/main/java/io/dait/app/VoiceSession.kt`)는 안내와 거의 같다(11.05 확인): 재생 전 AudioAttributes·AudioFocusRequest로 요청, GAIN 이어 재생, LOSS 정지, LOSS_TRANSIENT 일시정지. 다른 점은 CAN_DUCK에서 소리를 줄이지 않고 멈춘다는 것이다. 말소리는 작게 깔면 알아듣기 어려워 일부러 그렇게 했다(`setWillPauseWhenDucked`). Gleo 호출 때 포커스를 반납하지는 않고 일시정지한 채 돌려받기를 기다린다. 안내는 「필요 시」 반납이라 지금은 바꾸지 않았다.
+- 차량 탑재 Music/Audio 요건(MediaBrowserService·MediaSession·스티어링 휠 키)은 앱에 없다(11.05 코드 검색). 공모전 제출에도 필요한지 답이 오면 그때 정한다.
+- Vosk·JNA·Lucide 라이선스 파일은 앱에 들어 있다(기획안 「권리 확인」). 출처 표시 화면이 필요한지는 확인 안 함.
+- 추가 답장이 오면 이 절 아래에 이어 적고, 기획안 「Pleos 측에 확인할 질문」도 함께 고친다.

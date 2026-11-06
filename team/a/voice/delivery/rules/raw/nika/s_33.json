@@ -1,0 +1,14 @@
+{
+  "duration": 1.08,
+  "sample_rate": 24000,
+  "peak": 19667,
+  "rms": 3802.62,
+  "sha256": "6113ef12c96539f4836a7946faaa7ea8d7722f0955e248cd9bb9724c53268668",
+  "id": "s_33",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "문학",
+  "fingerprint": "6173023e6d6de3758781720068d61192e47dd1399fd34aae60706200da82f8b0",
+  "generated_at": "2026-11-03T23:41:13+0900",
+  "review": "generated_not_listening_reviewed"
+}

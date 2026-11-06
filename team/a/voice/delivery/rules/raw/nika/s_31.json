@@ -1,0 +1,14 @@
+{
+  "duration": 1.24,
+  "sample_rate": 24000,
+  "peak": 14945,
+  "rms": 2330.86,
+  "sha256": "965e93bb5f33e60aeb7d73b1b4f77f0a544ad1b36d8d17046d1f94e10ec776d6",
+  "id": "s_31",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "공통수학",
+  "fingerprint": "100532710e193aa82120c132c4556d7c12bb1f9daba22c3a28a7fbbbcfe3c22b",
+  "generated_at": "2026-11-03T23:41:00+0900",
+  "review": "generated_not_listening_reviewed"
+}

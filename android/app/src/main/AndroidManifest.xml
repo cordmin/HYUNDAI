@@ -2,16 +2,46 @@
     <uses-feature android:name="android.hardware.type.automotive" android:required="true" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="pleos.car.permission.NAVI_ROUTE" />
+    <uses-permission android:name="pleos.car.permission.NAVI_ROUTE_SEARCH" />
+    <uses-permission android:name="pleos.car.permission.CAR_DOORS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+    <uses-feature android:name="android.hardware.location.network" android:required="false" />
     <application android:label="다잇" android:icon="@drawable/ic_dait" android:theme="@style/AppTheme" android:allowBackup="false" android:fullBackupContent="false" android:dataExtractionRules="@xml/data_extraction_rules" android:supportsRtl="true">
         <uses-library android:name="android.car" android:required="false" />
-        <activity android:name=".MainActivity" android:exported="true">
+        <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTask" android:configChanges="uiMode|orientation|screenSize|smallestScreenSize|screenLayout|density|fontScale|locale|layoutDirection|keyboard|keyboardHidden|navigation">
+            <meta-data android:name="distractionOptimized" android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.CAR_LAUNCHER" />
             </intent-filter>
+            <!-- Gleo가 assets/schema.json의 START_LESSON으로 앱을 연다. -->
+            <intent-filter>
+                <action android:name="START_LESSON" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
+        <!-- 화면을 띄우지 않는 Gleo 부름. 내비가 앞에 있어도 그대로 둔다. -->
+        <receiver android:name=".GleoReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="GET_SCHOOL_PREP" />
+                <action android:name="CONTROL_LESSON" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".JourneyService" android:exported="false" android:foregroundServiceType="mediaPlayback|microphone|location" />
+        <!-- 차의 미디어 화면이 다잇 수업을 오디오로 찾고, 핸들 버튼이 수업을 멈추고 잇게 한다. -->
+        <service android:name=".LessonMediaService" android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
     </application>
 </manifest>

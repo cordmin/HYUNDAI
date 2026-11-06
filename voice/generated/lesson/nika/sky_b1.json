@@ -1,0 +1,14 @@
+{
+  "duration": 34.12,
+  "sample_rate": 24000,
+  "peak": 17311,
+  "rms": 2244.99,
+  "sha256": "2325025a5bda13058e9fbfca22cd4e6b5258f2c8beb563adc2090d0f408d5eae",
+  "id": "sky_b1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "햇빛은 그냥 보면 하얗게 보입니다. 그런데 비가 그친 뒤 하늘에 무지개가 뜨는 걸 떠올려 보세요. 무지개의 빨강, 주황, 노랑, 초록, 파랑, 보라는 어디에서 왔을까요? 바로 햇빛 안에서 왔습니다. 하얗게 보이는 햇빛은 사실 여러 색의 빛이 섞여 있는 것입니다. 삼각형 유리 기둥인 프리즘에 햇빛을 통과시켜도 이 색들이 줄지어 펼쳐집니다. 뉴턴이 바로 이 실험으로 햇빛의 비밀을 보여 주었습니다.",
+  "fingerprint": "ea2232f3b4ad363810170792327fb6ec673e2d09bd28d0887ef4b64e7dc5a099",
+  "generated_at": "2026-11-06T00:20:50+0900",
+  "review": "generated_not_listening_reviewed"
+}

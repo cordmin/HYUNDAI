@@ -1,0 +1,14 @@
+{
+  "duration": 5.08,
+  "sample_rate": 24000,
+  "peak": 19961,
+  "rms": 3678.34,
+  "sha256": "e319fb42c31d86f095bc10bda69f15bb3f4a9de83a4838d0c6c74b330c11f219",
+  "id": "demo_07",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "장면을 이해하고, 판단하고, 뒷이야기를 상상합니다.",
+  "fingerprint": "c464efc48f5efb5d8240db2d5a03b7596ba358f43fd96cc008a95dd758c51bcd",
+  "generated_at": "2026-11-03T11:04:33+0900",
+  "review": "generated_not_listening_reviewed"
+}

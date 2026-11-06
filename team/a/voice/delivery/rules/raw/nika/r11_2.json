@@ -1,0 +1,14 @@
+{
+  "duration": 4.0,
+  "sample_rate": 24000,
+  "peak": 22060,
+  "rms": 3550.92,
+  "sha256": "d9124dc47cf73047c52813f8c25dff220089c62eb5677debe3409440c3cc247f",
+  "id": "r11_2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "들려줘서 고마워요. 오늘은 편하게 쉬어요.",
+  "fingerprint": "9adb23e755c2ad23c0c7091e1568789f709c61582199fdcd953b2574aef513e1",
+  "generated_at": "2026-11-03T22:59:17+0900",
+  "review": "generated_not_listening_reviewed"
+}

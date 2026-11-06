@@ -1,0 +1,14 @@
+{
+  "duration": 29.96,
+  "sample_rate": 24000,
+  "peak": 26996,
+  "rms": 3778.24,
+  "sha256": "66d34c072d23430939de572ca68a979d813ea5bb7716f4593dca4151ba71164f",
+  "id": "rhythm_e13",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "같은 네 박 예시를 듣고 변화를 찾아보겠습니다. 한 예시는 첫 박을 나누어 소리를 더 넣고, 다른 예시는 소리를 내는 자리는 그대로 두되 몇 소리만 더 도드라지게 냈습니다. 두 예시에서 바뀐 점을 같은 말로 설명해도 될까요? 소리를 놓는 자리와 소리가 두드러지는 정도를 나누어 생각해 보세요. 무엇이 더 신나는지는 정답이 하나가 아니지만, 어느 조건을 바꾸었는지는 비교할 수 있습니다.",
+  "fingerprint": "5e8483c4c5148c67c96a3c88ad21a5a38c257d3cb827a7a585b5a05aff96e7fc",
+  "generated_at": "2026-11-06T00:16:51+0900",
+  "review": "generated_not_listening_reviewed"
+}

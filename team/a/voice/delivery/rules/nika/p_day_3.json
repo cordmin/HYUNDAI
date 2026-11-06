@@ -1,0 +1,12 @@
+{
+  "id": "p_day_3",
+  "text": "수요일은",
+  "source_sha256": "ed3332611f0cf6f2e38d11a91cbef57c6450bd72092b0fab4e622e1e639319ce",
+  "fingerprint": "81248537f4e26f28b3b25dd6f58fde5599bde51c002c64ebf40873a266903408",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.36,
+  "sample_rate": 24000,
+  "peak": 13785,
+  "rms": 3616.54,
+  "sha256": "ed3332611f0cf6f2e38d11a91cbef57c6450bd72092b0fab4e622e1e639319ce"
+}

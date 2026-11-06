@@ -1,0 +1,14 @@
+{
+  "duration": 26.08,
+  "sample_rate": 24000,
+  "peak": 19165,
+  "rms": 2638.08,
+  "sha256": "742cdaded2ca9b62b2cdc0891ef13c4113395fcb1f84d8899ef21b5306463c0a",
+  "id": "rhythm_m10",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "도착한 뒤 해 볼 작은 작곡을 미리 생각해 볼까요? 같은 간격의 네 박 가운데 한 자리를 골라 쉬게 하고, 나머지 자리에는 짧은 소리를 하나씩 놓아 보세요. 정답은 하나가 아닙니다. 지금 소리를 내거나 외울 필요는 없습니다. 어디를 쉬게 하면 어떤 느낌일지 떠올리는 것만으로도 좋습니다.",
+  "fingerprint": "ebc402d8190efb4dc4fd4cd7efc0f40ce0387187818be2b6be5383e115372ff0",
+  "generated_at": "2026-11-06T00:14:09+0900",
+  "review": "generated_not_listening_reviewed"
+}

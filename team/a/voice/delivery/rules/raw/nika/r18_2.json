@@ -1,0 +1,14 @@
+{
+  "duration": 2.12,
+  "sample_rate": 24000,
+  "peak": 25012,
+  "rms": 3267.97,
+  "sha256": "accd1dfbb8b7062a01ddcfa8affe11129a0aec4c6e76673c65b07e4ed04e1833",
+  "id": "r18_2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "좋아요. 꼭 해 봐요.",
+  "fingerprint": "2be5ec58b38c5721fc9b237d85bf16742f54943e8db183062137b54716471724",
+  "generated_at": "2026-11-03T23:00:32+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 31.04,
+  "sample_rate": 24000,
+  "peak": 19471,
+  "rms": 2577.23,
+  "sha256": "eb9aded9d5646318934dc4e91819684420d729afb4eef27f3047bc15c9b9c08c",
+  "id": "sky_n3",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "해가 진 직후 머리 위 하늘이 짙푸르게 물드는 시간을 본 적이 있으실 겁니다. 사진가들이 좋아하는 이 시간은 공기의 산란만으로는 잘 설명되지 않습니다. 이때 햇빛은 높은 하늘의 오존층을 길게 지나오는데, 오존이 주황빛과 붉은빛 쪽을 일부 흡수합니다. 그래서 파란빛이 더 남아 하늘이 깊은 푸른색을 띱니다. 흔한 하늘색 하나에도 여러 까닭이 겹쳐 있습니다.",
+  "fingerprint": "c46adf4c1f7c58bf54fffa92b20b55c8aff88bdb467c193636fff4fa764cd68c",
+  "generated_at": "2026-11-06T00:23:36+0900",
+  "review": "generated_not_listening_reviewed"
+}

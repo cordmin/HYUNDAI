@@ -1,0 +1,14 @@
+{
+  "duration": 3.68,
+  "sample_rate": 24000,
+  "peak": 14703,
+  "rms": 2421.89,
+  "sha256": "dd5c652dedd872fb30931974df7bc7533ea6185470c8426fc3ac48991213c718",
+  "id": "demo_04",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "답은 켤 때만 글로, 이 차 안에 남습니다.",
+  "fingerprint": "aea22d82459600dcae3acca4d636cce96f24193603367c9f6947d194f6bec439",
+  "generated_at": "2026-11-03T11:04:14+0900",
+  "review": "generated_not_listening_reviewed"
+}

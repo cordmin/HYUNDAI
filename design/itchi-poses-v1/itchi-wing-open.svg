@@ -1,0 +1,96 @@
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="wing-open-headGrad" x1="555" y1="200" x2="725" y2="370" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#24507A"/>
+      <stop offset="100%" stop-color="#183858"/>
+    </linearGradient>
+    <linearGradient id="wing-open-wingGrad" x1="640" y1="260" x2="880" y2="410" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#25527C"/>
+      <stop offset="100%" stop-color="#173654"/>
+    </linearGradient>
+    <linearGradient id="wing-open-wingBackGrad" x1="600" y1="220" x2="850" y2="380" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1D4164"/>
+      <stop offset="100%" stop-color="#122B43"/>
+    </linearGradient>
+    <linearGradient id="wing-open-tailGrad" x1="780" y1="405" x2="1020" y2="510" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#16334E"/>
+      <stop offset="50%" stop-color="#234E78"/>
+      <stop offset="100%" stop-color="#2E6292"/>
+    </linearGradient>
+    <linearGradient id="wing-open-bellyGrad" x1="565" y1="350" x2="845" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F2F9FE"/>
+      <stop offset="55%" stop-color="#DCEFFE"/>
+      <stop offset="100%" stop-color="#B4DDF8"/>
+    </linearGradient>
+    <linearGradient id="wing-open-ribbonGrad" x1="528" y1="240" x2="1018" y2="475" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="30%" stop-color="#8ADCFD"/>
+      <stop offset="55%" stop-color="#FFFFFF"/>
+      <stop offset="82%" stop-color="#BAE6FD"/>
+      <stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <linearGradient id="wing-open-branchGrad" x1="560" y1="534" x2="880" y2="534" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#15263B"/>
+      <stop offset="55%" stop-color="#2C4F72"/>
+      <stop offset="100%" stop-color="#203C58"/>
+    </linearGradient>
+    <radialGradient id="wing-open-eyeHaloGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.52"/>
+      <stop offset="55%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="wing-open-calmGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.8"/>
+    </filter>
+  </defs>
+  <rect id="bg" x="0" y="0" width="1920" height="1080" fill="#0B1220"/>
+  <g transform="translate(960, 540) scale(1.66) translate(-770, -374)">
+    <g id="branch">
+      <line x1="564" y1="534" x2="880" y2="534" stroke="url(#wing-open-branchGrad)" stroke-width="12" stroke-linecap="round"/>
+    </g>
+    <g id="wing-back">
+      <path d="M 676 286 C 708 214, 764 146, 824 126 C 854 116, 872 134, 858 178 C 844 222, 810 278, 774 316 Z" fill="url(#wing-open-wingBackGrad)"/>
+      <path d="M 684 278 C 714 212, 766 150, 822 130" stroke="#31689A" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.4"/>
+    </g>
+    <g id="tail">
+      <path d="M 836 426 L 884 386 C 930 404, 976 430, 1022 462 C 1028 466, 1026 474, 1016 474 L 992 473 L 1002 487 C 1006 493, 998 499, 987 495 C 934 474, 878 450, 836 426 Z" fill="url(#wing-open-tailGrad)"/>
+      <path d="M 868 408 C 912 428, 954 450, 992 473" stroke="#10273E" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.65"/>
+      <path d="M 868 408 C 912 428, 954 450, 992 473" stroke="#3E76A8" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.32" transform="translate(0, 2)"/>
+    </g>
+    <g id="body">
+      <path d="M 555 310 C 572 394, 646 476, 742 476 C 816 476, 868 438, 884 386 L 855 340 L 635 340 L 580 310 Z" fill="url(#wing-open-bellyGrad)"/>
+      <path d="M 592 400 C 646 464, 742 476, 806 460 C 852 446, 874 414, 884 386 C 856 422, 798 450, 726 450 C 658 450, 614 426, 592 400 Z" fill="#B5E0FA" opacity="0.36"/>
+      <path d="M 674 212 C 736 230, 828 296, 886 387 L 884 386 L 762 270 C 722 260, 690 270, 666 294 L 658 264 Z" fill="#163452"/>
+    </g>
+    <g id="wing">
+      <path d="M 648 306 C 622 326, 628 360, 664 360 C 684 360, 688 336, 704 336 C 722 336, 738 368, 756 368 C 774 368, 794 340, 812 340 C 832 340, 858 372, 884 386 C 896 328, 926 232, 916 154 C 912 122, 882 118, 840 144 C 782 180, 714 242, 666 294 L 648 306 Z" fill="url(#wing-open-wingGrad)"/>
+      <path d="M 668 292 C 716 240, 782 180, 840 144 C 882 118, 912 122, 916 154 C 924 216, 902 302, 884 374" stroke="#112A42" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <path d="M 674 292 C 722 242, 786 184, 842 150 C 878 126, 904 130, 908 158" stroke="#31689A" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.52"/>
+      <path d="M 744 260 C 794 222, 848 196, 896 186" stroke="#3E78AC" stroke-width="7.0" stroke-linecap="round" fill="none" opacity="0.25"/>
+      <path d="M 768 302 C 810 278, 854 262, 896 258" stroke="#3E78AC" stroke-width="6.0" stroke-linecap="round" fill="none" opacity="0.20"/>
+    </g>
+    <g id="head">
+      <path d="M 556 254 C 568 210, 594 188, 628 190 C 672 192, 696 214, 688 248 C 682 276, 668 292, 648 306 C 622 326, 628 360, 664 360 C 684 360, 688 336, 704 336 L 664 360 C 604 358, 566 340, 555 312 C 549 296, 550 274, 556 254 Z" fill="url(#wing-open-headGrad)"/>
+    </g>
+    <g id="beak">
+      <path d="M 522 268 L 558 254 L 554 280 Z" fill="#1F3D5C"/>
+    </g>
+    <g id="ribbon">
+      <path d="M 527 266 L 556 254 C 568 210, 594 188, 628 190 C 672 192, 696 214, 688 248 C 682 276, 668 292, 648 306 C 622 326, 628 360, 664 360 C 684 360, 688 336, 704 336 C 722 336, 738 368, 756 368 C 774 368, 794 340, 812 340 C 832 340, 858 372, 884 386 C 930 404, 976 430, 1018 460" stroke="#38BDF8" stroke-width="14.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.14" filter="url(#wing-open-calmGlow)"/>
+      <path d="M 527 266 L 556 254 C 568 210, 594 188, 628 190 C 672 192, 696 214, 688 248 C 682 276, 668 292, 648 306 C 622 326, 628 360, 664 360 C 684 360, 688 336, 704 336 C 722 336, 738 368, 756 368 C 774 368, 794 340, 812 340 C 832 340, 858 372, 884 386 C 930 404, 976 430, 1018 460" stroke="url(#wing-open-ribbonGrad)" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    <g id="t-bar">
+      <path d="M 956 441.5 L 996 441.5" stroke="#38BDF8" stroke-width="11.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.20" filter="url(#wing-open-calmGlow)"/>
+      <path d="M 956 441.5 L 996 441.5" stroke="#FFFFFF" stroke-width="7.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    <g id="eyes">
+      <circle cx="608" cy="250" r="18" fill="url(#wing-open-eyeHaloGrad)"/>
+      <circle cx="608" cy="250" r="11.0" fill="#38BDF8" opacity="0.90"/>
+      <circle cx="608" cy="250" r="5.2" fill="#FFFFFF"/>
+    </g>
+    <g id="legs">
+      <path d="M 706 470 L 688 518 M 680 530 C 682 520, 695 518, 704 526" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M 774 460 L 752 518 M 744 530 C 746 520, 759 518, 768 526" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+  </g>
+</svg>

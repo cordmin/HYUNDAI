@@ -1,0 +1,14 @@
+{
+  "duration": 31.4,
+  "sample_rate": 24000,
+  "peak": 23613,
+  "rms": 2699.48,
+  "sha256": "06d1c40ad4a90c823345e612613e9b1748dfd9bc53c9c21725ca62d0c5c876f0",
+  "id": "sky_b3",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "물결 이야기를 조금만 더 해 볼게요. 항구의 방파제 앞에 작은 돌멩이들이 흩어져 있다고 상상해 보겠습니다. 길고 커다란 너울은 돌멩이를 만나도 별일 없다는 듯이 그대로 넘어갑니다. 하지만 잘고 촘촘한 물결은 돌멩이에 부딪혀 이리저리 흩어집니다. 빛과 공기도 이와 조금 닮았습니다. 물론 빛이 실제로 돌멩이에 부딪히는 것은 아니지만, 그림을 그리는 데는 이 비유가 도움이 됩니다.",
+  "fingerprint": "bded1e3d4ba330fd663f7f5681783327fe96ca064187872d181d1a5dfd72af1c",
+  "generated_at": "2026-11-06T00:21:31+0900",
+  "review": "generated_not_listening_reviewed"
+}

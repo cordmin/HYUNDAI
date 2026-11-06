@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>다잇 로고에서 새로</title>
+<style>
+  body { margin: 0; background: #060B16; color: #BAE6FD; font-family: "Malgun Gothic", sans-serif; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+  svg { width: 100%; display: block; border-radius: 20px; }
+  .bar { display: flex; gap: 12px; align-items: center; margin-top: 14px; }
+  button { background: #132544; color: #E0F2FE; border: 1px solid #2A3A55; border-radius: 8px; padding: 8px 14px; font: inherit; cursor: pointer; }
+  input[type=range] { flex: 1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<!-- 다잇 로고의 리본 한 획이 끊기지 않고 구부러져 안티그래비티의 calm-v2 새(character/dait-bird-final-calm-v2.svg)가 되는 움직임.
+     2026-11-04 calm-v2로 확정. 새 그림의 선·색은 calm-v2 원본을 그대로 쓴다. -->
+<svg id="st" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="headGrad" x1="555" y1="200" x2="685" y2="370" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#24507A"/><stop offset="100%" stop-color="#183858"/>
+    </linearGradient>
+    <linearGradient id="wingGrad" x1="660" y1="275" x2="880" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#25527C"/><stop offset="100%" stop-color="#173654"/>
+    </linearGradient>
+    <linearGradient id="tailGrad" x1="840" y1="405" x2="1020" y2="495" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#16334E"/><stop offset="50%" stop-color="#234E78"/><stop offset="100%" stop-color="#2E6292"/>
+    </linearGradient>
+    <linearGradient id="bellyGrad" x1="565" y1="360" x2="845" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F2F9FE"/><stop offset="55%" stop-color="#DCEFFE"/><stop offset="100%" stop-color="#B4DDF8"/>
+    </linearGradient>
+    <linearGradient id="ribbonGrad" x1="528" y1="260" x2="1018" y2="472" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/><stop offset="30%" stop-color="#8ADCFD"/><stop offset="55%" stop-color="#FFFFFF"/>
+      <stop offset="82%" stop-color="#BAE6FD"/><stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <!-- 로고일 때의 리본 색: 앱 로고처럼 하늘색 → 흰색 → 하늘색 -->
+    <linearGradient id="logoGrad" x1="485" y1="0" x2="1062" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#38BDF8"/><stop offset="0.5" stop-color="#FFFFFF"/><stop offset="1" stop-color="#38BDF8"/>
+    </linearGradient>
+    <linearGradient id="branchGrad" x1="560" y1="546" x2="876" y2="546" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#15263B"/><stop offset="55%" stop-color="#2C4F72"/><stop offset="100%" stop-color="#203C58"/>
+    </linearGradient>
+    <radialGradient id="eyeHaloGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.52"/><stop offset="55%" stop-color="#38BDF8" stop-opacity="0.16"/><stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="calmGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.8"/>
+    </filter>
+  </defs>
+  <rect x="0" y="0" width="1920" height="1080" fill="#0B1220"/>
+
+  <g transform="translate(960, 540) scale(1.66) translate(-770, -374)">
+    <g id="bob">
+      <line id="branch" x1="564" y1="534" x2="880" y2="534" stroke="url(#branchGrad)" stroke-width="12" stroke-linecap="round"/>
+      <g id="gTail">
+        <path d="M 836 438 L 884 398 C 930 416, 976 442, 1022 474 C 1028 478, 1026 486, 1016 486 L 992 485 L 1002 499 C 1006 505, 998 511, 987 507 C 934 486, 878 462, 836 438 Z" fill="url(#tailGrad)"/>
+        <path d="M 868 420 C 912 440, 954 462, 992 485" stroke="#10273E" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.65"/>
+        <path d="M 868 420 C 912 440, 954 462, 992 485" stroke="#3E76A8" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.32" transform="translate(0, 2)"/>
+      </g>
+      <g id="gBelly">
+        <path d="M 555 322 C 572 406, 646 488, 742 488 C 816 488, 868 450, 884 398 L 855 352 L 635 352 L 580 322 Z" fill="url(#bellyGrad)"/>
+        <path d="M 592 412 C 646 476, 742 488, 806 472 C 852 458, 874 426, 884 398 C 856 434, 798 462, 726 462 C 658 462, 614 438, 592 412 Z" fill="#B5E0FA" opacity="0.36"/>
+      </g>
+      <g id="gWing">
+        <path d="M 674 224 C 736 242, 828 308, 886 399 L 884 398 L 762 282 C 722 272, 690 282, 666 306 L 658 276 Z" fill="#163452"/>
+        <path d="M 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 C 722 348, 738 380, 756 380 C 774 380, 794 352, 812 352 C 832 352, 858 384, 884 398 C 864 344, 820 296, 762 282 C 722 272, 690 282, 666 306 L 648 318 Z" fill="url(#wingGrad)"/>
+        <path d="M 672 304 C 694 280, 726 272, 762 282 C 820 296, 864 344, 884 398" stroke="#112A42" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+        <path d="M 676 304 C 698 282, 728 276, 760 286 C 816 300, 858 344, 880 394" stroke="#31689A" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.42"/>
+        <path d="M 734 322 C 770 348, 814 366, 860 380" stroke="#3E78AC" stroke-width="7.5" stroke-linecap="round" fill="none" opacity="0.22"/>
+      </g>
+      <g id="gHead">
+        <path d="M 556 266 C 568 222, 594 200, 628 202 C 672 204, 696 226, 688 260 C 682 288, 668 304, 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 L 664 372 C 604 370, 566 352, 555 324 C 549 308, 550 286, 556 266 Z" fill="url(#headGrad)"/>
+        <path d="M 523 284 L 558 266 L 555 292 Z" fill="#1F3D5C"/>
+      </g>
+      <path id="rbGlow" stroke="#38BDF8" stroke-width="14.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.14" filter="url(#calmGlow)"/>
+      <path id="rbLogo" stroke="url(#logoGrad)" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path id="rb" stroke="url(#ribbonGrad)" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path id="barGlow" stroke="#38BDF8" stroke-width="11.5" stroke-linecap="round" fill="none" opacity="0.20" filter="url(#calmGlow)"/>
+      <path id="bar" stroke="#FFFFFF" stroke-linecap="round" fill="none"/>
+      <g id="eye">
+        <circle id="halo" r="18" fill="url(#eyeHaloGrad)"/>
+        <circle id="iris" fill="#38BDF8"/>
+        <circle id="core" fill="#FFFFFF"/>
+      </g>
+      <g id="gLegs">
+        <path d="M 706 482 L 686 525 M 678 538 C 677 524, 694 522, 704 529" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M 774 472 L 750 525 M 742 538 C 741 524, 758 522, 768 529" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </g>
+    </g>
+  </g>
+</svg>
+<div class="bar">
+  <button id="pl">다시 보기</button>
+  <input type="range" id="sc" min="0" max="1000" step="1" value="0" aria-label="장면 넘겨 보기">
+</div>
+</div>
+<script>
+// 로고 획과 새 리본을 같은 구간끼리 짝지어, 구간마다 같은 개수의 점을 맞춘다.
+// 로고: D 오름 / D 위 / D 닫힘 / 밑줄 / a 오름 / a 내림 / i 오름 / i 내림 / t
+// 새:   부리·이마 / 정수리 / 뒤통수 내림 / D 말림 아래 / 말림에서 올라옴 / 물결 내림 / 물결 오름 / 꼬리 뿌리로 / 꼬리 윗선
+const LOGO = [
+  'M10 26 C12 10, 16 6, 22 6', 'M22 6 C28 6, 32 12, 30 20', 'M30 20 C28 28, 20 28, 16 28',
+  'M16 28 C26 28, 38 28, 42 20', 'M42 20 C44 14, 48 14, 50 18', 'M50 18 C52 24, 48 28, 54 28',
+  'M54 28 C60 28, 62 18, 62 14', 'M62 14 C62 26, 68 28, 72 28', 'M72 28 C76 28, 80 18, 80 10'];
+const BIRD = [
+  'M 528 282 L 556 266 C 568 222, 594 200, 628 202', 'M 628 202 C 672 204, 696 226, 688 260', 'M 688 260 C 682 288, 668 304, 648 318',
+  'M 648 318 C 622 338, 628 372, 664 372', 'M 664 372 C 684 372, 688 348, 704 348', 'M 704 348 C 722 348, 738 380, 756 380',
+  'M 756 380 C 774 380, 794 352, 812 352', 'M 812 352 C 832 352, 858 384, 884 398', 'M 884 398 C 930 416, 976 442, 1018 472'];
+const BIRD_D = 'M 528 282 L 556 266 C 568 222, 594 200, 628 202 C 672 204, 696 226, 688 260 C 682 288, 668 304, 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 C 722 348, 738 380, 756 380 C 774 380, 794 352, 812 352 C 832 352, 858 384, 884 398 C 930 416, 976 442, 1018 472';
+// 로고 좌표 → 새 좌표: 로고 가운데(48,17)를 새 리본 가운데(773,337)에 맞추고 6.4배
+const K = 6.4, LX = (x) => K * (x - 48) + 773, LY = (y) => K * (y - 17) + 337;
+const PER = 48, NS = 'http://www.w3.org/2000/svg';
+const st = document.getElementById('st');
+function sample(list, map) {
+  const pts = [];
+  list.forEach((d, k) => {
+    const p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', d);
+    st.appendChild(p);
+    const L = p.getTotalLength();
+    for (let i = (k ? 1 : 0); i <= PER; i++) {
+      const q = p.getPointAtLength(L * i / PER);
+      pts.push(map(q.x, q.y));
+    }
+    p.remove();
+  });
+  return pts;
+}
+const A = sample(LOGO, (x, y) => [LX(x), LY(y)]), B = sample(BIRD, (x, y) => [x, y]), N = A.length;
+
+const $ = id => document.getElementById(id);
+const clamp = x => Math.max(0, Math.min(1, x));
+const mix = (a, b, t) => a + (b - a) * t;
+const inOut = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const outBack = t => { const c = 1.5; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+const win = (T, s, d) => clamp((T - s) / d);
+
+// 시간표(밀리초)
+const MORPH = 700, SPREAD = 650, MDUR = 1250, TOTAL = 4400;
+const DOT0 = [LX(62), LY(7.5)], EYE = [608, 262];
+const BAR0 = [[LX(74), LY(16)], [LX(86), LY(16)]], BAR1 = [[956, 453.5], [996, 453.5]];
+
+function grow(id, T, start, ax, ay, dur = 560) {
+  const k = win(T, start, dur);
+  const el = $(id);
+  el.setAttribute('opacity', clamp(k * 1.5));
+  const s = mix(0.6, 1, outBack(k));
+  el.setAttribute('transform', `translate(${ax} ${ay}) scale(${s}) translate(${-ax} ${-ay})`);
+}
+
+function draw(T) {
+  // 1. 리본: 부리 쪽부터 꼬리 쪽으로 차례로 구부러진다
+  const pAll = win(T, MORPH, MDUR + SPREAD);
+  let d;
+  if (pAll >= 1) d = BIRD_D;
+  else {
+    d = '';
+    for (let i = 0; i < N; i++) {
+      const p = inOut(win(T, MORPH + SPREAD * i / N, MDUR));
+      d += (i ? 'L' : 'M') + mix(A[i][0], B[i][0], p).toFixed(1) + ' ' + mix(A[i][1], B[i][1], p).toFixed(1);
+    }
+  }
+  const pc = inOut(pAll);
+  ['rb', 'rbLogo', 'rbGlow'].forEach(id => $(id).setAttribute('d', d));
+  $('rb').setAttribute('stroke-width', mix(16.6, 10.5, pc));
+  $('rbLogo').setAttribute('stroke-width', mix(16.6, 10.5, pc));
+  // 로고 색에서 새 리본 색으로 천천히 바뀐다. 두 색을 함께 흐리게 하면 중간에 탁해지므로,
+  // 로고 색은 밑에 그대로 두고 새 리본 색만 위에서 짙어지게 한다.
+  $('rbLogo').setAttribute('opacity', pc >= 1 ? 0 : 1);
+  $('rb').setAttribute('opacity', pc);
+  $('rbGlow').setAttribute('opacity', 0.14 * pc);
+
+  // 2. t 가로줄: 꼬리가 구부러지는 동안 따라 내려와 꼬리 리본을 가로지른다
+  const pb = inOut(win(T, MORPH + SPREAD * 0.8, MDUR));
+  const bx1 = mix(BAR0[0][0], BAR1[0][0], pb), by = mix(BAR0[0][1], BAR1[0][1], pb), bx2 = mix(BAR0[1][0], BAR1[1][0], pb);
+  const bd = `M ${bx1.toFixed(1)} ${by.toFixed(1)} L ${bx2.toFixed(1)} ${by.toFixed(1)}`;
+  $('bar').setAttribute('d', bd); $('barGlow').setAttribute('d', bd);
+  $('bar').setAttribute('stroke-width', mix(14.5, 7.8, pb));
+  $('barGlow').setAttribute('opacity', 0.2 * pb);
+
+  // 3. i 점: 먼저 톡 튀고, 포물선을 그리며 머리 안 눈 자리로 뛰어 앉는다
+  const pop = win(T, 250, 380), popS = 1 + 0.4 * Math.sin(Math.PI * pop);
+  const pj = inOut(win(T, MORPH + 150, 950));
+  const C = [720, 90], u = 1 - pj;
+  const x = u * u * DOT0[0] + 2 * u * pj * C[0] + pj * pj * EYE[0];
+  const y = u * u * DOT0[1] + 2 * u * pj * C[1] + pj * pj * EYE[1];
+  const land = win(T, MORPH + 1100, 260), sq = 1 - 0.28 * Math.sin(Math.PI * land);
+  const blink = win(T, 3650, 230), bl = 1 - 0.9 * Math.sin(Math.PI * blink);
+  ['halo', 'iris', 'core'].forEach(id => { $(id).setAttribute('cx', x); $(id).setAttribute('cy', y); });
+  $('iris').setAttribute('r', mix(17.9, 11, pj) * popS);
+  $('core').setAttribute('r', mix(8.5, 5.2, pj) * popS);
+  $('iris').setAttribute('opacity', mix(1, 0.9, pj));
+  $('halo').setAttribute('opacity', 0.5 + 0.5 * Math.sin(Math.PI * pop) + 0.5 * pj);
+  $('eye').setAttribute('transform', `translate(${x} ${y}) scale(${(1 + (1 - sq) * 0.6).toFixed(3)} ${(sq * bl).toFixed(3)}) translate(${-x} ${-y})`);
+
+  // 4. 리본이 자리 잡은 곳부터 색이 차오른다: 머리 → 날개·등 → 배 → 꼬리
+  grow('gHead', T, 1450, 622, 280);
+  grow('gWing', T, 1750, 760, 330);
+  grow('gBelly', T, 1900, 720, 420);
+  grow('gTail', T, 2150, 900, 440);
+
+  // 5. 가지가 그어지고, 다리를 내려 앉으며 몸이 살짝 눌렸다 돌아온다
+  const br = inOut(win(T, 2350, 520));
+  const brx = mix(722, 564, br), brx2 = mix(722, 880, br);
+  $('branch').setAttribute('x1', brx); $('branch').setAttribute('x2', brx2);
+  $('branch').setAttribute('opacity', br > 0 ? 1 : 0);
+  const lg = win(T, 2650, 320);
+  $('gLegs').setAttribute('opacity', lg);
+  $('gLegs').setAttribute('transform', `translate(0 ${((1 - inOut(lg)) * -14).toFixed(1)})`);
+  const settle = win(T, 2850, 450);
+  const bob = 6 * Math.sin(Math.PI * settle) * (1 - settle * 0.4);
+  $('bob').setAttribute('transform', `translate(0 ${bob.toFixed(2)})`);
+}
+
+let t0 = null, raf = null;
+function run(ts) {
+  if (t0 === null) t0 = ts;
+  const T = ts - t0;
+  draw(T);
+  $('sc').value = Math.round(clamp(T / TOTAL) * 1000);
+  if (T < TOTAL) raf = requestAnimationFrame(run);
+}
+function play() { cancelAnimationFrame(raf); t0 = null; raf = requestAnimationFrame(run); }
+$('pl').onclick = play;
+$('sc').oninput = () => { cancelAnimationFrame(raf); draw($('sc').value / 1000 * TOTAL); };
+
+// ?t=1200 처럼 주면 그 순간에 멈춘 장면을 보여 준다(점검용)
+const fixed = new URLSearchParams(location.search).get('t');
+if (fixed !== null) { draw(Number(fixed)); $('sc').value = Math.round(clamp(fixed / TOTAL) * 1000); }
+else { draw(0); setTimeout(play, 400); }
+</script>
+</body>
+</html>

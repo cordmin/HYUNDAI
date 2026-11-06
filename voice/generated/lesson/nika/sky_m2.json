@@ -1,0 +1,14 @@
+{
+  "duration": 26.48,
+  "sample_rate": 24000,
+  "peak": 18526,
+  "rms": 2670.34,
+  "sha256": "fb6da27ebc58504c3377438943134fa9b12bf9a5d9f74f4581312def5a67679b",
+  "id": "sky_m2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "하얗게 보이는 햇빛에는 사실 무지개처럼 여러 색의 빛이 섞여 있습니다. 색마다 물결처럼 퍼져 나가는 간격인 파장이 다릅니다. 빨간빛은 물결 사이가 길고, 파란빛은 물결 사이가 짧고 촘촘합니다. 큰 너울은 작은 돌멩이를 그대로 넘어가지만 잔물결은 부딪혀 흩어지듯, 빛도 파장에 따라 흩어지는 정도가 다릅니다.",
+  "fingerprint": "f8a39576d3be2d6e957538747c141dbd38629308abc0f53aaad50dc8cc04ea5c",
+  "generated_at": "2026-11-06T00:26:06+0900",
+  "review": "generated_not_listening_reviewed"
+}

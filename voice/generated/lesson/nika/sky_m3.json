@@ -1,0 +1,14 @@
+{
+  "duration": 25.48,
+  "sample_rate": 24000,
+  "peak": 22571,
+  "rms": 2677.83,
+  "sha256": "50d54b4a34a647a7e5cdd6d406e776386467e389e85c8e9b6d50099bee0f11f2",
+  "id": "sky_m3",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "햇빛이 지구의 공기 속으로 들어오면 질소와 산소 같은 작은 알갱이를 만납니다. 이때 빛의 일부가 사방으로 흩어지는데, 이를 산란이라고 부릅니다. 파장이 짧은 파란빛은 파장이 긴 빨간빛보다 훨씬 더 잘 흩어집니다. 공기 알갱이들이 햇빛 속 파란빛을 하늘 곳곳으로 흩어 놓는 셈입니다.",
+  "fingerprint": "48ba40a977c729aa85cfceb65e2f9b433b7736b6e45fde7aa2bab6d221604387",
+  "generated_at": "2026-11-06T00:26:14+0900",
+  "review": "generated_not_listening_reviewed"
+}

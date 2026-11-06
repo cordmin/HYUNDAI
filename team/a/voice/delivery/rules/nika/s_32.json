@@ -1,0 +1,12 @@
+{
+  "id": "s_32",
+  "text": "공통영어",
+  "source_sha256": "b98b5b737e869e94ca5f712218aeb2f6c20169a133612541132de4287e35ed84",
+  "fingerprint": "3fe9c6a58f70e4541110fe49327261ce30f47318ce44cd85d08a4594487e89c8",
+  "review": "generated_not_listening_reviewed",
+  "duration": 1.48,
+  "sample_rate": 24000,
+  "peak": 17221,
+  "rms": 2977.67,
+  "sha256": "b98b5b737e869e94ca5f712218aeb2f6c20169a133612541132de4287e35ed84"
+}

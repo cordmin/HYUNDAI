@@ -1,0 +1,63 @@
+{
+  "packageName": "io.dait.app",
+  "appDescription": "An in-car learning app that plays short teacher-made audio lessons fitted to the remaining trip time and helps families prepare for school.",
+  "invokeWord": "다잇",
+  "version": "0.3-journey",
+  "actionCalls": [
+    {
+      "type": "function",
+      "function": {
+        "name": "START_LESSON",
+        "description": "Start a DAIT audio lesson that fits the remaining trip time or the requested length.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "minutes": {
+              "type": "number",
+              "description": "Lesson length in minutes when the user names one."
+            },
+            "subject": {
+              "type": "string",
+              "description": "School subject of the lesson when the user names one.",
+              "enum": ["국어", "수학", "기술", "과학", "음악"]
+            }
+          },
+          "required": []
+        },
+        "component": "activity"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "CONTROL_LESSON",
+        "description": "Pause or resume the DAIT lesson that is playing now.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "command": {
+              "type": "string",
+              "description": "Whether to pause or resume the lesson.",
+              "enum": ["pause", "resume"]
+            }
+          },
+          "required": ["command"]
+        },
+        "component": "service"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "GET_SCHOOL_PREP",
+        "description": "Tell what the child should prepare for the next school day, with the lunch menu and subjects.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "component": "service"
+      }
+    }
+  ]
+}

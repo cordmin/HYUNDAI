@@ -1,0 +1,107 @@
+{
+  "date": "2026-11-03",
+  "narration_count": 12,
+  "narration_seconds": 51.76,
+  "scene_checks": [
+    {
+      "id": "demo_01",
+      "seconds": 5.68,
+      "scene_seconds": 7,
+      "fits": true
+    },
+    {
+      "id": "demo_02",
+      "seconds": 3.64,
+      "scene_seconds": 10,
+      "fits": true
+    },
+    {
+      "id": "demo_03",
+      "seconds": 5.04,
+      "scene_seconds": 10,
+      "fits": true
+    },
+    {
+      "id": "demo_04",
+      "seconds": 3.68,
+      "scene_seconds": 8,
+      "fits": true
+    },
+    {
+      "id": "demo_05",
+      "seconds": 4.52,
+      "scene_seconds": 10,
+      "fits": true
+    },
+    {
+      "id": "demo_06",
+      "seconds": 5.84,
+      "scene_seconds": 15,
+      "fits": true
+    },
+    {
+      "id": "demo_07",
+      "seconds": 5.08,
+      "scene_seconds": 12,
+      "fits": true
+    },
+    {
+      "id": "demo_08",
+      "seconds": 3.48,
+      "scene_seconds": 10,
+      "fits": true
+    },
+    {
+      "id": "demo_09",
+      "seconds": 5.04,
+      "scene_seconds": 14,
+      "fits": true
+    },
+    {
+      "id": "demo_10",
+      "seconds": 4.32,
+      "scene_seconds": 11,
+      "fits": true
+    },
+    {
+      "id": "demo_11",
+      "seconds": 4.24,
+      "scene_seconds": 8,
+      "fits": true
+    },
+    {
+      "id": "demo_12",
+      "seconds": 1.2,
+      "scene_seconds": 5,
+      "fits": true
+    }
+  ],
+  "listening_review": "deferred",
+  "introduction": "deferred; brand name only",
+  "app_clips": [
+    {
+      "file": "dongbaek_i1.m4a",
+      "sha256": "75461d146aa6ba65e5e364e130531b112582328d823fca1df86185770aa1c4e4"
+    },
+    {
+      "file": "dongbaek_q1.m4a",
+      "sha256": "227357154ecde144f5ad87ea1c05a2ece4d1cf030e1236ca2cca03583e95bfaa"
+    },
+    {
+      "file": "dongbaek_q6.m4a",
+      "sha256": "e2c4deac0681718879098173953cbfa74083d5402ae1a9e2e8cbc13ed18a7903"
+    },
+    {
+      "file": "dongbaek_q4.m4a",
+      "sha256": "25b240276993b8c7c0eb94b96c238c87b9bd7c8760874414c12df559c275d381"
+    },
+    {
+      "file": "dongbaek_s1.m4a",
+      "sha256": "9b5f4109014748cfaa66d533a86f281788e78dfd130434f2ef968231135d7e48"
+    },
+    {
+      "file": "dongbaek_r1.m4a",
+      "sha256": "f18cef1de8e1ac8c3376a3cba37a074a5437999027c1106f0aa3c33c8c1e0850"
+    }
+  ]
+}

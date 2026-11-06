@@ -1,0 +1,14 @@
+{
+  "duration": 35.52,
+  "sample_rate": 24000,
+  "peak": 26551,
+  "rms": 3259.83,
+  "sha256": "11ba9d4c8d6e3149cbde6bd215ede60b76b57d6e10f6b15dfb58f439915d3a42",
+  "id": "sky_b9a",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "해가 지는 순간뿐 아니라 뜨는 순간도 같습니다. 아침노을 역시 햇빛이 먼 길을 돌아오기 때문에 붉게 보입니다. 지평선 가까이의 해가 낮보다 덜 눈부신 까닭도 여기에 있습니다. 긴 공기층을 지나오는 동안 빛의 상당 부분이 흩어져 약해지기 때문입니다. 달도 마찬가지입니다. 지평선 가까이 뜬 달이 주황빛으로 보이는 것을 본 적이 있으실 겁니다. 달빛도 결국 공기 속의 먼 길을 지나오면서 파란빛을 잃은 것입니다.",
+  "fingerprint": "abe19405805c40991190e2c4d2ca3320358ab267445cb29e4a21fca9841dbdca",
+  "generated_at": "2026-11-06T00:23:26+0900",
+  "review": "generated_not_listening_reviewed"
+}

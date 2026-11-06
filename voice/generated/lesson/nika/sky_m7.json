@@ -1,0 +1,14 @@
+{
+  "duration": 25.76,
+  "sample_rate": 24000,
+  "peak": 23170,
+  "rms": 2921.69,
+  "sha256": "74ab8db82c5067df6fa55618ce93391f75562560d5289ac108e9fbdfced40636",
+  "id": "sky_m7",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "구름은 왜 하얗게 보일까요? 구름의 물방울은 공기 알갱이보다 훨씬 커서 파란빛뿐 아니라 모든 색의 빛을 비슷하게 흩어 놓습니다. 여러 색이 고르게 섞여 오니 다시 하얗게 보이는 것입니다. 미세먼지가 많은 날 하늘이 희뿌옇게 보이는 것도 큰 입자가 온갖 색을 함께 흩어 놓기 때문입니다.",
+  "fingerprint": "a2dec8027637ddbfa97847e1ce7f2fce4f0fc68e720d53d58710402b7688b3df",
+  "generated_at": "2026-11-06T00:26:45+0900",
+  "review": "generated_not_listening_reviewed"
+}

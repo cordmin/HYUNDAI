@@ -1,0 +1,14 @@
+{
+  "duration": 4.04,
+  "sample_rate": 24000,
+  "peak": 13796,
+  "rms": 2915.29,
+  "sha256": "772b0ebd5f4e12a0b629195bfd9a6a9d5176c58bafb20c0a3a3cc72dd64fd87c",
+  "id": "p_door_bag",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "내리기 전에 가방이랑 준비물 한 번만 확인해요.",
+  "fingerprint": "d6211d6c0f41e43874edee41eaf3ee8d4714d8858887f7815fc02feb7e28f183",
+  "generated_at": "2026-11-03T23:03:17+0900",
+  "review": "generated_not_listening_reviewed"
+}

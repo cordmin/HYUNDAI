@@ -1,0 +1,14 @@
+{
+  "duration": 31.08,
+  "sample_rate": 24000,
+  "peak": 27212,
+  "rms": 3141.75,
+  "sha256": "904b6bd3dc2ca6d354424049b95b69b0c189262b4da2dec8b29bba09c476a9ba",
+  "id": "sky_b7",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "답은 까만색입니다. 달에는 공기가 거의 없습니다. 아폴로 우주인들이 달에서 찍은 사진을 보면, 해가 떠 있는 낮인데도 하늘이 깜깜합니다. 빛을 흩어 줄 공기가 없으니 해에서 곧장 오는 빛만 있고, 해가 없는 쪽의 하늘에서는 눈에 들어오는 빛이 거의 없는 것입니다. 파란 하늘은 공기가 있는 행성이 주는 선물인 셈입니다. 숨을 쉬게 해 주는 공기가 하늘의 색까지 만들어 주고 있습니다.",
+  "fingerprint": "4da787f76bf6151a2cb3ea9b2baf7ccf3444f29c97592345b3dd1318d7bd5e7f",
+  "generated_at": "2026-11-06T00:22:46+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "r10_2",
+  "text": "재미있게 다녀와요. 돌아오는 길에 들려줘요.",
+  "source_sha256": "c746615d6c8d0213023d78093f74a6f201e37ca9cfbce74ed04f494f951d7cda",
+  "fingerprint": "fb31752a16782fcbe707ba99c877ea24ff4ba1ca8aa59d95ce9cbd7c1e92ce1f",
+  "review": "generated_not_listening_reviewed",
+  "duration": 3.92,
+  "sample_rate": 24000,
+  "peak": 18935,
+  "rms": 2964.21,
+  "sha256": "c746615d6c8d0213023d78093f74a6f201e37ca9cfbce74ed04f494f951d7cda"
+}

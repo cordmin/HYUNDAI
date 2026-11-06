@@ -1,0 +1,14 @@
+{
+  "duration": 24.88,
+  "sample_rate": 24000,
+  "peak": 24019,
+  "rms": 2885.43,
+  "sha256": "553d70dd48a0050ce48eb33018ba98f627a245060a8026a303c89da63de0c4e6",
+  "id": "sky_m10",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "바다가 푸른 까닭은 하늘과 조금 다릅니다. 물이 붉은빛을 흡수하고 파란빛을 남겨서 깊은 물일수록 푸르게 보입니다. 한편 공기가 희박하고 먼지가 많은 화성에서는 낮 하늘이 황갈색이고 해 질 녘 노을이 오히려 푸르스름합니다. 무엇이 빛을 흩고 흡수하느냐가 색을 결정합니다.",
+  "fingerprint": "e1f55d0758fff5391b7512e102b9792d8b84d3e6b1fa83d04627b413e53519b7",
+  "generated_at": "2026-11-06T00:27:08+0900",
+  "review": "generated_not_listening_reviewed"
+}

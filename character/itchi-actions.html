@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>잇찌 행동 시안</title>
+<style>
+  body { margin: 0; background: #060B16; color: #E0F2FE; font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 24px 16px 40px; }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  .lead { color: #93C5FD; font-size: 14px; margin: 0 0 14px; line-height: 1.6; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .card { background: #0B1220; border: 1px solid #1E2B44; border-radius: 16px; padding: 12px 14px 14px; }
+  .card svg { width: 100%; height: auto; display: block; }
+  .name { font-size: 16px; font-weight: 700; margin: 6px 0 2px; }
+  .when { font-size: 13px; color: #93C5FD; line-height: 1.5; }
+  .tag { display: inline-block; font-size: 11px; color: #0B1220; background: #7DD3FC; border-radius: 6px; padding: 1px 6px; margin-left: 6px; vertical-align: 2px; }
+  .tag.idea { background: #CBD5E1; }
+  .tag.pose { background: #FDE68A; }
+  .note { background: #0B1220; border: 1px solid #334155; border-radius: 12px; padding: 10px 14px; margin: 0 0 14px; font-size: 13px; line-height: 1.7; }
+  .note b { color: #FDE68A; }
+  details { margin-top: 26px; }
+  summary { cursor: pointer; font-size: 15px; color: #BAE6FD; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>잇찌 행동 시안</h1>
+  <p class="lead">
+    잇찌는 다잇 로고가 변한 새이고 모티브는 까치다. 말하지 않고 몸짓으로 마음을 보여 준다. 카드마다 행동 하나를 되풀이한다.
+    한 카드 안의 잇찌는 옆모습(확정 그림 <code>dait-bird-final-calm-v2.svg</code>, 까치 날갯짓 날개)과 안티그래비티 자세 그림(<code>design/itchi-poses-v2/</code>: 정면, 3/4 얼굴, 웃는 눈, 졸음)을 같은 자리에서 오간다.
+    자세를 바꿀 때는 눈을 감는 순간이나 깡충 뛰는 순간에 바꿔 그림이 겹쳐 보이지 않게 했다.
+  </p>
+  <div class="note">
+    <b>2026-11-05 하나로 합침</b>(앱 담당 교사 「행동 시안 적절히 합쳐서 하나로」) · 전에는 옆모습 12가지, 자세 그림 6가지, 정면 부리 고르기가 따로 있었다.
+    겹치던 갸웃·꾸벅꾸벅은 하나로 합쳤고, 자세 그림만 쓰던 날갯짓은 까치 날개(흰 무늬 띠)가 있는 「날개 들썩」으로 대신했다.
+    노란 「자세 그림」 표시는 그 카드가 안티그래비티 자세 그림을 쓴다는 뜻이다. 정면은 리본을 몸 윤곽을 따라 한 줄로, 부리는 빛나는 윗선(「나」)으로 바꿔 그린다.
+    자세 그림은 파일을 읽어 오므로 미리보기 주소 <code>http://localhost:8795/character/itchi-actions.html</code>로 열어야 보인다(파일을 직접 열면 옆모습만 나온다).
+  </div>
+  <div class="grid" id="grid"></div>
+
+  <details>
+    <summary>정면 부리 다른 안 보기(지금은 「나」를 씀)</summary>
+    <div class="grid" id="beakGrid"></div>
+  </details>
+</div>
+
+<!-- 색과 깃털 그림, 그리고 자세 그림들의 색 정의를 한곳에 모아 둔다(숨긴 그림 안의 색은 다른 그림에서 쓸 수 없어서) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs id="sharedDefs">
+    <linearGradient id="gHead" x1="555" y1="200" x2="685" y2="370" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#24507A"/><stop offset="100%" stop-color="#183858"/></linearGradient>
+    <linearGradient id="gWing" x1="660" y1="275" x2="880" y2="400" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#25527C"/><stop offset="100%" stop-color="#173654"/></linearGradient>
+    <linearGradient id="gTail" x1="840" y1="405" x2="1020" y2="495" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#16334E"/><stop offset="50%" stop-color="#234E78"/><stop offset="100%" stop-color="#2E6292"/></linearGradient>
+    <linearGradient id="gBelly" x1="565" y1="360" x2="845" y2="500" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#F2F9FE"/><stop offset="55%" stop-color="#DCEFFE"/><stop offset="100%" stop-color="#B4DDF8"/></linearGradient>
+    <linearGradient id="gRibbon" x1="528" y1="260" x2="1018" y2="472" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#38BDF8"/><stop offset="30%" stop-color="#8ADCFD"/><stop offset="55%" stop-color="#FFFFFF"/><stop offset="82%" stop-color="#BAE6FD"/><stop offset="100%" stop-color="#FFFFFF"/></linearGradient>
+    <linearGradient id="gLogo" x1="485" y1="0" x2="1062" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#38BDF8"/><stop offset="0.5" stop-color="#FFFFFF"/><stop offset="1" stop-color="#38BDF8"/></linearGradient>
+    <linearGradient id="gBranch" x1="560" y1="546" x2="876" y2="546" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#15263B"/><stop offset="55%" stop-color="#2C4F72"/><stop offset="100%" stop-color="#203C58"/></linearGradient>
+    <radialGradient id="gHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#38BDF8" stop-opacity="0.52"/><stop offset="55%" stop-color="#38BDF8" stop-opacity="0.16"/><stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/></radialGradient>
+    <linearGradient id="gFeather" x1="0" y1="0" x2="84" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#38BDF8"/><stop offset="60%" stop-color="#BAE6FD"/><stop offset="100%" stop-color="#FFFFFF"/></linearGradient>
+    <filter id="fGlow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3.8"/></filter>
+  </defs>
+  <symbol id="feather" viewBox="-4 -16 92 32">
+    <path d="M 0 0 C 18 -13, 50 -15, 84 -2 L 76 0 L 84 3 C 52 13, 20 11, 0 0 Z" fill="url(#gFeather)"/>
+    <path d="M -2 0 C 26 -1, 56 -1, 80 0" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.9"/>
+  </symbol>
+</svg>
+
+<script>
+const NS = 'http://www.w3.org/2000/svg';
+const BIRD_D = 'M 528 282 L 556 266 C 568 222, 594 200, 628 202 C 672 204, 696 226, 688 260 C 682 288, 668 304, 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 C 722 348, 738 380, 756 380 C 774 380, 794 352, 812 352 C 832 352, 858 384, 884 398 C 930 416, 976 442, 1018 472';
+const EYE = [608, 262], FEET = [720, 534], WING = [800, 338], NECK = [648, 318];
+const clamp = x => Math.max(0, Math.min(1, x));
+const mix = (a, b, t) => a + (b - a) * t;
+const inOut = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const pulse = (t, at, len) => { const k = (t - at) / len; return k > 0 && k < 1 ? Math.sin(Math.PI * k) : 0; };
+const fade = (t, a, b) => clamp((t - a) / (b - a));
+const breath = (t, period = 1300, amp = 1.6) => amp * Math.sin(2 * Math.PI * t / period);
+const blinkAt = (t, ...times) => Math.max(0, ...times.map(at => pulse(t, at, 160)));
+
+// ---------- 까치 날갯짓 날개 ----------
+// 팀에서 받은 오프닝(received/dait_magpie_logo.html)의 까치 날개(흰 무늬 띠)를 모양·색 그대로 쓴다.
+// 날개 좌표는 까치 그림 기준이라, 부리 끝·꼬리 끝을 맞춰 잇찌 좌표로 옮긴다(itchi-opening.html과 같은 방식).
+const WINGS = {"near":[280.3,7.5,279.2,0.9,277.6,-0.2,34.2,-12.9,32.2,-10.9,31.5,-4.5,29.8,39.1,42.7,59.7,44.1,58.7,46.4,37.7,46,30.9,47.7,27.5,70.8,38.6,73.2,40.9,77.1,41.5,100.9,50,112.9,55.6,157.8,65.7,187.4,68.1,190.5,70.5,195.8,79.2,197.2,83.3,200.6,87.1,201.8,90.8,204.7,92.1,213.7,79.1,220.1,67.5,228,61.4,230.8,61.9,248.7,77,251.2,77.2,252.3,73.3,253.8,49.8,256.8,47.7,260.5,49.3,265.3,53.6,269.5,52.5,270.1,49.1,280.5,23.1],"panel":[263.4,24.3,262.4,16.1,259.6,11.7,254.4,7.3,248.4,4.9,235.9,3.4,199.8,2.9,163.4,4.3,107.7,8.5,73.8,9.7,71.7,10.9,73.9,13.5,86.1,21.5,99.7,28.4,124.9,38.2,162.3,48.6,207.8,56.6,230.2,51.5,246.9,43.8,257.9,34.5,261.1,30.2],"far":[241.3,62,240,60.1,235,57.7,205.6,48.1,195,43.4,159.4,34.1,157.4,30.9,160,19.7,159.3,8.8,148.6,2.3,143.4,1.2,135.7,-2.5,125.4,-4.6,111.4,-9.6,90.2,-14.8,62.2,-19.8,22.1,-24.5,20.4,-26,20.1,-35.1,18.6,-36.5,11.5,-33.4,9.7,-31.5,2.2,30.3,2.6,32.3,3.7,33.3,240.1,62.6],"fstripe":[146.7,24.4,146.2,17.9,140.4,11.6,119.5,7.9,95.4,6.4,21,5.9,19.8,7.6,20.9,12.4,31.9,18.3,55.9,18.9,73.8,20.9,76.7,22,110.7,25.7,141.3,31.3,143.3,30.3]};
+const IA = [523, 284], IB = [1028, 478], MA = [318.6, 224.4], MB = [786.0, 408.9];
+const I_S = Math.hypot(MB[0] - MA[0], MB[1] - MA[1]) / Math.hypot(IB[0] - IA[0], IB[1] - IA[1]);
+const I_R = Math.atan2(MB[1] - MA[1], MB[0] - MA[0]) - Math.atan2(IB[1] - IA[1], IB[0] - IA[0]);
+function m2i([x, y]) {
+  const dx = (x - MA[0]) / I_S, dy = (y - MA[1]) / I_S, c = Math.cos(-I_R), s = Math.sin(-I_R);
+  return [IA[0] + c * dx - s * dy, IA[1] + s * dx + c * dy];
+}
+const ROOT_FAR = m2i([520, 214]), ROOT_NEAR = m2i([545, 262]);
+const pts = flat => flat.reduce((o, v, i) => o + (i % 2 ? ',' : ' ') + v, '').trim();
+function wingAt(k) { // k: +1 위, -1 아래, 0 옆면
+  const phi = k > 0 ? mix(-8, 58.5, k) : mix(-8, -57, -k);
+  return { phi, len: k > 0 ? 0.7 + 0.3 * k : 0.7 - 0.42 * k, vk: Math.sign(k || 1) * Math.max(0.05, Math.abs(k)) };
+}
+const flapK = (t, period = 310) => Math.cos(2 * Math.PI * t / period);
+
+// ---------- 깃털 받기(앱 수업 끝 화면과 같은 길) ----------
+const bez = (a, b, c, d, u) => { const v = 1 - u; return [0, 1].map(j => v * v * v * a[j] + 3 * v * v * u * b[j] + 3 * v * u * u * c[j] + u * u * u * d[j]); };
+const RISE = 0.32, ROLL = 180 + 28, FS = [990, 610];
+function featherPose(f) {
+  const TOP = [930, 190], C2 = [1090, 172];
+  if (f < RISE) {
+    const p = f / RISE, e = p + 0.3 * p * (1 - p), C1 = [FS[0] + 190, FS[1] - 170];
+    const [x, y] = bez(FS, C1, C2, TOP, e), [x2, y2] = bez(FS, C1, C2, TOP, Math.min(1, e + 0.01));
+    return [x, y, Math.atan2(y2 - y, x2 - x) * 180 / Math.PI, 1, Math.cos(2 * Math.PI * e), mix(0.5, 1.2, e)];
+  }
+  const p = Math.min(1, (f - RISE) / (0.88 - RISE));
+  const dx = TOP[0] - C2[0], dy = TOP[1] - C2[1], len = Math.hypot(dx, dy);
+  const [bx, by] = bez(TOP, [TOP[0] + dx / len * 197, TOP[1] + dy / len * 197], [WING[0] + 40, WING[1] - 140], WING, p);
+  const th = 2 * Math.PI * 2 * p, ramp = Math.pow(Math.sin(Math.PI / 2 * Math.min(1, p / 0.25)), 2), sw = ramp * (1 - p);
+  return [bx - 110 * sw * Math.sin(th), by - 24 * sw * Math.pow(Math.sin(th), 2), mix(174, ROLL, p * p) + 30 * sw * Math.cos(th), 1, 0.78 + 0.22 * Math.cos(2 * th), 1.2 - 0.1 * p];
+}
+
+// ---------- 안티그래비티 자세 그림 ----------
+const POSE_DIR = '../design/itchi-poses-v2/';
+const POSES = ['front', 'three-quarter', 'smile', 'sleepy'];
+const FRONT_OUTLINE = 'M 652 266 C 648 224, 676 198, 718 198 C 760 198, 788 224, 785 260 C 786 284, 798 300, 806 322 C 816 350, 816 386, 826 410 C 856 430, 896 454, 936 480';
+const poseCache = {};
+function addPath(doc, parent, attrs) { const e = doc.createElementNS(NS, 'path'); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; }
+async function loadPose(name) {
+  const text = await (await fetch(`${POSE_DIR}itchi-${name}.svg`)).text();
+  const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+  ['bg', 'branch'].forEach(id => { const e = doc.getElementById(id); if (e) e.remove(); }); // 가지는 카드에 하나만
+  // 색 정의는 공용 자리로 옮긴다
+  doc.querySelectorAll('defs').forEach(d => { [...d.childNodes].forEach(n => { if (n.nodeType === 1 && !document.getElementById(n.getAttribute('id'))) document.getElementById('sharedDefs').appendChild(document.importNode(n, true)); }); d.remove(); });
+  if (['three-quarter', 'smile', 'sleepy'].includes(name)) {
+    // v2의 3/4 얼굴 계열은 부리가 얼굴 안쪽의 어두운 작은 세모뿐이라, 옆모습처럼 앞으로 내밀고 윗선을 빛나는 리본과 잇는다
+    const beak = doc.getElementById('beak');
+    if (beak) {
+      while (beak.firstChild) beak.firstChild.remove();
+      addPath(doc, beak, { d: 'M 535 284 L 558 267 L 556 291 Z', fill: '#1F3D5C' });
+      addPath(doc, beak, { d: 'M 537 283 L 556 268', stroke: '#38BDF8', 'stroke-width': 14.5, 'stroke-linecap': 'round', fill: 'none', opacity: 0.14 });
+      addPath(doc, beak, { d: 'M 537 283 L 556 268', stroke: '#38BDF8', 'stroke-width': 10.5, 'stroke-linecap': 'round', fill: 'none' });
+    }
+  }
+  if (name === 'front') {
+    // 정면 리본: 목을 감지 않고 몸 윤곽을 따라 한 줄로(왼쪽 뺨 → 머리 위 → 머리·몸 오른쪽 → 꼬리 끝)
+    const rib = doc.getElementById('ribbon');
+    if (rib) {
+      while (rib.firstChild) rib.firstChild.remove();
+      addPath(doc, rib, { d: FRONT_OUTLINE, stroke: '#38BDF8', 'stroke-width': 14.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none', opacity: 0.14, filter: 'url(#front-calmGlow)' });
+      addPath(doc, rib, { d: FRONT_OUTLINE, stroke: 'url(#front-ribbonGrad)', 'stroke-width': 10.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none' });
+    }
+    // 정면 부리 「나」: 어두운 세모의 양쪽 윗선을 빛나는 하늘색으로
+    const fb = doc.getElementById('beak');
+    if (fb) {
+      addPath(doc, fb, { class: 'glowBeak', d: 'M 707 271 L 718 295 L 729 271', stroke: '#38BDF8', 'stroke-width': 11, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none', opacity: 0.18 });
+      addPath(doc, fb, { class: 'glowBeak', d: 'M 707 271 L 718 295 L 729 271', stroke: '#8ADCFD', 'stroke-width': 5.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none' });
+    }
+  }
+  return [...doc.documentElement.childNodes].map(n => n.outerHTML || '').join('');
+}
+// 3/4 얼굴의 갸웃: 머리·부리·눈과 리본의 머리 쪽 점들을 목을 축으로 돌린다(갸웃 그림이 3/4 얼굴을 17도 돌린 것과 같음)
+function rotateHeadPath(d, deg) {
+  const nums = d.match(/-?\d+(\.\d+)?/g).map(Number);
+  let stop = 0; for (let i = 0; i + 1 < nums.length; i += 2) if (nums[i] === NECK[0] && nums[i + 1] === NECK[1]) { stop = i; break; }
+  const c = Math.cos(deg * Math.PI / 180), s = Math.sin(deg * Math.PI / 180);
+  for (let i = 0; i < stop; i += 2) { const dx = nums[i] - NECK[0], dy = nums[i + 1] - NECK[1]; nums[i] = NECK[0] + c * dx - s * dy; nums[i + 1] = NECK[1] + s * dx + c * dy; }
+  let k = 0; return d.replace(/-?\d+(\.\d+)?/g, () => +nums[k++].toFixed(1));
+}
+
+// ---------- 잇찌 한 마리 ----------
+// 옆모습 몸(코드), 까치 날개, 다리, 그리고 자세 그림 층을 한 몸 묶음(bob) 안에 겹쳐 둔다.
+// 자세 그림은 화면 좌표(1920×1080)로 그려져 있어 잇찌 좌표로 되돌리는 묶음에 넣는다.
+function makeBird(card) {
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', '440 130 660 440');
+  const poseLayers = POSES.filter(p => poseCache[p]).map(p => `<g class="pose" data-pose="${p}" style="display:none"><g transform="translate(770 374) scale(${(1 / 1.66).toFixed(6)}) translate(-960 -540)">${poseCache[p]}</g></g>`).join('');
+  svg.innerHTML = `
+    <line class="branch" x1="564" y1="534" x2="880" y2="534" stroke="url(#gBranch)" stroke-width="12" stroke-linecap="round"/>
+    <g class="bob">
+      <g class="wfar" style="display:none"><polygon points="${pts(WINGS.far)}" fill="rgb(32,64,91)" opacity="0.9"/><polygon points="${pts(WINGS.fstripe)}" fill="rgb(160,194,217)"/></g>
+      <g class="side">
+        <path d="M 836 438 L 884 398 C 930 416, 976 442, 1022 474 C 1028 478, 1026 486, 1016 486 L 992 485 L 1002 499 C 1006 505, 998 511, 987 507 C 934 486, 878 462, 836 438 Z" fill="url(#gTail)"/>
+        <path d="M 555 322 C 572 406, 646 488, 742 488 C 816 488, 868 450, 884 398 L 855 352 L 635 352 L 580 322 Z" fill="url(#gBelly)"/>
+        <path d="M 592 412 C 646 476, 742 488, 806 472 C 852 458, 874 426, 884 398 C 856 434, 798 462, 726 462 C 658 462, 614 438, 592 412 Z" fill="#B5E0FA" opacity="0.36"/>
+        <path d="M 674 224 C 736 242, 828 308, 886 399 L 884 398 L 762 282 C 722 272, 690 282, 666 306 L 658 276 Z" fill="#163452"/>
+        <path d="M 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 C 722 348, 738 380, 756 380 C 774 380, 794 352, 812 352 C 832 352, 858 384, 884 398 C 864 344, 820 296, 762 282 C 722 272, 690 282, 666 306 L 648 318 Z" fill="url(#gWing)"/>
+        <path d="M 672 304 C 694 280, 726 272, 762 282 C 820 296, 864 344, 884 398" stroke="#112A42" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+        <path d="M 734 322 C 770 348, 814 366, 860 380" stroke="#3E78AC" stroke-width="7.5" stroke-linecap="round" fill="none" opacity="0.22"/>
+        <path class="shine" d="M 734 322 C 770 348, 814 366, 860 380" stroke="#BAE6FD" stroke-width="9" stroke-linecap="round" fill="none" opacity="0" filter="url(#fGlow)"/>
+        <path d="M 556 266 C 568 222, 594 200, 628 202 C 672 204, 696 226, 688 260 C 682 288, 668 304, 648 318 C 622 338, 628 372, 664 372 C 684 372, 688 348, 704 348 L 664 372 C 604 370, 566 352, 555 324 C 549 308, 550 286, 556 266 Z" fill="url(#gHead)"/>
+        <path d="M 523 284 L 558 266 L 555 292 Z" fill="#1F3D5C"/>
+        <path d="${BIRD_D}" stroke="#38BDF8" stroke-width="14.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.14" filter="url(#fGlow)"/>
+        <path class="ribbon" d="${BIRD_D}" stroke="url(#gRibbon)" stroke-width="10.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M 956 453.5 L 996 453.5" stroke="#FFFFFF" stroke-width="7.8" stroke-linecap="round" fill="none"/>
+        <g class="eye">
+          <circle cx="${EYE[0]}" cy="${EYE[1]}" r="18" fill="url(#gHalo)"/>
+          <circle class="iris" cx="${EYE[0]}" cy="${EYE[1]}" r="11" fill="#38BDF8" opacity="0.9"/>
+          <circle class="core" cx="${EYE[0]}" cy="${EYE[1]}" r="5.2" fill="#FFFFFF"/>
+        </g>
+      </g>
+      <g class="wnear" style="display:none"><polygon points="${pts(WINGS.near)}" fill="rgb(30,63,90)"/><polygon points="${pts(WINGS.panel)}" fill="rgb(213,236,247)"/>
+        <path d="M 166 28 L 202 52 M 204 33 L 233 51 M 240 35 L 275 57" stroke="rgba(120,145,170,0.8)" stroke-width="1.4" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke"/></g>
+      <g class="legs">
+        <path d="M 706 482 L 686 525 M 678 538 C 677 524, 694 522, 704 529" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M 774 472 L 750 525 M 742 538 C 741 524, 758 522, 768 529" stroke="#223F60" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </g>
+      ${poseLayers}
+    </g>
+    <use class="feather" href="#feather" x="-72" y="-25" width="144" height="50" opacity="0"/>`;
+  card.prepend(svg);
+  const q = c => svg.querySelector('.' + c);
+  const poses = {};
+  svg.querySelectorAll('.pose').forEach(g => {
+    const eyes = g.querySelector('#eyes');
+    poses[g.dataset.pose] = { g, eyes, eyesBase: eyes ? (eyes.getAttribute('transform') || '') : '', head: g.querySelector('#head'), beak: g.querySelector('#beak'),
+      ribbon: [...g.querySelectorAll('#ribbon path')].map(p => ({ p, d: p.getAttribute('d') })) };
+  });
+  return { svg, bob: q('bob'), side: q('side'), eye: q('eye'), iris: q('iris'), core: q('core'), shine: q('shine'), feather: q('feather'),
+    legs: q('legs'), wfar: q('wfar'), wnear: q('wnear'), branch: q('branch'), ribbonPath: q('ribbon'), poses };
+}
+
+function setWing(el, root, w, g, extra = 0) {
+  if (g <= 0.01) { el.style.display = 'none'; return; }
+  el.style.display = '';
+  const deg = I_R * 180 / Math.PI;
+  el.setAttribute('transform', `translate(${root[0].toFixed(1)} ${root[1].toFixed(1)}) rotate(${(-(w.phi + extra) + deg).toFixed(2)}) scale(${(g * w.len / I_S).toFixed(3)} ${(g * w.vk / I_S).toFixed(3)})`);
+}
+
+// 한 장면의 모습. 생략한 값은 가만히 있는 모습이다.
+// view: 'side'(옆모습) 또는 자세 그림 이름, tilt: 3/4 얼굴 갸웃 각도, open: 눈 뜬 정도(1 뜸 ~ 0 감음)
+// x·dy: 몸 위치, sc: 크기, legs: 다리(0 접음 ~ 1 내림), wing: { k, g } 까치 날갯짓, fade: 투명도
+function pose(b, { view = 'side', tilt = 0, x = 0, dy = 0, sc = 1, lean = 0, puff = 1, stretch = 1, look = [0, 0], open = 1, smile = 0, iris = 1, shine = 0, legs = 1, wing = null, fade = 1 } = {}) {
+  if (!b.poses[view]) view = 'side'; // 자세 그림을 못 읽었으면 옆모습으로
+  const k = puff * sc;
+  b.bob.setAttribute('transform', `translate(${x.toFixed(2)} ${dy.toFixed(2)}) rotate(${lean.toFixed(2)} ${FEET[0]} ${FEET[1]}) translate(${FEET[0]} ${FEET[1]}) scale(${(k / Math.sqrt(stretch)).toFixed(3)} ${(k * stretch).toFixed(3)}) translate(${-FEET[0]} ${-FEET[1]})`);
+  b.bob.setAttribute('opacity', fade.toFixed(3));
+  const side = view === 'side';
+  b.side.style.display = side ? '' : 'none';
+  b.legs.style.display = side ? '' : 'none';
+  b.legs.setAttribute('opacity', legs.toFixed(3));
+  b.legs.setAttribute('transform', `translate(0 ${((1 - legs) * -18).toFixed(1)})`);
+  const w = wingAt(wing ? wing.k : 0), g = side && wing ? wing.g : 0;
+  setWing(b.wnear, ROOT_NEAR, w, g);
+  setWing(b.wfar, ROOT_FAR, w, Math.pow(g, 1.5), 4);
+  b.core.setAttribute('cx', (EYE[0] + 4.5 * look[0]).toFixed(1));
+  b.core.setAttribute('cy', (EYE[1] + 4.5 * look[1]).toFixed(1));
+  b.iris.setAttribute('r', (11 * iris).toFixed(2));
+  const sy = Math.max(0.08, open - 0.55 * smile);
+  b.eye.setAttribute('transform', `translate(${EYE[0]} ${EYE[1]}) scale(${(1 + 0.08 * smile).toFixed(3)} ${sy.toFixed(3)}) translate(${-EYE[0]} ${-EYE[1]})`);
+  b.shine.setAttribute('opacity', (0.9 * shine).toFixed(3));
+  for (const name in b.poses) {
+    const p = b.poses[name], on = name === view;
+    p.g.style.display = on ? '' : 'none';
+    if (!on) continue;
+    const rot = tilt ? `rotate(${tilt.toFixed(2)} ${NECK[0]} ${NECK[1]}) ` : '';
+    if (name === 'three-quarter') {
+      if (p.head) p.head.setAttribute('transform', rot);
+      if (p.beak) p.beak.setAttribute('transform', rot);
+      p.ribbon.forEach(r => r.p.setAttribute('d', tilt ? rotateHeadPath(r.d, tilt) : r.d));
+    }
+    if (p.eyes) {
+      if (!p.eyeC) { const bb = p.eyes.getBBox(); p.eyeC = [bb.x + bb.width / 2, bb.y + bb.height / 2]; }
+      const [cx, cy] = p.eyeC, s2 = Math.max(0.1, Math.min(1, open));
+      p.eyes.setAttribute('transform', `${p.eyesBase} ${name === 'three-quarter' ? rot : ''}translate(${cx} ${cy}) scale(1 ${s2.toFixed(3)}) translate(${-cx} ${-cy})`);
+    }
+  }
+}
+
+// 몸 돌리기: 옆모습 ↔ 정면처럼 그림이 크게 다른 두 모습은 살짝 웅크렸다 깡충 뛰어 공중에서 돌고, 눈을 감은 순간에 바꾼다
+function turnAt(t, at) {
+  const crouch = pulse(t, at - 160, 160), hop = pulse(t, at, 340), land = pulse(t, at + 340, 130);
+  return { dy: 4 * crouch - 18 * hop + 3 * land, stretch: 1 - 0.07 * crouch + 0.05 * hop - 0.08 * land, shut: pulse(t, at + 80, 190), done: t >= at + 170 };
+}
+function setFeather(b, t, T0, FLY) {
+  const f = (t - T0) / FLY, LAND = 0.88;
+  if (!(f > 0 && f < 1)) { b.feather.setAttribute('opacity', 0); return null; }
+  if (f < LAND) {
+    const [x, y, r, sx, sy, size] = featherPose(f);
+    b.feather.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${r.toFixed(1)}) scale(${(size * sx).toFixed(3)} ${(size * sy).toFixed(3)})`);
+    b.feather.setAttribute('opacity', clamp(f * 14).toFixed(3));
+    return [x, y];
+  }
+  const p = (f - LAND) / (1 - LAND);
+  b.feather.setAttribute('transform', `translate(${(WING[0] + 6 * p).toFixed(1)} ${(WING[1] + 4 * p).toFixed(1)}) rotate(${ROLL}) scale(${mix(1.1, 0.3, p).toFixed(3)} ${mix(1.1, 0.18, p).toFixed(3)})`);
+  b.feather.setAttribute('opacity', (1 - p).toFixed(3));
+  return null;
+}
+
+// ---------- 행동 목록(하나로 합친 것) ----------
+// used: 앱 수업 끝 화면에 이미 쓰는 행동, posed: 안티그래비티 자세 그림을 쓰는 행동
+const ACTIONS = [
+  { name: '숨쉬기', used: true, when: '가만히 있을 때 늘. 몸이 아주 조금 오르내리고 가끔 눈을 깜빡인다.', len: 4000,
+    run: (b, t) => pose(b, { dy: breath(t), open: 1 - blinkAt(t, 1200, 3300) }) },
+  { name: '두리번', when: '수업을 고르는 동안. 무엇을 들을지 함께 고르는 느낌으로 이리저리 본다.', len: 4200,
+    run: (b, t) => {
+      const k = t / 4200, look = k < .3 ? [-1, 0] : k < .55 ? [0.9, -0.3] : k < .8 ? [0.2, -1] : [-0.6, 0.5];
+      pose(b, { dy: breath(t), look, lean: k < .3 ? -3 : k < .55 ? 4 : k < .8 ? 1 : -1, open: 1 - blinkAt(t, 1300, 2350) });
+    } },
+  { name: '눈 맞추기', posed: true, when: '첫 화면에서 아이가 앱을 볼 때. 옆을 보던 잇찌가 깡충 뛰며 몸을 돌려 보는 사람과 눈을 맞추고 깜빡인 뒤, 다시 돌아선다.', len: 4800,
+    run: (b, t) => {
+      const a = turnAt(t, 900), c = turnAt(t, 3500), front = a.done && !c.done;
+      pose(b, { view: front ? 'front' : 'side', dy: breath(t) + a.dy + c.dy, stretch: a.stretch * c.stretch, open: 1 - Math.max(a.shut, c.shut, blinkAt(t, 2100, 2330)), look: [-0.6, 0.3] });
+    } },
+  { name: '반가워', posed: true, when: '앱을 켜고 오프닝이 끝난 뒤. 정면에서 두 번 깡충 뛰며 인사한다.', len: 3200,
+    run: (b, t) => {
+      const hop = pulse(t, 500, 340) + pulse(t, 950, 340), land = pulse(t, 840, 110) + pulse(t, 1290, 110);
+      pose(b, { view: 'front', dy: breath(t) - 14 * hop + 2 * land, stretch: 1 + 0.05 * hop - 0.06 * land, open: 1 - blinkAt(t, 2200) });
+    } },
+  { name: '갸웃', posed: true, used: true, when: '발문이 나와 아이가 생각하는 동안. 눈을 깜빡이며 고개를 이쪽으로 돌린 뒤, 목을 축으로 천천히 기울이고 기다린다. (앱 수업 끝 화면에는 옆모습으로 몸을 기울이는 갸웃이 들어 있다)', len: 4400,
+    run: (b, t) => {
+      const turned = t >= 600 && t < 3700;
+      const k = inOut(fade(t, 900, 1350)) * (1 - inOut(fade(t, 3000, 3400)));
+      pose(b, { view: turned ? 'three-quarter' : 'side', tilt: -17 * k, lean: -1.5 * k, dy: breath(t), open: 1 - Math.max(pulse(t, 520, 170), pulse(t, 3620, 170), blinkAt(t, 2250)) });
+    } },
+  { name: '끄덕끄덕', when: '아이가 답을 말하면 「들었어요」 하고 고개를 두 번 끄덕인다.', len: 3200,
+    run: (b, t) => {
+      const nod = pulse(t, 600, 300) + pulse(t, 1000, 300);
+      pose(b, { dy: breath(t) + 4 * nod, lean: -6 * nod, look: [-0.6, 0.6], open: 1 - 0.4 * nod });
+    } },
+  { name: '깃털 받기', posed: true, used: true, when: '수업을 마쳤을 때. 「깃털 +1」 글자에서 깃털이 비틀리며 솟아올라 그네 타듯 내려오고, 잇찌가 눈으로 따라가다 날개를 펴서 받는다. 받으면 날개가 반짝이고, 눈을 감는 순간 웃는 눈이 되어 깡충 뛴다.', len: 5600,
+    run: (b, t) => {
+      const T0 = 200, FLY = 2900, land = T0 + FLY * 0.88, ago = t - land;
+      const target = setFeather(b, t, T0, FLY);
+      let look = [-0.6, 0.5];
+      if (target) { const dx = target[0] - EYE[0], dy = target[1] - EYE[1], d = Math.hypot(dx, dy) || 1; look = [dx / d, dy / d]; }
+      const open = clamp((t - (land - 450)) / 250) * (1 - clamp((t - (land + 250)) / 300));
+      const smiling = ago > 260 && ago < 1700;
+      pose(b, { view: smiling ? 'smile' : 'side', dy: breath(t) - 12 * pulse(t, land + 260, 380), look, lean: target ? 5 * clamp((target[0] - 640) / 350) : 0,
+        shine: pulse(t, land, 400), wing: { k: 0.55 + 0.25 * Math.sin(t / 90), g: 0.55 * open }, open: 1 - Math.max(pulse(t, land + 180, 170), pulse(t, land + 1620, 170)), puff: smiling ? 1.02 : 1 });
+    } },
+  { name: '날아오기', when: '앱을 켤 때 등장(오프닝과 같은 날갯짓). 오른쪽 위에서 날갯짓하며 날아와 다리를 내리고 가지에 앉는다.', len: 4600,
+    run: (b, t) => {
+      const LANDT = 1900, p = clamp(t / LANDT), e = 1 - Math.pow(1 - p, 3), settle = pulse(t, LANDT, 260);
+      pose(b, { x: 560 * (1 - e), dy: -330 * (1 - e) * (1 - e) + breath(t) * clamp((t - LANDT) / 400) + 4 * settle, sc: mix(0.65, 1, e),
+        lean: -18 * (1 - e) * (1 - e) + 6 * Math.sin(Math.PI * e) * (1 - e), stretch: 1 - 0.06 * settle,
+        legs: clamp((t - 1450) / 400), wing: { k: flapK(t), g: 1 - clamp((t - 1550) / 350) }, look: [-0.4, 0.3], open: 1 - blinkAt(t, 2900) });
+    } },
+  { name: '날개 들썩', when: '신날 때(수업을 끝까지 들었을 때, 숙제를 마쳤을 때). 가지 위에서 날개를 여러 번 들썩이며 두 번 깡충 뛴다. 까치의 흰 날개 무늬가 보인다.', len: 3600,
+    run: (b, t) => {
+      const on = clamp((t - 400) / 150) * (1 - clamp((t - 2300) / 300));
+      pose(b, { dy: breath(t) - (pulse(t, 600, 420) + pulse(t, 1400, 420)) * 10, smile: on * 0.8, look: [-0.5, 0.3], wing: { k: flapK(t - 400, 320), g: on }, stretch: 1 + 0.03 * on });
+    } },
+  { name: '날아가기', when: '앱을 닫거나 내릴 때 퇴장. 몸을 낮췄다가 날갯짓하며 왼쪽 위로 날아간다(시안을 보이려고 다시 가지에 나타난다).', len: 3600,
+    run: (b, t) => {
+      const crouch = pulse(t, 250, 400), e = Math.pow(clamp((t - 600) / 1300), 2);
+      if (t < 2800) pose(b, { x: -620 * e, dy: -340 * e + 6 * crouch, sc: mix(1, 0.7, e), lean: 14 * e, stretch: 1 - 0.07 * crouch,
+        legs: 1 - clamp((t - 650) / 250), wing: { k: flapK(t - 550), g: clamp((t - 550) / 150) }, look: [-0.8, -0.5] });
+      else pose(b, { fade: clamp((t - 2800) / 400), dy: breath(t) });
+    } },
+  { name: '뿌듯', when: '깃털이 많이 모였을 때(예: 다섯 개마다). 가슴을 펴고 날개를 반쯤 펼쳐 흰 무늬를 보여 준다.', len: 3600,
+    run: (b, t) => {
+      const k = inOut(clamp((t - 400) / 400)) * (1 - inOut(clamp((t - 2400) / 500)));
+      pose(b, { dy: breath(t) - 3 * k, puff: 1 + 0.05 * k, stretch: 1 + 0.03 * k, smile: 0.9 * k, lean: 2 * k, shine: 0.5 * k, wing: { k: 0.55 + 0.08 * Math.sin(t / 220), g: 0.95 * k } });
+    } },
+  { name: '깜짝', when: '곧 도착할 때(2분 전). 「벌써?」 하고 눈이 커지며 날개를 파닥 작게 뛴다.', len: 3200,
+    run: (b, t) => {
+      const jump = pulse(t, 500, 260), big = clamp((t - 480) / 120) * (1 - clamp((t - 1500) / 400));
+      pose(b, { dy: breath(t) - 14 * jump, stretch: 1 + 0.05 * jump, iris: 1 + 0.25 * big, look: [-0.3 * big, -0.5 * big], open: 1 + 0.15 * big, wing: { k: flapK(t - 480, 220), g: pulse(t, 480, 420) * 0.8 } });
+    } },
+  { name: '꾸벅꾸벅', posed: true, when: '쉬는 시간 10분. 눈이 스르르 감기면 웅크려 졸다가, 눈을 뜨며 깬다.', len: 5800,
+    run: (b, t) => {
+      const sleep = t >= 1400 && t < 4400;
+      const f = fade(t, 1400, 1950) * (1 - fade(t, 4000, 4400));
+      const open = sleep ? 1 : t < 1400 ? 1 - 0.85 * fade(t, 500, 1400) : 1 - 0.85 * (1 - fade(t, 4400, 4800));
+      pose(b, { view: sleep ? 'sleepy' : 'side', dy: breath(t, 2400, 1.2 + 1.4 * f) + 3 * f, lean: -2 * f * Math.sin(t / 700), open, look: [-0.3, 0.6] });
+    } },
+  { name: '로고 ↔ 잇찌', used: true, when: '잇찌의 등장과 퇴장. 수업을 마칠 때 로고에서 나와 다시 로고로 돌아간다.', len: 6400, morph: true },
+];
+
+// ---------- 로고 ↔ 잇찌(앱과 같은 방식으로 획을 짝지어 구부림) ----------
+const LOGO = ['M10 26 C12 10, 16 6, 22 6', 'M22 6 C28 6, 32 12, 30 20', 'M30 20 C28 28, 20 28, 16 28', 'M16 28 C26 28, 38 28, 42 20', 'M42 20 C44 14, 48 14, 50 18', 'M50 18 C52 24, 48 28, 54 28', 'M54 28 C60 28, 62 18, 62 14', 'M62 14 C62 26, 68 28, 72 28', 'M72 28 C76 28, 80 18, 80 10'];
+const BIRD = ['M 528 282 L 556 266 C 568 222, 594 200, 628 202', 'M 628 202 C 672 204, 696 226, 688 260', 'M 688 260 C 682 288, 668 304, 648 318', 'M 648 318 C 622 338, 628 372, 664 372', 'M 664 372 C 684 372, 688 348, 704 348', 'M 704 348 C 722 348, 738 380, 756 380', 'M 756 380 C 774 380, 794 352, 812 352', 'M 812 352 C 832 352, 858 384, 884 398', 'M 884 398 C 930 416, 976 442, 1018 472'];
+const lx = x => 6.4 * (x - 48) + 773, ly = y => 6.4 * (y - 17) + 337;
+function sample(svg, list, map) {
+  const out = [];
+  list.forEach((d, k) => {
+    const p = document.createElementNS(NS, 'path'); p.setAttribute('d', d); svg.appendChild(p);
+    const L = p.getTotalLength();
+    for (let i = k ? 1 : 0; i <= 32; i++) { const q = p.getPointAtLength(L * i / 32); out.push(map(q.x, q.y)); }
+    p.remove();
+  });
+  return out;
+}
+function makeMorph(card) {
+  const b = makeBird(card);
+  b.svg.querySelectorAll('.pose').forEach(g => g.remove()); b.poses = {};
+  const ribbon = b.ribbonPath;
+  const parts = [...b.side.children].filter(el => el !== ribbon && !el.classList.contains('eye'));
+  const logo = document.createElementNS(NS, 'path');
+  logo.setAttribute('stroke', 'url(#gLogo)'); logo.setAttribute('fill', 'none'); logo.setAttribute('stroke-linecap', 'round'); logo.setAttribute('stroke-linejoin', 'round');
+  b.side.insertBefore(logo, ribbon);
+  const A = sample(b.svg, LOGO, (x, y) => [lx(x), ly(y)]), B = sample(b.svg, BIRD, (x, y) => [x, y]);
+  b.morph = k => {
+    let d = '';
+    for (let i = 0; i < A.length; i++) {
+      const p = inOut(clamp(k * 1.6 - 0.6 * i / A.length));
+      d += (i ? 'L' : 'M') + mix(A[i][0], B[i][0], p).toFixed(1) + ' ' + mix(A[i][1], B[i][1], p).toFixed(1);
+    }
+    ribbon.setAttribute('d', d); logo.setAttribute('d', d);
+    ribbon.setAttribute('opacity', k); logo.setAttribute('opacity', k >= 1 ? 0 : 1);
+    ribbon.setAttribute('stroke-width', mix(16.6, 10.5, k)); logo.setAttribute('stroke-width', mix(16.6, 10.5, k));
+    const fill = clamp((k - 0.6) / 0.4);
+    parts.forEach(el => el.style.opacity = fill);
+    b.legs.style.opacity = b.branch.style.opacity = fill;
+    const pj = inOut(clamp((k - 0.15) / 0.6)), u = 1 - pj, C = [720, 90], D = [lx(62), ly(7.5)];
+    const ex = u * u * D[0] + 2 * u * pj * C[0] + pj * pj * EYE[0], ey = u * u * D[1] + 2 * u * pj * C[1] + pj * pj * EYE[1];
+    b.eye.setAttribute('transform', `translate(${(ex - EYE[0]).toFixed(1)} ${(ey - EYE[1]).toFixed(1)})`);
+    b.iris.setAttribute('r', mix(17.9, 11, pj)); b.core.setAttribute('r', mix(8.5, 5.2, pj));
+  };
+  return b;
+}
+
+// ---------- 정면 부리 다른 안(접어 둔 칸) ----------
+const BEAKS = [
+  { key: '가', name: '가. 어두운 세모', note: '안티그래비티 그림 그대로. 얼굴 남색과 비슷해 작게 보인다.' },
+  { key: '나', name: '나. 빛나는 부리(지금 씀)', note: '세모 부리의 양쪽 윗선을 리본처럼 빛나는 하늘색으로.' },
+  { key: '다', name: '다. 리본에서 이어진 부리', note: '리본이 부리 끝에서 시작해 왼쪽 턱선을 따라 머리 위로 이어진다.' },
+  { key: '라', name: '라. 1자 부리(세로)', note: '빛나는 곧은 선 하나를 두 눈 사이 아래로.' },
+  { key: '마', name: '마. 1자 부리(가로)', note: '빛나는 곧은 선 하나를 가로로. 순하고 아이 같은 느낌.' },
+];
+function frontWithBeak(key) {
+  const wrap = document.createElementNS(NS, 'svg');
+  wrap.setAttribute('viewBox', '700 180 400 340');
+  wrap.innerHTML = poseCache.front;
+  const beak = wrap.querySelector('#beak'), rib = wrap.querySelectorAll('#ribbon path');
+  const mk = attrs => addPath(document, beak, attrs);
+  if (key !== '나') beak.querySelectorAll('.glowBeak').forEach(p => p.remove());
+  if (key === '라' || key === '마') {
+    while (beak.firstChild) beak.firstChild.remove();
+    const d = key === '라' ? 'M 718 270 L 718 292' : 'M 707 279 L 729 279';
+    mk({ d, stroke: '#38BDF8', 'stroke-width': 13, 'stroke-linecap': 'round', fill: 'none', opacity: 0.18 });
+    mk({ d, stroke: '#8ADCFD', 'stroke-width': 7, 'stroke-linecap': 'round', fill: 'none' });
+  }
+  if (key === '다') rib.forEach(p => p.setAttribute('d', 'M 718 295 L 707 271 C 696 300, 652 312, 642 284 C 636 240, 672 198, 718 198' + FRONT_OUTLINE.replace(/^M 652 266 C 648 224, 676 198, 718 198/, '')));
+  return wrap;
+}
+
+// ---------- 시작 ----------
+(async () => {
+  for (const p of POSES) { try { poseCache[p] = await loadPose(p); } catch (e) { /* 파일을 직접 열면 자세 그림 없이 옆모습만 */ } }
+  const grid = document.getElementById('grid');
+  const birds = ACTIONS.map(a => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<div class="name">${a.name}<span class="tag${a.used ? '' : ' idea'}">${a.used ? '앱에 넣음' : '시안'}</span>${a.posed ? '<span class="tag pose">자세 그림</span>' : ''}</div><div class="when">${a.when}</div>`;
+    grid.appendChild(card);
+    return { a, b: a.morph ? makeMorph(card) : makeBird(card) };
+  });
+  if (poseCache.front) {
+    const bg = document.getElementById('beakGrid');
+    BEAKS.forEach(x => { const card = document.createElement('div'); card.className = 'card'; card.appendChild(frontWithBeak(x.key)); card.insertAdjacentHTML('beforeend', `<div class="name">${x.name}</div><div class="when">${x.note}</div>`); bg.appendChild(card); });
+  }
+  const t0 = performance.now();
+  const frame = now => {
+    birds.forEach(({ a, b }) => {
+      const t = (now - t0) % a.len;
+      if (a.morph) {
+        const k = t < 2200 ? inOut(clamp(t / 2200)) : t < 4000 ? 1 : 1 - inOut(clamp((t - 4000) / 1800));
+        b.morph(k);
+        if (k >= 1) { b.core.setAttribute('cx', EYE[0] - 2); b.core.setAttribute('cy', EYE[1] + 2); }
+      } else a.run(b, t);
+    });
+    requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

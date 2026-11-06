@@ -1,0 +1,14 @@
+{
+  "duration": 3.96,
+  "sample_rate": 24000,
+  "peak": 17232,
+  "rms": 2382.95,
+  "sha256": "50a20056c4a4a7e49d4eb1ec15fe9e6837e9aa1050018a9d70515ddc15c29717",
+  "id": "r5_2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘 밤에는 일찍 자는 게 제일 좋은 공부예요.",
+  "fingerprint": "95ac3ef172e87ea5ed1d522192b3c71fb998fdc9865f41c96d39de25acd3548d",
+  "generated_at": "2026-11-03T22:58:14+0900",
+  "review": "generated_not_listening_reviewed"
+}

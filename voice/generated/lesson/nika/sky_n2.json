@@ -1,0 +1,14 @@
+{
+  "duration": 38.4,
+  "sample_rate": 24000,
+  "peak": 23201,
+  "rms": 2652.85,
+  "sha256": "078d1f2dc218c4fb785b22d47a47b6b6f63449ce3f69b8e3242f07fce3229f1b",
+  "id": "sky_n2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "파장이 얼마나 짧은지 감을 잡아 볼까요? 꼭 외울 필요는 없는 숫자입니다. 우리 눈에 보이는 빛의 파장은 머리카락 굵기의 백분의 일 안팎입니다. 빨간빛이 파란빛보다 물결 사이가 한 배 반쯤 깁니다. 그런데 흩어지는 정도는 훨씬 큰 차이가 납니다. 파장이 짧아질수록 흩어지는 정도가 아주 빠르게 커져서, 파란빛은 빨간빛보다 대여섯 배나 잘 흩어집니다. 작은 길이 차이가 하늘 전체의 색을 결정하는 것입니다.",
+  "fingerprint": "15c5ee1fefef7a0e6cba10ff18f4ae419e3eec621cf50cafc6db1afa86879d23",
+  "generated_at": "2026-11-06T00:21:21+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,509 @@
+{
+  "errors": [],
+  "states": [
+    {
+      "name": "home-pearl",
+      "contrast": [
+        {
+          "text": "지금",
+          "ratio": 5.52
+        },
+        {
+          "text": "수업",
+          "ratio": 13.94
+        },
+        {
+          "text": "기록",
+          "ratio": 13.94
+        },
+        {
+          "text": "15분 수업",
+          "ratio": 13.94
+        },
+        {
+          "text": "",
+          "ratio": 13.94
+        },
+        {
+          "text": "왜 낮 하늘은 파랗고 노을은 붉을까?",
+          "ratio": 13.94
+        },
+        {
+          "text": "과학 · 왜 하늘은 파랗고 노을은 붉을까",
+          "ratio": 13.94
+        },
+        {
+          "text": "약 15분이면 답을 알게 돼요",
+          "ratio": 13.94
+        },
+        {
+          "text": "모은 깃털 0개",
+          "ratio": 4.97
+        },
+        {
+          "text": "0개",
+          "ratio": 4.97
+        }
+      ],
+      "overflow": [],
+      "targets": []
+    },
+    {
+      "name": "badges-pearl",
+      "contrast": [
+        {
+          "text": "지금",
+          "ratio": 13.94
+        },
+        {
+          "text": "수업",
+          "ratio": 13.94
+        },
+        {
+          "text": "기록",
+          "ratio": 5.52
+        },
+        {
+          "text": "15분 수업",
+          "ratio": 13.94
+        },
+        {
+          "text": "",
+          "ratio": 13.94
+        },
+        {
+          "text": "내 배움 보관함",
+          "ratio": 13.94
+        },
+        {
+          "text": "모은 깃털 0개",
+          "ratio": 13.94
+        },
+        {
+          "text": "수업 기록",
+          "ratio": 13.53
+        },
+        {
+          "text": "배지",
+          "ratio": 4.97
+        },
+        {
+          "text": "배지 둘러보기 · 받는 방법은 준비 중이에요",
+          "ratio": 13.52
+        },
+        {
+          "text": "첫 발견",
+          "ratio": 13.94
+        },
+        {
+          "text": "국어",
+          "ratio": 13.94
+        },
+        {
+          "text": "수학",
+          "ratio": 13.94
+        },
+        {
+          "text": "탐험",
+          "ratio": 13.94
+        },
+        {
+          "text": "골고루 탐험가",
+          "ratio": 13.94
+        },
+        {
+          "text": "생활 속 발견가",
+          "ratio": 13.94
+        }
+      ],
+      "overflow": [],
+      "targets": []
+    },
+    {
+      "name": "home-pearl",
+      "contrast": [
+        {
+          "text": "지금",
+          "ratio": 5.52
+        },
+        {
+          "text": "수업",
+          "ratio": 13.94
+        },
+        {
+          "text": "기록",
+          "ratio": 13.94
+        },
+        {
+          "text": "15분 수업",
+          "ratio": 13.94
+        },
+        {
+          "text": "",
+          "ratio": 13.94
+        },
+        {
+          "text": "왜 낮 하늘은 파랗고 노을은 붉을까?",
+          "ratio": 13.94
+        },
+        {
+          "text": "과학 · 왜 하늘은 파랗고 노을은 붉을까",
+          "ratio": 13.94
+        },
+        {
+          "text": "약 15분이면 답을 알게 돼요",
+          "ratio": 13.94
+        },
+        {
+          "text": "모은 깃털 0개",
+          "ratio": 4.97
+        },
+        {
+          "text": "0개",
+          "ratio": 4.97
+        }
+      ],
+      "overflow": [],
+      "targets": []
+    },
+    {
+      "name": "badges-dark",
+      "contrast": [
+        {
+          "text": "지금",
+          "ratio": 10.28
+        },
+        {
+          "text": "수업",
+          "ratio": 10.28
+        },
+        {
+          "text": "기록",
+          "ratio": 6.8
+        },
+        {
+          "text": "15분 수업",
+          "ratio": 10.28
+        },
+        {
+          "text": "",
+          "ratio": 10.28
+        },
+        {
+          "text": "내 배움 보관함",
+          "ratio": 10.28
+        },
+        {
+          "text": "모은 깃털 0개",
+          "ratio": 10.28
+        },
+        {
+          "text": "수업 기록",
+          "ratio": 17.97
+        },
+        {
+          "text": "배지",
+          "ratio": 17.97
+        },
+        {
+          "text": "배지 둘러보기 · 받는 방법은 준비 중이에요",
+          "ratio": 17.97
+        },
+        {
+          "text": "첫 발견",
+          "ratio": 10.28
+        },
+        {
+          "text": "국어",
+          "ratio": 10.28
+        },
+        {
+          "text": "수학",
+          "ratio": 10.28
+        },
+        {
+          "text": "탐험",
+          "ratio": 10.28
+        },
+        {
+          "text": "골고루 탐험가",
+          "ratio": 10.28
+        },
+        {
+          "text": "생활 속 발견가",
+          "ratio": 10.28
+        }
+      ],
+      "overflow": [],
+      "targets": []
+    },
+    {
+      "name": "home-dark",
+      "contrast": [
+        {
+          "text": "지금",
+          "ratio": 6.8
+        },
+        {
+          "text": "수업",
+          "ratio": 10.28
+        },
+        {
+          "text": "기록",
+          "ratio": 10.28
+        },
+        {
+          "text": "15분 수업",
+          "ratio": 10.28
+        },
+        {
+          "text": "",
+          "ratio": 10.28
+        },
+        {
+          "text": "왜 낮 하늘은 파랗고 노을은 붉을까?",
+          "ratio": 10.28
+        },
+        {
+          "text": "과학 · 왜 하늘은 파랗고 노을은 붉을까",
+          "ratio": 10.28
+        },
+        {
+          "text": "약 15분이면 답을 알게 돼요",
+          "ratio": 10.28
+        },
+        {
+          "text": "모은 깃털 0개",
+          "ratio": 17.97
+        },
+        {
+          "text": "0개",
+          "ratio": 17.97
+        }
+      ],
+      "overflow": [],
+      "targets": []
+    },
+    {
+      "name": "badges-mixed",
+      "contrast": [
+        {
+          "text": "지금",
+          "ratio": 12.07
+        },
+        {
+          "text": "수업",
+          "ratio": 10.8
+        },
+        {
+          "text": "기록",
+          "ratio": 4.72
+        },
+        {
+          "text": "15분 수업",
+          "ratio": 4.69
+        },
+        {
+          "text": "",
+          "ratio": 5.56
+        },
+        {
+          "text": "내 배움 보관함",
+          "ratio": 12.03
+        },
+        {
+          "text": "모은 깃털 0개",
+          "ratio": 5.24
+        },
+        {
+          "text": "수업 기록",
+          "ratio": 11.25
+        },
+        {
+          "text": "배지",
+          "ratio": 9.83
+        },
+        {
+          "text": "배지 둘러보기 · 받는 방법은 준비 중이에요",
+          "ratio": 7.49
+        },
+        {
+          "text": "첫 발견",
+          "ratio": 9.17
+        },
+        {
+          "text": "국어",
+          "ratio": 5.81
+        },
+        {
+          "text": "수학",
+          "ratio": 8.16
+        },
+        {
+          "text": "탐험",
+          "ratio": 8.16
+        },
+        {
+          "text": "골고루 탐험가",
+          "ratio": 4.69
+        },
+        {
+          "text": "생활 속 발견가",
+          "ratio": 5
+        }
+      ],
+      "overflow": [],
+      "targets": []
+    },
+    {
+      "name": "home-mixed",
+      "contrast": [
+        {
+          "text": "지금",
+          "ratio": 5.19
+        },
+        {
+          "text": "수업",
+          "ratio": 10.8
+        },
+        {
+          "text": "기록",
+          "ratio": 9.62
+        },
+        {
+          "text": "15분 수업",
+          "ratio": 4.69
+        },
+        {
+          "text": "",
+          "ratio": 5.56
+        },
+        {
+          "text": "왜 낮 하늘은 파랗고 노을은 붉을까?",
+          "ratio": 5.83
+        },
+        {
+          "text": "과학 · 왜 하늘은 파랗고 노을은 붉을까",
+          "ratio": 8.53
+        },
+        {
+          "text": "약 15분이면 답을 알게 돼요",
+          "ratio": 9.22
+        },
+        {
+          "text": "모은 깃털 0개",
+          "ratio": 7.82
+        },
+        {
+          "text": "0개",
+          "ratio": 7.75
+        }
+      ],
+      "overflow": [],
+      "targets": []
+    },
+    {
+      "name": "settings-420",
+      "contrast": [
+        {
+          "text": "지금",
+          "ratio": 5.52
+        },
+        {
+          "text": "수업",
+          "ratio": 13.94
+        },
+        {
+          "text": "기록",
+          "ratio": 13.94
+        },
+        {
+          "text": "15분 수업",
+          "ratio": 13.94
+        },
+        {
+          "text": "",
+          "ratio": 13.94
+        },
+        {
+          "text": "왜 낮 하늘은 파랗고 노을은 붉을까?",
+          "ratio": 13.94
+        },
+        {
+          "text": "과학 · 왜 하늘은 파랗고 노을은 붉을까",
+          "ratio": 13.94
+        },
+        {
+          "text": "약 15분이면 답을 알게 돼요",
+          "ratio": 13.94
+        },
+        {
+          "text": "모은 깃털 0개",
+          "ratio": 4.97
+        },
+        {
+          "text": "0개",
+          "ratio": 4.97
+        }
+      ],
+      "overflow": [],
+      "targets": []
+    },
+    {
+      "name": "home-420",
+      "contrast": [
+        {
+          "text": "지금",
+          "ratio": 5.52
+        },
+        {
+          "text": "수업",
+          "ratio": 13.94
+        },
+        {
+          "text": "기록",
+          "ratio": 13.94
+        },
+        {
+          "text": "15분 수업",
+          "ratio": 13.94
+        },
+        {
+          "text": "",
+          "ratio": 13.94
+        },
+        {
+          "text": "왜 낮 하늘은 파랗고 노을은 붉을까?",
+          "ratio": 13.94
+        },
+        {
+          "text": "과학 · 왜 하늘은 파랗고 노을은 붉을까",
+          "ratio": 13.94
+        },
+        {
+          "text": "약 15분이면 답을 알게 돼요",
+          "ratio": 13.94
+        },
+        {
+          "text": "모은 깃털 0개",
+          "ratio": 4.97
+        },
+        {
+          "text": "0개",
+          "ratio": 4.97
+        }
+      ],
+      "overflow": [],
+      "targets": []
+    }
+  ],
+  "checks": {
+    "cancelKeepsSaved": true,
+    "invalidValueBlocked": true,
+    "drivingClosesUnsavedAndBlocks": true,
+    "logoConditional": true,
+    "schoolSettingsRetained": true,
+    "unrelatedStorageKept": true
+  },
+  "pass": true
+}

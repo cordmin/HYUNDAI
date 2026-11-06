@@ -144,7 +144,7 @@ test('쉬는 날에는 할 말이 없는 하교 대화 버튼을 보여 주지 �
     const html = document.getElementById('stageArea').innerHTML;
     school = null; schoolDays = {};
     html`);
-  assert.ok(shown.includes('가 볼 만한 곳'));
+  assert.ok(!shown.includes('가 볼 만한 곳'));
   assert.ok(!shown.includes('하교 대화'));
 });
 
@@ -1331,7 +1331,7 @@ test('학교를 등록해도 수업 중심 화면을 쓰고 준비물·등교 �
   assert.ok(!shown.html.includes('등교 대화'));
   assert.ok(!shown.html.includes('준비물'));
   assert.ok(!shown.html.includes('체육복'));
-  assert.ok(shown.html.includes('가 볼 만한 곳'));
+  assert.ok(!shown.html.includes('가 볼 만한 곳'));
   assert.ok(!shown.html.includes('카레'));
   if (shown.mode === 'afternoon' && !shown.weekend) assert.ok(shown.html.includes('하교 대화'));
   page(`goHome();`);
@@ -1386,9 +1386,9 @@ test('가 볼 만한 곳은 지금 위치, 없으면 학교에서 가까운 순�
   assert.strictEqual(page(`kmText(1.234) + ' ' + kmText(12.6)`), '1.2km 13km');
 });
 
-test('학교를 등록하기 전 첫 화면에서도 가 볼 만한 곳으로 갈 수 있다', () => {
+test('학교를 등록하기 전 첫 화면에서도 가 볼 만한 곳을 보여 주지 않는다', () => {
   page(`localStorage.values.clear(); school = null; goHome();`);
-  assert.ok(stageHtml().includes('aria-label="가 볼 만한 곳" onclick="openPlaces()"'));
+  assert.ok(!stageHtml().includes('openPlaces()'));
 });
 
 

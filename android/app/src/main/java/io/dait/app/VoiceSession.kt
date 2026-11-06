@@ -34,7 +34,15 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
     private var listen = ""
     private var turn = 0
     private var player: MediaPlayer? = null
+    private var playbackVolume = appContext.getSharedPreferences("dait.audio", Context.MODE_PRIVATE)
+        .getFloat("volume", 1f).coerceIn(0f, 1f)
     private var seekPosition = 0
+
+    // 다잇 음원만 조절한다. 재생 위치·오디오 포커스·차량 시스템 음량은 바꾸지 않는다.
+    fun setVolume(percent: Int) {
+        playbackVolume = percent.coerceIn(0, 100) / 100f
+        player?.setVolume(playbackVolume, playbackVolume)
+    }
 
     fun seek(positionMs: Int, expectedTurn: Int) {
         if (expectedTurn != turn || phase != Phase.SPEAKING) return
@@ -113,6 +121,7 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
                     setOnCompletionListener { onClipDone() }
                     setOnErrorListener { _, _, _ -> onClipDone(); true }
                     prepare()
+                    setVolume(playbackVolume, playbackVolume)
                     if (seekPosition > 0) seekTo(seekPosition.coerceAtMost((duration - 1).coerceAtLeast(0)).toLong(), MediaPlayer.SEEK_CLOSEST)
                     start()
                 }

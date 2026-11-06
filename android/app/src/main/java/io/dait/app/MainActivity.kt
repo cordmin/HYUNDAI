@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.webkit.JavascriptInterface
+import kotlin.math.roundToInt
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -295,6 +296,18 @@ class MainActivity : Activity() {
         @JavascriptInterface
         fun reportSpeechPosition(turn: Int) {
             runOnUiThread { voice?.reportPosition(turn) }
+        }
+
+        @JavascriptInterface
+        fun getSpeechVolume(): Int = (getSharedPreferences("dait.audio", MODE_PRIVATE)
+            .getFloat("volume", 1f).coerceIn(0f, 1f) * 100).roundToInt()
+
+        @JavascriptInterface
+        fun setSpeechVolume(percent: Int) {
+            val level = percent.coerceIn(0, 100)
+            getSharedPreferences("dait.audio", MODE_PRIVATE).edit()
+                .putFloat("volume", level / 100f).apply()
+            runOnUiThread { voice?.setVolume(level) }
         }
 
         // 'none'은 음성 인식 모델이 없음, 'ask'는 아직 마이크 허락을 받지 않음,

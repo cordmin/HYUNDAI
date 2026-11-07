@@ -75,17 +75,52 @@
       const lum = luminance(c);
       return max && 1 - min / max > .18 && hue >= 185 && hue <= 215 && contrast(lum, luminance(rgb('#38bdf8'))) < 1.25 && contrast(lum, 1) < 2.7;
     }).length >= 2;
-    const path = svg.querySelector('path:not(.pearl-logo-outline)');
+    const path = svg.querySelector(':scope > path:not(.pearl-logo-outline)');
+    let halo = svg.querySelector('.pearl-logo-halo');
+    if (path && !halo) {
+      const ns = 'http://www.w3.org/2000/svg', defs = svg.querySelector('defs');
+      const filter = document.createElementNS(ns, 'filter');
+      filter.id = 'pearlLogoOuterBlur';
+      filter.setAttribute('filterUnits', 'userSpaceOnUse');
+      filter.setAttribute('x', '-20'); filter.setAttribute('y', '-20');
+      filter.setAttribute('width', '140'); filter.setAttribute('height', '80');
+      filter.innerHTML = '<feGaussianBlur stdDeviation="1.57"/>';
+      const mask = document.createElementNS(ns, 'mask');
+      mask.id = 'pearlLogoOutside';
+      mask.setAttribute('maskUnits', 'userSpaceOnUse');
+      mask.setAttribute('x', '-20'); mask.setAttribute('y', '-20');
+      mask.setAttribute('width', '140'); mask.setAttribute('height', '80');
+      mask.setAttribute('style', 'mask-type:luminance');
+      mask.innerHTML = '<rect x="-20" y="-20" width="140" height="80" fill="white"/>';
+      const cutout = path.cloneNode();
+      cutout.setAttribute('stroke', 'black'); cutout.setAttribute('fill', 'none');
+      mask.append(cutout);
+      const dot = svg.querySelector(':scope > .brand-dot');
+      if (dot) { const hole = dot.cloneNode(); hole.setAttribute('fill', 'black'); mask.append(hole); }
+      defs.append(filter, mask);
+      halo = document.createElementNS(ns, 'g');
+      halo.classList.add('pearl-logo-halo');
+      halo.setAttribute('aria-hidden', 'true'); halo.setAttribute('pointer-events', 'none');
+      halo.setAttribute('mask', 'url(#pearlLogoOutside)');
+      const blurred = document.createElementNS(ns, 'g');
+      blurred.setAttribute('filter', 'url(#pearlLogoOuterBlur)');
+      blurred.setAttribute('opacity', '.76');
+      const ribbon = path.cloneNode();
+      ribbon.setAttribute('stroke', 'currentColor'); ribbon.setAttribute('stroke-width', '4.8');
+      blurred.append(ribbon);
+      if (dot) { const glowDot = dot.cloneNode(); glowDot.setAttribute('r', '3.35'); glowDot.setAttribute('fill', 'currentColor'); blurred.append(glowDot); }
+      halo.append(blurred); svg.insertBefore(halo, path);
+    }
     if (path && !svg.querySelector('.pearl-logo-outline')) {
       const outline = path.cloneNode(); outline.classList.add('pearl-logo-outline');
       outline.setAttribute('stroke-width', '4.4'); outline.setAttribute('aria-hidden', 'true'); svg.insertBefore(outline, path);
     }
     svg.querySelector('.pearl-logo-outline')?.setAttribute('stroke', bright ? '#18314a' : '#ffffff');
     brand.dataset.logoOutline = needsOutline ? 'on' : 'off'; brand.dataset.logoEffect = bright ? 'shadow' : 'glow';
-    // A tight, stronger first layer separates the ribbon before the softer depth/glow.
-    svg.style.filter = bright
-      ? 'drop-shadow(0 1px .8px rgba(12,24,39,.78)) drop-shadow(0 2px 2px rgba(12,24,39,.42)) drop-shadow(0 4px 5px rgba(0,0,0,.18))'
-      : 'drop-shadow(0 0 1px rgba(255,255,255,.95)) drop-shadow(0 1px 2.5px rgba(255,255,255,.6)) drop-shadow(0 0 7px rgba(255,255,255,.32))';
+    // Keep the original ribbon completely unfiltered. Only its exterior receives light.
+    svg.style.filter = 'none';
+    if (halo) halo.style.color = bright ? '#397694' : '#a3ddff';
+    brand.dataset.logoOuter = 'sky';
   }
   function refresh() { frame = 0; refreshInk(); refreshLogo(); }
   function queueRefresh() { if (!frame) frame = requestAnimationFrame(refresh); }

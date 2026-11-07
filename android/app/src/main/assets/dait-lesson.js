@@ -36,6 +36,11 @@
     return pieces.reduce((sum, piece) => sum + pieceSeconds(piece), 0);
   }
 
+  // Speech changes speed; thinking time and inter-period breaks remain wall-clock time.
+  function playbackSeconds(pieces, rate = 1) {
+    return pieces.reduce((sum, piece) => sum + (isBreak(piece) ? speechSeconds(piece) : speechSeconds(piece) / rate) + (piece.wait || 0), 0);
+  }
+
   function lessonOrder(lesson) {
     return lesson.pieces.filter(piece => !piece.short && !['복습', '짧은정리'].includes(piece.kind));
   }
@@ -83,15 +88,15 @@
 
   // 필수 조각을 두고, 15분 판 조각부터 대본 순서대로 더한 뒤 30분 판 조각을 더한다.
   // 시간에 들어가는 조각을 고를 뿐 말하는 차례는 대본 그대로다.
-  function pick(order, budget) {
+  function pick(order, budget, rate = 1) {
     const musts = order.filter(piece => piece.must);
-    let used = totalSeconds(musts);
+    let used = playbackSeconds(musts, rate);
     const keep = new Set(musts);
     const extras = order.filter(piece => !piece.must);
     for (const piece of [...extras.filter(piece => !piece.long), ...extras.filter(piece => piece.long)]) {
-      if (used + pieceSeconds(piece) > budget) continue;
+      if (used + playbackSeconds([piece], rate) > budget) continue;
       keep.add(piece);
-      used += pieceSeconds(piece);
+      used += playbackSeconds([piece], rate);
     }
     return order.filter(piece => keep.has(piece));
   }
@@ -136,14 +141,14 @@
   // 수업 중 내비의 남은 시간이 바뀌면, 앞으로 할 조각을 대본에서 다시 고른다.
   // 도착이 앞당겨지면 조각을 빼고, 늦어지면 빼 두었던 조각을 되살린다. 지나간 조각은 다시 넣지 않는다.
   // 필수 조각도 못 들어가면 짧은 정리 하나로 끝낸다. 지금 말하는 조각은 건드리지 않는다.
-  function fitRemaining(pieces, index, remainingSeconds, lesson) {
+  function fitRemaining(pieces, index, remainingSeconds, lesson, rate = 1) {
     if (isClosing(pieces[index])) return { pieces, wrapped: false }; // 정리는 끝까지 말한다
     const done = pieces.slice(0, index + 1);
     const order = playingOrder(lesson, pieces);
     const ahead = order.slice(order.indexOf(pieces[index]) + 1);
     const budget = remainingSeconds - ARRIVAL_MARGIN_S;
-    if (totalSeconds(ahead.filter(piece => piece.must)) <= budget) {
-      return { pieces: [...done, ...pick(ahead, budget)], wrapped: false };
+    if (playbackSeconds(ahead.filter(piece => piece.must), rate) <= budget) {
+      return { pieces: [...done, ...pick(ahead, budget, rate)], wrapped: false };
     }
     const end = shortEnd(lesson);
     return { pieces: end ? [...done, end] : done, wrapped: true };
@@ -224,13 +229,13 @@
 
   // 뒤에 몇 교시를 남길지 정한다. 줄어들 때는 필수 조각이 들어가는 한 남기고,
   // 새 교시를 되살릴 때는 한 교시 길이가 온전히 남아야 한다. 이어 붙인 수업은 남은 시간에 그 수업이 들어가면 되살린다.
-  function laterCount(trip, mustSeconds, plannedSeconds, budget) {
+  function laterCount(trip, mustSeconds, plannedSeconds, budget, rate = 1) {
     const rest = restOf(trip) * 60;
     const spare = budget - plannedSeconds;
-    const room = rest ? Math.floor(spare / (PERIOD_MINUTES * 60 + rest))
-      : Number(!!trip.later[0] && spare >= MIN_LESSON_MINUTES * 60 && fits(trip.later[0], spare / 60));
+    const room = rest ? Math.floor(spare / (PERIOD_MINUTES * 60 / rate + rest))
+      : Number(!!trip.later[0] && spare >= MIN_LESSON_MINUTES * 60 && playbackSeconds(required(trip.later[0]), rate) <= spare - ARRIVAL_MARGIN_S);
     let count = Math.min(trip.later.length, Math.max(trip.count, room));
-    const need = kept => trip.later.slice(0, kept).reduce((sum, lesson) => sum + rest + totalSeconds(required(lesson)), mustSeconds);
+    const need = kept => trip.later.slice(0, kept).reduce((sum, lesson) => sum + rest + playbackSeconds(required(lesson), rate), mustSeconds);
     while (count > 0 && need(count) > budget) count--;
     return count;
   }
@@ -238,18 +243,18 @@
   // 뒤 교시에 쓸 시간을 먼저 떼어 놓고, 남는 시간으로 이번 교시를 fitRemaining에 맡긴다.
   // 뒤 교시가 다 빠지면 쉬는 시간도 빠지고, 필수도 못 들어가면 이번 수업의 짧은 정리로 끝난다.
   // 쉬는 시간 중에 뒤 교시가 다 빠지면 pieces가 지금 차례보다 짧아진다. 그때는 화면 쪽에서 수업을 마친다.
-  function fitTrip(pieces, index, remainingSeconds, lesson, trip) {
+  function fitTrip(pieces, index, remainingSeconds, lesson, trip, rate = 1) {
     const now = pieces[index];
     const own = pieces.filter(piece => !isBreak(piece));
     const order = playingOrder(lesson, own);
     const ahead = isBreak(now) || isClosing(now) ? [] : order.slice(order.indexOf(now) + 1);
-    const must = totalSeconds(ahead.filter(piece => piece.must));
-    const count = laterCount(trip, must, totalSeconds(own.slice(index + 1)), remainingSeconds - ARRIVAL_MARGIN_S);
+    const must = playbackSeconds(ahead.filter(piece => piece.must), rate);
+    const count = laterCount(trip, must, playbackSeconds(own.slice(index + 1), rate), remainingSeconds - ARRIVAL_MARGIN_S, rate);
     const kept = { ...trip, count };
     if (isBreak(now)) return { pieces: withBreak(own, kept), count };
-    const held = trip.later.slice(0, count).reduce((sum, item) => sum + restOf(trip) * 60 + totalSeconds(assemble(item, trip.laterMinutes || trip.minutes)), 0);
+    const held = trip.later.slice(0, count).reduce((sum, item) => sum + restOf(trip) * 60 + playbackSeconds(assemble(item, trip.laterMinutes || trip.minutes), rate), 0);
     const room = count ? Math.max(remainingSeconds - held, must + ARRIVAL_MARGIN_S) : remainingSeconds;
-    return { pieces: withBreak(fitRemaining(own, index, room, lesson).pieces, kept), count };
+    return { pieces: withBreak(fitRemaining(own, index, room, lesson, rate).pieces, kept), count };
   }
 
   // 끝까지 못 들은 수업은 마지막으로 들은 조각의 다음 조각부터 이어 듣게 기억한다.
@@ -390,7 +395,7 @@
   }
 
   const Lesson = {
-    TIME_CHOICES, LONG_CHOICES, LONG_TRIP_MINUTES, BREAK_MINUTES, DEFAULT_MINUTES, SHORT_UNDER_MINUTES, assemble, fits, recommend, minutesFor, plan, lessonSeconds, fitRemaining,
+    TIME_CHOICES, LONG_CHOICES, LONG_TRIP_MINUTES, BREAK_MINUTES, DEFAULT_MINUTES, SHORT_UNDER_MINUTES, assemble, playbackSeconds, fits, recommend, minutesFor, plan, lessonSeconds, fitRemaining,
     speechSeconds, totalSeconds, required, shortOrder, isShort, recap, shortEnd, isQuestion, isClosing, isLongTrip, periodCount, tripOrder, planTrip, nextPeriod, periods, restOf, isBreak, withBreak, fitTrip,
     resumePoint, resumeFresh, resumeFits, resumePlan, resumeHeard, keepResume, RESUME_DAYS,
     subjects, bySubject, forRequest, unvoiced, countsAsFinished, monthOf, normalize, finishLesson, finishHomework, forgetAnswers, mileageLine

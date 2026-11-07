@@ -10,7 +10,7 @@
   const contrast = (a, b) => (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
   const valid = colors => colors && HEX.test(colors.start) && HEX.test(colors.end);
   let saved = { ...DEFAULT };
-  try { const value = JSON.parse(localStorage.getItem(KEY)); if (valid(value)) saved = { start: value.start, end: value.end }; } catch (_) { /* Invalid/missing settings use Pearl. */ }
+  try { const value = settingsStore.read(KEY, null); if (valid(value)) saved = { start: value.start, end: value.end }; } catch (_) { /* Invalid/missing settings use Pearl. */ }
   let active = { ...saved }, draft = null, dialog = null, focusBefore = null, frame = 0, noticeTimer;
   const PANES = '.home-card,.dialogue-card,.settings-card,.pearl-record-row,.pearl-badge,.pearl-page-title,.lesson-row,.pearl-homework,.pearl-nav nav,.pearl-eta,.pearl-nav .icon-btn';
   const TEXT = '.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-badge span,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-feathers,.pearl-feathers strong,.pearl-nav nav button,.pearl-eta,.pearl-nav .icon-btn,.pearl-record-tabs button,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.school-input,.choice-chip,.heard-bubble,.place-name,.place-address,.pearl-homework>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times,.pearl-seek';
@@ -129,6 +129,7 @@
     document.documentElement.style.setProperty('--bg-top', colors.start);
     document.documentElement.style.setProperty('--bg-bottom', colors.end);
     const dark = luminance(rgb(colors.start)) + luminance(rgb(colors.end)) < .55;
+    host.classList.toggle('pearl-night', dark);
     document.documentElement.style.setProperty('--ink', dark ? '#ffffff' : '#172236');
     document.documentElement.style.setProperty('--muted', dark ? '#e3ebf7' : '#526175');
     queueRefresh();
@@ -141,6 +142,7 @@
   }
   function close() {
     if (!dialog) return;
+    if (dialog.classList.contains('pearl-school-dialog')) schoolSettingsOpen = false;
     apply(saved); draft = null; dialog.close(); dialog.remove(); dialog = null;
     if (focusBefore?.isConnected) focusBefore.focus();
   }
@@ -168,7 +170,7 @@
     dialog.showModal();
   }
   window.openPearlSettings = () => {
-    if (isDrivingMode) { notice('주행중엔 설정을 바꿀 수 없어요.'); return; }
+    if (!vehiclePolicy.allows('settings')) { notice('주행중엔 설정을 바꿀 수 없어요.'); return; }
     const prefs = lessonPlaybackPrefs;
     const row = (action, label, detail) => `<button data-appearance-action="${action}"><strong>${label}</strong><small>${detail}</small></button>`;
     const toggle = (action, label, on) => `<button class="pearl-settings-switch" data-appearance-action="${action}" role="switch" aria-checked="${on}"><strong>${label}</strong><span aria-hidden="true">${on ? '켜짐' : '꺼짐'}</span></button>`;
@@ -183,7 +185,7 @@
     </div>`);
   };
   function openPlayback() {
-    if (isDrivingMode) { notice('주행중엔 설정을 바꿀 수 없어요.'); return; }
+    if (!vehiclePolicy.allows('settings')) { notice('주행중엔 설정을 바꿀 수 없어요.'); return; }
     let prefs = { ...lessonPlaybackPrefs }, editing = null;
     const intervalRow = (key, label) => `<div class="pearl-pb-row"><h3>${label}</h3><div class="pearl-pb-choices">${[15,30,60,120].map(n => `<button type="button" data-pb-key="${key}" data-pb-value="${n}" aria-pressed="${prefs[key] === n}">${lessonIntervalText(n)}</button>`).join('')}<button type="button" data-pb-custom="${key}" aria-pressed="${![15,30,60,120].includes(prefs[key])}">${[15,30,60,120].includes(prefs[key]) ? '직접 입력' : lessonIntervalText(prefs[key])}</button></div></div>`;
     shell('재생 설정', '<div id="pearlPlaybackBody"></div>');
@@ -271,16 +273,30 @@
         if(!HEX.test(value)){ showDetails(true); dialog.querySelector('#pearlColorMessage').textContent='색상 코드는 # 뒤에 6자리를 입력해 주세요.'; field.focus(); return; }
         draft[key]=value.toLowerCase();
       }
-      try{ localStorage.setItem(KEY,JSON.stringify(draft)); }catch(_){ dialog.querySelector('#pearlColorMessage').textContent='저장할 수 없어요. 기기 저장 공간을 확인해 주세요.'; return; }
+      try{ settingsStore.write(KEY,draft); }catch(_){ dialog.querySelector('#pearlColorMessage').textContent='저장할 수 없어요. 기기 저장 공간을 확인해 주세요.'; return; }
       saved={...draft}; close();
     });
     sync();
   }
-  // Refresh after the existing render, without replacing its playback or trip state.
-  const renderStage = window.renderStage;
-  window.renderStage = function (...args) { const result = renderStage.apply(this, args); queueRefresh(); return result; };
-  const setDriving = window.setDrivingMode;
-  window.setDrivingMode = function (driving, ...args) { if (driving) close(); const result = setDriving.call(this, driving, ...args); queueRefresh(); return result; };
+  let schoolRenderKey = '';
+  function renderSchoolPanel() {
+    const container = dialog?.querySelector('#pearlSchoolBody');
+    if (!container || !schoolSettingsOpen) return;
+    const key = JSON.stringify([settings, school, readStored(QUESTIONS_KEY), readStored(VOICE_KEY), lessonRecordOn(), tripMemoryState(), tripSpots, homePlace]);
+    if (key === schoolRenderKey) return;
+    schoolRenderKey = key; renderSettings(container);
+  }
+  appEvents.on('schoolSettingsOpened', () => {
+    shell('학교 · 다니는 길', '<div id="pearlSchoolBody"></div>');
+    dialog.classList.add('pearl-school-dialog');
+    // shell closes a previous panel; this new panel owns only its presentation.
+    schoolSettingsOpen = true; schoolRenderKey = ''; renderSchoolPanel(); queueRefresh();
+  });
+  appEvents.on('schoolSettingsClosed', () => { if (dialog?.classList.contains('pearl-school-dialog')) close(); });
+  appEvents.on('rendered', () => { renderSchoolPanel(); queueRefresh(); });
+  appEvents.on('vehicleChanged', ({ driving }) => { if (driving) close(); queueRefresh(); });
+  appEvents.on('closeOverlays', close);
+  appEvents.on('back', () => { if (!dialog) return false; close(); return true; });
   window.addEventListener('resize', queueRefresh);
   apply(saved);
 })();

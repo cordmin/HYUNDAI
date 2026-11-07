@@ -2,12 +2,11 @@
 (() => {
   'use strict';
   const KEY = 'dait.volume.v1';
-  const audio = document.getElementById('audioPlayer');
   const bridge = window.AndroidBridge;
   let volume = 100, opened = false;
   try {
-    const saved = localStorage.getItem(KEY);
-    if (saved !== null && saved.trim() !== '' && Number.isFinite(Number(saved))) volume = Math.round(Math.max(0, Math.min(100, Number(saved))));
+    const saved = settingsStore.read(KEY, null);
+    if (saved !== null && String(saved).trim() !== '' && Number.isFinite(Number(saved))) volume = Math.round(Math.max(0, Math.min(100, Number(saved))));
     if (bridge?.getSpeechVolume) volume = Math.round(Math.max(0, Math.min(100, Number(bridge.getSpeechVolume()))));
     if (!Number.isFinite(volume)) volume = 100;
   } catch (_) { /* Storage can be unavailable; this trip's controls still work. */ }
@@ -28,9 +27,8 @@
   function setVolume(value, persist = true) {
     const number = Number(value); if (!Number.isFinite(number)) return;
     volume = Math.round(Math.max(0, Math.min(100, number)));
-    audio.volume = volume / 100; audio.muted = volume === 0;
-    if (bridge?.setSpeechVolume) bridge.setSpeechVolume(volume);
-    if (persist) { try { localStorage.setItem(KEY, String(volume)); } catch (_) { /* Keep the current trip's volume. */ } }
+    audioAdapter.setVolume(volume);
+    if (persist) { try { settingsStore.write(KEY, volume); } catch (_) { /* Keep the current trip's volume. */ } }
     sync();
   }
   function mount() {
@@ -50,9 +48,8 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && opened) { opened = false; sync(); document.querySelector('#pearlVolume button')?.focus(); }
   });
-  const renderNav = window.renderPearlNav;
-  window.renderPearlNav = function (...args) { const result = renderNav.apply(this, args); mount(); return result; };
-  const setDriving = window.setDrivingMode;
-  window.setDrivingMode = function (...args) { opened = false; sync(); return setDriving.apply(this, args); };
+  appEvents.on('navigationRendered', mount);
+  appEvents.on('vehicleChanged', () => { opened = false; sync(); });
+  appEvents.on('back', () => { if (!opened) return false; opened = false; sync(); return true; });
   setVolume(volume, false); mount();
 })();

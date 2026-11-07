@@ -42,9 +42,9 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
         if (!rate.isFinite() || rate !in 0.8f..2f) return
         playbackRate = rate
         player?.let { current ->
-            val wasPlaying = current.isPlaying
-            current.playbackParams = PlaybackParams().setSpeed(playbackRate)
-            if (!wasPlaying) current.pause()
+            // Applying non-zero PlaybackParams may start a paused MediaPlayer.
+            // Defer it until resume instead of briefly playing while held/interrupted.
+            if (current.isPlaying) current.playbackParams = PlaybackParams().setSpeed(playbackRate)
         }
     }
 
@@ -95,12 +95,12 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
 
     // 이어 듣기. 소리를 다시 받아 멈춘 곳에서 잇는다. 바로 못 받으면 받을 때까지 기다린다.
     fun proceed() {
-        if (!held) return
+        if (!held && !suspended) return
         held = false
         suspended = false
         when (audio.requestAudioFocus(focus)) {
             AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> resume(rewind = false)
-            AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> suspended = true
+            AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> { suspended = true; emit("paused") }
             else -> finish("stopped")
         }
     }
@@ -195,6 +195,7 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
             val paused = player
             if (paused == null) playNext() else {
                 if (rewind) paused.seekTo(resumePosition(paused))
+                paused.playbackParams = PlaybackParams().setSpeed(playbackRate)
                 paused.start()
             }
         }

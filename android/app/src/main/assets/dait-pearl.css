@@ -260,3 +260,28 @@ body.lesson-playing .stage-container { padding:calc(6 * var(--u)) calc(28 * var(
 
 .pearl-settings-dialog.pearl-playback-dialog button {min-height:44px;height:auto}
 .pearl-settings-dialog.pearl-playback-dialog .icon-btn {width:44px;height:44px}
+
+/* Driving uses the same composition with quiet motion and larger secondary targets. */
+body.driving .pearl-player.is-playing .pearl-player-wave i { animation:none; transform:scaleY(.5); }
+.pearl-tools { height:calc(max(52px,44 * var(--u)) + 6px); }
+.pearl-nav .pearl-tools .icon-btn, .pearl-volume-control { width:max(52px,calc(44 * var(--u))); height:max(52px,calc(44 * var(--u))); }
+.pearl-volume-control.is-open { height:calc(max(52px,44 * var(--u)) + 188 * var(--u)); }
+.pearl-settings-dialog.pearl-playback-dialog button { min-height:48px; }
+.pearl-settings-dialog.pearl-playback-dialog .icon-btn { width:48px; height:48px; }
+.pearl-school-dialog { width:min(800px,calc(100% - 28px)); }
+.pearl-school-dialog .dialogue-top { display:none; }
+.pearl-school-dialog .settings-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:14px; margin-top:14px; }
+.pearl-school-dialog .settings-center { padding:12px; }
+.pearl-school-dialog .main-question { font-size:20px; }
+.pearl-school-dialog .settings-side { gap:8px; }
+.pearl-school-dialog .setting-row, .pearl-school-dialog .school-input, .pearl-school-dialog .choice-chip { min-height:48px; font-size:15px; }
+.pearl-school-dialog .card-sub, .pearl-school-dialog .settings-message { font-size:13px; }
+@media(max-width:500px) { .pearl-school-dialog .settings-grid {grid-template-columns:1fr} }
+
+.pearl-night .pearl-settings-dialog { color:#f5f8ff; background:rgba(25,34,48,.92); border-color:#ffffff52; }
+.pearl-night .pearl-settings-dialog .icon-btn, .pearl-night .pearl-settings-menu button, .pearl-night .pearl-pb-choices button { color:#f5f8ff; background:#ffffff12; border-color:#ffffff3d; }
+.pearl-night .pearl-settings-menu small, .pearl-night .pearl-settings-footer p, .pearl-night .pearl-settings-switch span, .pearl-night .pearl-color-note { color:#d8e5f7; }
+.pearl-night .pearl-settings-switch[aria-checked=true] span { color:#a8cdff; }
+.pearl-night .pearl-pb-choices button[aria-pressed=true] { background:#245ed0; color:white; }
+.pearl-night .pearl-volume-control.is-open { background:rgba(25,34,48,.94); }
+.pearl-night .pearl-volume-panel output, .pearl-night .pearl-tools .pearl-volume-control.is-open>.icon-btn { color:#f5f8ff!important; }

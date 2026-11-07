@@ -1,7 +1,8 @@
 /* Appearance only: native lesson, navigation, rewards and driving rules stay in the app. */
 (() => {
   'use strict';
-  const KEY = 'dait.pearl.colors.v1';
+  const KEY = 'dait.pearl.colors.v2';
+  const LEGACY_KEY = 'dait.pearl.colors.v1';
   const DEFAULT = { start: '#f8e9eb', end: '#e7edf5' };
   const HEX = /^#[0-9a-f]{6}$/i;
   const host = document.querySelector('.pleos-display');
@@ -9,8 +10,16 @@
   const luminance = c => c.map(v => { v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }).reduce((s, v, i) => s + v * [.2126, .7152, .0722][i], 0);
   const contrast = (a, b) => (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
   const valid = colors => colors && HEX.test(colors.start) && HEX.test(colors.end);
-  let saved = { ...DEFAULT };
-  try { const value = settingsStore.read(KEY, null); if (valid(value)) saved = { start: value.start, end: value.end }; } catch (_) { /* Invalid/missing settings use Pearl. */ }
+  const cloneProfiles = value => ({ mode: value.mode, light: { ...value.light }, dark: { ...value.dark } });
+  const isDark = colors => luminance(rgb(colors.start)) + luminance(rgb(colors.end)) < .55;
+  let profiles = { mode: 'light', light: { ...DEFAULT }, dark: { start: '#151719', end: '#1f2937' } };
+  const stored = settingsStore.read(KEY, null);
+  if (stored && ['light','dark'].includes(stored.mode) && valid(stored.light) && valid(stored.dark)) profiles = cloneProfiles(stored);
+  else {
+    const legacy = settingsStore.read(LEGACY_KEY, null);
+    if (valid(legacy)) { profiles.mode = isDark(legacy) ? 'dark' : 'light'; profiles[profiles.mode] = { start: legacy.start, end: legacy.end }; }
+  }
+  let saved = { ...profiles[profiles.mode] };
   let active = { ...saved }, draft = null, dialog = null, focusBefore = null, frame = 0, noticeTimer;
   const PANES = '.home-card,.dialogue-card,.settings-card,.pearl-record-row,.pearl-badge,.pearl-page-title,.lesson-row,.pearl-homework,.pearl-nav nav,.pearl-eta,.pearl-nav .icon-btn';
   const TEXT = '.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-badge span,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-feathers,.pearl-feathers strong,.pearl-nav nav button,.pearl-eta,.pearl-nav .icon-btn,.pearl-record-tabs button,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.school-input,.choice-chip,.heard-bubble,.place-name,.place-address,.pearl-homework>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times,.pearl-seek';
@@ -124,12 +133,13 @@
   }
   function refresh() { frame = 0; refreshInk(); refreshLogo(); }
   function queueRefresh() { if (!frame) frame = requestAnimationFrame(refresh); }
-  function apply(colors) {
+  function apply(colors, mode = profiles.mode) {
     active = { ...colors };
     document.documentElement.style.setProperty('--bg-top', colors.start);
     document.documentElement.style.setProperty('--bg-bottom', colors.end);
     const dark = luminance(rgb(colors.start)) + luminance(rgb(colors.end)) < .55;
-    host.classList.toggle('pearl-night', dark);
+    host.classList.toggle('pearl-night', mode === 'dark');
+    host.dataset.colorMode = mode;
     document.documentElement.style.setProperty('--ink', dark ? '#ffffff' : '#172236');
     document.documentElement.style.setProperty('--muted', dark ? '#e3ebf7' : '#526175');
     queueRefresh();
@@ -176,7 +186,7 @@
     const toggle = (action, label, on) => `<button class="pearl-settings-switch" data-appearance-action="${action}" role="switch" aria-checked="${on}"><strong>${label}</strong><span aria-hidden="true">${on ? '켜짐' : '꺼짐'}</span></button>`;
     shell('설정', `<div class="pearl-settings-menu">
       ${row('playback', '재생 설정', `뒤로 ${lessonIntervalText(prefs.back)} · 앞으로 ${lessonIntervalText(prefs.forward)} · ${prefs.rate.toFixed(1)}배속`)}
-      ${row('colors', '앱 색상', '두 가지 색으로 만드는 배경')}
+      ${row('colors', '앱 색상', '라이트·다크 모드별 배경')}
       ${row('school', '학교 · 다니는 길', school ? escapeHtml(school.name) : '학교 등록과 다니는 길 설정')}
       ${toggle('questions', '대화 중 질문', readStored(QUESTIONS_KEY) !== false)}
       ${micState() === 'none' ? '' : toggle('voice', '말로 답하기', readStored(VOICE_KEY) !== false)}
@@ -233,20 +243,35 @@
     return '#'+channels.map(n=>Math.round((n+m)*255).toString(16).padStart(2,'0')).join('');
   }
   function openColors() {
-    shell('앱 색상', `<form id="pearlColorForm" novalidate><div class="pearl-color-workbench"><div class="pearl-color-picker"><button type="button" class="pearl-color-plane" aria-label="색상판" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown"><span class="pearl-color-cursor" aria-hidden="true"></span></button><label class="pearl-hue-label" for="pearlHue">색상</label><input id="pearlHue" class="pearl-hue" type="range" min="0" max="359" step="1" aria-label="색상"><div class="pearl-color-preview" aria-label="선택한 두 색의 배경 미리보기"></div></div><div class="pearl-color-actions">${[['start','시작 색'],['end','끝 색']].map(([key,label])=>`<button type="button" class="pearl-color-choice" data-endpoint="${key}" aria-pressed="${key==='start'}"><span data-swatch="${key}" aria-hidden="true"></span>${label}</button>`).join('')}<div class="pearl-color-presets" aria-label="색상 조합"><button type="button" data-palette="pearl" aria-label="진주색" style="--preset:linear-gradient(120deg,#f8e9eb,#e7edf5)"></button><button type="button" data-palette="dark" aria-label="블랙 · 블랙" style="--preset:#151719"></button><button type="button" data-palette="mixed" aria-label="화이트 · 네이비" style="--preset:linear-gradient(120deg,#ffffff,#112c51)"></button></div><button type="button" class="pearl-color-details" aria-expanded="false" aria-controls="pearlColorCodes">상세 입력</button></div></div><div id="pearlColorCodes" class="pearl-color-fields" hidden>${[['start','시작 색'],['end','끝 색']].map(([key,label])=>`<div><label for="pearlHex-${key}">${label} 색상 코드</label><div class="pearl-color-control"><input type="text" id="pearlHex-${key}" data-hex="${key}" value="${saved[key].toUpperCase()}" aria-label="${label} 색상 코드" maxlength="7" spellcheck="false" autocomplete="off"></div></div>`).join('')}</div><div class="pearl-settings-footer"><p id="pearlColorMessage" role="status">이 기기에 저장돼요.</p><button class="primary-btn" type="submit">저장</button></div></form>`);
+    shell('앱 색상', `<form id="pearlColorForm" novalidate><div class="pearl-color-modes" role="group" aria-label="색상을 설정할 모드">${[['light','라이트 모드'],['dark','다크 모드']].map(([mode,label])=>`<button type="button" class="pearl-color-mode" data-color-mode="${mode}" aria-pressed="${profiles.mode===mode}"><span data-mode-swatch="${mode}" aria-hidden="true"></span>${label}</button>`).join('')}</div><div class="pearl-color-workbench"><div class="pearl-color-picker"><button type="button" class="pearl-color-plane" aria-label="색상판" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown"><span class="pearl-color-cursor" aria-hidden="true"></span></button><label class="pearl-hue-label" for="pearlHue">색상</label><input id="pearlHue" class="pearl-hue" type="range" min="0" max="359" step="1" aria-label="색상"><div class="pearl-color-preview" aria-label="선택한 두 색의 배경 미리보기"></div></div><div class="pearl-color-actions">${[['start','시작 색'],['end','끝 색']].map(([key,label])=>`<button type="button" class="pearl-color-choice" data-endpoint="${key}" aria-pressed="${key==='start'}"><span data-swatch="${key}" aria-hidden="true"></span>${label}</button>`).join('')}<div class="pearl-color-presets" aria-label="색상 조합"><button type="button" data-palette="pearl" aria-label="진주색" style="--preset:linear-gradient(120deg,#f8e9eb,#e7edf5)"></button><button type="button" data-palette="dark" aria-label="블랙 · 블랙" style="--preset:#151719"></button><button type="button" data-palette="mixed" aria-label="화이트 · 네이비" style="--preset:linear-gradient(120deg,#ffffff,#112c51)"></button></div><button type="button" class="pearl-color-details" aria-expanded="false" aria-controls="pearlColorCodes">상세 입력</button></div></div><div id="pearlColorCodes" class="pearl-color-fields" hidden>${[['start','시작 색'],['end','끝 색']].map(([key,label])=>`<div><label for="pearlHex-${key}">${label} 색상 코드</label><div class="pearl-color-control"><input type="text" id="pearlHex-${key}" data-hex="${key}" value="${saved[key].toUpperCase()}" aria-label="${label} 색상 코드" maxlength="7" spellcheck="false" autocomplete="off"></div></div>`).join('')}</div><div class="pearl-settings-footer"><p id="pearlColorMessage" role="status">이 기기에 저장돼요.</p><button class="primary-btn" type="submit">저장</button></div></form>`);
     dialog.classList.add('pearl-color-dialog');
-    draft = { ...saved };
+    const draftProfiles = cloneProfiles(profiles);
+    let editingMode = profiles.mode;
+    draft = draftProfiles[editingMode];
     let selected='start', pointer=null;
     const hsv={ start:toHsv(draft.start), end:toHsv(draft.end) }, plane=dialog.querySelector('.pearl-color-plane'), hue=dialog.querySelector('#pearlHue'), cursor=dialog.querySelector('.pearl-color-cursor'), codes=dialog.querySelector('#pearlColorCodes'), details=dialog.querySelector('.pearl-color-details');
     const showDetails=open=>{ codes.hidden=!open; details.setAttribute('aria-expanded',String(open)); details.textContent=open?'상세 입력 닫기':'상세 입력'; };
     const sync=(updateCodes=true)=>{
+      for (const mode of ['light','dark']) {
+        dialog.querySelector(`[data-color-mode=${mode}]`).setAttribute('aria-pressed', String(mode === editingMode));
+        dialog.querySelector(`[data-mode-swatch=${mode}]`).style.background = `linear-gradient(120deg,${draftProfiles[mode].start},${draftProfiles[mode].end})`;
+      }
+      dialog.querySelector('#pearlColorMessage').textContent = `${editingMode === 'light' ? '라이트' : '다크'} 모드 색상을 설정 중이에요.`;
       for(const key of ['start','end']){ dialog.querySelector(`[data-swatch=${key}]`).style.background=draft[key]; dialog.querySelector(`[data-endpoint=${key}]`).setAttribute('aria-pressed',String(key===selected)); if(updateCodes)dialog.querySelector(`[data-hex=${key}]`).value=draft[key].toUpperCase(); }
       const current=hsv[selected];
       plane.style.setProperty('--picker-hue',current.h); cursor.style.left=current.s*100+'%'; cursor.style.top=(1-current.v)*100+'%'; cursor.style.background=draft[selected];
       plane.setAttribute('aria-label',`${selected==='start'?'시작 색':'끝 색'} 색상판, 진하기 ${Math.round(current.s*100)}%, 밝기 ${Math.round(current.v*100)}%. 좌우 방향키로 진하기, 위아래 방향키로 밝기 조절`);
       hue.value=Math.round(current.h); hue.style.setProperty('--picker-hue',current.h); hue.setAttribute('aria-valuetext',`${Math.round(current.h)}도`);
       dialog.querySelector('.pearl-color-preview').style.background=`linear-gradient(120deg,${draft.start},${draft.end})`;
-      apply(draft);
+      apply(draft, editingMode);
+    };
+    const readCodes = () => {
+      for (const key of ['start','end']) {
+        const field = dialog.querySelector(`[data-hex=${key}]`), value = field.value.trim();
+        if (!HEX.test(value)) { showDetails(true); dialog.querySelector('#pearlColorMessage').textContent = '색상 코드는 # 뒤에 6자리를 입력해 주세요.'; field.focus(); return false; }
+        draft[key] = value.toLowerCase();
+      }
+      return true;
     };
     const change=()=>{ draft[selected]=toHex(hsv[selected]); dialog.querySelector('#pearlColorMessage').textContent='이 기기에 저장돼요.'; sync(); };
     const pick=e=>{ const r=plane.getBoundingClientRect(); hsv[selected].s=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)); hsv[selected].v=1-Math.max(0,Math.min(1,(e.clientY-r.top)/r.height)); change(); };
@@ -258,23 +283,27 @@
     hue.addEventListener('input',()=>{ hsv[selected].h=Number(hue.value); change(); });
     dialog.addEventListener('input',e=>{ const key=e.target.dataset.hex, value=e.target.value.trim(); if(key&&HEX.test(value)){ draft[key]=value.toLowerCase(); hsv[key]=toHsv(draft[key]); sync(false); } });
     dialog.addEventListener('click',e=>{
+      const mode = e.target.closest('[data-color-mode]')?.dataset.colorMode;
+      if (mode && mode !== editingMode) {
+        if (!readCodes()) return;
+        editingMode = mode; draft = draftProfiles[mode];
+        hsv.start = toHsv(draft.start); hsv.end = toHsv(draft.end); sync();
+      }
       const endpoint=e.target.closest('[data-endpoint]')?.dataset.endpoint;
       if(endpoint){ selected=endpoint; sync(false); }
       if(e.target===details){ showDetails(codes.hidden); if(!codes.hidden)dialog.querySelector(`[data-hex=${selected}]`).focus(); }
       const palette=e.target.closest('[data-palette]')?.dataset.palette;
       const presets={pearl:DEFAULT,dark:{start:'#151719',end:'#151719'},mixed:{start:'#ffffff',end:'#112c51'}};
-      if(presets[palette]){ draft={...presets[palette]}; hsv.start=toHsv(draft.start); hsv.end=toHsv(draft.end); sync(); }
+      if(presets[palette]){ draft={...presets[palette]}; draftProfiles[editingMode]=draft; hsv.start=toHsv(draft.start); hsv.end=toHsv(draft.end); sync(); }
     });
     dialog.querySelector('form').addEventListener('submit',e=>{
       e.preventDefault();
       if(isDrivingMode){ close(); notice('주행중엔 설정을 바꿀 수 없어요.'); return; }
-      for(const key of ['start','end']){
-        const field=dialog.querySelector(`[data-hex=${key}]`), value=field.value.trim();
-        if(!HEX.test(value)){ showDetails(true); dialog.querySelector('#pearlColorMessage').textContent='색상 코드는 # 뒤에 6자리를 입력해 주세요.'; field.focus(); return; }
-        draft[key]=value.toLowerCase();
-      }
-      try{ settingsStore.write(KEY,draft); }catch(_){ dialog.querySelector('#pearlColorMessage').textContent='저장할 수 없어요. 기기 저장 공간을 확인해 주세요.'; return; }
-      saved={...draft}; close();
+      if (!readCodes()) return;
+      draftProfiles.mode = editingMode;
+      try { settingsStore.write(KEY, draftProfiles); }
+      catch (_) { dialog.querySelector('#pearlColorMessage').textContent='저장할 수 없어요. 기기 저장 공간을 확인해 주세요.'; return; }
+      profiles = cloneProfiles(draftProfiles); saved = { ...profiles[profiles.mode] }; close();
     });
     sync();
   }

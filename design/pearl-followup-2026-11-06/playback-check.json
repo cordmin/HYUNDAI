@@ -1,0 +1,11 @@
+{
+  "errors": [],
+  "checks": {
+    "realAudioStarted": true,
+    "appearanceKeepsPlayback": true,
+    "appearanceKeepsPause": true,
+    "parkedSeekKeepsPause": true,
+    "drivingStillBlocksSeek": true
+  },
+  "pass": true
+}

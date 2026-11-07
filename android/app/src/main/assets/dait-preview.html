@@ -1067,7 +1067,7 @@
         <button class="pearl-brand" aria-label="다잇 첫 화면" onclick="goHome()">${getDaitLogoHtml()}</button>
         <nav>${[['now','지금'],['lessons','수업'],['records','기록']].map(([id,label]) => `<button aria-current="${active === id ? 'page' : 'false'}" onclick="openPearlTab('${id}')">${label}</button>`).join('')}</nav>
         <button class="pearl-eta" aria-label="듣는 시간" onclick="openPearlTab('lessons')"${minutes !== null ? ' disabled' : ''}>${eta}</button>
-        <button class="icon-btn" aria-label="설정" onclick="openSettings()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="17" r="2" fill="currentColor"/></svg></button>`;
+        <button class="icon-btn" aria-label="설정" onclick="openPearlSettings()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="17" r="2" fill="currentColor"/></svg></button>`;
     }
 
     function openPearlTab(tab) {
@@ -3927,5 +3927,7 @@
       playSplashIntro();
     }, 120);
   </script>
+  <script src="dait-appearance.js"></script>
+  <script src="dait-volume.js"></script>
 </body>
 </html>

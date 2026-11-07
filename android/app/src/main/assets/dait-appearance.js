@@ -13,7 +13,7 @@
   try { const value = JSON.parse(localStorage.getItem(KEY)); if (valid(value)) saved = { start: value.start, end: value.end }; } catch (_) { /* Invalid/missing settings use Pearl. */ }
   let active = { ...saved }, draft = null, dialog = null, focusBefore = null, frame = 0, noticeTimer;
   const PANES = '.home-card,.dialogue-card,.settings-card,.pearl-record-row,.pearl-badge,.pearl-page-title,.lesson-row,.pearl-homework,.pearl-nav nav,.pearl-eta,.pearl-nav .icon-btn';
-  const TEXT = '.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-badge span,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-feathers,.pearl-feathers strong,.pearl-nav nav button,.pearl-eta,.pearl-nav .icon-btn,.pearl-record-tabs button,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.school-input,.choice-chip,.heard-bubble,.place-name,.place-address,.pearl-homework>span,.drive-btn:not(.primary)';
+  const TEXT = '.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-badge span,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-feathers,.pearl-feathers strong,.pearl-nav nav button,.pearl-eta,.pearl-nav .icon-btn,.pearl-record-tabs button,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.school-input,.choice-chip,.heard-bubble,.place-name,.place-address,.pearl-homework>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times,.pearl-seek';
 
   function backgroundAt(x, y) {
     const rect = host.getBoundingClientRect(), dx = Math.sin(2 * Math.PI / 3), dy = -Math.cos(2 * Math.PI / 3);
@@ -157,14 +157,69 @@
       if (action === 'close') close();
       else if (action === 'colors') openColors();
       else if (action === 'school') { close(); openSettings(); }
+      else if (action === 'playback') openPlayback();
+      else if (action === 'settings') window.openPearlSettings();
+      else if (action === 'questions') { toggleQuestions(); window.openPearlSettings(); }
+      else if (action === 'answers') { toggleLessonRecord(); window.openPearlSettings(); }
+      else if (action === 'voice') { toggleVoiceAnswers(); window.openPearlSettings(); }
+      else if (action === 'restart') { close(); restartLesson(); }
       if (e.target === dialog) { const r = dialog.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) close(); }
     });
     dialog.showModal();
   }
   window.openPearlSettings = () => {
     if (isDrivingMode) { notice('주행중엔 설정을 바꿀 수 없어요.'); return; }
-    shell('설정', '<div class="pearl-settings-menu"><button data-appearance-action="colors">앱 색상<small>두 가지 색으로 만드는 배경</small></button><button data-appearance-action="school">학교 · 대화 설정<small>다니는 학교와 하교 대화</small></button></div>');
+    const prefs = lessonPlaybackPrefs;
+    const row = (action, label, detail) => `<button data-appearance-action="${action}"><strong>${label}</strong><small>${detail}</small></button>`;
+    const toggle = (action, label, on) => `<button class="pearl-settings-switch" data-appearance-action="${action}" role="switch" aria-checked="${on}"><strong>${label}</strong><span aria-hidden="true">${on ? '켜짐' : '꺼짐'}</span></button>`;
+    shell('설정', `<div class="pearl-settings-menu">
+      ${row('playback', '재생 설정', `뒤로 ${lessonIntervalText(prefs.back)} · 앞으로 ${lessonIntervalText(prefs.forward)} · ${prefs.rate.toFixed(1)}배속`)}
+      ${row('colors', '앱 색상', '두 가지 색으로 만드는 배경')}
+      ${row('school', '학교 · 다니는 길', school ? escapeHtml(school.name) : '학교 등록과 다니는 길 설정')}
+      ${toggle('questions', '대화 중 질문', readStored(QUESTIONS_KEY) !== false)}
+      ${micState() === 'none' ? '' : toggle('voice', '말로 답하기', readStored(VOICE_KEY) !== false)}
+      ${toggle('answers', '수업 대답 기록', lessonRecordOn())}
+      ${currentMode === 'lesson' && lessonRun && !lessonRun.done && !isLessonResting() ? row('restart', '처음부터 듣기', '지금 수업을 처음부터') : ''}
+    </div>`);
   };
+  function openPlayback() {
+    if (isDrivingMode) { notice('주행중엔 설정을 바꿀 수 없어요.'); return; }
+    let prefs = { ...lessonPlaybackPrefs }, editing = null;
+    const intervalRow = (key, label) => `<div class="pearl-pb-row"><h3>${label}</h3><div class="pearl-pb-choices">${[15,30,60,120].map(n => `<button type="button" data-pb-key="${key}" data-pb-value="${n}" aria-pressed="${prefs[key] === n}">${lessonIntervalText(n)}</button>`).join('')}<button type="button" data-pb-custom="${key}" aria-pressed="${![15,30,60,120].includes(prefs[key])}">${[15,30,60,120].includes(prefs[key]) ? '직접 입력' : lessonIntervalText(prefs[key])}</button></div></div>`;
+    shell('재생 설정', '<div id="pearlPlaybackBody"></div>');
+    dialog.classList.add('pearl-playback-dialog');
+    const draw = () => {
+      dialog.querySelector('#pearlPlaybackBody').innerHTML = `<form id="pearlPlaybackForm" novalidate>
+        ${intervalRow('back', '뒤로 이동')}${intervalRow('forward', '앞으로 이동')}
+        <div class="pearl-pb-row"><h3>재생 속도</h3><div class="pearl-pb-choices">${LESSON_RATES.map(n => `<button type="button" data-pb-rate="${n}" aria-pressed="${prefs.rate === n}">${n.toFixed(1)}×</button>`).join('')}</div></div>
+        <div class="pearl-pb-custom"${editing ? '' : ' hidden'}><label>${editing === 'back' ? '뒤로' : '앞으로'} 이동 시간<input id="pearlCustomTime" type="number" min="1" max="3600" step="1" inputmode="numeric" value="${editing ? prefs[editing] % 60 === 0 ? prefs[editing]/60 : prefs[editing] : 1}"></label><select id="pearlCustomUnit" aria-label="이동 시간 단위"><option value="1">초</option><option value="60"${editing && prefs[editing] % 60 === 0 ? ' selected' : ''}>분</option></select><button class="card-btn" type="button" data-pb-apply>적용</button></div>
+        <div class="pearl-settings-footer"><p id="pearlPlaybackMessage" role="status">이 기기에 저장돼요.</p><button class="card-btn" type="submit">저장</button></div>
+      </form>`;
+    };
+    const applyCustom = () => {
+      if (!editing) return true;
+      const n = Number(dialog.querySelector('#pearlCustomTime').value);
+      const unit = Number(dialog.querySelector('#pearlCustomUnit').value), limit = unit === 60 ? 60 : 3600;
+      if (!Number.isInteger(n) || n < 1 || n > limit) { dialog.querySelector('#pearlPlaybackMessage').textContent = `1부터 ${limit}까지 입력해 주세요.`; dialog.querySelector('#pearlCustomTime').focus(); return false; }
+      prefs[editing] = n * Number(dialog.querySelector('#pearlCustomUnit').value); editing = null; return true;
+    };
+    dialog.addEventListener('click', e => {
+      const button = e.target.closest('button'); if (!button) return;
+      if (button.dataset.pbKey) { prefs[button.dataset.pbKey] = Number(button.dataset.pbValue); editing = null; draw(); }
+      else if (button.dataset.pbCustom) { editing = button.dataset.pbCustom; draw(); dialog.querySelector('#pearlCustomTime').focus(); }
+      else if (button.dataset.pbRate) { if (!applyCustom()) return; prefs.rate = Number(button.dataset.pbRate); draw(); }
+      else if (button.hasAttribute('data-pb-apply') && applyCustom()) draw();
+    });
+    dialog.addEventListener('submit', e => {
+      e.preventDefault();
+      if (isDrivingMode) { close(); notice('주행중엔 설정을 바꿀 수 없어요.'); return; }
+      if (!applyCustom()) return;
+      try { if (saveLessonPlaybackPrefs(prefs)) close(); }
+      catch (_) { dialog.querySelector('#pearlPlaybackMessage').textContent = '저장할 수 없어요. 기기 저장 공간을 확인해 주세요.'; }
+    });
+    draw();
+  }
+
   function toHsv(hex) {
     const [r,g,b] = rgb(hex).map(v => v / 255), max = Math.max(r,g,b), min = Math.min(r,g,b), d = max - min;
     let h = !d ? 0 : max === r ? ((g-b)/d)%6 : max === g ? (b-r)/d+2 : (r-g)/d+4;

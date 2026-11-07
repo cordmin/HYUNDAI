@@ -1422,7 +1422,7 @@ test('처음부터 듣기는 멈춤·답·중단지점을 초기화하고 현재
     window.AndroidBridge = { micState: () => 'none', speak: clips => restartClips.push(JSON.parse(clips)), stopSpeech() {},
       holdSpeech() {}, proceedSpeech() {}, setJourneyActive() {} };
     startLesson('rhythm');`);
-  assert.ok(stageHtml().includes('onclick="restartLesson()">처음부터 듣기'));
+  assert.ok(stageHtml().includes('class="pearl-transport"')); // 처음부터 듣기는 설정 팝업으로 이동했다.
   for (let i = 0; i < 3; i++) hearLesson('ended');
   page(`lessonRun.answers.push({text:'이전 시도의 답'}); lessonRun.meters = 1200; pauseLesson();
     writeStored(LESSON_KEY, Lesson.keepResume(lessonProgress(), Lesson.resumePoint(lessonRun.lesson, lessonRun.heard, toYmd(new Date()))));
@@ -1557,4 +1557,37 @@ test('제거한 준비물 기능은 Gleo와 문 열림으로도 말하지 않는
   assert.ok(!html.includes('speak([DAIT_RULES.extras.p_door_bag]'));
   page(`goHome(); var removedReply; window.AndroidBridge = { gleoRespond(v) { removedReply = JSON.parse(v); } }; window.onGleoAction('GET_SCHOOL_PREP', '{}'); delete window.AndroidBridge;`);
   assert.strictEqual(page('removedReply.status'), 'fail');
+});
+
+
+test('시간 이동은 구간 경계를 넘고 일시정지를 유지하며 주행 중 자유 탐색은 막는다', () => {
+  page(`localStorage.values.clear(); demoMinutes = null; window.setDrivingMode(false); goHome(); lessonMinutes = 15; startLesson('sky'); pauseLesson();
+    var timeBoundary = lessonTimeline(lessonRun).sections[1].start;
+    seekLessonAt(timeBoundary - 5); seekLessonBy(15);`);
+  assert.strictEqual(page('lessonRun.index'), 1);
+  assert.ok(Math.abs(page('lessonRun.positionSeconds') - 10) < .1);
+  assert.strictEqual(page('lessonRun.paused'), true);
+  page('seekLessonBy(-3600);');
+  assert.strictEqual(page('lessonRun.index'), 0);
+  assert.strictEqual(page('lessonRun.positionSeconds'), 0);
+  page('window.setDrivingMode(true); seekLessonBy(30); var drivePosition = lessonRun.positionSeconds; seekLessonAt(100);');
+  assert.strictEqual(page('lessonRun.positionSeconds'), page('drivePosition'));
+  assert.ok(stageHtml().includes('aria-label="수업 진행 시간"'));
+  assert.ok(!stageHtml().includes('수업 구간'));
+  page('window.setDrivingMode(false); goHome();');
+});
+
+test('재생 속도는 음원과 무음 대기·남은 시간에 반영하고 주행 중 설정은 저장하지 않는다', () => {
+  page(`lessonMinutes = 15; startLesson('sky');
+    var prefsSaved = saveLessonPlaybackPrefs({back:60,forward:120,rate:2});
+    lessonWait(10000, nextLessonPiece);`);
+  assert.strictEqual(page('prefsSaved'), true);
+  assert.strictEqual(page('lessonRun.wait.rate'), 2);
+  assert.ok(page('lessonRun.wait.endsAt - Date.now()') <= 5000);
+  page('pauseLesson();');
+  assert.ok(page('lessonRun.wait.left') > 9800);
+  page('window.setDrivingMode(true);');
+  assert.strictEqual(page('saveLessonPlaybackPrefs({back:15,forward:30,rate:1})'), false);
+  assert.strictEqual(page('lessonPlaybackPrefs.rate'), 2);
+  page('window.setDrivingMode(false); goHome(); saveLessonPlaybackPrefs({back:15,forward:30,rate:1});');
 });

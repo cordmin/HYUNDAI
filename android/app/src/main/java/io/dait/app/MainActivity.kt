@@ -294,6 +294,12 @@ class MainActivity : Activity() {
         }
 
         @JavascriptInterface
+        fun setSpeechRate(rate: Double) {
+            if (!rate.isFinite() || rate !in 0.8..2.0) return
+            runOnUiThread { voice?.setRate(rate.toFloat()) }
+        }
+
+        @JavascriptInterface
         fun reportSpeechPosition(turn: Int) {
             runOnUiThread { voice?.reportPosition(turn) }
         }

@@ -5,6 +5,7 @@ import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.media.PlaybackParams
 import org.json.JSONObject
 
 // 미리 만든 음원을 차례로 틀고, 필요하면 이어서 아이의 답을 듣는다.
@@ -36,6 +37,17 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
     private var player: MediaPlayer? = null
     private var playbackVolume = appContext.getSharedPreferences("dait.audio", Context.MODE_PRIVATE)
         .getFloat("volume", 1f).coerceIn(0f, 1f)
+    private var playbackRate = 1f
+    fun setRate(rate: Float) {
+        if (!rate.isFinite() || rate !in 0.8f..2f) return
+        playbackRate = rate
+        player?.let { current ->
+            val wasPlaying = current.isPlaying
+            current.playbackParams = PlaybackParams().setSpeed(playbackRate)
+            if (!wasPlaying) current.pause()
+        }
+    }
+
     private var seekPosition = 0
 
     // 다잇 음원만 조절한다. 재생 위치·오디오 포커스·차량 시스템 음량은 바꾸지 않는다.
@@ -123,6 +135,7 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
                     prepare()
                     setVolume(playbackVolume, playbackVolume)
                     if (seekPosition > 0) seekTo(seekPosition.coerceAtMost((duration - 1).coerceAtLeast(0)).toLong(), MediaPlayer.SEEK_CLOSEST)
+                    playbackParams = PlaybackParams().setSpeed(playbackRate)
                     start()
                 }
             }

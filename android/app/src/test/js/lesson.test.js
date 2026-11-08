@@ -94,7 +94,7 @@ test('짧은 판만 들은 수업은 추천에서 뒤로 보내지 않는다', (
   const other = { ...lesson, id: 'o', pieces: withShort.pieces.map(item => ({ ...item })) };
   const shortDone = Lesson.finishLesson(null, withShort, '2026-11-02', true, 0, [], true);
   assert.strictEqual(shortDone.records[0].short, true);
-  assert.strictEqual(shortDone.ieum, 1);
+  assert.strictEqual(shortDone.ieum, undefined);
   assert.deepStrictEqual(Lesson.recommend([withShort, other], 15, shortDone.records).map(item => item.id), ['w', 'o']);
   const fullDone = Lesson.finishLesson(null, withShort, '2026-11-02', true, 0, []);
   assert.deepStrictEqual(Lesson.recommend([withShort, other], 15, fullDone.records).map(item => item.id), ['o', 'w']);
@@ -191,31 +191,31 @@ test('도착으로 잘린 수업은 남은 조각을 다 들어도 마친 수업
   assert.strictEqual(Lesson.countsAsFinished({ plannedSeconds: 120, heard: [lesson.pieces[0], lesson.pieces[6]], reachedEnd: true }), false);
 });
 
-test('마친 수업은 이음 +1과 거리, 숙제를 남기고, 못 마친 수업은 기록만 남긴다', () => {
+test('마친 수업은 거리·숙제를 남기며 보상은 적립하지 않는다', () => {
   const done = Lesson.finishLesson(null, lesson, '2026-11-02', true, 12.5, [{ text: '답' }]);
-  assert.strictEqual(done.ieum, 1);
+  assert.strictEqual(done.ieum, undefined);
   assert.strictEqual(done.km['2026-11'], 12.5);
   assert.strictEqual(done.homework.title, '숙제');
   assert.strictEqual(done.records[0].answers[0].text, '답');
   const stopped = Lesson.finishLesson(done, lesson, '2026-11-03', false, 5, []);
-  assert.strictEqual(stopped.ieum, 1);
+  assert.strictEqual(stopped.ieum, undefined);
   assert.strictEqual(stopped.km['2026-11'], 12.5);
   assert.strictEqual(stopped.records.length, 2);
 });
 
-test('숙제를 마치면 이음 +1, 숙제가 없으면 그대로다', () => {
+test('숙제를 마치면 숙제만 정리하고 보상은 적립하지 않는다', () => {
   const given = Lesson.finishLesson(null, lesson, '2026-11-02', true, 0, []);
   const done = Lesson.finishHomework(given);
-  assert.strictEqual(done.ieum, 2);
+  assert.strictEqual(done.ieum, undefined);
   assert.strictEqual(done.homework, null);
-  assert.strictEqual(Lesson.finishHomework(done).ieum, 2);
+  assert.strictEqual(Lesson.finishHomework(done).ieum, undefined);
 });
 
-test('남긴 답을 지워도 들은 수업과 이음은 남는다', () => {
+test('남긴 답을 지워도 들은 수업 기록은 남는다', () => {
   const given = Lesson.finishLesson(null, lesson, '2026-11-02', true, 0, [{ text: '답' }]);
   const forgotten = Lesson.forgetAnswers(given);
   assert.deepStrictEqual(forgotten.records[0].answers, []);
-  assert.strictEqual(forgotten.ieum, 1);
+  assert.strictEqual(forgotten.ieum, undefined);
 });
 
 test('달린 거리를 아는 말로 바꾼다', () => {
@@ -376,21 +376,21 @@ test('과목 목록은 자료에서 겹치지 않게 만들고, 과목으로 거
   assert.strictEqual(Lesson.bySubject(lessons, '').length, lessons.length);
 });
 
-test('마친 교시는 저마다 이음과 숙제가 되고, 숙제는 하나씩 마친다', () => {
+test('마친 교시는 기록과 숙제를 남기고, 숙제는 하나씩 마친다', () => {
   const first = { ...lesson, id: 'a', homework: '첫 숙제' };
   const second = { ...lesson, id: 'b', homework: '둘째 숙제' };
   const done = Lesson.finishLesson(Lesson.finishLesson(null, first, '2026-11-02', true, 1, []), second, '2026-11-02', true, 2, []);
-  assert.strictEqual(done.ieum, 2);
+  assert.strictEqual(done.ieum, undefined);
   assert.strictEqual(done.records.length, 2);
   assert.strictEqual(done.km['2026-11'], 3);
   assert.strictEqual(done.homework.title, '첫 숙제');
   const one = Lesson.finishHomework(done);
-  assert.strictEqual(one.ieum, 3);
+  assert.strictEqual(one.ieum, undefined);
   assert.strictEqual(one.homework.title, '둘째 숙제');
   const two = Lesson.finishHomework(one);
-  assert.strictEqual(two.ieum, 4);
+  assert.strictEqual(two.ieum, undefined);
   assert.strictEqual(two.homework, null);
-  assert.strictEqual(Lesson.finishHomework(two).ieum, 4);
+  assert.strictEqual(Lesson.finishHomework(two).ieum, undefined);
 });
 
 test('같은 수업을 다시 마치면 그 수업의 숙제만 새로 바뀌어 쌓이지 않는다', () => {
@@ -455,7 +455,7 @@ test('Gleo 설명서(schema.json)는 문서 규칙을 지키고 앱과 맞는다
   const schema = JSON.parse(fs.readFileSync(path.join(assets, 'schema.json'), 'utf8'));
   const gradle = fs.readFileSync(path.join(__dirname, '../../../build.gradle'), 'utf8');
   const manifest = fs.readFileSync(path.join(__dirname, '../../main/AndroidManifest.xml'), 'utf8');
-  const page = fs.readFileSync(path.join(assets, 'dait-preview.html'), 'utf8');
+  const page = require('./app-files.js').appSource();
   const kotlin = fs.readFileSync(path.join(__dirname, '../../main/java/io/dait/app/GleoBridge.kt'), 'utf8');
   assert.strictEqual(schema.packageName, gradle.match(/applicationId '([^']+)'/)[1]);
   assert.strictEqual(schema.version, gradle.match(/versionName '([^']+)'/)[1]);
@@ -477,4 +477,15 @@ test('Gleo 설명서(schema.json)는 문서 규칙을 지키고 앱과 맞는다
   }
   const start = schema.actionCalls.find(call => call.function.name === 'START_LESSON').function;
   assert.deepStrictEqual(start.parameters.properties.subject.enum, Lesson.subjects(appLessons)); // 수업이 늘면 설명서도 고친다
+});
+
+
+test('기존 보상 값만 제거하고 수업·숙제·이어 듣기 기록을 보존한다', () => {
+  const old = { ieum: 42, records: [{ lesson: 'a' }], homework: { title: '숙제' }, resume: { lesson: 'a' } };
+  const normalized = Lesson.normalize(old);
+  assert.ok(!Object.hasOwn(normalized, 'ieum'));
+  assert.deepStrictEqual(normalized.records, old.records);
+  assert.deepStrictEqual(normalized.homework, old.homework);
+  assert.deepStrictEqual(normalized.resume, old.resume);
+  assert.strictEqual(old.ieum, 42);
 });

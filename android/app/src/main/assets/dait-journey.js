@@ -1,5 +1,5 @@
 // 여정 규칙: 남은 시간별 분량, 대화 단계, 아이의 말 해석.
-// 화면과 소리는 dait-preview.html이 맡고, 여기는 화면 없이 시험할 수 있는 판단만 둔다.
+// 화면과 소리는 dait-app.js(dait-preview.html이 불러옴)가 맡고, 여기는 화면 없이 시험할 수 있는 판단만 둔다.
 (function (root) {
   const FLOWS = {
     morning: {

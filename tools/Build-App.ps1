@@ -28,7 +28,7 @@ try {
     "sdk.dir=$sdkRoot" | Set-Content -LiteralPath 'local.properties' -Encoding ascii
     & '.\gradlew.bat' ':app:assembleDebug' ':app:testDebugUnitTest' ':app:lintDebug' "-PdaitBuildRoot=$($buildRoot.Replace('\','/'))" '--no-daemon' '--console' 'plain'
     if ($LASTEXITCODE -ne 0) { throw 'Build or checks failed.' }
-    & node --test 'app\src\test\js\journey.test.js' 'app\src\test\js\lesson.test.js'
+    & node --test (Get-ChildItem 'app\src\test\js\*.test.js').FullName
     if ($LASTEXITCODE -ne 0) { throw 'Journey rule tests failed.' }
     if (-not (Test-Path -LiteralPath 'app\src\main\assets\model-ko\uuid')) { Write-Warning 'Speech model is missing: the app builds, but answers work by touch only. Run tools\Setup-Voice-Model.py.' }
     $apk =Join-Path $taskRoot 'apk\DAIT-dialogue-debug.apk'

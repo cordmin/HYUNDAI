@@ -22,7 +22,7 @@
   let saved = { ...profiles[profiles.mode] };
   let active = { ...saved }, draft = null, dialog = null, focusBefore = null, frame = 0, noticeTimer;
   const PANES = '.home-card,.dialogue-card,.settings-card,.pearl-record-row,.pearl-badge,.pearl-page-title,.lesson-row,.pearl-homework,.pearl-nav nav,.pearl-eta,.pearl-nav .icon-btn';
-  const TEXT = '.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-badge span,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-feathers,.pearl-feathers strong,.pearl-nav nav button,.pearl-eta,.pearl-nav .icon-btn,.pearl-record-tabs button,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.school-input,.choice-chip,.heard-bubble,.place-name,.place-address,.pearl-homework>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times,.pearl-seek';
+  const TEXT = '.pearl-badge span,.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-nav nav button,.pearl-eta,.pearl-nav .icon-btn,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.school-input,.choice-chip,.heard-bubble,.place-name,.place-address,.pearl-homework>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times,.pearl-seek';
 
   function backgroundAt(x, y) {
     const rect = host.getBoundingClientRect(), dx = Math.sin(2 * Math.PI / 3), dy = -Math.cos(2 * Math.PI / 3);
@@ -49,7 +49,7 @@
     const dark = Math.min(...samples.map(v => contrast(v, luminance(rgb('#172236')))));
     const white = Math.min(...samples.map(v => contrast(v, 1)));
     const blue = Math.min(...samples.map(v => contrast(v, luminance(rgb('#245ed0')))));
-    if ((element.matches('[aria-current=page],[aria-selected=true]') || element.closest('.pearl-feathers')) && blue >= 4.5) return { ink: '#245ed0', score: blue };
+    if (element.matches('[aria-current=page],[aria-selected=true]') && blue >= 4.5) return { ink: '#245ed0', score: blue };
     return white > dark ? { ink: '#ffffff', score: white } : { ink: '#172236', score: dark };
   }
   function refreshInk() {
@@ -152,7 +152,6 @@
   }
   function close() {
     if (!dialog) return;
-    if (dialog.classList.contains('pearl-school-dialog')) schoolSettingsOpen = false;
     apply(saved); draft = null; dialog.close(); dialog.remove(); dialog = null;
     if (focusBefore?.isConnected) focusBefore.focus();
   }
@@ -168,11 +167,9 @@
       const action = e.target.closest('[data-appearance-action]')?.dataset.appearanceAction;
       if (action === 'close') close();
       else if (action === 'colors') openColors();
-      else if (action === 'school') { close(); openSettings(); }
       else if (action === 'playback') openPlayback();
       else if (action === 'settings') window.openPearlSettings();
       else if (action === 'questions') { toggleQuestions(); window.openPearlSettings(); }
-      else if (action === 'answers') { toggleLessonRecord(); window.openPearlSettings(); }
       else if (action === 'voice') { toggleVoiceAnswers(); window.openPearlSettings(); }
       else if (action === 'restart') { close(); restartLesson(); }
       if (e.target === dialog) { const r = dialog.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) close(); }
@@ -187,10 +184,8 @@
     shell('설정', `<div class="pearl-settings-menu">
       ${row('playback', '재생 설정', `뒤로 ${lessonIntervalText(prefs.back)} · 앞으로 ${lessonIntervalText(prefs.forward)} · ${prefs.rate.toFixed(1)}배속`)}
       ${row('colors', '앱 색상', '라이트·다크 모드별 배경')}
-      ${row('school', '학교 · 다니는 길', school ? escapeHtml(school.name) : '학교 등록과 다니는 길 설정')}
       ${toggle('questions', '대화 중 질문', readStored(QUESTIONS_KEY) !== false)}
       ${micState() === 'none' ? '' : toggle('voice', '말로 답하기', readStored(VOICE_KEY) !== false)}
-      ${toggle('answers', '수업 대답 기록', lessonRecordOn())}
       ${currentMode === 'lesson' && lessonRun && !lessonRun.done && !isLessonResting() ? row('restart', '처음부터 듣기', '지금 수업을 처음부터') : ''}
     </div>`);
   };
@@ -307,22 +302,7 @@
     });
     sync();
   }
-  let schoolRenderKey = '';
-  function renderSchoolPanel() {
-    const container = dialog?.querySelector('#pearlSchoolBody');
-    if (!container || !schoolSettingsOpen) return;
-    const key = JSON.stringify([settings, school, readStored(QUESTIONS_KEY), readStored(VOICE_KEY), lessonRecordOn(), tripMemoryState(), tripSpots, homePlace]);
-    if (key === schoolRenderKey) return;
-    schoolRenderKey = key; renderSettings(container);
-  }
-  appEvents.on('schoolSettingsOpened', () => {
-    shell('학교 · 다니는 길', '<div id="pearlSchoolBody"></div>');
-    dialog.classList.add('pearl-school-dialog');
-    // shell closes a previous panel; this new panel owns only its presentation.
-    schoolSettingsOpen = true; schoolRenderKey = ''; renderSchoolPanel(); queueRefresh();
-  });
-  appEvents.on('schoolSettingsClosed', () => { if (dialog?.classList.contains('pearl-school-dialog')) close(); });
-  appEvents.on('rendered', () => { renderSchoolPanel(); queueRefresh(); });
+  appEvents.on('rendered', queueRefresh);
   appEvents.on('vehicleChanged', ({ driving }) => { if (driving) close(); queueRefresh(); });
   appEvents.on('closeOverlays', close);
   appEvents.on('back', () => { if (!dialog) return false; close(); return true; });

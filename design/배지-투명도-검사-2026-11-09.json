@@ -1,0 +1,86 @@
+[
+  {
+    "name": "everyday-discoverer.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "transparent_fraction": 0.356,
+    "sha256": "f96fa27fe8deed682a2b676be3228736628ce789c5cd6c3c90fbf617464417f3"
+  },
+  {
+    "name": "exploration.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "transparent_fraction": 0.504,
+    "sha256": "0fb157048bad04c55462c17cf702b0a9553057cf950a5a6e8b419025fbfead52"
+  },
+  {
+    "name": "first-discovery.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "transparent_fraction": 0.415,
+    "sha256": "4b3784d72029aecf252b5a7477dd50f130ce8f284e5f2ffb989e582fa4c3e193"
+  },
+  {
+    "name": "korean.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "transparent_fraction": 0.456,
+    "sha256": "cf0b8785ed1020e3962bef76a8fb1b51c19cc44999bb2efb244920b330a7eeb7"
+  },
+  {
+    "name": "math.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "transparent_fraction": 0.401,
+    "sha256": "25908c0f5aedcdb5c1b280d10e8596d6420bdaca2a5862d55cf552e8e6eb2ae9"
+  },
+  {
+    "name": "well-rounded-explorer.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "transparent_fraction": 0.442,
+    "sha256": "2f88db4090d639148a5413d57a027434d850ae1df4d7ae58eea16f30b6cd0280"
+  }
+]

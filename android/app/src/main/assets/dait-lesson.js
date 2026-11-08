@@ -1,4 +1,4 @@
-// 수업 규칙: 시간에 맞춘 수업 조립, 긴 이동의 교시 나누기, 도착에 맞춘 줄이기, 숙제와 깃털(보상).
+// 수업 규칙: 시간에 맞춘 수업 조립, 긴 이동의 교시 나누기, 도착에 맞춘 줄이기, 숙제 기록.
 // 작업용 대본으로 생산·통합하며 교사 검수는 후속 단계다. 필수 조각은 두고 시간이 남는 만큼 나머지 조각을 더한다.
 (function (root) {
   const TIME_CHOICES = [8, 15, 20, 30];
@@ -338,13 +338,14 @@
     return ymd.slice(0, 7);
   }
 
-  // ieum은 보상(깃털) 수다. 화면 이름은 2026-11-05에 이음에서 깃털로 바꿨고, 기기에 쌓인 기록을 잃지 않게 값 이름은 그대로 둔다.
   function emptyProgress() {
-    return { ieum: 0, km: {}, records: [], homework: null, homeworkNext: [], resume: null };
+    return { km: {}, records: [], homework: null, homeworkNext: [], resume: null };
   }
 
   function normalize(progress) {
-    return { ...emptyProgress(), ...(progress || {}) };
+    const next = { ...emptyProgress(), ...(progress || {}) };
+    delete next.ieum; // 이전 보상 값은 수업·숙제 기록과 분리해 더 이상 사용하지 않는다.
+    return next;
   }
 
   function finishLesson(progress, lesson, ymd, finished, km, answers, short) {
@@ -356,7 +357,6 @@
     next.records = [...next.records, record].slice(-KEEP_RECORDS);
     if (!finished) return next;
     if (next.resume && next.resume.lesson === lesson.id) next.resume = null; // 이어 듣던 수업을 마쳤다
-    next.ieum += 1;
     if (lesson.homework) {
       // 긴 이동에서 교시마다 숙제가 생겨도 앞 숙제를 덮지 않는다. 같은 수업의 숙제만 새것으로 바꾼다.
       const waiting = [next.homework, ...next.homeworkNext].filter(item => item && item.lesson !== lesson.id);
@@ -378,11 +378,10 @@
     const [first, ...rest] = next.homeworkNext;
     next.homework = first || null;
     next.homeworkNext = rest;
-    next.ieum += 1;
     return next;
   }
 
-  // 기록 칸의 답을 지운다. 들은 수업과 깃털은 남긴다.
+  // 기록 칸의 답을 지운다. 들은 수업은 남긴다.
   function forgetAnswers(progress) {
     const next = normalize(progress);
     next.records = next.records.map(record => ({ ...record, answers: [] }));

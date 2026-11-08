@@ -10,7 +10,7 @@ import android.os.SystemClock
 import android.service.media.MediaBrowserService
 
 // 차가 수업을 음악처럼 다루게 한다. 핸들의 재생·멈춤·이전 버튼이 수업에 오고, 차의 미디어 화면에 수업 이름이 뜬다.
-// 수업을 고르고 진행하는 것은 화면(dait-preview.html)이 하고, 여기서는 버튼을 화면에 넘기고 화면이 알려 준 상태를 차에 보인다.
+// 수업을 고르고 진행하는 것은 화면(dait-preview.html과 dait-app.js)이 하고, 여기서는 버튼을 화면에 넘기고 화면이 알려 준 상태를 차에 보인다.
 object LessonMedia {
     const val PLAY = "play"
     const val PAUSE = "pause"

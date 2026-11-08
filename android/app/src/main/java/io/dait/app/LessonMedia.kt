@@ -15,6 +15,7 @@ object LessonMedia {
     const val PLAY = "play"
     const val PAUSE = "pause"
     const val PREVIOUS = "previous"
+    const val NEXT = "next"
 
     private var session: MediaSession? = null
 
@@ -25,13 +26,21 @@ object LessonMedia {
             override fun onPause() = send(PAUSE)
             override fun onStop() = send(PAUSE) // 수업을 끝내 버리지 않고 멈추기만 한다
             override fun onSkipToPrevious() = send(PREVIOUS)
+            override fun onSkipToNext() = send(NEXT)
+            override fun onRewind() = send(PREVIOUS)
+            override fun onFastForward() = send(NEXT)
+            override fun onSeekTo(pos: Long) = send("seek", pos)
         })
         created.setPlaybackState(state(PlaybackState.STATE_NONE, 0L))
         session = created
     }
 
     // 듣는 수업이 없으면 버튼을 받지 않는다. 쉬는 시간과 멈춘 수업은 멈춤으로 보여, 재생 버튼이 이어 듣기가 된다.
-    fun update(context: Context, active: Boolean, playing: Boolean, title: String, subtitle: String) {
+    fun update(context: Context, active: Boolean, playing: Boolean, title: String, subtitle: String) =
+        updatePlayback(context, active, if (playing) "playing" else "paused", title, subtitle, 0L, 0L, 1f)
+
+    fun updatePlayback(context: Context, active: Boolean, status: String, title: String, subtitle: String,
+                       positionMs: Long, durationMs: Long, rate: Float, canSeek: Boolean = false) {
         val media = session(context)
         if (!active) {
             media.setPlaybackState(state(PlaybackState.STATE_NONE, 0L))
@@ -42,20 +51,25 @@ object LessonMedia {
             .putString(MediaMetadata.METADATA_KEY_TITLE, title)
             .putString(MediaMetadata.METADATA_KEY_ARTIST, subtitle)
             .putString(MediaMetadata.METADATA_KEY_ALBUM, "다잇 수업")
+            .putLong(MediaMetadata.METADATA_KEY_DURATION, durationMs.coerceAtLeast(0L))
             .build())
         val actions = PlaybackState.ACTION_PLAY or PlaybackState.ACTION_PAUSE or PlaybackState.ACTION_PLAY_PAUSE or
-            PlaybackState.ACTION_STOP or PlaybackState.ACTION_SKIP_TO_PREVIOUS
-        media.setPlaybackState(state(if (playing) PlaybackState.STATE_PLAYING else PlaybackState.STATE_PAUSED, actions))
+            PlaybackState.ACTION_STOP or PlaybackState.ACTION_SKIP_TO_PREVIOUS or PlaybackState.ACTION_SKIP_TO_NEXT or
+            PlaybackState.ACTION_REWIND or PlaybackState.ACTION_FAST_FORWARD or
+            (if (canSeek) PlaybackState.ACTION_SEEK_TO else 0L)
+        val playing = status == "playing"
+        media.setPlaybackState(state(if (playing) PlaybackState.STATE_PLAYING else PlaybackState.STATE_PAUSED, actions,
+            positionMs.coerceIn(0L, durationMs.coerceAtLeast(0L)), if (playing) rate.coerceIn(0.8f, 2f) else 0f))
         media.isActive = true
     }
 
-    private fun state(value: Int, actions: Long): PlaybackState = PlaybackState.Builder()
+    private fun state(value: Int, actions: Long, positionMs: Long = 0L, speed: Float = 0f): PlaybackState = PlaybackState.Builder()
         .setActions(actions)
-        .setState(value, PlaybackState.PLAYBACK_POSITION_UNKNOWN, if (value == PlaybackState.STATE_PLAYING) 1f else 0f, SystemClock.elapsedRealtime())
+        .setState(value, positionMs, speed, SystemClock.elapsedRealtime())
         .build()
 
-    private fun send(command: String) {
-        MainActivity.current?.onMediaCommand(command)
+    private fun send(command: String, positionMs: Long = 0L) {
+        MainActivity.current?.onMediaCommand(command, positionMs)
     }
 }
 

@@ -5,6 +5,7 @@ import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.media.PlaybackParams
 import org.json.JSONObject
 
 // 미리 만든 음원을 차례로 틀고, 필요하면 이어서 아이의 답을 듣는다.
@@ -36,6 +37,17 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
     private var player: MediaPlayer? = null
     private var playbackVolume = appContext.getSharedPreferences("dait.audio", Context.MODE_PRIVATE)
         .getFloat("volume", 1f).coerceIn(0f, 1f)
+    private var playbackRate = 1f
+    fun setRate(rate: Float) {
+        if (!rate.isFinite() || rate !in 0.8f..2f) return
+        playbackRate = rate
+        player?.let { current ->
+            // Applying non-zero PlaybackParams may start a paused MediaPlayer.
+            // Defer it until resume instead of briefly playing while held/interrupted.
+            if (current.isPlaying) current.playbackParams = PlaybackParams().setSpeed(playbackRate)
+        }
+    }
+
     private var seekPosition = 0
 
     // 다잇 음원만 조절한다. 재생 위치·오디오 포커스·차량 시스템 음량은 바꾸지 않는다.
@@ -83,12 +95,12 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
 
     // 이어 듣기. 소리를 다시 받아 멈춘 곳에서 잇는다. 바로 못 받으면 받을 때까지 기다린다.
     fun proceed() {
-        if (!held) return
+        if (!held && !suspended) return
         held = false
         suspended = false
         when (audio.requestAudioFocus(focus)) {
             AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> resume(rewind = false)
-            AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> suspended = true
+            AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> { suspended = true; emit("paused") }
             else -> finish("stopped")
         }
     }
@@ -123,6 +135,7 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
                     prepare()
                     setVolume(playbackVolume, playbackVolume)
                     if (seekPosition > 0) seekTo(seekPosition.coerceAtMost((duration - 1).coerceAtLeast(0)).toLong(), MediaPlayer.SEEK_CLOSEST)
+                    playbackParams = PlaybackParams().setSpeed(playbackRate)
                     start()
                 }
             }
@@ -182,6 +195,7 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
             val paused = player
             if (paused == null) playNext() else {
                 if (rewind) paused.seekTo(resumePosition(paused))
+                paused.playbackParams = PlaybackParams().setSpeed(playbackRate)
                 paused.start()
             }
         }

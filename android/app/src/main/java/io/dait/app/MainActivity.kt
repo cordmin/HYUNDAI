@@ -137,8 +137,8 @@ class MainActivity : Activity() {
     }
 
     // 핸들 버튼이나 차의 미디어 화면에서 온 재생·멈춤·이전을 화면의 수업에 넘긴다.
-    fun onMediaCommand(command: String) {
-        callPage("window.onMediaKey && window.onMediaKey(${JSONObject.quote(command)});")
+    fun onMediaCommand(command: String, positionMs: Long = 0L) {
+        callPage("window.onMediaKey && window.onMediaKey(${JSONObject.quote(command)}, $positionMs);")
     }
 
     override fun onResume() {
@@ -184,10 +184,11 @@ class MainActivity : Activity() {
     @Deprecated("Platform back navigation")
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
-        if (::webView.isInitialized && webView.canGoBack()) {
-            webView.goBack()
-        } else {
-            super.onBackPressed()
+        if (!::webView.isInitialized) { finish(); return }
+        webView.evaluateJavascript("window.handleAppBack ? window.handleAppBack() : false") { handled ->
+            if (!isDestroyed && handled != "true") {
+                if (webView.canGoBack()) webView.goBack() else finish()
+            }
         }
     }
 
@@ -294,6 +295,12 @@ class MainActivity : Activity() {
         }
 
         @JavascriptInterface
+        fun setSpeechRate(rate: Double) {
+            if (!rate.isFinite() || rate !in 0.8..2.0) return
+            runOnUiThread { voice?.setRate(rate.toFloat()) }
+        }
+
+        @JavascriptInterface
         fun reportSpeechPosition(turn: Int) {
             runOnUiThread { voice?.reportPosition(turn) }
         }
@@ -359,6 +366,17 @@ class MainActivity : Activity() {
         fun setLessonMedia(active: Boolean, playing: Boolean, title: String, subtitle: String) {
             runOnUiThread { LessonMedia.update(this@MainActivity, active, playing, title, subtitle) }
         }
+
+        @JavascriptInterface
+        fun setLessonPlayback(active: Boolean, status: String, title: String, subtitle: String,
+                              positionMs: Long, durationMs: Long, rate: Double, canSeek: Boolean) {
+            if (!rate.isFinite()) return
+            runOnUiThread { LessonMedia.updatePlayback(this@MainActivity, active, status, title, subtitle,
+                positionMs, durationMs, rate.toFloat(), canSeek) }
+        }
+
+        @JavascriptInterface
+        fun isDebugBuild(): Boolean = (applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
 
         @JavascriptInterface
         fun setJourneyActive(active: Boolean) {

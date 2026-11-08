@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-08",
+  "status": "PASS",
+  "method": "actual build-lessons.js and dait-lesson.js; isolated fixture; 4.62 chars/sec estimate",
+  "sourcePieces": 32,
+  "basicPieces": 22,
+  "shortPieces": 10,
+  "sourceQuestions": 5,
+  "audioProduced": 0,
+  "appIntegrated": false,
+  "plans": [
+    {
+      "minutes": 8,
+      "pieces": [
+        "s_i1",
+        "s_b1",
+        "s_b2",
+        "s_b4",
+        "s_q1",
+        "s_b5",
+        "s_b6",
+        "s_q2",
+        "s_c1",
+        "s_c2"
+      ],
+      "count": 10,
+      "estimatedSeconds": 447.71,
+      "requiredSeconds": 447.71,
+      "omitted": [],
+      "arrivalClosing": "f_s1"
+    },
+    {
+      "minutes": 15,
+      "pieces": [
+        "f_i1",
+        "f_i2",
+        "f_b1",
+        "f_b2",
+        "f_b3",
+        "f_b4",
+        "f_b5",
+        "f_b6",
+        "f_q1",
+        "f_b7",
+        "f_b8",
+        "f_b9",
+        "f_b10",
+        "f_b11",
+        "f_q2",
+        "f_b12",
+        "f_q3",
+        "f_c1",
+        "f_c2"
+      ],
+      "count": 19,
+      "estimatedSeconds": 877.22,
+      "requiredSeconds": 532.07,
+      "omitted": [
+        "f_b13"
+      ],
+      "arrivalClosing": "f_s1"
+    }
+  ]
+}

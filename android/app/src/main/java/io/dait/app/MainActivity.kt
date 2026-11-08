@@ -376,9 +376,6 @@ class MainActivity : Activity() {
         }
 
         @JavascriptInterface
-        fun isDebugBuild(): Boolean = (applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
-
-        @JavascriptInterface
         fun setJourneyActive(active: Boolean) {
             runOnUiThread {
                 journeyActive = active

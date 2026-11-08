@@ -1,0 +1,14 @@
+{
+  "duration": 35.32,
+  "sample_rate": 24000,
+  "peak": 22875,
+  "rms": 2346.72,
+  "sha256": "0f2499851623f05cc1d5db6868240dc4b9ca30a8b024b80e27daafe12ed9a3a1",
+  "id": "starry_f_i1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "안녕하세요, 다잇입니다. 오늘은 윤동주의 시 별 헤는 밤을 소리로 만나겠습니다. 별을 센다고 하면 하나, 둘, 셋 같은 숫자가 떠오르지요. 그런데 이 시는 숫자 대신 추억과 사랑, 어머니를 부릅니다. 오늘의 질문입니다. 별을 헤는데 왜 숫자가 없을까요? 하늘을 보거나 화면을 읽을 필요는 없습니다. 편하게 듣고, 질문에는 마음속으로만 답해도 괜찮습니다.",
+  "fingerprint": "5278e20a07f063d8ffe523147dabbb5025d2a440f66cdcac185ff6c4cfc39a09",
+  "generated_at": "2026-11-08T23:29:57+0900",
+  "review": "generated_not_listening_reviewed"
+}

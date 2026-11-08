@@ -1,0 +1,14 @@
+{
+  "duration": 32.2,
+  "sample_rate": 24000,
+  "peak": 27024,
+  "rms": 3118.33,
+  "sha256": "624650ab1edc6a2b57ec4562e48845d0f8966cea7c4b4da3a0d8fbed8b7cce02",
+  "id": "starry_f_r1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "지난 시간에는 윤동주의 시 별 헤는 밤을 함께 읽었습니다. 시에서 말하는 이는 별을 세며 추억과 사랑, 어머니와 옛 친구를 떠올렸습니다. 별을 헤는 일이 그리운 것을 하나씩 불러 보는 일처럼 느껴졌지요. 끝부분에서는 흙으로 덮은 이름 위에도 봄이 오기를 기다렸습니다. 그리움과 앞날을 기다리는 마음, 이 두 가지를 기억하며 다음 수업으로 이어 가겠습니다.",
+  "fingerprint": "cc61b83c69c39395398d1f4d4debc3e38cf68c461a367a233307b91aa94151eb",
+  "generated_at": "2026-11-08T23:29:47+0900",
+  "review": "generated_not_listening_reviewed"
+}

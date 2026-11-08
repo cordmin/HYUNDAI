@@ -1,0 +1,14 @@
+{
+  "duration": 22.72,
+  "sample_rate": 24000,
+  "peak": 18965,
+  "rms": 2705.39,
+  "sha256": "820ed7a7b7231d33e012345c29b2d882055fb19159d11de4b9bf295c84c43933",
+  "id": "starry_f_q1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "잠깐 마음속으로 생각해 볼까요? 이 시는 별마다 숫자를 붙이는 대신 추억과 사랑, 어머니를 부릅니다. 그렇다면 별을 헨다는 것은 무엇을 하는 일처럼 느껴지나요? 그렇게 생각한 까닭이 되는 말도 하나 떠올려 보세요. 소리 내 답하지 않아도 괜찮습니다.",
+  "fingerprint": "f1b2b2e82d3f575fe7410bd1e7e880eecb925a54f096ecf631fde6ede7567d7c",
+  "generated_at": "2026-11-08T23:31:16+0900",
+  "review": "generated_not_listening_reviewed"
+}

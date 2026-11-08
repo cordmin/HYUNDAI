@@ -1,0 +1,14 @@
+{
+  "duration": 23.76,
+  "sample_rate": 24000,
+  "peak": 27433,
+  "rms": 3093.68,
+  "sha256": "2f32c3710bf8e771fe59172da2a5c9330418616d6c91bab2940001e25e088ea9",
+  "id": "starry_f_q2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이름을 흙으로 덮던 장면과, 그 언덕에 봄이 오기를 기다리는 장면을 비교해 볼까요? 말하는 이의 마음이 어떻게 달라진다고 느꼈나요? 부끄러움, 자랑, 겨울, 봄 가운데 생각을 뒷받침하는 말을 골라도 좋습니다. 다른 답이 떠올라도 시의 말과 이어 설명할 수 있으면 됩니다.",
+  "fingerprint": "ea15c8bce182024debdf96f875c95c3a2eea5b58dcdf4756714ae97a9231f78e",
+  "generated_at": "2026-11-08T23:32:18+0900",
+  "review": "generated_not_listening_reviewed"
+}

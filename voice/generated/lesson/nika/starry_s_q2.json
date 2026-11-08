@@ -1,0 +1,14 @@
+{
+  "duration": 25.44,
+  "sample_rate": 24000,
+  "peak": 18164,
+  "rms": 2333.24,
+  "sha256": "f0d297255f2d84441676db9457c9db7fb8ab01185665e51973f02c7062b56edd",
+  "id": "starry_s_q2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이번에는 시의 말하는 방식을 빌려 보겠습니다. 별 하나에, 뒤에 내가 소중히 여기는 말을 하나 이어 보세요. 사람 이름이어도 좋고 기억하고 싶은 마음이어도 좋습니다. 실제 별을 찾거나 글을 적지는 않습니다. 마음속으로 한 문장만 만들어 보세요. 지금 떠오르지 않으면 그냥 듣고 지나가도 괜찮습니다.",
+  "fingerprint": "eb7751360782f2b64ce0e8260f9b90c82a0232ac2f52a01a7c89cb47b0f44c70",
+  "generated_at": "2026-11-08T23:34:28+0900",
+  "review": "generated_not_listening_reviewed"
+}

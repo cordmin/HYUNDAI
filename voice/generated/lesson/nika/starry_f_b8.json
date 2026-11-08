@@ -1,0 +1,14 @@
+{
+  "duration": 36.24,
+  "sample_rate": 24000,
+  "peak": 22997,
+  "rms": 2975.47,
+  "sha256": "e58c22eb00d875950ff7877b9db60bd1aaeaef6c0989771e7949b63bac9e161a",
+  "id": "starry_f_b8",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "시는 조금 다른 장면으로 넘어갑니다. 말하는 이는 언덕 위에 자기 이름을 쓰고 흙으로 덮습니다. 이어 부끄러운 이름을 슬퍼한다는 말이 나옵니다. 이 행동이 무엇을 뜻하는지 시가 풀이까지 붙여 주지는 않습니다. 그래서 이름을 덮었다는 행동과 부끄럽다는 말을 함께 놓고 마음을 짐작해 볼 수 있습니다. 자기 모습을 돌아보는 마음으로 읽을 수도 있겠지요. 어떤 구체적인 사건 때문이라고 시에 없는 사정을 정해 버리지는 않겠습니다.",
+  "fingerprint": "c3447f8e9f5d462da19c443322b2799cf7e6b2b12302bdfc4a45aebc03ce439a",
+  "generated_at": "2026-11-08T23:31:38+0900",
+  "review": "generated_not_listening_reviewed"
+}

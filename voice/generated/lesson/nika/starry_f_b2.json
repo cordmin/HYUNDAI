@@ -1,0 +1,14 @@
+{
+  "duration": 34.68,
+  "sample_rate": 24000,
+  "peak": 20982,
+  "rms": 2858.96,
+  "sha256": "89c0bd03f4fd332e908e2458dc63590cc32000bbeb5855634a954aceafda3c58",
+  "id": "starry_f_b2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "시의 처음에는 가을 하늘과 별이 나옵니다. 처음에는 눈으로 볼 수 있는 풍경처럼 들리지요. 그런데 곧 가슴속에 새겨지는 별을 이야기합니다. 별이 실제로 가슴 안으로 들어간 것은 아닐 거예요. 하늘에 있는 별을 말하다가, 마음에 떠오르는 무엇인가를 말하기 시작한 셈입니다. 같은 별이라는 말도 앞뒤의 말과 함께 들으면 달라집니다. 이제 어떤 이름들이 별에 이어지는지 귀 기울여 보겠습니다.",
+  "fingerprint": "2ad951a9d812aeb6df635fb7e5268bb440b4377a5380fa804003a1f73583565a",
+  "generated_at": "2026-11-08T23:30:27+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 30.68,
+  "sample_rate": 24000,
+  "peak": 27571,
+  "rms": 2897.57,
+  "sha256": "b61eeafa474dc35ada37f4a29c60198c97385e989014dc7300caedb9a30545c5",
+  "id": "starry_s_b6",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이후에는 자기 이름을 언덕 위에 쓰고 흙으로 덮는 장면이 나옵니다. 부끄러운 이름을 슬퍼한다는 말도 있지요. 그런데 끝에서는 겨울이 지나 봄이 오기를 기다립니다. 이름을 묻은 언덕에도 풀이 무성해질 것이라고 말합니다. 쓸쓸한 마음만 있는 시라고 느꼈다면, 앞으로 달라질 모습을 기대하는 말도 있다는 점을 함께 기억해 주세요. 짧게 읽을 때도 끝의 방향을 놓치지 않는 것이 좋겠습니다.",
+  "fingerprint": "d8ea47ccd21d74745dfebb5454e7dea7eba42e33f89b3084298d70540109cbbf",
+  "generated_at": "2026-11-08T23:34:20+0900",
+  "review": "generated_not_listening_reviewed"
+}

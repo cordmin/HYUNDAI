@@ -1,0 +1,14 @@
+{
+  "duration": 25.32,
+  "sample_rate": 24000,
+  "peak": 23975,
+  "rms": 2807.92,
+  "sha256": "27440be2f85a7904faea24856e8b1396892d90cb0f9a1762c2f9d85b4765ac59",
+  "id": "starry_s_q1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "여기서 잠깐 마음속으로 생각해 볼까요? 이 시에서 별을 헤는 일은 숫자를 세는 일에 더 가까울까요, 그리운 것을 하나씩 떠올리는 일에 더 가까울까요? 어느 쪽으로 생각했든 까닭이 되는 말을 하나 찾아보세요. 추억이나 어머니라는 말을 떠올려도 좋습니다. 답은 소리 내지 않아도 괜찮습니다.",
+  "fingerprint": "2b6f555341683f3c4e0fef1c5f794e2291265d1449b27ab84bead206e38bf40c",
+  "generated_at": "2026-11-08T23:34:01+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 24.52,
+  "sample_rate": 24000,
+  "peak": 18925,
+  "rms": 2535.38,
+  "sha256": "86e32dda9242d66d0df84c9ff0820107d10b9e75162b043a41e8173f2246a0fa",
+  "id": "starry_f_b4",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "시에서 말하는 이는 별마다 말을 하나씩 천천히 얹습니다. 별 하나에 추억과, 별 하나에 사랑과. 이어서 쓸쓸함과 동경, 시를 부르고, 끝에는 어머니를 두 번 부릅니다. 시에서 말하는 이는 어머님을 부르며, 별 하나에 아름다운 말 한마디씩 불러 본다고 말합니다.",
+  "fingerprint": "23ed969fb69b0a5498f07f0767bea353fc9c4f434d043f3bc217abd6c406fd83",
+  "generated_at": "2026-11-08T23:30:45+0900",
+  "review": "generated_not_listening_reviewed"
+}

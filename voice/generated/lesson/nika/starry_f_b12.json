@@ -1,0 +1,14 @@
+{
+  "duration": 40.56,
+  "sample_rate": 24000,
+  "peak": 19825,
+  "rms": 2904.47,
+  "sha256": "82b0046b4719e4e77289a47ba668f1ec85da0f3dfd2cc3904deaa4bb23e9ca94",
+  "id": "starry_f_b12",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이제 시의 처음과 끝을 나란히 떠올려 보겠습니다. 처음에는 가을이 나왔고, 끝에는 겨울이 지나 봄이 오는 때를 기다립니다. 별을 헤던 목소리는 그리운 사람들의 이름을 거쳐 자기 이름으로 이어졌지요. 흩어진 장면을 하나씩 외우는 대신 무엇이 달라졌는지 비교해 보세요. 가을에서 봄으로, 부끄러움에서 자랑으로 이어지는 말들이 있습니다. 이것을 이미 모든 문제가 해결됐다는 뜻으로 단정할 필요는 없습니다. 달라질 앞날을 바라보는 마음으로 읽어 볼 수 있습니다.",
+  "fingerprint": "29b516ffc7a85ba3b7abec2c2aaa7eb0da5dbb62cac43fe43acbf53c7c0c9699",
+  "generated_at": "2026-11-08T23:32:30+0900",
+  "review": "generated_not_listening_reviewed"
+}

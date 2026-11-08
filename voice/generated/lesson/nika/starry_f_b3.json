@@ -1,0 +1,14 @@
+{
+  "duration": 34.28,
+  "sample_rate": 24000,
+  "peak": 22606,
+  "rms": 2129.18,
+  "sha256": "e9af4ac68560a4f8e5516af8558fc78adc824091f26fed2174fb0fc8ceaca33b",
+  "id": "starry_f_b3",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이 시에서 말하는 이는 같은 말을 되풀이합니다. 별 하나에, 별 하나에, 하고 천천히 이어 가는 것이지요. 소리로 들으면 이 되풀이가 곧 별을 세는 움직임처럼 들립니다. 똑같은 말이 이어지는 동안 듣는 사람의 마음도 느려집니다. 뒤에 오는 말은 조금씩 달라집니다. 추억에서 사랑으로, 쓸쓸함으로 옮겨 가다가 마침내 어머니에 닿습니다. 말하는 이의 마음이 어디로 가는지가 말의 차례에 담겨 있는 셈입니다.",
+  "fingerprint": "807cc22f79a9cc9de9576c652a6b1509c7a687e86c68a3075edad32b8a8c0bcd",
+  "generated_at": "2026-11-08T23:30:37+0900",
+  "review": "generated_not_listening_reviewed"
+}

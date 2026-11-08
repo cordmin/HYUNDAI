@@ -1,0 +1,14 @@
+{
+  "duration": 29.64,
+  "sample_rate": 24000,
+  "peak": 21327,
+  "rms": 2763.68,
+  "sha256": "82ba9eb8a8146da4884062a9f021d28e88a0e1566a2be5e012e4a1e6f792b18b",
+  "id": "starry_f_i2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘은 세 걸음으로 시를 따라갑니다. 첫째, 별 하나에 무엇을 담는지 듣습니다. 둘째, 별처럼 멀리 있는 이름들이 어떤 마음을 불러오는지 살핍니다. 셋째, 이름을 흙으로 덮는 장면에서 봄을 기다리는 장면으로 넘어가 봅니다. 시의 뜻을 한 가지 정답으로 외우지는 않을 거예요. 그렇게 생각한 까닭을 시의 말에서 찾아보는 것이 오늘의 목표입니다.",
+  "fingerprint": "24866078aa0488057f05925d36bd601aa1ab26f9edcf4331c1f7cc84bf6a08c4",
+  "generated_at": "2026-11-08T23:30:06+0900",
+  "review": "generated_not_listening_reviewed"
+}

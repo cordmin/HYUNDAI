@@ -1,0 +1,14 @@
+{
+  "duration": 25.6,
+  "sample_rate": 24000,
+  "peak": 25391,
+  "rms": 3226.78,
+  "sha256": "090206fdb4b057dbe386080a978011512b93760543c68720eb5c1c10a1933136",
+  "id": "starry_f_q3",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이번에는 시의 표현을 빌려 내 문장을 마음속으로 만들어 보겠습니다. 별 하나에, 뒤에 내가 소중히 여기는 말 하나를 이어 보세요. 사람의 이름이어도 좋고, 기억하고 싶은 마음이어도 좋습니다. 실제 별을 찾거나 적지는 않습니다. 떠오르지 않으면 그냥 듣고 지나가도 괜찮습니다.",
+  "fingerprint": "d9346c9f3c630c2e099f15d5f3236cc70bcf7688f25c456f04e37eb37a8691d5",
+  "generated_at": "2026-11-08T23:32:38+0900",
+  "review": "generated_not_listening_reviewed"
+}

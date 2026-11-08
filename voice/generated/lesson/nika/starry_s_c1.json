@@ -1,0 +1,14 @@
+{
+  "duration": 32.2,
+  "sample_rate": 24000,
+  "peak": 21563,
+  "rms": 2949.57,
+  "sha256": "cfd69bb120b2eff9567e98726e95fb71e598735fc0f5b207cb970c128a41bdfa",
+  "id": "starry_s_c1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘의 질문으로 돌아갑니다. 별을 헤는데 왜 숫자가 없을까요? 이 시에서는 별을 세는 일을 통해 추억과 사랑, 멀리 있는 이름을 하나씩 불러 보이기 때문이라고 읽을 수 있습니다. 별 하나에라는 되풀이가 그 마음들을 차례로 들려줍니다. 끝에는 이름을 묻은 언덕에도 봄이 오기를 기다리지요. 오늘은 뜻 하나를 외우기보다 시의 말과 내 생각을 연결해 보았습니다.",
+  "fingerprint": "3d52401a40fbc882f9dc33da2d106373c0b38e0a2402b64cc322b9c92429bec2",
+  "generated_at": "2026-11-08T23:34:38+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -474,3 +474,21 @@ body.lesson-playing .pleos-display { background-image:linear-gradient(to bottom,
 .lesson-options-btn.just-added svg { animation:queue-added .28s cubic-bezier(.16,1,.3,1); }
 @keyframes queue-added { from { transform:scale(.75);opacity:.55; } to { transform:scale(1);opacity:1; } }
 @media(prefers-reduced-motion:reduce) { .lesson-options-btn.just-added svg { animation:none; } }
+
+/* The end of a lesson is a calm handoff, not an inactive timeline. */
+.lesson-end { display:flex;flex-direction:column;gap:16px;flex:1;min-height:0;padding:12px 20px 10px;overflow:auto;color:var(--ink); }
+.lesson-end header { text-align:center;padding:12px 0 0; }
+.lesson-end h1 { margin:0 0 6px;font-size:26px;letter-spacing:-.025em; }
+.lesson-end header p,.lesson-up-next p { margin:0;color:var(--muted);font-size:14px; }
+.lesson-up-next { background:var(--glass-menu);border-radius:16px;padding:12px 18px;box-shadow:var(--glass-shadow); }
+.lesson-next-top { display:flex;align-items:center;justify-content:space-between;gap:12px; }
+.lesson-next-top>span { font-size:14px;font-variant-numeric:tabular-nums; }
+.next-autoplay { width:auto;gap:10px;min-height:44px; }
+.next-autoplay>span:first-child { font-size:14px; }
+.lesson-up-next h2 { margin:5px 0 6px;font-size:23px;line-height:1.25;letter-spacing:-.025em; }
+.lesson-next-actions { display:flex;justify-content:flex-end;gap:10px;margin-top:12px; }
+.lesson-next-actions .primary-btn { flex:0 1 180px;min-width:100px;min-height:48px;font-size:17px;padding:8px 16px; }
+.lesson-end-finish { align-self:center;border:0;background:none;color:var(--muted);font-size:16px;min-height:44px;padding:8px 24px; }
+.lesson-end-note { text-align:center;flex:1;display:grid;place-content:center;font-size:17px; }
+.queue-summary { margin:10px 0;font-size:14px;color:var(--muted); }
+@media(max-height:460px){.lesson-end { gap:8px;padding-top:0; }.lesson-end header {padding-top:0}.lesson-end h1{font-size:23px}.lesson-up-next{padding:6px 16px 10px}.lesson-up-next h2{margin-top:0}.lesson-next-actions{margin-top:8px}}

@@ -58,6 +58,7 @@ window.onSpeechEvent = function(jsonText) {
   }
   if (info.event === 'paused' || info.event === 'resumed') {
     speechPaused = info.event === 'paused';
+    if(speechPaused&&lessonRun?.done){cancelNextLessonCountdown();renderStage();updateDriveScreen();}
     if (currentMode === 'lesson' && lessonRun && !lessonRun.done) {
       if (speechPaused) lessonRun.playback.interrupt();
       else if (!lessonRun.playback.resumeFromSystem()) { holdSpeech(); speechPaused = true; }

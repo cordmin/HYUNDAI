@@ -28,23 +28,25 @@ function updateDriveScreen(sentence) {
   const offer = inLesson ? null : lessonOffer();
   const minutes = Lesson.minutesFor(remainMinutes());
   const fromStop = !!offer && offer === stoppedLesson(minutes);
-  document.getElementById('driveSentence').textContent = inLesson ? (sentence || document.querySelector('.main-question')?.textContent || '')
+  document.getElementById('driveSentence').textContent = inLesson ? (sentence || (lessonRun?.done ? lessonDoneLine(lessonRun) : document.querySelector('.main-question')?.textContent) || '')
     : offer ? (fromStop ? '지난번 멈춘 곳부터 들을까요?' : offer.question) : '주차 후 이어갈게요';
   const offerLine = !offer ? '' : fromStop ? `${offer.title} · 남은 약 ${stopMinutesLeft(offer, minutes)}분` : lessonPromise(offer, minutes);
   document.getElementById('driveSub').textContent = inLesson ? (lessonRun && lessonRun.paused ? '잠시 멈췄어요' : '')
     : offer ? offerLine : '설정과 자세한 내용은 주차한 뒤 열어요';
   const done = isLessonDone();
   const replay = document.getElementById('driveReplay');
-  replay.textContent = '이전';
-  replay.disabled = !inLesson || done || isLessonResting();
+  const awaiting=done&&!!lessonRun?.nextAt;
+  replay.textContent = awaiting?'자동 재생 취소':'이전';
+  replay.disabled = !inLesson || (done&&!awaiting) || isLessonResting();
   replay.hidden = !inLesson;
   const next = document.getElementById('driveNext');
-  next.textContent = !inLesson ? '듣기' : done ? '마치기' : lessonMainLabel(lessonRun);
+  next.textContent = !inLesson ? '듣기' : awaiting ? '지금 재생' : done ? '마치기' : lessonMainLabel(lessonRun);
   next.disabled = !inLesson && !offer;
   syncLessonMedia();
 }
 
 function driveReplay() {
+  if(isLessonDone()&&lessonRun.nextAt){cancelNextLessonAutoplay();return}
   if (currentMode === 'lesson' && !isLessonDone()) seekLessonBy(-lessonPlaybackPrefs.back);
 }
 
@@ -52,7 +54,8 @@ function driveNext() {
   if (currentMode !== 'lesson') {
     const offer = lessonOffer();
     if (offer) { lessonMinutes = Lesson.minutesFor(remainMinutes()); startLesson(offer.id, offer === stoppedLesson(lessonMinutes)); }
-  } else if (isLessonDone()) goHome();
+  } else if (isLessonDone()&&lessonRun.nextAt) playNextQueuedLesson();
+  else if (isLessonDone()) goHome();
   else lessonMainAction();
   updateDriveScreen();
 }

@@ -11,13 +11,13 @@ test('바로 다음은 앞에, 맨 뒤 추가는 뒤에 넣으며 중복 수업�
   assert.equal(p.move(p.items[0].key,-1),false);
 });
 test('직접 고른 재생목록이 시리즈 다음 편보다 우선한다',()=>{
-  const p=new Playlist(lessons);p.saveSeries('시리즈',['a','b','c']);
+  const p=new Playlist(lessons,{},[{title:'시리즈',lessons:['a','b','c']}]);
   assert.deepEqual(p.next('a'),{lesson:'b',source:'series'});
   p.add('d');assert.equal(p.next('a').lesson,'d');p.remove(p.items[0].key);
   p.followSeries=false;assert.equal(p.next('a'),null);
 });
 test('시리즈는 완주한 이전 편만 인정하고, 다음 편이 없어도 순환하지 않는다',()=>{
-  const p=new Playlist(lessons);p.saveSeries('순서',['a','b','c']);
+  const p=new Playlist(lessons,{},[{title:'순서',lessons:['a','b','c']}]);
   assert.equal(p.prior('b',[]),'a');assert.equal(p.prior('b',[{lesson:'a',finished:false}]),'a');
   assert.equal(p.prior('b',[{lesson:'a',finished:true}]),null);assert.equal(p.next('c'),null);
 });
@@ -25,18 +25,18 @@ test('저장·복원은 설정과 순서를 보존하며 잘못되거나 사라�
   const p=new Playlist(lessons,{items:[null,{lesson:'a'},{lesson:'missing'}],series:[null,{title:'test',lessons:['a','b','b']}],autoNext:false,cues:false});
   p.add('c','next');const q=new Playlist(lessons,p.snapshot());
   assert.equal(q.autoNext,false);assert.equal(q.cues,false);assert.deepEqual(q.items.map(i=>i.lesson),['c','a']);
-  assert.deepEqual(q.series[0].lessons,['a','b']);q.add('d');assert.equal(new Set(q.items.map(i=>i.key)).size,3);
+  assert.equal(q.series.length,0);q.add('d');assert.equal(new Set(q.items.map(i=>i.key)).size,3);
 });
 test('순서가 정의되지 않은 수업을 시리즈로 추정하지 않고 제목·편수를 검증한다',()=>{
-  const p=new Playlist(lessons);assert.equal(p.seriesFor('a'),null);assert.equal(p.saveSeries('', ['a','b']),null);
-  assert.equal(p.saveSeries('한 편',['a','a']),null);assert.equal(p.add('missing'),false);
+  const p=new Playlist(lessons);assert.equal(p.seriesFor('a'),null);assert.equal(typeof p.saveSeries,'undefined');
+  assert.equal(new Playlist(lessons,{},[{title:'한 편',lessons:['a','a']}]).series.length,0);assert.equal(p.add('missing'),false);
 });
 
-test('공식 시리즈와 내 시리즈를 구분하고 공식 자료를 사용자 저장소에 복제하지 않는다',()=>{
+test('제작자 시리즈만 읽고 사용자 저장소에서 시리즈를 만들거나 복원하지 않는다',()=>{
  const catalog=[{id:'official',title:'공식 순서',lessons:['a','b'],outros:{a:{clip:'lesson/series_a_outro',seconds:3,text:'다음 편을 기대해 주세요.'},b:{clip:'https://invalid.test',seconds:3}}}];
- const p=new Playlist(lessons,{},catalog);p.saveSeries('내 순서',['c','d']);
+ const p=new Playlist(lessons,{series:[{title:'내 순서',lessons:['c','d']}]},catalog);
  assert.equal(p.series[0].outros.a.clip,'lesson/series_a_outro');assert.equal(p.series[0].outros.b,undefined);
- assert.equal(p.snapshot().series.length,1);const q=new Playlist(lessons,p.snapshot(),catalog);assert.equal(q.series.length,2);assert.equal(q.series[0].id,'official');
+ assert.equal(p.snapshot().series,undefined);const q=new Playlist(lessons,p.snapshot(),catalog);assert.equal(q.series.length,1);assert.equal(q.series[0].id,'official');
 });
 
 test('시리즈 예고 음원이 없는 자료는 제출용 검사에서 차단한다',()=>{

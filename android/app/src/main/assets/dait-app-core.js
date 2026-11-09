@@ -108,7 +108,7 @@ function isLessonDone() {
 
 // 지금 조각을 건너뛴다.
 function skipLessonPiece() {
-  if (currentMode === 'lesson' && lessonRun && !lessonRun.done) nextLessonPiece();
+  if (currentMode === 'lesson' && lessonRun && !lessonRun.done) nextLessonPiece(true);
 }
 
 function remainMinutes() {
@@ -118,7 +118,7 @@ function remainMinutes() {
 // 여정 동안에는 내비가 앱을 덮어도 소리를 낼 수 있게 앱을 유지한다.
 // 달리는 중에 내려놓으면 내비 뒤에서 다시 올릴 수 없으므로 주차하거나 수업을 닫을 때까지 둔다.
 function syncJourney() {
-  const finishedParked = isLessonDone() && speechPhase === 'idle' && !isDrivingMode;
+  const finishedParked = isLessonDone() && !lessonRun.nextAt && speechPhase === 'idle' && !isDrivingMode;
   const active = (currentMode === 'lesson' && !finishedParked);
   if (active === journeyActive) return;
   journeyActive = active;
@@ -129,6 +129,7 @@ function syncJourney() {
 function finishOnArrival() {
   if (currentMode !== 'lesson') return;
   hasArrived = true;
+  cancelNextLessonCountdown();
   if (lessonRun.done) closeAfterArrival();
   else if (lessonRun.stopped || lessonRun.paused) endLesson(); // 멈춰 둔 채 도착하면 이어 말하지 않고 기록을 남긴다
   else fitLessonToEta(0);

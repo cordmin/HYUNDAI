@@ -75,12 +75,12 @@ function lessonOptionsButton(lesson, fromStop) {
 function renderLesson(container) {
   const run = lessonRun;
   if (!run.done && !isLessonResting()) { renderLessonPlayer(container, run); return; }
+  if(run.done){renderLessonEnd(container,run);return}
   const piece = run.pieces[run.index];
   const resting = !run.done && Lesson.isBreak(piece);
-  const title = run.done ? lessonDoneLine(run) : run.stopped ? '수업을 잠시 멈췄어요' : piece.line;
+  const title = run.stopped ? '수업을 잠시 멈췄어요' : piece.line;
   const back = '<button class="primary-btn secondary" onclick="prevLessonPiece()">이전</button>';
-  const buttons = run.done ? `${!isDrivingMode && lessonQueue.next(run.lesson.id) ? '<button class="primary-btn secondary" onclick="playNextQueuedLesson()">다음 수업 듣기</button>' : ''}<button class="primary-btn" onclick="goHome()">마치기</button>`
-    : `${resting ? '' : back}<button class="primary-btn" onclick="lessonMainAction()">${lessonMainLabel(run)}</button>`;
+  const buttons = `${resting ? '' : back}<button class="primary-btn" onclick="lessonMainAction()">${lessonMainLabel(run)}</button>`;
   container.innerHTML = `
     <div class="dialogue-wrap">
       <div class="dialogue-top">
@@ -94,7 +94,6 @@ function renderLesson(container) {
           ${run.done || resting ? '' : run.paused ? '<div class="card-sub">잠시 멈췄어요</div>' : piece.voiced ? '' : '<div class="card-sub">음원 준비 중</div>'}
         </div>
       </div>
-      ${!isDrivingMode && !resting ? lessonProgressHtml(run) : ''}
       <div class="bottom-bar">${buttons}</div>
     </div>
   `;
@@ -198,18 +197,6 @@ function lessonTimeText(seconds) {
   return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, '0')}`;
 }
 
-function lessonProgressHtml(run) {
-  const timeline = lessonTimeline(run);
-  return `<div class="lesson-progress" aria-label="수업 진행">
-    <div class="lesson-progress-times"><span id="lessonElapsed">0:00</span><span id="lessonSectionName"></span><span>${lessonTimeText(timeline.seconds)}</span></div>
-    <div class="lesson-progress-track">
-      <div class="lesson-progress-segments" aria-hidden="true">${timeline.sections.map(section => `<span data-lesson-segment="${section.index}" style="flex:${section.seconds}"></span>`).join('')}</div>
-      <input id="lessonSeek" type="range" min="0" max="${timeline.seconds}" step="0.1" value="0" aria-label="수업 재생 위치" oninput="previewLessonSeek(Number(this.value))" onchange="seekLessonAt(Number(this.value))" onblur="cancelLessonScrub()" onpointercancel="cancelLessonScrub()"${run.done ? ' disabled' : ''}>
-    </div>
-    <div class="lesson-sections" aria-label="수업 구간">${timeline.sections.map((section, n) => `<button onclick="seekLessonSection(${section.index})" data-lesson-section="${section.index}" aria-label="${n + 1}구간 ${escapeHtml(section.piece.line)}"${run.done ? ' disabled' : ''}>${n + 1}. ${escapeHtml(section.piece.line)}</button>`).join('')}</div>
-  </div>`;
-}
-
 function updateLessonProgress() {
   const run = lessonRun;
   if (!run || currentMode !== 'lesson') return;
@@ -295,4 +282,10 @@ function lessonDoneLine(run) {
 function lessonMainLabel(run) {
   if (isLessonResting()) return run.trip.rest ? '다음 교시 듣기' : '다음 수업 듣기';
   return run.playback.state !== 'playing' ? '이어 듣기' : '일시정지';
+}
+
+// Completion has no dead seek controls. The upcoming lesson is actionable here.
+function renderLessonEnd(container,run){
+  const next=nextLessonCandidate(run);
+  container.innerHTML=`<section class="lesson-end"><header><h1>${escapeHtml(lessonDoneLine(run))}</h1><p>${escapeHtml(run.lesson.title)}</p></header>${next?`<article class="lesson-up-next"><div class="lesson-next-top"><span id="nextLessonCountdown" role="status">${run.nextAt?run.nextSeconds+'초 후 재생':'다음 수업'}</span><button class="queue-switch next-autoplay" role="switch" aria-label="다음 수업 자동 재생" aria-checked="${lessonQueue.autoNext}" onclick="toggleNextLessonAutoplay()"${isDrivingMode?' disabled':''}><span>자동 재생</span><span aria-hidden="true">${lessonQueue.autoNext?'켜짐':'꺼짐'}</span></button></div><h2>${escapeHtml(next.target.title)}</h2><p>${escapeHtml(next.target.subject)} · ${next.source==='series'?'시리즈 다음 편':next.source==='queue'?'재생목록':'이어서 들을 수업'}</p><div class="lesson-next-actions">${run.nextAt?'<button class="primary-btn secondary" onclick="cancelNextLessonAutoplay()">취소</button>':''}<button class="primary-btn" onclick="playNextQueuedLesson()">지금 재생</button></div></article>`:'<p class="lesson-end-note">'+(hasArrived?'도착했어요.':'다음 이동에서 이어 들어요.')+'</p>'}<button class="lesson-end-finish" onclick="goHome()">마치기</button></section>`;
 }

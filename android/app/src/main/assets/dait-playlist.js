@@ -23,6 +23,7 @@
       return true;
     }
     remove(key){this.items=this.items.filter(item=>item.key!==key)}
+    promote(key){const index=this.items.findIndex(item=>item.key===key);if(index<0)return false;const [item]=this.items.splice(index,1);this.items.unshift(item);return true}
     move(key, delta){if(![-1,1].includes(delta))return false;const i=this.items.findIndex(item=>item.key===key),j=i+delta;if(i<0||j<0||j>=this.items.length)return false;[this.items[i],this.items[j]]=[this.items[j],this.items[i]];return true}
     seriesFor(lesson){return this.series.find(item=>item.lessons.includes(lesson))||null}
     prior(lesson, records=[]){const series=this.seriesFor(lesson);if(!series)return null;const index=series.lessons.indexOf(lesson);if(index<1)return null;const id=series.lessons[index-1];return records.some(item=>item.lesson===id&&item.finished)?null:id}

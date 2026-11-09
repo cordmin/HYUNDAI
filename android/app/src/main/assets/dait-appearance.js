@@ -178,11 +178,30 @@
     host.dataset.colorMode = mode;
     queueRefresh();
   }
-  function notice(message) {
+  let noticeGeneration=0;
+  function dismissNotice(){noticeGeneration++;clearTimeout(noticeTimer);const node=document.getElementById('pearlNotice');if(node)node.hidden=true;}
+  function notice(message, action = null) {
     let node = document.getElementById('pearlNotice');
     if (!node) { node = document.createElement('div'); node.id = 'pearlNotice'; node.className = 'pearl-notice'; node.setAttribute('role', 'status'); host.append(node); }
-    node.textContent = message; node.hidden = false;
-    clearTimeout(noticeTimer); noticeTimer = setTimeout(() => { node.hidden = true; }, 3500);
+    const generation=++noticeGeneration;
+    clearTimeout(noticeTimer);node.replaceChildren();node.hidden=false;
+    const actionable=!!action&&typeof action.onClick==='function'&&!isDrivingMode;
+    node.classList.toggle('has-action',actionable);
+    const text=document.createElement('span');text.textContent=message;node.append(text);
+    if(actionable){
+      const button=document.createElement('button');button.type='button';button.textContent=action.label;
+      button.setAttribute('aria-label',action.ariaLabel||action.label);
+      button.addEventListener('click',()=>{if(generation!==noticeGeneration||node.hidden||isDrivingMode)return;const focused=document.activeElement===button;dismissNotice();action.onClick();if(focused)action.restoreFocus?.()});
+      node.append(button);
+    }
+    const schedule=()=>{
+      clearTimeout(noticeTimer);
+      if(node.contains(document.activeElement)||node.matches(':hover'))return;
+      noticeTimer=setTimeout(()=>{if(generation===noticeGeneration)dismissNotice()},actionable?8000:3500);
+    };
+    node.onpointerenter=node.onfocusin=()=>clearTimeout(noticeTimer);
+    node.onpointerleave=node.onfocusout=schedule;
+    schedule();
   }
   function close() {
     if (!dialog) return;
@@ -352,7 +371,7 @@
     document.querySelector('.pearl-theme-btn')?.setAttribute('aria-pressed', String(profiles.mode === 'dark'));
   };
   appEvents.on('rendered', queueRefresh);
-  appEvents.on('vehicleChanged', ({ driving }) => { if (driving) close(); queueRefresh(); });
+  appEvents.on('vehicleChanged', ({ driving }) => { if (driving) { close(); dismissNotice(); } queueRefresh(); });
   appEvents.on('closeOverlays', close);
   appEvents.on('back', () => { if (!dialog) return false; close(); return true; });
   window.addEventListener('resize', queueRefresh);

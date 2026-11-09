@@ -53,3 +53,9 @@ test('재생목록의 이어 듣기 의도는 저장되고 잘못된 순서 이�
  assert.equal(p.move(p.items[0].key,NaN),false);assert.deepEqual(p.snapshot(),before);
  const q=new Playlist(lessons,p.snapshot());assert.equal(q.next('c').fromStop,true);
 });
+
+test('방금 추가한 고유 항목만 바로 다음으로 옮기고 사라진 항목은 대신 옮기지 않는다',()=>{
+ const p=new Playlist(lessons);p.add('a');p.add('b');p.add('a');const keys=p.items.map(i=>i.key);
+ assert.equal(p.promote(keys[2]),true);assert.deepEqual(p.items.map(i=>i.key),[keys[2],keys[0],keys[1]]);assert.equal(p.items.length,3);
+ p.remove(keys[2]);assert.equal(p.promote(keys[2]),false);assert.deepEqual(p.items.map(i=>i.key),[keys[0],keys[1]]);
+});

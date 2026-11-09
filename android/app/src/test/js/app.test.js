@@ -1090,3 +1090,17 @@ test('끝나는 순간 일시정지나 시스템 중단이 있으면 다음 목�
  resetPlaylistTest();page(`addLessonToQueue('ai','last');startLesson('dongbaek');lessonRun.playback.interrupt();`);finishPlaylistTestLesson();
  assert.equal(page('lessonRun.done'),true);assert.equal(page('lessonQueue.items.length'),1);resetPlaylistTest();
 });
+
+test('+는 기본 맨 뒤 추가이고 토스트 전환은 방금 넣은 항목만 옮기며 재생을 건드리지 않는다',()=>{
+ resetPlaylistTest();page(`startLesson('dongbaek');pauseLesson();var quickRun=lessonRun,quickSeq=speechSeq,quickNotice;window.playlistNotice=(message,action)=>{quickNotice={message,action}};addLessonToQueue('ai');addLessonToQueue('prime');addLessonToQueue('ai');var quickKeys=lessonQueue.items.map(i=>i.key),quickAction=quickNotice.action;`);
+ assert.deepEqual(Array.from(page('lessonQueue.items.map(i=>i.lesson)')),['ai','prime','ai']);
+ assert.equal(page('quickNotice.action.label'),'바로 다음에 재생');page('quickAction.onClick();');
+ assert.deepEqual(Array.from(page('lessonQueue.items.map(i=>i.key)')),Array.from(page('[quickKeys[2],quickKeys[0],quickKeys[1]]')));
+ assert.equal(page('lessonRun===quickRun&&speechSeq===quickSeq&&lessonRun.paused'),true);assert.equal(page('lessonQueue.items.length'),3);
+ page(`lessonQueue.remove(quickKeys[2]);quickAction.onClick();`);assert.equal(page('lessonQueue.items[0].key'),page('quickKeys[0]'));
+ page('delete window.playlistNotice;');resetPlaylistTest();
+});
+test('토스트를 누르기 전에 주행으로 바뀌면 순서를 변경하지 않는다',()=>{
+ resetPlaylistTest();page(`addLessonToQueue('ai');addLessonToQueue('prime');var quickBefore=JSON.stringify(lessonQueue.items);window.setDrivingMode(true);promoteQueuedLesson(lessonQueue.items[1].key);`);
+ assert.equal(page('JSON.stringify(lessonQueue.items)'),page('quickBefore'));resetPlaylistTest();
+});

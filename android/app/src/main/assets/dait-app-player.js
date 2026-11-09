@@ -67,9 +67,9 @@ function renderLessonPick(container) {
   updateListScroll('lessonList', 'lessonScroll');
 }
 
-// Two distinct actions now live here: Play Next and Add to End.
+// One tap adds to the end; the toast can move that exact entry to Play Next.
 function lessonOptionsButton(lesson, fromStop) {
-  return `<button class="lesson-options-btn" aria-haspopup="dialog" aria-label="${escapeHtml(lesson.title)} 재생목록에 추가" onclick="openLessonOptions('${lesson.id}', ${!!fromStop})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8 12h8M12 8v8"/></svg></button>`;
+  return `<button class="lesson-options-btn" data-queue-add="${lesson.id}" data-from-stop="${!!fromStop}" aria-label="${escapeHtml(lesson.title)} 재생목록에 추가" onclick="quickAddLesson('${lesson.id}', ${!!fromStop})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8 12h8M12 8v8"/></svg></button>`;
 }
 
 function renderLesson(container) {

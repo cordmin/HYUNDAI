@@ -413,6 +413,10 @@ body.lesson-playing .pleos-display { background-image:linear-gradient(to bottom,
 
 /* Queue editing is parked-only; playback stays visible behind the compact sheet. */
 .playlist-list-toolbar { display:flex;align-items:center;gap:8px;flex-shrink:0;min-height:44px; }
+.pearl-notice.has-action { display:flex;align-items:center;gap:12px;width:max-content;max-width:calc(100% - 24px);padding:10px 12px;box-sizing:border-box; }
+.pearl-notice.has-action[hidden] { display:none; }
+.pearl-notice.has-action>span { min-width:0;font-size:14px;line-height:1.5;text-align:left; }
+.pearl-notice.has-action>button { min-height:44px;flex-shrink:0;border:0;border-radius:10px;padding:0 12px;background:var(--notice-ink);color:var(--notice-bg);font-size:14px;font-weight:650;white-space:nowrap; }
 .playlist-list-toolbar .pearl-record-tabs { flex:1;min-width:0;gap:calc(10 * var(--u)); }
 .playlist-open-btn { border:0;background:var(--soft);color:var(--lilac);border-radius:12px;padding:0 12px;min-height:44px;font-size:14px;font-weight:650;white-space:nowrap; }
 .playlist-dialog { width:min(650px,calc(100% - 24px));padding:18px; }

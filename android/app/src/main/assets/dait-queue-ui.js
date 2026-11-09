@@ -7,12 +7,11 @@
   const lesson=id=>DAIT_LESSONS.find(item=>item.id===id);
   const toggle=(key,label)=>`<button class="queue-switch" data-queue-pref="${key}" role="switch" aria-checked="${lessonQueue[key]}"><span>${label}</span><span aria-hidden="true">${lessonQueue[key]?'켜짐':'꺼짐'}</span></button>`;
   function edit(){const saved=persistPlaylist();renderStage();window.openPlaylist(tab);return saved}
-  window.openLessonOptions=(id,fromStop=false)=>{
-    const item=lesson(id);if(!item)return;
-    window.openDaitPanel('재생목록에 추가',`<p class="pearl-option-title">${escapeHtml(item.title)}</p><div class="pearl-settings-menu"><button data-add-position="next"><strong>바로 다음에 재생</strong></button><button data-add-position="last"><strong>맨 뒤에 추가</strong></button></div>`,'pearl-lesson-options',e=>{
-      const position=e.target.closest('[data-add-position]')?.dataset.addPosition;if(!position||isDrivingMode)return;
-      window.closeDaitPanel();addLessonToQueue(id,position,fromStop);
-    });
+  window.restoreQueueAddFocus=(id,fromStop)=>document.querySelector(`[data-queue-add="${id}"][data-from-stop="${!!fromStop}"]`)?.focus({preventScroll:true});
+  window.quickAddLesson=(id,fromStop=false)=>{
+    const focused=document.activeElement?.matches('[data-queue-add]');
+    if(!lesson(id)||!addLessonToQueue(id,'last',fromStop))return;
+    if(focused)window.restoreQueueAddFocus(id,fromStop);
   };
   window.showSeriesOrderPrompt=(id,options={})=>{
     const prior=lessonQueue.prior(id,lessonProgress().records),before=lesson(prior);if(!before)return;
@@ -38,7 +37,7 @@
     if(nextTab)tab=nextTab;
     const items=lessonQueue.items,series=lessonQueue.series.find(item=>item.id===selectedSeries);
     const now=hasActiveLesson()?`<div class="queue-now"><span>지금 듣는 수업</span><strong>${escapeHtml(lessonRun.lesson.title)}</strong></div>`:'';
-    const queue=items.length?`<ol class="queue-items">${items.map((item,index)=>`<li><button class="queue-title" data-queue-play="${item.key}"><span>${index+1}</span><strong>${escapeHtml(lesson(item.lesson).title)}</strong></button><div class="queue-actions"><button data-queue-move="${item.key}" data-delta="-1" aria-label="${escapeHtml(lesson(item.lesson).title)} 위로"${index===0?' disabled':''}>${icon('up')}</button><button data-queue-move="${item.key}" data-delta="1" aria-label="${escapeHtml(lesson(item.lesson).title)} 아래로"${index===items.length-1?' disabled':''}>${icon('down')}</button><button data-queue-remove="${item.key}" aria-label="${escapeHtml(lesson(item.lesson).title)} 재생목록에서 삭제">${icon('remove')}</button></div></li>`).join('')}</ol>`:'<p class="queue-empty">수업 옆 +에서 바로 다음이나 맨 뒤에 추가해 보세요.</p>';
+    const queue=items.length?`<ol class="queue-items">${items.map((item,index)=>`<li><button class="queue-title" data-queue-play="${item.key}"><span>${index+1}</span><strong>${escapeHtml(lesson(item.lesson).title)}</strong></button><div class="queue-actions"><button data-queue-move="${item.key}" data-delta="-1" aria-label="${escapeHtml(lesson(item.lesson).title)} 위로"${index===0?' disabled':''}>${icon('up')}</button><button data-queue-move="${item.key}" data-delta="1" aria-label="${escapeHtml(lesson(item.lesson).title)} 아래로"${index===items.length-1?' disabled':''}>${icon('down')}</button><button data-queue-remove="${item.key}" aria-label="${escapeHtml(lesson(item.lesson).title)} 재생목록에서 삭제">${icon('remove')}</button></div></li>`).join('')}</ol>`:'<p class="queue-empty">수업 옆 +를 누르면 맨 뒤에 추가돼요.</p>';
     const seriesList=series?`<button class="queue-back" data-queue-series="">시리즈 목록</button><h3 class="queue-series-name">${escapeHtml(series.title)}</h3><ol class="queue-items">${series.lessons.map((id,index)=>`<li><button class="queue-title" data-series-play="${id}"><span>${index+1}</span><strong>${escapeHtml(lesson(id).title)}</strong></button></li>`).join('')}</ol>`
       :lessonQueue.series.length?`<div class="queue-series-list">${lessonQueue.series.map(item=>`<button data-queue-series="${item.id}"><strong>${escapeHtml(item.title)}</strong><span>${item.lessons.length}편 · 순서대로 듣기</span></button>`).join('')}</div>`:'<p class="queue-empty">재생목록에 수업 두 편 이상을 담고 시리즈로 저장해 보세요.</p>';
     const panel=window.openDaitPanel('재생목록',`${now}<div class="queue-preferences">${toggle('autoNext','다음 수업 자동 재생')}</div><div class="queue-tabs" role="tablist" aria-label="재생목록 종류"><button role="tab" aria-selected="${tab==='queue'}" data-queue-tab="queue">다음 재생${items.length?' · '+items.length:''}</button><button role="tab" aria-selected="${tab==='series'}" data-queue-tab="series">시리즈</button></div><div class="queue-scroll">${tab==='queue'?queue:seriesList}</div><div class="queue-footer">${tab==='queue'?`<button class="queue-save" data-save-series${new Set(items.map(item=>item.lesson)).size<2?' disabled':''}>시리즈로 저장</button>`:`<div class="queue-preferences">${toggle('followSeries','시리즈 순서대로 듣기')}${toggle('cues','시리즈 연결 안내')}</div>`}</div>`,'playlist-dialog',e=>{

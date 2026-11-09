@@ -6,11 +6,12 @@ const Lesson = require('../../main/assets/dait-lesson.js');
 const lessons = require('../../main/assets/dait-lessons.js');
 const starry = lessons.find(lesson => lesson.id === 'starry');
 
-test('별 헤는 밤의 32조각은 실제 음원·길이가 연결돼 있고 8분·15분에 맞춰 조립된다', () => {
+test('별 헤는 밤의 녹음된 조각은 실제 음원·길이가 연결돼 있고 8분·15분에 맞춰 조립된다', () => {
   assert.equal(starry.subject, '국어');
-  assert.equal(starry.pieces.length, 32);
-  for (const piece of starry.pieces) {
-    assert.ok(piece.voiced && piece.seconds > 0);
+  const voiced = starry.pieces.filter(piece => piece.voiced);
+  assert.ok(voiced.length >= 32, String(voiced.length));
+  for (const piece of voiced) {
+    assert.ok(piece.seconds > 0);
     assert.ok(fs.statSync(path.join(__dirname, '../../main/assets/voices', piece.clip + '.m4a')).size > 0);
   }
   assert.equal(Lesson.fits(starry, 5), false);

@@ -467,6 +467,7 @@ if (window.location.href.includes('android_asset') || navigator.userAgent.includ
 window.setDrivingMode = function(isDriving, isRealDriving) {
   const departing = isDriving && !isDrivingMode;
   isDrivingMode = isDriving;
+  if (isDriving && hasActiveLesson()) lessonView = null;
   vehiclePolicy.update(isDriving);
   appEvents.emit('vehicleChanged', { driving: isDriving });
   document.body.classList.toggle('driving', isDriving);
@@ -543,6 +544,11 @@ window.onMediaKey = function(command, positionMs) {
 };
 window.handleAppBack = function () {
   if (appEvents.emit('back').some(Boolean)) return true;
+  if (hasActiveLesson()) {
+    if (lessonView === 'now') return false;
+    openPearlTab('now');
+    return true;
+  }
   if (currentMode) { goHome(); return true; }
   return false;
 };

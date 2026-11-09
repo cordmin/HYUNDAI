@@ -1,0 +1,630 @@
+{
+  "url": "http://127.0.0.1:8796/dait-preview.html?app=1&review=glass",
+  "cases": [
+    {
+      "size": {
+        "width": 1000,
+        "height": 632
+      },
+      "palette": "light",
+      "views": [
+        {
+          "name": "home",
+          "labels": 5,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "lessons",
+          "labels": 16,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "badges",
+          "labels": 11,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "settings",
+          "labels": 6,
+          "minContrast": 5.79,
+          "overflow": false
+        },
+        {
+          "name": "playback-settings",
+          "labels": 20,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "player",
+          "labels": 7,
+          "minContrast": 9.17,
+          "overflow": false
+        },
+        {
+          "name": "mini-player",
+          "labels": 13,
+          "minContrast": 5,
+          "overflow": false
+        }
+      ],
+      "drivingBlock": true
+    },
+    {
+      "size": {
+        "width": 1000,
+        "height": 632
+      },
+      "palette": "dark",
+      "views": [
+        {
+          "name": "home",
+          "labels": 5,
+          "minContrast": 6.14,
+          "overflow": false
+        },
+        {
+          "name": "lessons",
+          "labels": 16,
+          "minContrast": 6.14,
+          "overflow": false
+        },
+        {
+          "name": "badges",
+          "labels": 11,
+          "minContrast": 6.14,
+          "overflow": false
+        },
+        {
+          "name": "settings",
+          "labels": 6,
+          "minContrast": 6.91,
+          "overflow": false
+        },
+        {
+          "name": "playback-settings",
+          "labels": 20,
+          "minContrast": 6.14,
+          "overflow": false
+        },
+        {
+          "name": "player",
+          "labels": 7,
+          "minContrast": 10.72,
+          "overflow": false
+        },
+        {
+          "name": "mini-player",
+          "labels": 13,
+          "minContrast": 6.14,
+          "overflow": false
+        }
+      ],
+      "drivingBlock": true
+    },
+    {
+      "size": {
+        "width": 1000,
+        "height": 632
+      },
+      "palette": "light-black",
+      "views": [
+        {
+          "name": "home",
+          "labels": 5,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "lessons",
+          "labels": 16,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "badges",
+          "labels": 11,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "settings",
+          "labels": 6,
+          "minContrast": 5.79,
+          "overflow": false
+        },
+        {
+          "name": "playback-settings",
+          "labels": 20,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "player",
+          "labels": 7,
+          "minContrast": 9.43,
+          "overflow": false
+        },
+        {
+          "name": "mini-player",
+          "labels": 13,
+          "minContrast": 5,
+          "overflow": false
+        }
+      ],
+      "drivingBlock": true
+    },
+    {
+      "size": {
+        "width": 1000,
+        "height": 632
+      },
+      "palette": "light-mixed",
+      "views": [
+        {
+          "name": "home",
+          "labels": 5,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "lessons",
+          "labels": 16,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "badges",
+          "labels": 11,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "settings",
+          "labels": 6,
+          "minContrast": 5.79,
+          "overflow": false
+        },
+        {
+          "name": "playback-settings",
+          "labels": 20,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "player",
+          "labels": 7,
+          "minContrast": 4.53,
+          "overflow": false
+        },
+        {
+          "name": "mini-player",
+          "labels": 13,
+          "minContrast": 5,
+          "overflow": false
+        }
+      ],
+      "drivingBlock": true
+    },
+    {
+      "size": {
+        "width": 1000,
+        "height": 632
+      },
+      "palette": "dark-white",
+      "views": [
+        {
+          "name": "home",
+          "labels": 5,
+          "minContrast": 5.59,
+          "overflow": false
+        },
+        {
+          "name": "lessons",
+          "labels": 16,
+          "minContrast": 5.64,
+          "overflow": false
+        },
+        {
+          "name": "badges",
+          "labels": 11,
+          "minContrast": 5.33,
+          "overflow": false
+        },
+        {
+          "name": "settings",
+          "labels": 6,
+          "minContrast": 6.91,
+          "overflow": false
+        },
+        {
+          "name": "playback-settings",
+          "labels": 20,
+          "minContrast": 6.14,
+          "overflow": false
+        },
+        {
+          "name": "player",
+          "labels": 7,
+          "minContrast": 10.93,
+          "overflow": false
+        },
+        {
+          "name": "mini-player",
+          "labels": 13,
+          "minContrast": 5.33,
+          "overflow": false
+        }
+      ],
+      "drivingBlock": true
+    },
+    {
+      "size": {
+        "width": 665,
+        "height": 420
+      },
+      "palette": "light",
+      "views": [
+        {
+          "name": "home",
+          "labels": 5,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "lessons",
+          "labels": 14,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "badges",
+          "labels": 11,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "settings",
+          "labels": 6,
+          "minContrast": 5.79,
+          "overflow": false
+        },
+        {
+          "name": "playback-settings",
+          "labels": 20,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "player",
+          "labels": 7,
+          "minContrast": 9.17,
+          "overflow": false
+        },
+        {
+          "name": "mini-player",
+          "labels": 13,
+          "minContrast": 5,
+          "overflow": false
+        }
+      ],
+      "drivingBlock": true
+    },
+    {
+      "size": {
+        "width": 665,
+        "height": 420
+      },
+      "palette": "dark",
+      "views": [
+        {
+          "name": "home",
+          "labels": 5,
+          "minContrast": 6.14,
+          "overflow": false
+        },
+        {
+          "name": "lessons",
+          "labels": 14,
+          "minContrast": 6.14,
+          "overflow": false
+        },
+        {
+          "name": "badges",
+          "labels": 11,
+          "minContrast": 6.14,
+          "overflow": false
+        },
+        {
+          "name": "settings",
+          "labels": 6,
+          "minContrast": 6.91,
+          "overflow": false
+        },
+        {
+          "name": "playback-settings",
+          "labels": 20,
+          "minContrast": 6.14,
+          "overflow": false
+        },
+        {
+          "name": "player",
+          "labels": 7,
+          "minContrast": 10.72,
+          "overflow": false
+        },
+        {
+          "name": "mini-player",
+          "labels": 13,
+          "minContrast": 6.14,
+          "overflow": false
+        }
+      ],
+      "drivingBlock": true
+    },
+    {
+      "size": {
+        "width": 665,
+        "height": 420
+      },
+      "palette": "light-black",
+      "views": [
+        {
+          "name": "home",
+          "labels": 5,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "lessons",
+          "labels": 14,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "badges",
+          "labels": 11,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "settings",
+          "labels": 6,
+          "minContrast": 5.79,
+          "overflow": false
+        },
+        {
+          "name": "playback-settings",
+          "labels": 20,
+          "minContrast": 4.98,
+          "overflow": false
+        },
+        {
+          "name": "player",
+          "labels": 7,
+          "minContrast": 9.43,
+          "overflow": false
+        },
+        {
+          "name": "mini-player",
+          "labels": 13,
+          "minContrast": 5,
+          "overflow": false
+        }
+      ],
+      "drivingBlock": true
+    },
+    {
+      "size": {
+        "width": 665,
+        "height": 420
+      },
+      "palette": "light-mixed",
+      "views": [
+        {
+          "name": "home",
+          "labels": 5,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "lessons",
+          "labels": 14,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "badges",
+          "labels": 11,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "settings",
+          "labels": 6,
+          "minContrast": 5.79,
+          "overflow": false
+        },
+        {
+          "name": "playback-settings",
+          "labels": 20,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "player",
+          "labels": 7,
+          "minContrast": 4.53,
+          "overflow": false
+        },
+        {
+          "name": "mini-player",
+          "labels": 13,
+          "minContrast": 5,
+          "overflow": false
+        }
+      ],
+      "drivingBlock": true
+    },
+    {
+      "size": {
+        "width": 665,
+        "height": 420
+      },
+      "palette": "dark-white",
+      "views": [
+        {
+          "name": "home",
+          "labels": 5,
+          "minContrast": 5.59,
+          "overflow": false
+        },
+        {
+          "name": "lessons",
+          "labels": 14,
+          "minContrast": 5.65,
+          "overflow": false
+        },
+        {
+          "name": "badges",
+          "labels": 11,
+          "minContrast": 5.33,
+          "overflow": false
+        },
+        {
+          "name": "settings",
+          "labels": 6,
+          "minContrast": 6.91,
+          "overflow": false
+        },
+        {
+          "name": "playback-settings",
+          "labels": 20,
+          "minContrast": 6.14,
+          "overflow": false
+        },
+        {
+          "name": "player",
+          "labels": 7,
+          "minContrast": 10.86,
+          "overflow": false
+        },
+        {
+          "name": "mini-player",
+          "labels": 13,
+          "minContrast": 5.33,
+          "overflow": false
+        }
+      ],
+      "drivingBlock": true
+    },
+    {
+      "size": {
+        "width": 420,
+        "height": 640
+      },
+      "palette": "light",
+      "views": [
+        {
+          "name": "home",
+          "labels": 5,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "lessons",
+          "labels": 18,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "badges",
+          "labels": 11,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "settings",
+          "labels": 6,
+          "minContrast": 5.79,
+          "overflow": false
+        },
+        {
+          "name": "playback-settings",
+          "labels": 20,
+          "minContrast": 5,
+          "overflow": false
+        },
+        {
+          "name": "player",
+          "labels": 7,
+          "minContrast": 9.23,
+          "overflow": false
+        },
+        {
+          "name": "mini-player",
+          "labels": 13,
+          "minContrast": 5,
+          "overflow": false
+        }
+      ],
+      "drivingBlock": true
+    },
+    {
+      "size": {
+        "width": 420,
+        "height": 640
+      },
+      "palette": "dark",
+      "views": [
+        {
+          "name": "home",
+          "labels": 5,
+          "minContrast": 6.14,
+          "overflow": false
+        },
+        {
+          "name": "lessons",
+          "labels": 18,
+          "minContrast": 6.14,
+          "overflow": false
+        },
+        {
+          "name": "badges",
+          "labels": 11,
+          "minContrast": 6.14,
+          "overflow": false
+        },
+        {
+          "name": "settings",
+          "labels": 6,
+          "minContrast": 6.91,
+          "overflow": false
+        },
+        {
+          "name": "playback-settings",
+          "labels": 20,
+          "minContrast": 6.14,
+          "overflow": false
+        },
+        {
+          "name": "player",
+          "labels": 7,
+          "minContrast": 10.72,
+          "overflow": false
+        },
+        {
+          "name": "mini-player",
+          "labels": 13,
+          "minContrast": 6.14,
+          "overflow": false
+        }
+      ],
+      "drivingBlock": true
+    }
+  ],
+  "failures": []
+}

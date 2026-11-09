@@ -6,6 +6,7 @@
 // ========================================================
 const LESSON_KEY = 'dait.lessonProgress';
 let lessonRun = null; // 지금 듣는 교시: { lesson, trip, pieces, index, heard, answers, reachedEnd, done, finished, stopped, saved }
+let lessonView = null; // null: full player; now/lessons/records: browse without stopping playback
 let lessonMinutes = Lesson.DEFAULT_MINUTES;
 let lessonTimer = null;
 let lessonProgressTimer = null;
@@ -48,7 +49,8 @@ function openLessons() {
   if (isDrivingMode) return;
   const eta = remainMinutes();
   lessonMinutes = eta !== null ? Lesson.minutesFor(eta) : 8; // 수업 화면은 8분 탭부터 보여 준다
-  currentMode = 'lessonPick';
+  if (hasActiveLesson()) lessonView = 'lessons';
+  else currentMode = 'lessonPick';
   render();
 }
 
@@ -99,7 +101,7 @@ function renderLessonPick(container) {
   container.innerHTML = `
     <div class="dialogue-wrap pearl-picker">
       <div class="dialogue-top">
-        <button class="back-btn" onclick="goHome()">처음으로</button>
+        <button class="back-btn" onclick="openPearlTab('now')">처음으로</button>
         <span class="top-label">수업</span>
       </div>
       <div class="pearl-records">
@@ -116,20 +118,20 @@ function renderLessonPick(container) {
               ${LESSON_PLAY_ICON}
               <span class="lesson-text">
                 <span class="lesson-title">지난번 멈춘 곳부터: ${escapeHtml(stopped.title)}</span>
-                <span class="lesson-meta">${escapeHtml(stopped.subject)} · 남은 약 ${stopMinutesLeft(stopped, lessonMinutes)}분</span>
+                <span class="lesson-meta">${escapeHtml(stopped.subject)} · 남은 약 ${stopMinutesLeft(stopped, lessonMinutes)}분${stopReserved && reserved === stopped ? ' · 출발 대기' : ''}</span>
               </span>
             </button>
-            <button class="card-btn quiet" onclick="toggleLessonArm('${stopped.id}', true)">${stopReserved && reserved === stopped ? '예약 취소' : '출발하면 듣기'}</button>
+            ${lessonOptionsButton(stopped, true, stopReserved && reserved === stopped)}
           </div>` : ''}
           ${lessons.filter(lesson => lesson !== stopped).map(lesson => `<div class="lesson-row">
             <button class="choice-chip" onclick="startLesson('${lesson.id}')">
               ${LESSON_PLAY_ICON}
               <span class="lesson-text">
                 <span class="lesson-title">${escapeHtml(lesson.question || lesson.title)}</span>
-                <span class="lesson-meta">${escapeHtml(lesson.subject)} · 약 ${Math.round(Lesson.totalSeconds(Lesson.assemble(lesson, trip.minutes)) / 60)}분 · ${escapeHtml(lesson.title)}</span>
+                <span class="lesson-meta">${escapeHtml(lesson.subject)} · 약 ${Math.round(Lesson.totalSeconds(Lesson.assemble(lesson, trip.minutes)) / 60)}분${reserved === lesson && !stopReserved ? ' · 출발 대기' : ''}</span>
               </span>
             </button>
-            <button class="card-btn quiet" onclick="toggleLessonArm('${lesson.id}')">${reserved === lesson && !stopReserved ? '예약 취소' : '출발하면 듣기'}</button>
+            ${lessonOptionsButton(lesson, false, reserved === lesson && !stopReserved)}
           </div>`).join('')}
           </div>
         </div>
@@ -147,6 +149,10 @@ function renderLessonPick(container) {
   updateListScroll('lessonList', 'lessonScroll');
 }
 
+function lessonOptionsButton(lesson, fromStop, reserved) {
+  return `<button class="lesson-options-btn${reserved ? ' is-reserved' : ''}" aria-haspopup="dialog" aria-label="${escapeHtml(lesson.title)} ${reserved ? '출발 예약됨, ' : ''}수업 옵션" onclick="openLessonOptions('${lesson.id}', ${!!fromStop})"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg></button>`;
+}
+
 function renderLesson(container) {
   const run = lessonRun;
   if (!run.done && !isLessonResting()) { renderLessonPlayer(container, run); return; }
@@ -159,7 +165,7 @@ function renderLesson(container) {
   container.innerHTML = `
     <div class="dialogue-wrap">
       <div class="dialogue-top">
-        <button class="back-btn" onclick="goHome()">처음으로</button>
+        <button class="back-btn" onclick="openPearlTab('now')">처음으로</button>
         ${!isDrivingMode && !run.done && !resting ? '<button class="back-btn" onclick="restartLesson()">처음부터 듣기</button>' : ''}
         <span class="top-label">${escapeHtml(lessonLabel(run, resting))}</span>
       </div>
@@ -304,6 +310,7 @@ function currentLessonPosition(run) {
 function updateLessonProgress() {
   const run = lessonRun;
   if (!run || currentMode !== 'lesson') return;
+  updateLessonDock();
   const timeline = lessonTimeline(run);
   const section = timeline.sections.find(item => item.index === run.index);
   const position = run.done ? timeline.seconds : (section ? section.start + Math.min(section.seconds, currentLessonPosition(run)) : timeline.seconds);
@@ -400,10 +407,13 @@ function isLessonResting() {
 
 // fromStop이면 지난번 멈춘 곳부터 잇는다.
 function startLesson(lessonId, fromStop, recordPoint) {
+  if (hasActiveLesson() && lessonRun.lesson.id === lessonId && !fromStop && !recordPoint) { returnToLesson(); return; }
   const recordLesson = recordPoint && DAIT_LESSONS.find(item => item.id === lessonId);
   const trip = recordLesson ? { ...Lesson.planTrip([recordLesson], lessonMinutes), resume: recordPoint }
     : fromStop ? stopTrip(lessonId) : lessonTripFor(lessonId);
   if (!trip || !trip.lesson || !(trip.resume || Lesson.fits(trip.lesson, trip.minutes))) return;
+  if (hasActiveLesson()) endLesson(); // Save the old session before replacing its audio.
+  lessonView = null;
   disarm();
   tripForDoor = null; // 내릴 때 한마디가 수업을 끊고 지나가지 않게 한다
   clearTimeout(doorTimer);
@@ -688,6 +698,7 @@ function saveLesson(run) {
 function closeLesson() {
   endLesson();
   lessonRun = null;
+  lessonView = null;
 }
 
 // 주행 중에는 고르는 화면을 열지 않고, 가는 길에 들어갈 수업 하나를 버튼 하나로 제안한다.

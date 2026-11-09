@@ -1048,7 +1048,7 @@ test('수업 시간은 기록 화면 같은 탭에서 8분·15분·20분만 고�
   assert.ok(stageHtml().includes('id="lessonScrollDown"'));
   assert.ok(stageHtml().includes(`onclick="scrollList(1, 'lessonList')"`));
   assert.ok(stageHtml().includes('AI는 왜 자신 있게 틀릴까요?</span>')); // 카드 큰 글은 수업의 질문
-  assert.ok(/<span class="lesson-meta"[^>]*>기술 · 약 \d+분 · AI는 왜 자신 있게 틀릴까<\/span>/.test(stageHtml()));
+  assert.ok(/<span class="lesson-meta"[^>]*>기술 · 약 \d+분<\/span>/.test(stageHtml()));
   page(`pickLessonTime(8);`);
   assert.strictEqual(page('lessonMinutes'), 8);
   assert.match(stageHtml(), /aria-selected="true" onclick="pickLessonTime\(8\)"/);
@@ -1068,7 +1068,8 @@ test('출발하면 듣기로 고른 수업은 출발할 때 시작하고, 고르
   page(`localStorage.values.clear(); openLessons(); toggleLessonArm('ai');`);
   assert.strictEqual(page(`armed.mode`), 'lesson');
   assert.ok(!stageHtml().includes('출발하면 들려줄게요')); // 예약은 버튼 글자(예약 취소)로만 보여 준다
-  assert.ok(stageHtml().includes(`onclick="toggleLessonArm('ai')">예약 취소</button>`));
+  assert.ok(stageHtml().includes(`class="lesson-options-btn is-reserved"`));
+  assert.ok(stageHtml().includes(`onclick="openLessonOptions('ai', false)"`));
   assert.strictEqual(page(`currentMode`), 'lessonPick');
   assert.strictEqual(page(`lessonRun`), null);
   assert.strictEqual(page(`speechPhase`), 'idle');
@@ -1430,7 +1431,7 @@ test('기록 화면은 수업 기록과 기존 배지 여섯 장을 보여 준�
   page(`goHome(); localStorage.values.clear(); openPearlTab('records');`);
   assert.ok(!stageHtml().includes('내 배움 보관함'));
   assert.ok(stageHtml().includes('>배움 기록</button>'));
-  assert.ok(stageHtml().includes('>획득 배지</button>'));
+  assert.ok(stageHtml().includes('>배지 둘러보기</button>'));
   page(`selectRecordTab('badges');`);
   assert.equal((stageHtml().match(/<img src="badges\//g) || []).length, 6);
   for (const id of ['first-discovery','korean','math','exploration','well-rounded-explorer','everyday-discoverer']) {
@@ -1488,13 +1489,13 @@ test('배움 기록은 날짜를 제목 위에 월·일로 표시하고 완료 �
 test('배움 기록의 마저 듣기는 다른 수업을 들은 뒤에도 그 기록의 구간과 초부터 재생한다', () => {
   page(`goHome(); localStorage.values.clear(); demoMinutes = null; lessonMinutes = 15; startLesson('prime');
     lessonRun.wait.endsAt = Date.now() + (lessonRun.wait.endPosition - 2.5) * 1000;
-    pauseLesson(); openPearlTab('records');`);
+    pauseLesson(); goHome(); openPearlTab('records');`);
   const point = page(`lessonProgress().records[0].resume`);
   assert.strictEqual(point.lesson, 'prime');
   assert.ok(Math.abs(point.offset - 2.5) < .1);
   page(`startLesson('ai');`);
   for (let i = 0; i < 3; i++) hearLesson('ended');
-  page(`openPearlTab('records');`);
+  page(`goHome(); openPearlTab('records');`);
   assert.strictEqual(page(`lessonProgress().resume.lesson`), 'ai');
   page(`resumeRecord(0);`);
   assert.strictEqual(page('lessonRun.lesson.id'), 'prime');
@@ -1516,18 +1517,20 @@ test('배움 기록에서 구형 중단 위치도 연결하며 네이티브 음�
   page(`goHome(); delete window.AndroidBridge; DAIT_LESSONS.find(item => item.id === 'prime').pieces.forEach(piece => delete piece.voiced); localStorage.values.clear();`);
 });
 
-test('기록 탭은 주행 중 열리지 않고 수업을 닫을 때 중단 위치를 남긴다', () => {
+test('기록 탐색은 수업을 끝내지 않고 주행하면 재생 화면으로 돌아간다', () => {
   page(`lessonMinutes = 15; startLesson('ai');`);
   page(`openPearlTab('lessons');`);
   assert.strictEqual(page('currentMode'), 'lesson');
   page(`window.setDrivingMode(true); openPearlTab('records');`);
   assert.strictEqual(page('currentMode'), 'lesson');
   page(`window.setDrivingMode(false); openPearlTab('records');`);
-  assert.strictEqual(page('currentMode'), 'records');
-  assert.strictEqual(page('lessonRun'), null);
-  assert.strictEqual(page('speechPhase'), 'idle');
-
-  page(`goHome(); localStorage.values.clear();`);
+  assert.strictEqual(page('currentMode'), 'lesson');
+  assert.strictEqual(page('lessonView'), 'records');
+  assert.ok(page('lessonRun'));
+  assert.strictEqual(page('lessonRun.done'), false);
+  page(`window.setDrivingMode(true);`);
+  assert.strictEqual(page('lessonView'), null);
+  page(`window.setDrivingMode(false); goHome(); localStorage.values.clear();`);
 });
 
 test('제거한 준비물 기능은 Gleo와 문 열림으로도 말하지 않는다', () => {
@@ -1689,4 +1692,70 @@ test('추천 탭은 시간에 맞는 수업 중 안 들은 수업에서 무작�
   page(`openPearlTab('now');`);
   assert.strictEqual(page(`homePick.id`), fitting[0]);
   page(`Math.random = __random; localStorage.values.clear();`);
+});
+
+test('추천·수업·기록을 탐색해도 같은 재생 세션과 오디오 순번을 유지한다', () => {
+  page(`goHome(); localStorage.values.clear(); lessonMinutes=15; startLesson('prime'); var browsingRun=lessonRun; var browsingSeq=speechSeq;
+    openPearlTab('now'); openPearlTab('records'); openPearlTab('lessons');`);
+  assert.strictEqual(page('lessonRun === browsingRun'), true);
+  assert.equal(page('currentMode'), 'lesson');
+  assert.equal(page('lessonView'), 'lessons');
+  assert.equal(page('speechSeq'), page('browsingSeq'));
+  assert.equal(page('lessonRun.done'), false);
+  page(`pauseLesson(); var pausedBrowseSeq=speechSeq; returnToLesson(); startLesson('prime');`);
+  assert.equal(page('lessonView'), null);
+  assert.equal(page('lessonRun === browsingRun'), true);
+  assert.equal(page('lessonRun.paused'), true);
+  assert.equal(page('speechSeq'), page('pausedBrowseSeq'));
+  page('goHome(); localStorage.values.clear();');
+});
+
+test('탐색 중 핸들 시간 이동·수동 멈춤을 유지하고 주행하면 같은 수업의 전체화면으로 돌아간다', () => {
+  page(`goHome(); lessonMinutes=15; startLesson('prime'); openPearlTab('records'); window.onMediaKey('pause'); window.onMediaKey('next');`);
+  assert.equal(page('lessonView'), 'records');
+  assert.equal(page('lessonRun.paused'), true);
+  assert.equal(page('currentMode'), 'lesson');
+  page('window.setDrivingMode(true); openPearlTab("records");');
+  assert.equal(page('lessonView'), null);
+  assert.equal(page('lessonRun.done'), false);
+  assert.equal(page('lessonRun.paused'), true);
+  page('window.setDrivingMode(false); goHome();');
+});
+
+test('탐색하다 다른 수업을 시작하면 이전 구간·초를 저장하고 새 수업으로 전환한다', () => {
+  page(`goHome(); localStorage.values.clear(); lessonMinutes=15; startLesson('prime');
+    lessonRun.wait.endsAt=Date.now()+(lessonRun.wait.endPosition-2.5)*1000; pauseLesson(); openPearlTab('now'); startLesson('ai');`);
+  assert.equal(page('lessonRun.lesson.id'), 'ai');
+  assert.equal(page('lessonView'), null);
+  assert.equal(page('lessonProgress().records[0].resume.lesson'), 'prime');
+  assert.ok(Math.abs(page('lessonProgress().records[0].resume.offset')-2.5)<.1);
+  page('openPearlTab("records"); stopLessonFromDock();');
+  assert.equal(page('lessonRun'), null);
+  assert.equal(page('currentMode'), 'records');
+  assert.equal(page('speechPhase'), 'idle');
+  page('goHome(); localStorage.values.clear();');
+});
+
+test('뒤로 가기는 수업을 종료하지 않고 추천으로 이동하며 루트에서는 시스템에 넘긴다', () => {
+  page(`goHome(); lessonMinutes=15; startLesson('prime'); var backPlaybackSeq=speechSeq;`);
+  assert.equal(page('window.handleAppBack()'), true);
+  assert.equal(page('lessonView'), 'now');
+  assert.equal(page('window.handleAppBack()'), false);
+  assert.equal(page('lessonRun.done'), false);
+  assert.equal(page('speechSeq'), page('backPlaybackSeq'));
+  page('goHome();');
+});
+
+test('현재 수업을 들으며 목록에서 예약해도 30분 만료가 화면에 반영되고 현재 재생은 유지된다', () => {
+  page(`goHome(); localStorage.values.clear(); lessonMinutes=15; startLesson('prime'); openPearlTab('lessons');
+    var expiryTimeout=setTimeout; var reservationExpiry; setTimeout=(fn,ms)=>{if(ms===ARM_MS) reservationExpiry=fn;return 1};
+    toggleLessonArm('ai'); setTimeout=expiryTimeout; var expiryRun=lessonRun;`);
+  assert.ok(stageHtml().includes('출발 대기'));
+  page('reservationExpiry();');
+  assert.equal(page('armed'), null);
+  assert.equal(page('lessonRun === expiryRun'), true);
+  assert.equal(page('lessonRun.done'), false);
+  assert.equal(page('lessonView'), 'lessons');
+  assert.ok(!stageHtml().includes('출발 대기'));
+  page('goHome(); localStorage.values.clear();');
 });

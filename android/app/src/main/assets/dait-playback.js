@@ -45,7 +45,14 @@
       if (audio.readyState >= 1) seek();
     }
     setVolume(percent) { const audio = this.getAudio(); audio.volume = percent / 100; audio.muted = percent === 0; this.bridge?.setSpeechVolume?.(percent); }
-    setRate(rate) { if (this.bridge?.setSpeechRate) this.bridge.setSpeechRate(rate); else if (!this.bridge) this.getAudio().playbackRate = rate; }
+    // audio 태그는 새 음원(src)을 열 때 속도를 defaultPlaybackRate로 되돌리므로 둘 다 맞춘다.
+    setRate(rate) {
+      if (this.bridge?.setSpeechRate) { this.bridge.setSpeechRate(rate); return; }
+      if (this.bridge) return;
+      const audio = this.getAudio();
+      audio.defaultPlaybackRate = rate;
+      audio.playbackRate = rate;
+    }
     hold() { if (this.bridge) this.bridge.holdSpeech(); else this.getAudio().pause(); }
     resume(onError) { if (this.bridge) this.bridge.proceedSpeech(); else this.getAudio().play().catch(onError); }
   }

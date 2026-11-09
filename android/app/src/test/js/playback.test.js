@@ -15,6 +15,13 @@ test('주행 제한은 정해진 미디어 조작만 허용하고 상세 설정�
  for(const c of ['settings','seek-absolute']) assert.equal(p.allows(c),false);
  p.update(false); assert.equal(p.allows('settings'),true);
 });
+test('브라우저 배속은 다음 음원을 열어도 유지된다', () => {
+ const audio = { defaultPlaybackRate:1, playbackRate:1, play:()=>Promise.resolve() };
+ Object.defineProperty(audio,'src',{ set(){ this.playbackRate=this.defaultPlaybackRate; } }); // 새 음원을 열면 속도가 기본값으로 돌아간다
+ const a = new P.AudioAdapter(()=>null,()=>audio);
+ a.setRate(2); a.playClip('voices/x.m4a',()=>{});
+ assert.equal(audio.playbackRate,2);
+});
 test('생각할 시간과 교시 휴식은 배속으로 줄이지 않는다', () => {
  const question = { text:'질문',seconds:20,wait:10 }, rest={text:'',seconds:60,kind:'쉬는시간'};
  assert.equal(Lesson.playbackSeconds([question],2),20);

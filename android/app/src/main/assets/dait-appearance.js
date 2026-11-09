@@ -178,23 +178,23 @@
     host.dataset.colorMode = mode;
     queueRefresh();
   }
-  let noticeGeneration=0, noticeMotion=null, noticeProgress=null, noticeExitTimer;
+  let noticeGeneration=0, noticeMotion=null, noticeExitTimer;
   const quietMotion=()=>isDrivingMode||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   function dismissNotice(immediate=false){
     const generation=++noticeGeneration,node=document.getElementById('pearlNotice');
-    clearTimeout(noticeTimer);clearTimeout(noticeExitTimer);noticeMotion?.cancel();noticeProgress?.cancel();
+    clearTimeout(noticeTimer);clearTimeout(noticeExitTimer);noticeMotion?.cancel();
     if(!node||node.hidden)return;
     node.dataset.state='leaving';node.setAttribute('aria-hidden','true');
     const hide=()=>{if(generation===noticeGeneration)node.hidden=true};
     if(immediate||quietMotion()||!node.animate){hide();return}
-    noticeMotion=node.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(5px)'}],{duration:140,easing:'ease-in',fill:'forwards'});
-    noticeExitTimer=setTimeout(hide,140);
+    noticeMotion=node.animate([{opacity:1},{opacity:0}],{duration:320,easing:'ease-out',fill:'forwards'});
+    noticeExitTimer=setTimeout(hide,320);
   }
   function notice(message, action = null) {
     let node = document.getElementById('pearlNotice');
     if (!node) { node = document.createElement('div'); node.id = 'pearlNotice'; node.className = 'pearl-notice'; node.setAttribute('role', 'status'); node.setAttribute('aria-atomic','true'); host.append(node); }
     const replacing=!node.hidden&&node.dataset.state==='visible',generation=++noticeGeneration;
-    clearTimeout(noticeTimer);clearTimeout(noticeExitTimer);noticeMotion?.cancel();noticeProgress?.cancel();
+    clearTimeout(noticeTimer);clearTimeout(noticeExitTimer);noticeMotion?.cancel();
     node.replaceChildren();node.hidden=false;node.dataset.state='visible';node.removeAttribute('aria-hidden');
     const actionable=!!action&&typeof action.onClick==='function'&&!isDrivingMode;
     node.classList.toggle('has-action',actionable);
@@ -208,20 +208,18 @@
       button.addEventListener('click',()=>{if(generation!==noticeGeneration||node.hidden||node.dataset.state!=='visible'||isDrivingMode)return;const focused=document.activeElement===button;dismissNotice(true);action.onClick();if(focused)action.restoreFocus?.()});
       node.append(button);
     }
-    const bar=document.createElement('span');bar.className='notice-lifetime';bar.setAttribute('aria-hidden','true');node.append(bar);
     if(actionable){const add=host.querySelector('[data-queue-add]');if(add){node.style.right=Math.max(12,host.getBoundingClientRect().right-add.getBoundingClientRect().left+8)+'px'}else node.style.right='12px'}else node.style.right='12px';
     if(!quietMotion()&&node.animate){
       // Repeated additions update the receipt in place instead of stacking or re-opening a panel.
       const moving=replacing?copy:node;
       noticeMotion=moving.animate(replacing?[{opacity:.35},{opacity:1}]:[{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:replacing?130:210,easing:'cubic-bezier(.16,1,.3,1)'});
-      noticeProgress=bar.animate([{transform:'scaleX(1)'},{transform:'scaleX(0)'}],{duration:actionable?4500:2800,easing:'linear',fill:'forwards'});
-    }else bar.hidden=true;
+    }
     let remaining=actionable?4500:2800,started=performance.now();
-    const pause=()=>{if(!noticeTimer)return;clearTimeout(noticeTimer);noticeTimer=null;remaining=Math.max(0,remaining-(performance.now()-started));noticeProgress?.pause()};
+    const pause=()=>{if(!noticeTimer)return;clearTimeout(noticeTimer);noticeTimer=null;remaining=Math.max(0,remaining-(performance.now()-started));};
     const resume=()=>{
       if(generation!==noticeGeneration||node.hidden||node.dataset.state!=='visible'||noticeTimer)return;
       if(node.contains(document.activeElement)&&document.activeElement.matches(':focus-visible'))return;
-      started=performance.now();noticeProgress?.play();noticeTimer=setTimeout(()=>{if(generation===noticeGeneration)dismissNotice()},remaining);
+      started=performance.now();noticeTimer=setTimeout(()=>{if(generation===noticeGeneration)dismissNotice()},remaining);
     };
     noticeTimer=null;node.onpointerenter=null;node.onpointerleave=null;
     const actionButton=node.querySelector('button');

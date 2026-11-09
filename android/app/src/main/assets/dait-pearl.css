@@ -191,7 +191,6 @@ input { caret-color: var(--lilac); }
 .notice-copy span { font-size:13px; }
 .notice-check { display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;border-radius:50%;background:var(--soft);color:var(--ink); }
 .notice-check svg { width:18px;height:18px; }
-.notice-lifetime { position:absolute;bottom:0;left:14px;right:14px;height:2px;border-radius:2px;background:var(--lilac);opacity:.45;transform-origin:left center; }
 .pearl-notice>button { pointer-events:auto;min-height:44px;flex-shrink:0;border:0;border-radius:10px;padding:0 10px;background:none;color:var(--ink);font-size:14px;font-weight:650;white-space:nowrap; }
 .pearl-notice>button:hover { background:var(--soft); }
 @media(max-width:480px) { .pearl-notice.has-action { right:12px !important;bottom:12px; } .pearl-notice { gap:8px;padding:8px 10px; } .pearl-notice>button { padding:0 4px;font-size:13px; } .notice-check { display:none; } }

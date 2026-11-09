@@ -40,6 +40,25 @@ const LESSON_BACK_MS = 3000; // 조각을 이만큼 들었으면 「이전」은
 const TRIP_CAP_MS = 2 * 60 * 60 * 1000; // 차 상태가 멈춰도 앞쪽 작업이 끝없이 남지 않게 수업을 닫는 시간
 const TOP_SPEED_MPS = 50; // 이보다 빨리 줄어든 남은 거리는 달린 것이 아니라 목적지를 바꾼 것이다
 
+// 시리즈 차례대로 듣기(설정). 처음에는 켜져 있다. 끄면 시리즈와 상관없이 시간에 맞는 수업을 고른다.
+const SERIES_KEY = 'dait.lesson.series';
+
+function seriesOn() {
+  return lessonQueue.followSeries;
+}
+
+function lessonRules() {
+  return { series: seriesOn() };
+}
+
+function toggleSeries() {
+  if (isDrivingMode) return false;
+  lessonQueue.followSeries=!seriesOn();persistPlaylist();
+  homePick = null; // 첫 화면 수업도 새 규칙으로 다시 고른다
+  if (!hasActiveLesson()) render();
+  return true;
+}
+
 function lessonProgress() {
   const stored = readStored(LESSON_KEY);
   const progress = Lesson.normalize(stored);
@@ -65,12 +84,7 @@ function pickLessonTime(minutes) {
 // 고른 수업을 맨 앞에 두고 다른 수업을 줄 세운다. 긴 이동이면 교시로 나누고,
 // 짧은 이동이어도 고른 수업 뒤에 5분 넘게 남으면 다른 수업을 쉬지 않고 이어 붙인다.
 function lessonTripFor(lessonId,skipKey,explicitOnly=false) {
-  return Lesson.planTrip(playlistTripOrder(lessonId,skipKey,explicitOnly), lessonMinutes);
-}
-
-function doneHomework() {
-  writeStored(LESSON_KEY, Lesson.finishHomework(lessonProgress()));
-  render();
+  return Lesson.planTrip(playlistTripOrder(lessonId,skipKey,explicitOnly), lessonMinutes, lessonRules());
 }
 
 function currentLessonPosition(run) {
@@ -165,20 +179,14 @@ function stopTrip(lessonId) {
   return { ...Lesson.planTrip([lesson], lessonMinutes), resume: lessonProgress().resume };
 }
 
-// 교시마다 기록을 따로 남기려고 교시마다 새로 시작한다. 앞 교시를 마쳤으면 그 복습이 앞에 붙는다.
-// 멈춘 곳부터 이을 때는 복습 없이 멈춘 조각부터 말하고, 앞에서 들은 조각도 들은 것으로 센다.
+// 교시마다 기록을 따로 남기려고 교시마다 새로 시작한다. 지난 수업 복습은 붙이지 않는다.
+// 멈춘 곳부터 이을 때는 멈춘 조각부터 말하고, 앞에서 들은 조각도 들은 것으로 센다.
 function startPeriod(trip) {
   trip={...trip,lesson:lessonWithSeriesOutro(trip.lesson)};
   const before = trip.resume ? Lesson.resumeHeard(trip.lesson, trip.resume) : [];
-  // 쉬지 않고 이어 붙인 수업은 앞 수업을 방금 들었으므로 그 복습을 붙이지 않는다.
-  const history = lessonProgress().records;
-  const series = lessonQueue.seriesFor(trip.lesson.id);
-  const previous = series?.lessons[series.lessons.indexOf(trip.lesson.id)-1];
-  const last = history.filter(record=>record.finished).slice(-1)[0];
-  const records = !lessonQueue.cues || !lessonQueue.followSeries || (trip.number > 1 && !trip.rest) ? []
-    : series ? (previous && last?.lesson===previous?[last]:[]) : history;
+  const records = trip.number > 1 && !trip.rest ? [] : lessonProgress().records;
   const pieces = trip.resume ? Lesson.resumePlan(trip.lesson, trip.resume, trip.minutes)
-    : Lesson.plan(trip.lesson, DAIT_LESSONS, trip.minutes, records);
+    : Lesson.plan(trip.lesson, DAIT_LESSONS, trip.minutes, records, { after: trip.number > 1 && !trip.rest ? trip.prev : null });
   const run = {
     lesson: trip.lesson, trip, pieces: Lesson.withBreak(pieces, trip), plannedSeconds: Lesson.lessonSeconds([...before, ...pieces]), short: Lesson.isShort([...before, ...pieces]),
     index: 0, heard: before, heardBefore: before.length, meters: 0, lastMeters: null, lastMetersAt: 0, startedAt: Date.now(),
@@ -250,6 +258,21 @@ function lessonWait(ms, then, kind = 'speech') {
   const endPosition = kind === 'thinking' ? Lesson.totalSeconds([piece]) : Lesson.speechSeconds(piece);
   run.wait = { then, rate, kind, endPosition, endsAt: Date.now() + ms / rate };
   lessonTimer = setTimeout(() => { if (lessonRun === run && !run.paused) { run.wait = null; then(); } }, ms / rate);
+  syncLessonBed();
+}
+
+// 말이 멈춘 동안(발문 뒤 생각할 틈, 쉬는 시간)에는 배경음을 작게 깔아 끊긴 것으로 오해하지 않게 한다(2026-11-09).
+// 사람이 멈췄거나, 길 안내·통화가 소리를 가져갔거나, 음원이 아직 없는 조각을 기다리는 동안에는 깔지 않는다.
+function lessonBedWanted() {
+  const run = lessonRun;
+  if (!run || run.done || run.paused || run.stopped || run.playback.interrupted || speechPaused || !run.wait) return false;
+  return run.wait.kind === 'thinking' || isLessonResting();
+}
+
+function syncLessonBed() {
+  const voice = document.getElementById('audioPlayer');
+  const volume = voice && Number.isFinite(voice.volume) ? (voice.muted ? 0 : voice.volume * 100) : 100;
+  bedAdapter.set(lessonBedWanted(), volume);
 }
 
 // 사람이 누른 일시정지. 앱이 먼저 다시 말을 걸지 않고, 이어 듣기를 누를 때까지 기다린다.
@@ -262,6 +285,7 @@ function pauseLesson() {
     clearTimeout(lessonTimer);
     run.wait.left = Math.max(0, run.wait.endsAt - run.pausedAt) * (run.wait.rate || 1);
   } else holdSpeech();
+  syncLessonBed();
   renderStage();
   updateDriveScreen();
 }
@@ -387,6 +411,7 @@ function endLesson(natural = false) {
   run.savedPosition = currentLessonPosition(run);
   stopSpeech();
   run.done = true;
+  syncLessonBed();
   saveLesson(run);
   if (natural && run.finished && maybeContinuePlaylist(run)) return;
   render();
@@ -394,7 +419,7 @@ function endLesson(natural = false) {
   if (hasArrived) closeAfterArrival();
 }
 
-// 교시마다 한 번만 수업 기록과 숙제를 남긴다.
+// 교시마다 한 번만 수업 기록을 남긴다.
 function saveLesson(run) {
   if (run.saved) return;
   run.saved = true;
@@ -445,5 +470,5 @@ function stopLessonFromDock() {
 // 주행 중에는 고르는 화면을 열지 않고, 가는 길에 들어갈 수업 하나를 버튼 하나로 제안한다.
 function lessonOffer() {
   const minutes = Lesson.minutesFor(remainMinutes());
-  return stoppedLesson(minutes) || Lesson.recommend(DAIT_LESSONS, minutes, lessonProgress().records)[0] || null;
+  return stoppedLesson(minutes) || Lesson.recommend(DAIT_LESSONS, minutes, lessonProgress().records, lessonRules())[0] || null;
 }

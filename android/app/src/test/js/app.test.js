@@ -76,7 +76,7 @@ function hearLesson(event, extra = '') {
   page(`window.onSpeechEvent(JSON.stringify({ event: '${event}', seq: speechSeq${extra} }));`);
 }
 
-test('수업은 조각을 차례로 틀고, 끝까지 들으면 이음과 숙제를 남긴다', () => {
+test('수업은 조각을 차례로 틀고, 끝까지 들으면 기록을 남기고 숙제는 남기지 않는다', () => {
   page(`localStorage.values.clear(); setEta(null); lessonMinutes = 15; startLesson('dongbaek');`);
   assert.strictEqual(page(`currentMode`), 'lesson');
   assert.strictEqual(page(`lessonRun.pieces[0].id`), 'i1');
@@ -88,15 +88,15 @@ test('수업은 조각을 차례로 틀고, 끝까지 들으면 이음과 숙제
   }
   assert.strictEqual(page(`lessonRun.finished`), true);
   assert.strictEqual(page(`lessonProgress().ieum`), undefined);
-  assert.ok(page(`lessonProgress().homework.title`).includes('점순이'));
+  assert.strictEqual(page(`lessonProgress().homework`), undefined); // 숙제 기능은 뺐다(2026-11-09)
   page(`goHome();`);
   assert.strictEqual(page(`lessonRun`), null);
   assert.strictEqual(page(`lessonProgress().records.length`), 1);
 });
 
-test('다음 수업은 지난 수업 복습으로 시작하고, 답 기록이 꺼져 있으면 듣지 않는다', () => {
+test('다음 수업은 지난 수업 복습 없이 그 수업 도입으로 시작한다', () => {
   page(`startLesson('ai');`);
-  assert.strictEqual(page(`lessonRun.pieces[0].clip`), 'lesson/dongbaek_r1');
+  assert.strictEqual(page(`lessonRun.pieces[0].kind`), '도입');
   while (!page(`Lesson.isQuestion(lessonRun.pieces[lessonRun.index])`)) page(`skipLessonPiece();`);
   page(`goHome();`);
 });
@@ -201,7 +201,7 @@ test('목적지가 없을 때 긴 시간이면 교시로 나눈다', () => {
   page(`goHome();`);
 });
 
-test('긴 이동은 교시마다 다른 수업을 듣고, 보상 없이 숙제와 기록을 남긴다', () => {
+test('긴 이동은 교시마다 다른 수업을 듣고, 보상·숙제 없이 기록을 남긴다', () => {
   page(`localStorage.values.clear(); setEta(45); openLessons(); startLesson('dongbaek');`);
   hearPeriod();
   assert.strictEqual(page(`lessonProgress().ieum`), undefined); // 쉬는 시간이 시작될 때 바로 남긴다
@@ -214,7 +214,7 @@ test('긴 이동은 교시마다 다른 수업을 듣고, 보상 없이 숙제�
   page(`window.setDrivingMode(true);`);
   hearLesson('ended');
   assert.strictEqual(page(`lessonRun.lesson.id`), second.id);
-  assert.strictEqual(page(`lessonRun.pieces[0].clip`), 'lesson/dongbaek_r1'); // 마친 앞 교시의 복습
+  assert.notStrictEqual(page(`lessonRun.pieces[0].kind`), '복습'); // 앞 교시를 「지난 시간에는」으로 되짚지 않는다
   assert.ok(stageHtml().includes(`2교시 ${second.subject}`));
   hearPeriod();
   page(`window.setDrivingMode(false);`);
@@ -225,8 +225,8 @@ test('긴 이동은 교시마다 다른 수업을 듣고, 보상 없이 숙제�
   assert.ok(stageHtml().includes('수업을 마쳤어요'));
   assert.strictEqual(page(`lessonProgress().ieum`), undefined);
   assert.strictEqual(page(`lessonProgress().records.filter(record => record.finished).length`), 2);
-  assert.ok(page(`lessonProgress().homework.title`).includes('점순이'));
-  assert.strictEqual(page(`lessonProgress().homeworkNext[0].title`), second.homework);
+  assert.strictEqual(page(`lessonProgress().homework`), undefined);
+  assert.strictEqual(page(`lessonProgress().homeworkNext`), undefined);
   page(`goHome(); setEta(null);`);
   assert.strictEqual(page(`lessonProgress().records.length`), 2);
 });
@@ -240,6 +240,33 @@ test('쉬는 시간은 말하지 않는다', () => {
   const spoken = page(`bridgeCalls.length`);
   assert.strictEqual(spoken, page(`lessonRun.pieces.length - 1`));
   page(`goHome(); delete window.AndroidBridge; setEta(null); DAIT_LESSONS.forEach(item => item.pieces.forEach(line => { delete line.voiced; }));`);
+});
+
+test('발문 뒤 생각할 틈과 쉬는 시간에만 배경음을 깔고, 멈추거나 말을 시작하면 끈다', () => {
+  page(`localStorage.values.clear(); DAIT_LESSONS.forEach(item => item.pieces.forEach(line => { line.voiced = true; }));
+    var bedCalls = [];
+    bedAdapter.on = false;
+    window.AndroidBridge = { speak() {}, stopSpeech() {}, setJourneyActive() {}, startBed: () => bedCalls.push('start'), stopBed: () => bedCalls.push('stop') };
+    setEta(45); openLessons(); startLesson('dongbaek');`);
+  const last = () => page(`bedCalls[bedCalls.length - 1]`);
+  assert.notStrictEqual(last(), 'start'); // 말하는 동안에는 깔지 않는다
+  page(`while (!Lesson.isQuestion(lessonRun.pieces[lessonRun.index])) skipLessonPiece();`);
+  assert.notStrictEqual(last(), 'start'); // 발문을 말하는 동안에도 깔지 않는다
+  hearLesson('ended');
+  assert.strictEqual(page(`lessonRun.wait.kind`), 'thinking');
+  assert.strictEqual(last(), 'start');
+  page(`pauseLesson();`);
+  assert.strictEqual(last(), 'stop');
+  page(`resumeLesson();`);
+  assert.strictEqual(last(), 'start');
+  page(`nextLessonPiece();`); // 생각할 틈이 끝나 다음 말을 시작한다
+  assert.strictEqual(last(), 'stop');
+  page(`while (!isLessonResting()) skipLessonPiece();`);
+  assert.strictEqual(last(), 'start'); // 교시 사이 쉬는 시간
+  page(`goHome();`);
+  page(`if (lessonRun && !lessonRun.done) endLesson();`);
+  assert.strictEqual(last(), 'stop');
+  page(`delete window.AndroidBridge; setEta(null); DAIT_LESSONS.forEach(item => item.pieces.forEach(line => { delete line.voiced; }));`);
 });
 
 test('쉬는 시간은 넘기면 바로 다음 교시로 가고, 다시 듣기는 쉬는 시간을 다시 시작하지 않는다', () => {
@@ -459,7 +486,7 @@ test('도착한 뒤 늦게 온 남은 시간으로 뒤 교시를 되살리지 �
 test('쉬는 시간에 지낸 만큼은 앞으로 쉴 시간에서 뺀다', () => {
   page(`localStorage.values.clear(); setEta(45); openLessons(); startLesson('dongbaek');`);
   hearPeriod();
-  page(`lessonRun.trip.later[0] = DAIT_LESSONS.find(item => item.id === 'prime');`); // 9분에 필수가 들어가는 수업으로 남은 쉬는 시간만 시험
+  page(`lessonRun.trip.later[0] = DAIT_LESSONS.find(item => item.id === 'prime'); lessonRun.trip.series = false;`); // 시리즈 규칙(원래 판만)은 따로 시험한다. 9분에 필수가 들어가는 수업으로 남은 쉬는 시간만 시험
   page(`lessonRun.restedFrom = Date.now() - 9 * 60 * 1000; setEta(10); applyNaviEta();`);
   assert.strictEqual(page(`isLessonResting()`), true);
   assert.strictEqual(page(`lessonRun.trip.count`), 1);
@@ -1063,13 +1090,9 @@ test('직접 고른 목록은 시리즈 자동 다음 편보다 먼저 재생한
   resetPlaylistTest();page(`lessonQueue.saveSeries('시험 시리즈',['dongbaek','starry']);addLessonToQueue('ai','last');startLesson('dongbaek');`);finishPlaylistTestLesson();
   assert.equal(page('lessonRun.lesson.id'),'ai');resetPlaylistTest();
 });
-test('시리즈 연결 안내는 앞편을 실제 마친 경우에만 기존 복습 음원을 사용한다',()=>{
-  resetPlaylistTest();page(`lessonMinutes=20;lessonQueue.saveSeries('시험 시리즈',['dongbaek','starry']);writeStored(LESSON_KEY,{records:[{lesson:'ai',finished:true,ymd:'20261109'}]});startLesson('starry',false,null,{skipSeriesPrompt:true});`);
-  assert.ok(!page(`lessonRun.pieces.some(p=>p.kind==='복습')`));
-  page(`goHome();writeStored(LESSON_KEY,{records:[{lesson:'dongbaek',finished:true,ymd:'20261109'}]});startLesson('starry',false,null,{skipSeriesPrompt:true});`);
-  assert.equal(page(`lessonRun.pieces[0].kind`),'복습');
-  page(`goHome();lessonQueue.cues=false;startLesson('starry',false,null,{skipSeriesPrompt:true});`);
-  assert.ok(!page(`lessonRun.pieces.some(p=>p.kind==='복습')`));resetPlaylistTest();
+test('최신 팀 결정대로 시리즈를 골라도 지난 수업 복습은 다시 붙이지 않는다',()=>{
+ resetPlaylistTest();page(`lessonQueue.saveSeries('시험',['dongbaek','starry']);writeStored(LESSON_KEY,{records:[{lesson:'dongbaek',finished:true}]});startLesson('starry',false,null,{skipSeriesPrompt:true});`);
+ assert.ok(!page(`lessonRun.pieces.some(p=>p.kind==='복습')`));resetPlaylistTest();
 });
 
 test('시리즈 예고 음원은 같은 시리즈를 순서대로 이어 들을 때만 연결할 자리를 준비한다',()=>{
@@ -1103,4 +1126,15 @@ test('+는 기본 맨 뒤 추가이고 토스트 전환은 방금 넣은 항목�
 test('토스트를 누르기 전에 주행으로 바뀌면 순서를 변경하지 않는다',()=>{
  resetPlaylistTest();page(`addLessonToQueue('ai');addLessonToQueue('prime');var quickBefore=JSON.stringify(lessonQueue.items);window.setDrivingMode(true);promoteQueuedLesson(lessonQueue.items[1].key);`);
  assert.equal(page('JSON.stringify(lessonQueue.items)'),page('quickBefore'));resetPlaylistTest();
+});
+
+test('시리즈 차례대로 듣기는 처음에 켜져 있고, 켜면 매미를 마친 뒤 첫 화면 수업이 소수다', () => {
+  page(`localStorage.values.clear(); lessonQueue.followSeries=true; setDrivingMode(false); lessonMinutes = 15;`);
+  assert.strictEqual(page(`seriesOn()`), true);
+  page(`writeStored(LESSON_KEY, { records: [{ lesson: 'cicada', title: '매미와 소수', ymd: '20261109', finished: true }] }); homePick = null; openPearlTab('now');`);
+  assert.strictEqual(page(`homeLesson().lesson.id`), 'prime');
+  assert.strictEqual(page(`toggleSeries()`), true);
+  assert.strictEqual(page(`seriesOn()`), false);
+  assert.strictEqual(page(`lessonRules().series`), false);
+  page(`toggleSeries(); localStorage.values.clear();`);
 });

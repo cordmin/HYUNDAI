@@ -53,7 +53,7 @@ body.in-app .pleos-display { border: 0; }
 .pearl-nav nav button[aria-current=page] { color: var(--lilac); background: var(--soft); box-shadow: 0 3px 12px #655a6410; }
 .home-card, .dialogue-card, .settings-card, .pearl-record-row, .pearl-badge { background: var(--glass); border: 1px solid var(--glass-edge); }
 .home-card, .dialogue-card, .settings-card, .pearl-record-row, .pearl-badge,
-.pearl-nav nav, .pearl-page-title, .lesson-row, .pearl-homework, .pearl-record-content {
+.pearl-nav nav, .pearl-page-title, .lesson-row, .pearl-record-content {
   -webkit-backdrop-filter: blur(18px) saturate(120%);
   backdrop-filter: blur(18px) saturate(120%);
   box-shadow: var(--glass-shadow);
@@ -134,7 +134,6 @@ body.driving .pearl-nav { visibility: hidden; }
 .pearl-record-row span, .pearl-hint { font-size: calc(13 * var(--u)); color: var(--muted); }
 .pearl-hint { margin: 0 0 calc(10 * var(--u)); }
 .pearl-empty { padding: calc(40 * var(--u)) calc(12 * var(--u)); text-align: center; color: var(--muted); font-size: calc(17 * var(--u)); }
-.pearl-homework { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: calc(10 * var(--u)); background: var(--glass); border-radius: calc(12 * var(--u)); margin-bottom: calc(10 * var(--u)); font-size: calc(14 * var(--u)); }
 .splash-overlay { background: linear-gradient(120deg,var(--bg-top),var(--bg-bottom)); }
 @media (max-width: 600px) {
   .pearl-nav { gap: 6px; }

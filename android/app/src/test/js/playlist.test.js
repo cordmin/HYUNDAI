@@ -43,7 +43,8 @@ test('시리즈 예고 음원이 없는 자료는 제출용 검사에서 차단�
  const fs=require('node:fs'),os=require('node:os'),path=require('node:path'),{spawnSync}=require('node:child_process');
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'dait-series-'));
  try{const file=path.join(dir,'series.js');fs.writeFileSync(file,"module.exports=[{title:'시험',lessons:['dongbaek','starry'],outros:{dongbaek:{clip:'lesson/definitely_missing_series',seconds:3}}}]");
- const result=spawnSync(process.execPath,[path.join(__dirname,'../../../../../tools/check-lesson-voices.js'),path.join(__dirname,'../../main/assets/dait-lessons.js'),file],{encoding:'utf8'});
+ const fixture=path.join(dir,'lessons.js');fs.writeFileSync(fixture,'module.exports='+JSON.stringify(require('../../main/assets/dait-lessons.js').filter(x=>['dongbaek','starry'].includes(x.id))));
+ const result=spawnSync(process.execPath,[path.join(__dirname,'../../../../../tools/check-lesson-voices.js'),fixture,file],{encoding:'utf8'});
  assert.equal(result.status,1);assert.match(result.stderr,/시리즈 연결 음원/);
  }finally{fs.rmSync(dir,{recursive:true,force:true})}
 });

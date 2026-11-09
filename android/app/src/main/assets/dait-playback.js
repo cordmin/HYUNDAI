@@ -56,6 +56,25 @@
     hold() { if (this.bridge) this.bridge.holdSpeech(); else this.getAudio().pause(); }
     resume(onError) { if (this.bridge) this.bridge.proceedSpeech(); else this.getAudio().play().catch(onError); }
   }
+  // 말이 멈춘 동안(생각할 틈·쉬는 시간) 작게 까는 배경음. 같은 상태를 거듭 알려도 한 번만 켜고 끈다.
+  class BedAdapter {
+    constructor(getBridge, getAudio) { this.getBridge = getBridge; this.getAudio = getAudio; this.on = false; }
+    set(on, volumePercent = 100) {
+      on = !!on;
+      if (on === this.on) return;
+      this.on = on;
+      const bridge = this.getBridge();
+      if (bridge) { if (bridge.startBed) on ? bridge.startBed() : bridge.stopBed(); return; }
+      const audio = this.getAudio();
+      if (!audio) return;
+      if (!on) { audio.pause(); return; }
+      audio.loop = true;
+      audio.volume = Math.max(0, Math.min(1, volumePercent / 100 * BedAdapter.LEVEL));
+      const playing = audio.play();
+      if (playing && typeof playing.catch === 'function') playing.catch(() => {});
+    }
+  }
+  BedAdapter.LEVEL = 1; // 크기는 소리 파일에서 정한다
   class ArrivalPlanner {
     constructor(lesson) { this.lesson = lesson; }
     fit(run, seconds, rate, rested = 0) { return this.lesson.fitTrip(run.pieces, run.index, seconds + rested, run.lesson, run.trip, rate); }
@@ -67,7 +86,7 @@
       }, 0);
     }
   }
-  const api = { Events, LessonSession, VehiclePolicy, SettingsStore, AudioAdapter, ArrivalPlanner };
+  const api = { Events, LessonSession, VehiclePolicy, SettingsStore, AudioAdapter, BedAdapter, ArrivalPlanner };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.DaitPlayback = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

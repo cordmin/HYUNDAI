@@ -1,6 +1,9 @@
 // Persistent Up Next and ordered series. User queue wins over series suggestions.
 const PLAYLIST_KEY='dait.playlist.v1';
-const lessonQueue=new DaitPlaylist.Playlist(DAIT_LESSONS,settingsStore.read(PLAYLIST_KEY,{}),typeof DAIT_SERIES==='undefined'?[]:DAIT_SERIES);
+// Keep the team's series/part metadata as the source of published order.
+const publishedSeries=typeof DAIT_SERIES==='undefined'?[]:DAIT_SERIES;
+const embeddedSeries=[...new Set(DAIT_LESSONS.map(item=>item.series).filter(Boolean))].filter(title=>!publishedSeries.some(item=>item.title===title)).map((title,index)=>({id:'lesson-series-'+index,title,lessons:DAIT_LESSONS.filter(item=>item.series===title).sort((a,b)=>a.part-b.part).map(item=>item.id)}));
+const lessonQueue=new DaitPlaylist.Playlist(DAIT_LESSONS,settingsStore.read(PLAYLIST_KEY,{followSeries:settingsStore.read('dait.lesson.series',true)}),[...publishedSeries,...embeddedSeries]);
 function persistPlaylist(){
   try{settingsStore.write(PLAYLIST_KEY,lessonQueue.snapshot());return true}
   catch(_){window.playlistNotice?.('저장하지 못했어요. 이 화면에서만 유지돼요.');return false}
@@ -23,7 +26,7 @@ function promoteQueuedLesson(key){
 function playlistTripOrder(id,skipKey,explicitOnly=false){
   const own=lessonQueue.order(id,skipKey).map(key=>DAIT_LESSONS.find(item=>item.id===key)).filter(Boolean);
   if(!lessonQueue.autoNext)return own.slice(0,1);
-  return explicitOnly||lessonQueue.items.some(item=>item.key!==skipKey)||lessonQueue.seriesFor(id)?own:Lesson.tripOrder(DAIT_LESSONS,lessonProgress().records,id);
+  return explicitOnly||lessonQueue.items.some(item=>item.key!==skipKey)||lessonQueue.seriesFor(id)?own:Lesson.tripOrder(DAIT_LESSONS,lessonProgress().records,id,lessonRules());
 }
 function playlistHint(id){const series=lessonQueue.seriesFor(id);return series?`${series.title} · ${series.lessons.indexOf(id)+1}/${series.lessons.length}편`:''}
 function nextPlaylistLesson(run){

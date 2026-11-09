@@ -9,7 +9,7 @@ const LENGTHS = path.join(LESSONS, '음원길이.csv');
 const OUTPUT = path.join(ROOT, 'android', 'app', 'src', 'main', 'assets', 'dait-lessons.js');
 const VOICES = path.join(ROOT, 'android', 'app', 'src', 'main', 'assets', 'voices');
 const SCRIPT = path.join(ROOT, 'voice', '수업-대본.csv');
-const KINDS = ['복습', '도입', '전개', '발문', '정리', '짧은정리'];
+const KINDS = ['복습', '이음', '도입', '전개', '발문', '정리', '짧은정리']; // 이음: 시리즈 앞 편을 바로 들은 뒤에만 앞에 붙는 말
 const LEVELS = ['', '기억', '이해', '적용', '분석', '평가', '창작'];
 
 function parseCsv(text) {
@@ -52,7 +52,7 @@ function buildPiece(lessonId, row, lengths, file) {
   if (!LEVELS.includes(row['수준'])) fail(`수준이 틀렸습니다: ${row['수준']}`);
   if (!row['대사']) fail('대사가 없습니다');
   if (!['', '8', '15', '30'].includes(row['판'] || '')) fail('판은 8, 15, 30 가운데 하나로 씁니다');
-  if (row['판'] === '8' && ['복습', '짧은정리'].includes(row['구분'])) fail('짧은 판(8)에는 복습과 짧은 정리를 두지 않습니다');
+  if (row['판'] === '8' && ['복습', '이음', '짧은정리'].includes(row['구분'])) fail('짧은 판(8)에는 복습·이음·짧은 정리를 두지 않습니다');
   const clip = `lesson/${lessonId}_${row['조각']}`;
   const piece = { id: row['조각'], kind: row['구분'], must: row['필수'] === '예', line: row['화면 문장'], text: row['대사'], clip };
   if (row['판'] === '30') piece.long = true;
@@ -71,8 +71,18 @@ function build() {
     const pieces = readTable(path.join(LESSONS, row['파일'])).map(line => buildPiece(row['이름'], line, lengths, row['파일']));
     if (new Set(pieces.map(piece => piece.id)).size !== pieces.length) throw new Error(`${row['파일']}: 조각 이름이 겹칩니다`);
     if (!row['질문']) throw new Error(`목록.csv ${row['이름']}: 첫 화면에 쓸 질문이 없습니다`);
-    return { id: row['이름'], title: row['제목'], question: row['질문'], subject: row['과목'], field: row['분야'], intro: row['소개'], homework: row['숙제'], review: row['검수'], pieces };
+    const lesson = { id: row['이름'], title: row['제목'], question: row['질문'], subject: row['과목'], field: row['분야'], intro: row['소개'], review: row['검수'], pieces };
+    // 시리즈: 「시리즈」에 묶음 이름, 「편」에 1부터 차례. 비워 두면 시리즈가 아니다.
+    if (row['시리즈'] || row['편']) {
+      const part = Number(row['편']);
+      if (!row['시리즈'] || !Number.isInteger(part) || part < 1) throw new Error(`목록.csv ${row['이름']}: 시리즈와 편(1부터)을 함께 씁니다`);
+      Object.assign(lesson, { series: row['시리즈'], part });
+    }
+    if (pieces.some(piece => piece.kind === '이음') && !(lesson.part > 1)) throw new Error(`${row['파일']}: 이음은 시리즈 2편부터 둡니다`);
+    return lesson;
   });
+  const parts = lessons.filter(lesson => lesson.series).map(lesson => `${lesson.series} ${lesson.part}`);
+  if (new Set(parts).size !== parts.length) throw new Error('목록.csv: 같은 시리즈에 같은 편이 둘 있습니다');
   fs.writeFileSync(OUTPUT, `// tools/build-lessons.js가 만든 파일입니다. lessons/*.csv를 고치세요.
 (function (root) {
   const DAIT_LESSONS = ${JSON.stringify(lessons, null, 1)};

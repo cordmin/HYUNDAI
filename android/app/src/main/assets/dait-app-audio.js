@@ -8,6 +8,7 @@ function speak(clips) {
   speechPhase = 'speaking';
   speechPaused = false;
   speechSeq++;
+  syncLessonBed(); // 배경음을 먼저 끄고 말한다
   applyLessonAudioRate();
   audioAdapter.speak(clips, speechSeq, () => { previewQueue = clips.slice(); playPreviewClip(); });
 }
@@ -34,6 +35,7 @@ function stopSpeech() {
   speechPaused = false;
   speechSeq++;
   audioAdapter.stop();
+  syncLessonBed();
 }
 
 function holdSpeech() {
@@ -62,6 +64,7 @@ window.onSpeechEvent = function(jsonText) {
       renderStage();
       syncLessonMedia();
     }
+    syncLessonBed();
     return;
   }
   speechPhase = 'idle';

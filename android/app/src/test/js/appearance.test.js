@@ -34,6 +34,15 @@ test('새 테마에서 사용자가 저장한 라이트·다크 배색은 다시
   assert.equal(result.styles['--bg-bottom'], '#e2c3cf');
 });
 
+test('라이트 모드에 검은 배경을 골라도 밝은 설정 패널의 글자를 흰색으로 바꾸지 않는다', () => {
+  const saved = { mode: 'light', light: { start: '#000000', end: '#111111' }, dark: { start: '#30212a', end: '#452e38' } };
+  const result = loadAppearance({ 'dait.pearl.colors.v3': saved });
+  assert.equal(result.host.dataset.colorMode, 'light');
+  assert.equal(result.styles['--ink'], '#352832');
+  assert.equal(result.styles['--muted'], '#715e69');
+  assert.deepEqual(result.store['dait.pearl.colors.v3'], saved);
+});
+
 test('처음 실행하거나 저장소가 막혀 있어도 로즈 배경을 그린다', () => {
   const result = loadAppearance({}, false);
   assert.equal(result.styles['--bg-top'], '#f8e9eb');

@@ -27,14 +27,18 @@
   }
   let saved = { ...profiles[profiles.mode] };
   let active = { ...saved }, draft = null, dialog = null, focusBefore = null, frame = 0, noticeTimer;
-  const PANES = '.home-card,.dialogue-card,.settings-card,.pearl-record-row,.pearl-badge,.pearl-page-title,.lesson-row,.pearl-homework,.pearl-nav nav,.pearl-nav .icon-btn';
-  const TEXT = '.pearl-badge span,.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-nav nav button,.pearl-nav .icon-btn,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.school-input,.choice-chip,.heard-bubble,.place-name,.place-address,.pearl-homework>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times,.pearl-seek';
+  let backdropGlow = [0, 0, 0, 0];
+  const PANES = '.home-card,.dialogue-card,.settings-card,.pearl-record-row,.pearl-badge,.pearl-page-title,.lesson-row,.pearl-homework,.pearl-nav nav,.pearl-nav .icon-btn,.pearl-record-tabs button';
+  const TEXT = '.pearl-badge span,.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-nav nav button,.pearl-nav .icon-btn,.pearl-record-tabs button,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.school-input,.choice-chip,.heard-bubble,.place-name,.place-address,.pearl-homework>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times span,.pearl-seek';
 
   function backgroundAt(x, y) {
     const rect = host.getBoundingClientRect(), dx = Math.sin(2 * Math.PI / 3), dy = -Math.cos(2 * Math.PI / 3);
     const t = Math.max(0, Math.min(1, .5 + ((x - rect.left - rect.width / 2) * dx + (y - rect.top - rect.height / 2) * dy) / (rect.width * dx + rect.height * dy)));
     const a = rgb(active.start), b = rgb(active.end);
-    return a.map((v, i) => v + (b[i] - v) * t);
+    // Match the 135deg rose overlay above the user's 120deg background.
+    const glowAt = Math.max(0, Math.min(1, .5 + (x - rect.left - rect.width / 2 + y - rect.top - rect.height / 2) / (rect.width + rect.height)));
+    const alpha = Math.max(0, (glowAt - .3) / .7) * backdropGlow[3];
+    return a.map((v, i) => (v + (b[i] - v) * t) * (1 - alpha) + backdropGlow[i] * alpha);
   }
   function rgba(element) {
     const color = getComputedStyle(element).backgroundColor;
@@ -59,17 +63,24 @@
     const rose = host.classList.contains('pearl-night') ? '#f0b9cc' : '#884d62';
     const accent = Math.min(...samples.map(v => contrast(v, luminance(rgb(rose)))));
     if (element.matches('[aria-current=page],[aria-selected=true],[aria-pressed=true]') && accent >= 4.5) return { ink: rose, score: accent };
-    return white > dark ? { ink: '#fffafb', score: Math.min(...samples.map(v => contrast(v, luminance(rgb('#fffafb'))))) } : { ink: '#352832', score: dark };
+    let result = white > dark ? { ink: '#fffafb', score: Math.min(...samples.map(v => contrast(v, luminance(rgb('#fffafb'))))) } : { ink: '#352832', score: dark };
+    if (result.score < 5.2) {
+      const black = Math.min(...samples.map(v => contrast(v, 0)));
+      if (black > result.score) result = { ink: '#000000', score: black };
+    }
+    return result;
   }
   function refreshInk() {
     host.querySelectorAll('[data-pearl-tint]').forEach(e => { e.style.removeProperty('background-color'); e.removeAttribute('data-pearl-tint'); });
     const elements = [...host.querySelectorAll(TEXT)];
     for (const element of elements) {
       let result = measure(element);
-      if (!result || result.score >= 4.65) continue;
+      if (!result || result.score >= 5.2) continue;
       const pane = element.closest(PANES);
       if (!pane) continue;
-      pane.style.setProperty('background-color', result.ink === '#fffafb' ? 'rgba(53,40,50,.16)' : 'rgba(255,250,251,.34)');
+      // Stronger material only where an extreme custom background needs it.
+      // Leave headlining text and time labels free of plates and filters.
+      pane.style.setProperty('background-color', result.ink === '#fffafb' ? 'rgba(53,40,50,.86)' : 'rgba(255,250,251,.86)');
       pane.setAttribute('data-pearl-tint', '');
       result = measure(element);
       if (result.score < 4.5) pane.style.setProperty('background-color', '#fffafb');
@@ -137,13 +148,20 @@
     if (halo) halo.style.color = bright ? '#884d62' : '#f0b9cc';
     brand.dataset.logoOuter = 'rose';
   }
-  function refresh() { frame = 0; refreshInk(); refreshLogo(); }
+  function refresh() {
+    frame = 0;
+    const glow = getComputedStyle(host).getPropertyValue('--bg-glow').trim();
+    backdropGlow = /^#[0-9a-f]{8}$/i.test(glow) ? [...rgb(glow), parseInt(glow.slice(7), 16) / 255] : [0, 0, 0, 0];
+    refreshInk(); refreshLogo();
+  }
   function queueRefresh() { if (!frame) frame = requestAnimationFrame(refresh); }
   function apply(colors, mode = profiles.mode) {
     active = { ...colors };
     document.documentElement.style.setProperty('--bg-top', colors.start);
     document.documentElement.style.setProperty('--bg-bottom', colors.end);
-    const dark = luminance(rgb(colors.start)) + luminance(rgb(colors.end)) < .55;
+    // Pane ink follows its material, not the user's background luminance.
+    // Exposed player labels choose their own contrast in refreshInk().
+    const dark = mode === 'dark';
     host.classList.toggle('pearl-night', mode === 'dark');
     host.dataset.colorMode = mode;
     document.documentElement.style.setProperty('--ink', dark ? '#fff1f5' : '#352832');

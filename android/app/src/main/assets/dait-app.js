@@ -78,8 +78,16 @@ function render() {
 function renderStage() {
   try {
   const stageArea = document.getElementById('stageArea');
-  document.body.classList.toggle('lesson-playing', !!(currentMode === 'lesson' && lessonRun && !lessonRun.done && !isLessonResting()));
+  const browsing = hasActiveLesson() && lessonView;
+  document.body.classList.toggle('lesson-playing', !!(hasActiveLesson() && !lessonView && !isLessonResting()));
+  document.body.classList.toggle('lesson-browsing', !!browsing);
   renderPearlNav();
+  if (browsing) {
+    if (browsing === 'lessons') renderLessonPick(stageArea);
+    else if (browsing === 'records') renderRecords(stageArea);
+    else renderHome(stageArea);
+    return;
+  }
   if (currentMode === 'records') { renderRecords(stageArea); return; }
 
   // 1. Home Screen (단일 완성형 스마트 벤토)
@@ -112,7 +120,7 @@ function renderStage() {
 
   // 5. Dialogue Flow
   renderDialogueFlow(stageArea);
-  } finally { appEvents.emit('rendered'); }
+  } finally { renderLessonDock(); appEvents.emit('rendered'); }
 }
 
 // Pearl: 수업이 중심인 지금 화면. 학교 등록 여부와 관계없이 같은 구성을 쓴다.
@@ -189,7 +197,7 @@ function lessonCardHtml(lesson, reserved) {
 
 function renderPearlNav() {
   const lessonTab = currentMode === 'lessonPick' || currentMode === 'lesson';
-  const active = currentMode === 'records' ? 'records' : lessonTab ? 'lessons' : 'now';
+  const active = hasActiveLesson() && lessonView ? lessonView : currentMode === 'records' ? 'records' : lessonTab ? 'lessons' : 'now';
   const dark = document.querySelector('.pleos-display')?.dataset.colorMode === 'dark';
   document.getElementById('pearlNav').innerHTML = `
     <button class="pearl-brand" aria-label="다잇 첫 화면" onclick="openPearlTab('now')">${getDaitLogoHtml()}</button>
@@ -201,13 +209,55 @@ function renderPearlNav() {
 
 function openPearlTab(tab) {
   if (isDrivingMode) return;
-  if (tab === 'lessons' && currentMode === 'lesson' && lessonRun && !lessonRun.done) return; // 듣던 수업을 계속 보여 준다.
+  if (hasActiveLesson()) {
+    appEvents.emit('closeOverlays');
+    lessonView = tab;
+    if (tab === 'lessons') openLessons();
+    else render();
+    return;
+  }
   if (currentMode === 'lesson') closeLesson();
   stopSpeech();
   if (tab === 'lessons') { openLessons(); return; }
   if (tab === 'records') { currentMode = 'records'; render(); return; }
   homePick = null; // 추천 탭을 누르면 새로 뽑는다
   goHome();
+}
+
+// Browsing is a view of the live session, never a new playback session.
+function hasActiveLesson() {
+  return currentMode === 'lesson' && !!lessonRun && !lessonRun.done;
+}
+function returnToLesson() {
+  if (isDrivingMode || !hasActiveLesson()) return;
+  lessonView = null;
+  renderStage();
+}
+function stopLessonFromDock() {
+  if (isDrivingMode || !hasActiveLesson()) return;
+  const view = lessonView;
+  closeLesson();
+  currentMode = view === 'records' ? 'records' : view === 'lessons' ? 'lessonPick' : null;
+  render();
+}
+function renderLessonDock() {
+  const dock = document.getElementById('lessonDock');
+  if (!dock) return;
+  const visible = hasActiveLesson() && !!lessonView && !isDrivingMode;
+  dock.hidden = !visible;
+  if (!visible) { dock.innerHTML = ''; return; }
+  const run = lessonRun, playing = !isLessonResting() && run.playback.state === 'playing';
+  dock.innerHTML = `<button class="lesson-dock-open" onclick="returnToLesson()" aria-label="${escapeHtml(run.lesson.title)} 재생 화면으로 돌아가기"><span class="lesson-dock-copy"><strong>${escapeHtml(run.lesson.title)}</strong><span id="miniLessonRemaining"></span></span></button><button class="lesson-dock-toggle" onclick="lessonMainAction()" aria-label="${lessonMainLabel(run)}">${lessonTransportIcon(playing ? 'pause' : 'play')}</button><button class="lesson-dock-stop" onclick="stopLessonFromDock()" aria-label="수업 끝내기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>`;
+  updateLessonDock();
+}
+function updateLessonDock() {
+  if (!hasActiveLesson() || !lessonView) return;
+  const label = document.getElementById('miniLessonRemaining');
+  if (!label) return;
+  const run = lessonRun;
+  const state = isLessonResting() ? '쉬는 시간' : run.playback.interrupted ? '다른 소리가 끝나면 이어 들어요' : run.paused ? '잠시 멈췄어요' : '듣는 중';
+  const seconds = arrivalPlanner.remaining(run.pieces, run.index, currentLessonPosition(run), lessonPlaybackPrefs.rate);
+  label.textContent = `${state} · ${lessonTimeText(seconds)} 남음`;
 }
 
 let recordTab = 'lessons';
@@ -268,7 +318,7 @@ function renderRecords(container) {
   container.innerHTML = `<section class="pearl-records">
     <div class="pearl-record-tabs" role="tablist" aria-label="배움 기록 종류">
       <button id="recordLessonsTab" role="tab" aria-controls="recordPanel" aria-selected="${recordTab === 'lessons'}" onclick="selectRecordTab('lessons')">배움 기록</button>
-      <button id="recordBadgesTab" role="tab" aria-controls="recordPanel" aria-selected="${recordTab === 'badges'}" onclick="selectRecordTab('badges')">획득 배지</button>
+      <button id="recordBadgesTab" role="tab" aria-controls="recordPanel" aria-selected="${recordTab === 'badges'}" onclick="selectRecordTab('badges')">배지 둘러보기</button>
     </div>
     <div class="pearl-record-content"><div class="pearl-record-body" id="recordPanel" onscroll="updateListScroll()" role="tabpanel" aria-labelledby="${recordTab === 'badges' ? 'recordBadgesTab' : 'recordLessonsTab'}">${recordTab === 'badges'
       ? `<div class="pearl-badges">${PEARL_BADGES.map(([id,name]) => `<div class="pearl-badge"><img src="badges/${id}.png" alt="${name} 배지"><span>${name}</span></div>`).join('')}</div>`
@@ -390,6 +440,7 @@ function remainMinutes() {
 function startFlow(mode) {
   if (mode !== 'afternoon') return; // 등교 대화·준비물 안내는 제거했다.
   if (askMicFirst(() => startFlow(mode))) return;
+  if (hasActiveLesson()) closeLesson();
   disarm();
   currentMode = mode;
   heard = '';
@@ -413,6 +464,7 @@ function startFlow(mode) {
 function goHome() {
   appEvents.emit('closeOverlays');
   if (currentMode === 'lesson') closeLesson();
+  lessonView = null;
   stopSpeech();
   if (tripForDoor && !tripForDoor.drove) tripForDoor = null; // 주차 중에 들어 본 대화는 여정이 아니다
   currentMode = null;
@@ -489,7 +541,7 @@ function arm(choice) {
   armed = { ...choice, timer: setTimeout(() => {
     disarm();
     refreshHomeIfIdle();
-    if (currentMode === 'lessonPick') render();
+    if (currentMode === 'lessonPick' || (hasActiveLesson() && lessonView === 'lessons')) render();
   }, ARM_MS) };
 }
 

@@ -41,7 +41,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--lilac); out
 /* 장미 노을(연하게): 사용자가 고른 두 색 위에 오른쪽 아래로 갈수록 장밋빛을 얹는다. */
 :root { --bg-glow: #d7a9ba59; }
 .pearl-night { --bg-glow: #a0566f29; }
-.pleos-display { border: 7px solid rgba(255,255,255,.86); background: linear-gradient(135deg,transparent 30%,var(--bg-glow)), linear-gradient(120deg,var(--bg-top),var(--bg-bottom)); box-shadow: 0 18px 50px #3528321a; }
+.pleos-display { border: 7px solid rgba(255,255,255,.86); background: linear-gradient(135deg,transparent 30%,var(--bg-glow)), linear-gradient(120deg,var(--bg-top),var(--bg-bottom)); box-shadow: 0 18px 50px rgba(var(--shadow-rgb, 53, 40, 50), 0.102); }
 body.in-app .pleos-display { border: 0; }
 .stage-container { padding: calc(8 * var(--u)) calc(12 * var(--u)) calc(12 * var(--u)); } /* 아래 여백 = 좌우 여백 */
 .pearl-nav { display: flex; align-items: center; gap: calc(10 * var(--u)); padding: calc(4 * var(--u)) calc(12 * var(--u)) 0; min-height: 52px; flex-shrink: 0; }
@@ -154,7 +154,7 @@ button { min-height: max(44px, calc(44 * var(--u))); }
 .pearl-brand svg { overflow: visible; }
 .pearl-logo-outline { display: none; }
 .pearl-brand[data-logo-outline=on] .pearl-logo-outline { display: block; }
-::selection { background: #ead7de; color: var(--ink); }
+::selection { background: var(--selection,var(--soft)); color: var(--ink); }
 input { caret-color: var(--lilac); }
 .lesson-progress-times { font-variant-numeric: tabular-nums; }
 
@@ -162,10 +162,10 @@ input { caret-color: var(--lilac); }
   position: absolute; inset: 0; margin: auto; width: min(560px, calc(100% - 32px));
   max-height: calc(100% - 24px); overflow: auto; padding: 22px;
   color: var(--ink); background: var(--glass-menu); border: 1px solid var(--glass-edge);
-  border-radius: 20px; box-shadow: inset 0 1px 0 var(--glass-sheen), 0 18px 60px #35283233;
+  border-radius: 20px; box-shadow: inset 0 1px 0 var(--glass-sheen), 0 18px 60px rgba(var(--shadow-rgb, 53, 40, 50), 0.2);
   -webkit-backdrop-filter: blur(24px) saturate(120%); backdrop-filter: blur(24px) saturate(120%);
 }
-.pearl-settings-dialog::backdrop { background: #35283224; }
+.pearl-settings-dialog::backdrop { background: rgba(var(--shadow-rgb, 53, 40, 50), 0.141); }
 .pearl-settings-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .pearl-settings-heading h2 { font-size: 22px; }
 .pearl-settings-dialog .icon-btn { width: 44px; height: 44px; flex-shrink: 0; color: var(--ink); }
@@ -183,7 +183,7 @@ input { caret-color: var(--lilac); }
 .pearl-settings-footer { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-top: 18px; }
 .pearl-settings-footer p { font-size: 13px; color: var(--muted); }
 .pearl-settings-footer button { min-height: 44px; font-size: 16px; padding: 0 22px; }
-.pearl-notice { position: absolute; z-index: 10001; left: 50%; bottom: 26px; transform: translateX(-50%); max-width: calc(100% - 28px); padding: 14px 20px; border-radius: 14px; background: #352832f2; color: var(--on-lilac); font-size: 16px; text-align: center; box-shadow: 0 8px 24px #35283233; }
+.pearl-notice { position: absolute; z-index: 10001; left: 50%; bottom: 26px; transform: translateX(-50%); max-width: calc(100% - 28px); padding: 14px 20px; border-radius: 14px; background: var(--notice-bg); color: var(--notice-ink); font-size: 16px; text-align: center; box-shadow: 0 8px 24px rgba(var(--shadow-rgb, 53, 40, 50), 0.2); }
 @media (max-width: 460px) {
   .pearl-settings-dialog { padding: 16px; }
   .pearl-color-fields { grid-template-columns: 1fr; gap: 12px; }
@@ -201,13 +201,13 @@ input { caret-color: var(--lilac); }
 .pearl-nav .pearl-tools .pearl-theme-btn[aria-pressed=true] { background:var(--lilac); color:var(--on-lilac); }
 .pearl-nav .pearl-tools .pearl-volume-control > .icon-btn { width:100%; background:transparent; }
 .pearl-volume-control { width:max(44px,calc(44 * var(--u))); height:max(44px,calc(44 * var(--u))); border-radius:calc(22 * var(--u)); background:var(--soft); flex-shrink:0; overflow:hidden; transition:height .28s cubic-bezier(.16,1,.3,1); }
-.pearl-volume-control.is-open { height:calc(max(44px,44 * var(--u)) + 188 * var(--u)); background:var(--glass-menu); box-shadow:inset 0 1px 0 var(--glass-sheen), 0 12px 30px #35283222; backdrop-filter:blur(22px) saturate(120%); -webkit-backdrop-filter:blur(22px) saturate(120%); }
+.pearl-volume-control.is-open { height:calc(max(44px,44 * var(--u)) + 188 * var(--u)); background:var(--glass-menu); box-shadow:inset 0 1px 0 var(--glass-sheen), 0 12px 30px rgba(var(--shadow-rgb, 53, 40, 50), 0.133); backdrop-filter:blur(22px) saturate(120%); -webkit-backdrop-filter:blur(22px) saturate(120%); }
 .pearl-nav .pearl-tools .pearl-volume-control.is-open > .icon-btn { color:var(--ink)!important; }
 .pearl-volume-panel { display:flex; flex-direction:column; align-items:center; padding:calc(6 * var(--u)) 0 calc(10 * var(--u)); gap:calc(8 * var(--u)); }
 .pearl-volume-panel[hidden] { display:none; }
 .pearl-volume-panel input { appearance:none; -webkit-appearance:none; writing-mode:vertical-lr; direction:rtl; width:100%; min-width:44px; height:calc(140 * var(--u)); margin:0; background:transparent; cursor:ns-resize; touch-action:none; }
 .pearl-volume-panel input::-webkit-slider-runnable-track { width:6px; height:100%; border-radius:6px; background:linear-gradient(to top,var(--lilac) 0 var(--volume-fill),var(--soft) var(--volume-fill) 100%); }
-.pearl-volume-panel input::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; margin-left:-8px; border:0; border-radius:50%; background:var(--lilac); box-shadow:0 3px 7px #884d6225; }
+.pearl-volume-panel input::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; margin-left:-8px; border:0; border-radius:50%; background:var(--lilac); box-shadow:0 3px 7px rgba(var(--shadow-rgb, 53, 40, 50), 0.145); }
 .pearl-volume-panel input::-moz-range-track { width:6px; background:var(--soft); border-radius:6px; }
 .pearl-volume-panel input::-moz-range-progress { background:var(--lilac); width:6px; }
 .pearl-volume-panel input::-moz-range-thumb { width:22px; height:22px; border:0; border-radius:50%; background:var(--lilac); }
@@ -219,18 +219,18 @@ input { caret-color: var(--lilac); }
 .pearl-color-workbench { display:grid; grid-template-columns:minmax(0,1fr) 144px; gap:16px; margin-top:10px; }
 .pearl-color-picker { min-width:0; }
 .pearl-color-plane { display:block; position:relative; width:100%; height:138px; padding:0; border:0; border-radius:12px; background:linear-gradient(to top,#000,transparent),linear-gradient(to right,#fff,transparent),hsl(var(--picker-hue) 100% 50%); touch-action:none; cursor:crosshair; }
-.pearl-color-cursor { position:absolute; display:block; width:20px; height:20px; border:2px solid #fff; border-radius:50%; transform:translate(-50%,-50%); box-shadow:0 1px 4px #0009,0 0 0 1px #35283266; pointer-events:none; }
+.pearl-color-cursor { position:absolute; display:block; width:20px; height:20px; border:2px solid #fff; border-radius:50%; transform:translate(-50%,-50%); box-shadow:0 1px 4px #0009,0 0 0 1px rgba(var(--shadow-rgb, 53, 40, 50), 0.4); pointer-events:none; }
 .pearl-hue-label { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
 .pearl-hue { appearance:none; -webkit-appearance:none; display:block; width:100%; height:44px; padding:0 10px; margin:3px 0; background:transparent; cursor:ew-resize; touch-action:none; }
 .pearl-hue::-webkit-slider-runnable-track { height:18px; border-radius:12px; background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00); }
-.pearl-hue::-webkit-slider-thumb { -webkit-appearance:none; width:28px; height:28px; margin-top:-5px; border:3px solid #fff; border-radius:50%; background:hsl(var(--picker-hue) 100% 50%); box-shadow:0 2px 5px #35283255; }
+.pearl-hue::-webkit-slider-thumb { -webkit-appearance:none; width:28px; height:28px; margin-top:-5px; border:3px solid #fff; border-radius:50%; background:hsl(var(--picker-hue) 100% 50%); box-shadow:0 2px 5px rgba(var(--shadow-rgb, 53, 40, 50), 0.333); }
 .pearl-hue::-moz-range-track { height:18px; border-radius:12px; background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00); }
-.pearl-hue::-moz-range-thumb { width:22px; height:22px; border:3px solid #fff; border-radius:50%; background:hsl(var(--picker-hue) 100% 50%); box-shadow:0 2px 5px #35283255; }
+.pearl-hue::-moz-range-thumb { width:22px; height:22px; border:3px solid #fff; border-radius:50%; background:hsl(var(--picker-hue) 100% 50%); box-shadow:0 2px 5px rgba(var(--shadow-rgb, 53, 40, 50), 0.333); }
 .pearl-color-dialog .pearl-color-preview { height:24px; }
 .pearl-color-actions { display:flex; flex-direction:column; gap:8px; }
 .pearl-color-choice { display:flex; align-items:center; justify-content:flex-start; gap:10px; min-height:48px; padding:0 12px; color:var(--ink); border:1px solid var(--line); background:var(--card); border-radius:12px; font-size:15px; cursor:pointer; }
 .pearl-color-choice[aria-pressed=true] { border:2px solid var(--lilac); padding:0 11px; background:#ffffff88; }
-.pearl-color-choice>span { width:24px; height:24px; flex-shrink:0; border:1px solid #35283226; border-radius:7px; }
+.pearl-color-choice>span { width:24px; height:24px; flex-shrink:0; border:1px solid rgba(var(--shadow-rgb, 53, 40, 50), 0.149); border-radius:7px; }
 .pearl-color-dialog .pearl-color-presets { margin:0; display:flex; gap:6px; flex-wrap:nowrap; }
 .pearl-color-dialog .pearl-color-presets button { position:relative; width:44px; height:44px; min-height:44px; padding:0; flex-shrink:0; }
 .pearl-color-dialog .pearl-color-presets button:before { content:''; position:absolute; inset:6px; border-radius:7px; background:var(--preset); }
@@ -303,7 +303,7 @@ body.lesson-playing .stage-container { padding:calc(6 * var(--u)) calc(28 * var(
 /* Driving uses the same composition with quiet motion and larger secondary targets. */
 .pearl-tools { height:calc(max(52px,44 * var(--u)) + 10 * var(--u)); }
 .pearl-nav .pearl-tools .icon-btn, .pearl-volume-control { width:max(44px,calc(36 * var(--u))); height:max(44px,calc(36 * var(--u))); }
-.pearl-tools { height:calc(max(44px,36 * var(--u)) + 4 * var(--u)); padding:calc(1 * var(--u)) calc(3 * var(--u)); gap:calc(6 * var(--u)); box-shadow:inset 0 1px 0 var(--glass-sheen), 0 4px 12px #3528320a; }
+.pearl-tools { height:calc(max(44px,36 * var(--u)) + 4 * var(--u)); padding:calc(1 * var(--u)) calc(3 * var(--u)); gap:calc(6 * var(--u)); box-shadow:inset 0 1px 0 var(--glass-sheen), 0 4px 12px rgba(var(--shadow-rgb, 53, 40, 50), 0.039); }
 .pearl-nav .pearl-tools .icon-btn svg { width:22px; height:22px; }
 .pearl-volume-control.is-open { height:calc(max(44px,36 * var(--u)) + 188 * var(--u)); }
 .pearl-settings-dialog.pearl-playback-dialog button { min-height:48px; }
@@ -320,7 +320,7 @@ body.lesson-playing .stage-container { padding:calc(6 * var(--u)) calc(28 * var(
 /* Each appearance mode owns its own two-color palette. */
 .pearl-color-modes { display:flex; gap:8px; margin-top:10px; }
 .pearl-settings-dialog .pearl-color-mode { display:flex; align-items:center; justify-content:center; gap:9px; flex:1; min-height:44px; height:44px; padding:0 10px; border:1px solid var(--line); border-radius:12px; background:var(--card); color:var(--ink); font-size:15px; font-weight:650; cursor:pointer; }
-.pearl-color-mode span { width:24px; height:24px; border-radius:50%; border:1px solid #884d6255; }
+.pearl-color-mode span { width:24px; height:24px; border-radius:50%; border:1px solid rgba(var(--shadow-rgb, 53, 40, 50), 0.333); }
 .pearl-settings-dialog .pearl-color-mode[aria-pressed=true] { box-shadow:inset 0 0 0 2px var(--lilac); border-color:var(--lilac); }
 .pearl-night .pearl-color-mode { color:var(--ink); background:var(--card); border-color:var(--line); }
 .pearl-night .pearl-color-mode[aria-pressed=true] { box-shadow:inset 0 0 0 2px var(--lilac); border-color:var(--lilac); }
@@ -369,7 +369,7 @@ body.lesson-playing .stage-container { padding:calc(6 * var(--u)) calc(28 * var(
 .pearl-settings-dialog .pearl-settings-heading .icon-btn svg { width:24px; height:24px; stroke-width:2.2; }
 /* 모든 버튼: 누르면 살짝 들어가고(조금 작아짐) 안쪽에 옅은 그늘이 진다(2026-11-09 전수 적용). */
 button { transition: transform .12s ease, box-shadow .12s ease, filter .12s ease; }
-button:active:not(:disabled) { transform: scale(.95); box-shadow: inset 0 2px 6px #3528322e !important; filter: brightness(.96); }
+button:active:not(:disabled) { transform: scale(.95); box-shadow: inset 0 2px 6px rgba(var(--shadow-rgb, 53, 40, 50), 0.18) !important; filter: brightness(.96); }
 /* 넓은 줄 버튼은 덜 줄여 들썩이지 않게 한다. */
 .lesson-row > .choice-chip:active:not(:disabled), .pearl-settings-menu button:active:not(:disabled) { transform: scale(.985); }
 /* 카드에 붙은 탭은 이음새가 어긋나지 않게, 색상판은 끌어서 고르므로 크기와 그늘을 바꾸지 않는다. */
@@ -378,11 +378,11 @@ button:active:not(:disabled) { transform: scale(.95); box-shadow: inset 0 2px 6p
 /* 안드로이드가 누를 때 띄우는 네모 표시는 끈다. 버튼마다 위의 눌림 효과가 대신한다. */
 button { -webkit-tap-highlight-color: transparent; }
 /* 로고는 네모 그늘 대신 글자 모양을 따라 그늘이 지고 살짝 작아진다. */
-.pearl-brand:active:not(:disabled) { box-shadow: none !important; transform: scale(.94); filter: drop-shadow(0 1px 1.5px #35283266) brightness(.9); }
+.pearl-brand:active:not(:disabled) { box-shadow: none !important; transform: scale(.94); filter: drop-shadow(0 1px 1.5px rgba(var(--shadow-rgb, 53, 40, 50), 0.4)) brightness(.9); }
 
 /* Primary playback is the strongest action; library controls remain quiet. */
 .pearl-play, .pearl-play:hover, .pearl-night .pearl-play { background:var(--lilac); color:var(--on-lilac); }
-.pearl-play { box-shadow:0 6px 16px #35283224; }
+.pearl-play { box-shadow:0 6px 16px rgba(var(--shadow-rgb, 53, 40, 50), 0.141); }
 .pearl-play:hover { filter:brightness(1.06); }
 .pearl-play:focus-visible { outline-offset:5px; }
 .lesson-options-btn { flex:0 0 44px; align-self:center; width:44px; height:44px; padding:10px; border:0; border-radius:12px; color:var(--muted); background:none; cursor:pointer; }
@@ -390,7 +390,7 @@ button { -webkit-tap-highlight-color: transparent; }
 .lesson-options-btn:hover, .lesson-options-btn.is-reserved { color:var(--lilac); background:var(--soft); }
 .pearl-option-title { margin:12px 0 0; font-size:17px; font-weight:650; }
 .pearl-lesson-options { width:min(380px,calc(100% - 32px)); }
-.pearl-record-content { box-shadow:inset 0 1px 0 var(--glass-sheen), 0 4px 16px #35283208; }
+.pearl-record-content { box-shadow:inset 0 1px 0 var(--glass-sheen), 0 4px 16px rgba(var(--shadow-rgb, 53, 40, 50), 0.031); }
 .lesson-dock { display:flex; align-items:center; flex-shrink:0; gap:8px; min-height:64px; padding:6px 8px; margin:0 12px 10px; border-radius:16px; color:var(--ink); background:var(--glass-menu); border:1px solid var(--glass-edge); box-shadow:var(--glass-shadow); -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); }
 .lesson-dock[hidden] { display:none; }
 .lesson-dock button { min-height:48px; border:0; cursor:pointer; }
@@ -403,3 +403,10 @@ button { -webkit-tap-highlight-color: transparent; }
 .lesson-dock-stop { flex:0 0 48px; width:48px; height:48px; border-radius:12px; background:none; color:var(--muted); display:grid; place-items:center; }
 .lesson-dock-stop svg { width:22px; height:22px; }
 body.driving .lesson-dock { display:none; }
+
+/* Materials and browser controls share the derived user palette. */
+.pearl-color-choice[aria-pressed=true] { background:var(--soft); }
+.pearl-settings-dialog, .pearl-settings-dialog input, .pearl-settings-dialog select { accent-color:var(--lilac); }
+.pearl-record-content { scrollbar-color:var(--lilac) var(--soft); }
+.splash-aura { background:radial-gradient(circle, var(--soft), transparent 70%); }
+body.lesson-playing .pleos-display { background-image:linear-gradient(to bottom,transparent 65%,var(--player-shade)),linear-gradient(135deg,transparent 30%,var(--bg-glow)),linear-gradient(120deg,var(--bg-top),var(--bg-bottom)); }

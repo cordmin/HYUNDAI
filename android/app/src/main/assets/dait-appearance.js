@@ -27,18 +27,24 @@
   }
   let saved = { ...profiles[profiles.mode] };
   let active = { ...saved }, draft = null, dialog = null, focusBefore = null, frame = 0, noticeTimer;
-  let backdropGlow = [0, 0, 0, 0];
-  const PANES = '.home-card,.dialogue-card,.settings-card,.pearl-record-row,.pearl-badge,.pearl-page-title,.lesson-row,.pearl-homework,.pearl-nav nav,.pearl-nav .icon-btn,.pearl-record-tabs button,.lesson-dock';
-  const TEXT = '.pearl-badge span,.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-nav nav button,.pearl-nav .icon-btn,.pearl-record-tabs button,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.choice-chip,.pearl-homework>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times span,.pearl-seek,.lesson-dock-copy strong,.lesson-dock-copy>span';
+  let backdropGlow = [0, 0, 0, 0], palette = DaitPalette.derive(active, profiles.mode);
+  const PANES = '.home-card,.dialogue-card,.settings-card,.pearl-record-row,.pearl-badge,.pearl-page-title,.lesson-row,.pearl-homework,.pearl-nav nav,.pearl-nav .icon-btn,.pearl-record-tabs button,.lesson-dock,.pearl-settings-dialog,.pearl-settings-menu button,.pearl-pb-choices button';
+  const TEXT = '.pearl-badge span,.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-nav nav button,.pearl-nav .icon-btn,.pearl-record-tabs button,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.choice-chip,.pearl-homework>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times span,.pearl-seek,.lesson-dock-copy strong,.lesson-dock-copy>span,.pearl-settings-dialog h2,.pearl-settings-dialog h3,.pearl-settings-dialog strong,.pearl-settings-dialog small,.pearl-settings-dialog p,.pearl-settings-dialog label,.pearl-settings-dialog input:not([type=range]),.pearl-settings-dialog select,.pearl-settings-dialog button:not(.primary-btn):not(.card-btn),.pearl-settings-switch span,.pearl-volume-panel output';
 
   function backgroundAt(x, y) {
     const rect = host.getBoundingClientRect(), dx = Math.sin(2 * Math.PI / 3), dy = -Math.cos(2 * Math.PI / 3);
     const t = Math.max(0, Math.min(1, .5 + ((x - rect.left - rect.width / 2) * dx + (y - rect.top - rect.height / 2) * dy) / (rect.width * dx + rect.height * dy)));
     const a = rgb(active.start), b = rgb(active.end);
-    // Match the 135deg rose overlay above the user's 120deg background.
+    // Match the subtle palette overlay above the user's 120deg background.
     const glowAt = Math.max(0, Math.min(1, .5 + (x - rect.left - rect.width / 2 + y - rect.top - rect.height / 2) / (rect.width + rect.height)));
     const alpha = Math.max(0, (glowAt - .3) / .7) * backdropGlow[3];
-    return a.map((v, i) => (v + (b[i] - v) * t) * (1 - alpha) + backdropGlow[i] * alpha);
+    let result = a.map((v, i) => (v + (b[i] - v) * t) * (1 - alpha) + backdropGlow[i] * alpha);
+    // A wide lower-edge fade protects timing text across high-contrast gradients; no text plates.
+    if (document.body.classList.contains('lesson-playing')) {
+      const shade = Math.max(0, Math.min(1, ((y-rect.top)/rect.height-.65)/.35))*.20;
+      result = result.map((v,i) => v*(1-shade)+rgb(palette.darkInk)[i]*shade);
+    }
+    return result;
   }
   function rgba(element) {
     const color = getComputedStyle(element).backgroundColor;
@@ -47,7 +53,7 @@
     return n.length >= 3 ? [...n.slice(0, 3), n.length === 4 ? n[3] : 1] : [0, 0, 0, 0];
   }
   function measure(element) {
-    if (!element.getClientRects().length) return null;
+    if (!element.getClientRects().length || element.matches('.pearl-theme-btn[aria-pressed=true]')) return null;
     const range = document.createRange(); range.selectNodeContents(element);
     let rect = range.getBoundingClientRect(); if (!rect.width) rect = element.getBoundingClientRect();
     if (!rect.width) return null;
@@ -58,12 +64,12 @@
       for (const layer of layers) c = c.map((v, i) => v * (1 - layer[3]) + layer[i] * layer[3]);
       return luminance(c);
     });
-    const dark = Math.min(...samples.map(v => contrast(v, luminance(rgb('#352832')))));
+    const dark = Math.min(...samples.map(v => contrast(v, luminance(rgb(palette.darkInk)))));
     const white = Math.min(...samples.map(v => contrast(v, 1)));
-    const rose = host.classList.contains('pearl-night') ? '#f0b9cc' : '#884d62';
-    const accent = Math.min(...samples.map(v => contrast(v, luminance(rgb(rose)))));
-    if (element.matches('[aria-current=page],[aria-selected=true],[aria-pressed=true]') && accent >= 4.5) return { ink: rose, score: accent };
-    let result = white > dark ? { ink: '#fffafb', score: Math.min(...samples.map(v => contrast(v, luminance(rgb('#fffafb'))))) } : { ink: '#352832', score: dark };
+    const accentInk = palette.accent;
+    const accent = Math.min(...samples.map(v => contrast(v, luminance(rgb(accentInk)))));
+    if (element.matches('[aria-current=page],[aria-selected=true],[aria-pressed=true]') && accent >= 4.5) return { ink: accentInk, score: accent };
+    let result = white > dark ? { ink: palette.lightInk, score: Math.min(...samples.map(v => contrast(v, luminance(rgb(palette.lightInk))))) } : { ink: palette.darkInk, score: dark };
     if (result.score < 5.2) {
       const black = Math.min(...samples.map(v => contrast(v, 0)));
       if (black > result.score) result = { ink: '#000000', score: black };
@@ -71,6 +77,7 @@
     return result;
   }
   function refreshInk() {
+    host.querySelectorAll('[data-pearl-ink]').forEach(e => { e.removeAttribute('data-pearl-ink'); e.style.removeProperty('--local-ink'); });
     host.querySelectorAll('[data-pearl-tint]').forEach(e => { e.style.removeProperty('background-color'); e.removeAttribute('data-pearl-tint'); });
     const elements = [...host.querySelectorAll(TEXT)];
     for (const element of elements) {
@@ -80,10 +87,10 @@
       if (!pane) continue;
       // Stronger material only where an extreme custom background needs it.
       // Leave headlining text and time labels free of plates and filters.
-      pane.style.setProperty('background-color', result.ink === '#fffafb' ? 'rgba(53,40,50,.86)' : 'rgba(255,250,251,.86)');
+      pane.style.setProperty('background-color', result.ink === palette.lightInk ? palette.darkInk + 'ee' : palette.lightInk + 'ee');
       pane.setAttribute('data-pearl-tint', '');
       result = measure(element);
-      if (result.score < 4.5) pane.style.setProperty('background-color', '#fffafb');
+      if (result.score < 4.5) pane.style.setProperty('background-color', palette.lightInk);
     }
     for (const element of elements) {
       const result = measure(element); if (!result) continue;
@@ -97,7 +104,7 @@
     const rect = svg.getBoundingClientRect();
     const colors = [[.2, .25], [.5, .5], [.8, .75]].map(([x, y]) => backgroundAt(rect.left + rect.width * x, rect.top + rect.height * y));
     const bright = luminance(colors[1]) >= .32;
-    const stops = bright ? ['#7b405a','#b66d87','#914f67'] : ['#f0c0d0','#fbe9ee','#cb91a6'];
+    const stops = palette.logo(bright);
     svg.querySelectorAll('#flowGradBadge stop').forEach((stop, index) => stop.setAttribute('stop-color', stops[index]));
     svg.querySelector('.brand-dot')?.setAttribute('fill', stops[0]);
     const needsOutline = colors.filter(c => contrast(luminance(c), luminance(rgb(stops[0]))) < 3).length >= 2;
@@ -141,12 +148,12 @@
       const outline = path.cloneNode(); outline.classList.add('pearl-logo-outline');
       outline.setAttribute('stroke-width', '4.4'); outline.setAttribute('aria-hidden', 'true'); svg.insertBefore(outline, path);
     }
-    svg.querySelector('.pearl-logo-outline')?.setAttribute('stroke', bright ? '#352832' : '#fff1f5');
+    svg.querySelector('.pearl-logo-outline')?.setAttribute('stroke', bright ? palette.darkInk : palette.lightInk);
     brand.dataset.logoOutline = needsOutline ? 'on' : 'off'; brand.dataset.logoEffect = bright ? 'shadow' : 'glow';
     // Keep the original ribbon completely unfiltered. Only its exterior receives light.
     svg.style.filter = 'none';
-    if (halo) halo.style.color = bright ? '#884d62' : '#f0b9cc';
-    brand.dataset.logoOuter = 'rose';
+    if (halo) halo.style.color = bright ? palette.darkInk : palette.lightInk;
+    brand.dataset.logoOuter = 'adaptive';
   }
   function refresh() {
     frame = 0;
@@ -159,13 +166,16 @@
     active = { ...colors };
     document.documentElement.style.setProperty('--bg-top', colors.start);
     document.documentElement.style.setProperty('--bg-bottom', colors.end);
-    // Pane ink follows its material, not the user's background luminance.
-    // Exposed player labels choose their own contrast in refreshInk().
-    const dark = mode === 'dark';
+    palette = DaitPalette.derive(colors, mode);
+    if (typeof CSS !== 'undefined' && !CSS.supports('backdrop-filter', 'blur(1px)') && !CSS.supports('-webkit-backdrop-filter', 'blur(1px)')) {
+      for (const role of ['--glass','--glass-raised','--glass-menu','--glass-hover']) palette.tokens[role] = palette.tokens['--paper'];
+    }
+    for (const [name, value] of Object.entries(palette.tokens)) {
+      document.documentElement.style.setProperty(name, value);
+      host.style.setProperty(name, value);
+    }
     host.classList.toggle('pearl-night', mode === 'dark');
     host.dataset.colorMode = mode;
-    document.documentElement.style.setProperty('--ink', dark ? '#fff1f5' : '#352832');
-    document.documentElement.style.setProperty('--muted', dark ? '#d7bec8' : '#715e69');
     queueRefresh();
   }
   function notice(message) {
@@ -196,7 +206,7 @@
       else if (action === 'restart') { close(); restartLesson(); }
       if (e.target === dialog) { const r = dialog.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) close(); }
     });
-    dialog.showModal();
+    dialog.showModal(); queueRefresh();
   }
   window.openPearlSettings = () => {
     if (!vehiclePolicy.allows('settings')) { notice('주행중엔 설정을 바꿀 수 없어요.'); return; }
@@ -235,6 +245,7 @@
         <div class="pearl-pb-custom"${editing ? '' : ' hidden'}><label>${editing === 'back' ? '뒤로' : '앞으로'} 이동 시간<input id="pearlCustomTime" type="number" min="1" max="3600" step="1" inputmode="numeric" value="${editing ? prefs[editing] % 60 === 0 ? prefs[editing]/60 : prefs[editing] : 1}"></label><select id="pearlCustomUnit" aria-label="이동 시간 단위"><option value="1">초</option><option value="60"${editing && prefs[editing] % 60 === 0 ? ' selected' : ''}>분</option></select><button class="card-btn" type="button" data-pb-apply>적용</button></div>
         <div class="pearl-settings-footer"><p id="pearlPlaybackMessage" role="status">이 기기에 저장돼요.</p><button class="card-btn" type="submit">저장</button></div>
       </form>`;
+      queueRefresh();
     };
     const applyCustom = () => {
       if (!editing) return true;

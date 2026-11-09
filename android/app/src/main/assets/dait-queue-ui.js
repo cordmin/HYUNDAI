@@ -12,6 +12,8 @@
     const focused=document.activeElement?.matches('[data-queue-add]');
     if(!lesson(id)||!addLessonToQueue(id,'last',fromStop))return;
     if(focused)window.restoreQueueAddFocus(id,fromStop);
+    const button=document.querySelector(`[data-queue-add="${id}"][data-from-stop="${!!fromStop}"]`);
+    if(button){button.classList.add('just-added');setTimeout(()=>button.classList.remove('just-added'),750)}
   };
   window.showSeriesOrderPrompt=(id,options={})=>{
     const prior=lessonQueue.prior(id,lessonProgress().records),before=lesson(prior);if(!before)return;

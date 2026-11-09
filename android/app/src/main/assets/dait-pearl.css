@@ -183,7 +183,20 @@ input { caret-color: var(--lilac); }
 .pearl-settings-footer { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-top: 18px; }
 .pearl-settings-footer p { font-size: 13px; color: var(--muted); }
 .pearl-settings-footer button { min-height: 44px; font-size: 16px; padding: 0 22px; }
-.pearl-notice { position: absolute; z-index: 10001; left: 50%; bottom: 26px; transform: translateX(-50%); max-width: calc(100% - 28px); padding: 14px 20px; border-radius: 14px; background: var(--notice-bg); color: var(--notice-ink); font-size: 16px; text-align: center; box-shadow: 0 8px 24px rgba(var(--shadow-rgb, 53, 40, 50), 0.2); }
+.pearl-notice { position:absolute;z-index:10001;left:12px;right:12px;bottom:12px;display:flex;align-items:center;gap:12px;min-height:56px;box-sizing:border-box;padding:8px 14px;border-radius:14px;background:var(--glass-menu);color:var(--ink);box-shadow:inset 0 1px 0 var(--glass-sheen),0 4px 16px rgba(var(--shadow-rgb,53,40,50),.12);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);overflow:hidden;pointer-events:none; }
+.pearl-notice[hidden] { display:none; }
+.pearl-notice[data-state=leaving] { pointer-events:none; }
+.pleos-display:has(.lesson-dock:not([hidden])) .pearl-notice { bottom:86px; }
+.notice-copy { flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;line-height:1.35; }
+.notice-copy strong { overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:14px;font-weight:650; }
+.notice-copy span { font-size:13px; }
+.notice-check { display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;border-radius:50%;background:var(--soft);color:var(--ink); }
+.notice-check svg { width:18px;height:18px; }
+.notice-lifetime { position:absolute;bottom:0;left:14px;right:14px;height:2px;border-radius:2px;background:var(--lilac);opacity:.45;transform-origin:left center; }
+.pearl-notice>button { pointer-events:auto;min-height:44px;flex-shrink:0;border:0;border-radius:10px;padding:0 10px;background:none;color:var(--ink);font-size:14px;font-weight:650;white-space:nowrap; }
+.pearl-notice>button:hover { background:var(--soft); }
+@media(max-width:480px) { .pearl-notice.has-action { right:12px !important;bottom:12px; } .pearl-notice { gap:8px;padding:8px 10px; } .pearl-notice>button { padding:0 4px;font-size:13px; } .notice-check { display:none; } }
+
 @media (max-width: 460px) {
   .pearl-settings-dialog { padding: 16px; }
   .pearl-color-fields { grid-template-columns: 1fr; gap: 12px; }
@@ -413,10 +426,6 @@ body.lesson-playing .pleos-display { background-image:linear-gradient(to bottom,
 
 /* Queue editing is parked-only; playback stays visible behind the compact sheet. */
 .playlist-list-toolbar { display:flex;align-items:center;gap:8px;flex-shrink:0;min-height:44px; }
-.pearl-notice.has-action { display:flex;align-items:center;gap:12px;width:max-content;max-width:calc(100% - 24px);padding:10px 12px;box-sizing:border-box; }
-.pearl-notice.has-action[hidden] { display:none; }
-.pearl-notice.has-action>span { min-width:0;font-size:14px;line-height:1.5;text-align:left; }
-.pearl-notice.has-action>button { min-height:44px;flex-shrink:0;border:0;border-radius:10px;padding:0 12px;background:var(--notice-ink);color:var(--notice-bg);font-size:14px;font-weight:650;white-space:nowrap; }
 .playlist-list-toolbar .pearl-record-tabs { flex:1;min-width:0;gap:calc(10 * var(--u)); }
 .playlist-open-btn { border:0;background:var(--soft);color:var(--lilac);border-radius:12px;padding:0 12px;min-height:44px;font-size:14px;font-weight:650;white-space:nowrap; }
 .playlist-dialog { width:min(650px,calc(100% - 24px));padding:18px; }
@@ -458,3 +467,12 @@ body.lesson-playing .pleos-display { background-image:linear-gradient(to bottom,
 .series-name { width:100%;min-height:48px;font-size:17px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px;box-sizing:border-box;margin-top:8px; }
 @media(max-height:460px) { .playlist-dialog {padding:12px 18px} .playlist-dialog .pearl-settings-heading .icon-btn {width:44px;height:44px;min-height:44px} .queue-scroll {max-height:148px} .queue-now {margin:4px 0} .queue-footer {margin-top:4px;padding-top:2px} }
 @media(max-width:460px) { .queue-actions {gap:0} .queue-actions button {width:44px} .queue-title strong {font-size:14px} .playlist-list-toolbar .pearl-record-tabs {gap:2px;padding:0} .playlist-list-toolbar .pearl-record-tabs button {font-size:14px;padding:0 7px} .playlist-open-btn {padding:0 9px;font-size:13px} }
+
+/* A brief check confirms each tap; it is not a permanent saved/not-saved toggle. */
+.lesson-options-btn .queue-add-check { display:none; }
+.lesson-options-btn.just-added { color:var(--ink);background:var(--soft); }
+.lesson-options-btn.just-added .queue-add-plus { display:none; }
+.lesson-options-btn.just-added .queue-add-check { display:block; }
+.lesson-options-btn.just-added svg { animation:queue-added .28s cubic-bezier(.16,1,.3,1); }
+@keyframes queue-added { from { transform:scale(.75);opacity:.55; } to { transform:scale(1);opacity:1; } }
+@media(prefers-reduced-motion:reduce) { .lesson-options-btn.just-added svg { animation:none; } }

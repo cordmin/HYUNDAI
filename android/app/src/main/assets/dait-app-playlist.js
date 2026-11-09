@@ -11,7 +11,7 @@ function addLessonToQueue(id,position='last',fromStop=false){
   if(!lessonQueue.add(id,position,fromStop)){window.playlistNotice?.('재생목록에 더 추가할 수 없어요.');return false}
   const item=position==='next'?lessonQueue.items[0]:lessonQueue.items[lessonQueue.items.length-1];
   const saved=playlistEdited();
-  const action=saved&&position==='last'?{label:'바로 다음에 재생',ariaLabel:(DAIT_LESSONS.find(lesson=>lesson.id===id)?.title||'방금 추가한 수업')+' 바로 다음에 재생',onClick:()=>promoteQueuedLesson(item.key),restoreFocus:()=>window.restoreQueueAddFocus?.(id,fromStop)}:null;
+  const action=saved&&position==='last'?{label:'바로 다음에 재생',title:DAIT_LESSONS.find(lesson=>lesson.id===id)?.title,count:lessonQueue.items.length,ariaLabel:(DAIT_LESSONS.find(lesson=>lesson.id===id)?.title||'방금 추가한 수업')+' 바로 다음에 재생',onClick:()=>promoteQueuedLesson(item.key),restoreFocus:()=>window.restoreQueueAddFocus?.(id,fromStop)}:null;
   window.playlistNotice?.(saved?(position==='next'?'바로 다음에 추가했어요.':'맨 뒤에 추가했어요.'):'추가했지만 저장하지 못했어요. 이번 화면에서만 유지돼요.',action);return true;
 }
 function promoteQueuedLesson(key){

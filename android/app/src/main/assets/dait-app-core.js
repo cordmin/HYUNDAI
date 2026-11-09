@@ -6,6 +6,7 @@ const appEvents = new DaitPlayback.Events();
 const vehiclePolicy = new DaitPlayback.VehiclePolicy();
 const settingsStore = new DaitPlayback.SettingsStore(localStorage);
 const audioAdapter = new DaitPlayback.AudioAdapter(() => window.AndroidBridge, () => document.getElementById('audioPlayer'));
+const bedAdapter = new DaitPlayback.BedAdapter(() => window.AndroidBridge, () => document.getElementById('bedPlayer'));
 const arrivalPlanner = new DaitPlayback.ArrivalPlanner(Lesson);
 
 let currentMode = null; // null(추천) | 'lessonPick'(수업 고르기) | 'lesson'(수업 듣기) | 'records'(기록)

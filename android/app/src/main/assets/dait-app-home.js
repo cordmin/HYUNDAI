@@ -75,10 +75,13 @@ function homeLesson() {
   const reserved = armed && armed.lesson ? DAIT_LESSONS.find(item => item.id === armed.lesson) : null;
   if (reserved) return { reserved, lesson: reserved };
   const records = lessonProgress().records;
-  const fitting = Lesson.recommend(DAIT_LESSONS, lessonMinutes, records);
+  const rules = lessonRules();
+  const fitting = Lesson.recommend(DAIT_LESSONS, lessonMinutes, records, rules);
   const heard = new Set(records.map(record => record.lesson)); // 짧은 판으로 들었어도 들은 수업이다
-  const fresh = fitting.filter(lesson => !heard.has(lesson.id));
-  const pool = fresh.length ? fresh : fitting;
+  const fresh = fitting.filter(lesson => !heard.has(lesson.id) && !(rules.series && Lesson.seriesWaiting(DAIT_LESSONS, lesson, records)));
+  const due = rules.series ? Lesson.seriesDue(DAIT_LESSONS, records) : null;
+  // 시리즈를 켜면 이어 들을 편이 첫 화면 수업이다. 아니면 안 들은 수업 가운데 하나를 고른다.
+  const pool = due && fitting.includes(due) ? [due] : fresh.length ? fresh : fitting;
   if (!pool.includes(homePick)) homePick = pool[Math.floor(Math.random() * pool.length)] || null;
   return { reserved: null, lesson: homePick };
 }
@@ -90,6 +93,8 @@ const FLOWER = (x, y, r) => `<g transform="translate(${x} ${y})">${[0, 72, 144, 
 const NOTE = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})"><ellipse rx="13" ry="9.5" transform="rotate(-20)"/><path d="M11 -3V-58" stroke="#000" stroke-width="4" stroke-linecap="round" fill="none"/></g>`;
 
 const LESSON_PATTERNS = {
+  // 매미와 소수: 13과 17, 두 주기가 다시 만나는 221
+  cicada: '<g font-family="Georgia,serif" font-weight="700"><text x="210" y="200" font-size="150">13</text><text x="300" y="96" font-size="88">17</text><text x="232" y="276" font-size="52">221</text></g><g fill="none" stroke="#000" stroke-width="6" stroke-linecap="round"><path d="M150 230q-40-60 0-130"/><path d="M420 120q40 60 0 130"/></g>',
   // 소수: 크고 작은 소수와 끝없음
   prime: '<g font-family="Georgia,serif" font-weight="700"><text x="250" y="250" font-size="190">7</text><text x="170" y="150" font-size="96">5</text><text x="320" y="86" font-size="64">3</text><text x="200" y="272" font-size="46">2</text><text x="352" y="176" font-size="34">11</text><text x="120" y="80" font-size="48">∞</text></g>',
   // 하늘과 노을: 지는 해의 큰 반원, 작은 해, 빛 알갱이
@@ -200,7 +205,7 @@ function renderRecords(container) {
     </div>
     <div class="pearl-record-content"><div class="pearl-record-body" id="recordPanel" onscroll="updateListScroll()" role="tabpanel" aria-labelledby="${recordTab === 'badges' ? 'recordBadgesTab' : 'recordLessonsTab'}">${recordTab === 'badges'
       ? `<div class="pearl-badges">${PEARL_BADGES.map(([id,name]) => `<div class="pearl-badge"><img src="badges/${id}.png" alt="${name} 배지"><span>${name}</span></div>`).join('')}</div>`
-      : `${progress.homework ? `<div class="pearl-homework"><span>숙제 · ${escapeHtml(progress.homework.title)}</span><button class="card-btn quiet" onclick="doneHomework()">했어요</button></div>` : ''}
+      : `
         ${records.length ? `<div class="pearl-record-grid">${records.map((record, reverseIndex) => {
           const index = progress.records.length - 1 - reverseIndex;
           const resumable = recordResume(record, index, progress);

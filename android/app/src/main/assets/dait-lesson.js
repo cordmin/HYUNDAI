@@ -1,4 +1,4 @@
-// 수업 규칙: 시간에 맞춘 수업 조립, 긴 이동의 교시 나누기, 도착에 맞춘 줄이기, 숙제 기록.
+// 수업 규칙: 시간에 맞춘 수업 조립, 긴 이동의 교시 나누기, 도착에 맞춘 줄이기, 수업 기록.
 // 작업용 대본으로 생산·통합하며 교사 검수는 후속 단계다. 필수 조각은 두고 시간이 남는 만큼 나머지 조각을 더한다.
 (function (root) {
   const TIME_CHOICES = [8, 15, 20, 30];
@@ -41,11 +41,12 @@
     return pieces.reduce((sum, piece) => sum + (isBreak(piece) ? speechSeconds(piece) : speechSeconds(piece) / rate) + (piece.wait || 0), 0);
   }
 
+  // 복습·이음·짧은 정리는 상황에 따라 앞뒤에 붙는 조각이라 본 차례에 넣지 않는다.
   function lessonOrder(lesson) {
-    return lesson.pieces.filter(piece => !piece.short && !['복습', '짧은정리'].includes(piece.kind));
+    return lesson.pieces.filter(piece => !piece.short && !['복습', '이음', '짧은정리'].includes(piece.kind));
   }
 
-  // 짧은 판(판 8)은 따로 짠 맛보기 수업이다. 질문으로 시작해 개념 하나만 다루고 답과 숙제로 맺는다.
+  // 짧은 판(판 8)은 따로 짠 맛보기 수업이다. 질문으로 시작해 개념 하나만 다루고 답과 정리로 맺는다.
   function shortOrder(lesson) {
     return lesson.pieces.filter(piece => piece.short);
   }
@@ -105,15 +106,51 @@
     return pick(orderFor(lesson, minutes), minutes * 60);
   }
 
+  // ---- 시리즈: 목록.csv의 「시리즈」와 「편」으로 차례를 정한다 ----
+  function seriesStep(lessons, lesson, step) {
+    if (!lesson || !lesson.series) return null;
+    return lessons.find(item => item.series === lesson.series && item.part === lesson.part + step) || null;
+  }
+
+  function finishedIds(records) {
+    return new Set((records || []).filter(record => record.finished).map(record => record.lesson));
+  }
+
+  // 이어 들을 차례인 편: 가장 최근에 마친 시리즈 수업의 다음 편 가운데 아직 마치지 않은 것.
+  function seriesDue(lessons, records) {
+    const done = finishedIds(records);
+    for (const record of [...(records || [])].reverse()) {
+      if (!record.finished) continue;
+      const next = seriesStep(lessons, lessons.find(item => item.id === record.lesson), 1);
+      if (next && !done.has(next.id)) return next;
+    }
+    return null;
+  }
+
+  // 앞 편을 아직 마치지 않은 뒤 편. 시리즈를 켜면 추천 뒤로 보낸다(목록에서 숨기지는 않는다).
+  function seriesWaiting(lessons, lesson, records) {
+    const before = seriesStep(lessons, lesson, -1);
+    return !!before && !finishedIds(records).has(before.id);
+  }
+
+  // 원래 판으로 들을 수 있는가. 시리즈 수업은 맛보기(짧은 판)로 넘기지 않고 다음 이동으로 미룬다.
+  function playsFull(lesson, minutes) {
+    return orderFits(lessonOrder(lesson), minutes) && !isShort(orderFor(lesson, minutes));
+  }
+
   // 남은 시간에 들어가는 수업을, 그 시간을 많이 채우는 순서로 고른다. 들은 수업은 뒤로 보낸다.
   // 짧은 판만 들은 수업은 맛보기를 한 것이라 뒤로 보내지 않는다. 다음 긴 이동에서 원래 판으로 이어 듣게 한다.
-  function recommend(lessons, minutes, records) {
+  // 시리즈를 켜면(options.series): 이어 들을 편을 맨 앞에 두고, 앞 편을 안 마친 뒤 편은 맨 뒤로 보내며,
+  // 원래 판이 들어가지 않는 시리즈 수업은 이번에는 권하지 않는다.
+  function recommend(lessons, minutes, records, options = {}) {
     const heard = new Set((records || []).map(record => record.lesson)); // 짧은 판으로 들었어도 들은 수업이다(2026-11-09)
     if (minutes < MIN_LESSON_MINUTES) return [];
+    const series = !!options.series;
+    const due = series ? seriesDue(lessons, records) : null;
     return lessons
-      .filter(lesson => fits(lesson, minutes))
-      .map(lesson => ({ lesson, seconds: totalSeconds(assemble(lesson, minutes)) }))
-      .sort((a, b) => heard.has(a.lesson.id) - heard.has(b.lesson.id) || b.seconds - a.seconds)
+      .filter(lesson => fits(lesson, minutes) && (!series || !lesson.series || playsFull(lesson, minutes)))
+      .map(lesson => ({ lesson, seconds: totalSeconds(assemble(lesson, minutes)), rank: lesson === due ? 0 : series && seriesWaiting(lessons, lesson, records) ? 2 : 1 }))
+      .sort((a, b) => a.rank - b.rank || heard.has(a.lesson.id) - heard.has(b.lesson.id) || b.seconds - a.seconds)
       .map(item => item.lesson);
   }
 
@@ -122,20 +159,30 @@
     return Number.isFinite(etaMinutes) ? Math.floor(etaMinutes) : DEFAULT_MINUTES;
   }
 
-  // 지난 수업이 마친 수업이고 다른 수업을 시작할 때만 앞에 복습을 붙인다. 짧은 판에는 복습을 두지 않는다.
-  // 판은 고른 시간으로 정하고, 복습도 시간 안에 넣는다. 복습 때문에 필수 조각이 빠지게 되면 복습을 뺀다.
-  function plan(lesson, lessons, minutes, records) {
+  // 시리즈 앞 편과 이어 주는 말. 이번 수업의 대본에 「이음」으로 둔다.
+  function bridge(lesson) {
+    return lesson.pieces.find(piece => piece.kind === '이음') || null;
+  }
+
+  // 「지난 시간에는 …」 복습은 붙이지 않는다(2026-11-09). 며칠 전 수업이나 다른 과목을 되짚어 듣는 사람을 헷갈리게 했다.
+  // 대본의 복습 조각은 보관만 한다.
+  // 바로 앞에 들은 수업(쉬지 않고 이어 붙였으면 options.after, 아니면 마지막으로 마친 수업)이 시리즈 앞 편이면
+  // 앞에 이음 말을 붙인다. 판은 고른 시간으로 정하고, 이음도 시간 안에 넣으며 그 때문에 필수 조각이 빠지면 뺀다.
+  function plan(lesson, lessons, minutes, records, options = {}) {
     const order = orderFor(lesson, minutes);
     const last = (records || []).filter(record => record.finished).slice(-1)[0];
     const before = last && last.lesson !== lesson.id ? lessons.find(item => item.id === last.lesson) : null;
-    const line = before && !isShort(order) ? recap(before) : null;
-    const left = line ? minutes - pieceSeconds(line) / 60 : minutes;
-    return line && orderFits(order, left) ? [line, ...pick(order, left * 60)] : pick(order, minutes * 60);
+    const prev = options.after || before;
+    const link = !isShort(order) && prev && prev === seriesStep(lessons, lesson, -1) ? bridge(lesson) : null;
+    for (const lead of [[link], []].map(items => items.filter(Boolean))) {
+      const left = minutes - totalSeconds(lead) / 60;
+      if (!lead.length || orderFits(order, left)) return [...lead, ...pick(order, left * 60)];
+    }
   }
 
-  // 복습은 지난 수업의 말이므로 이번 수업을 들은 시간에 넣지 않는다.
+  // 복습·이음은 이번 수업의 본 내용이 아니므로 이번 수업을 들은 시간에 넣지 않는다.
   function lessonSeconds(pieces) {
-    return totalSeconds(pieces.filter(piece => piece.kind !== '복습' && !isBreak(piece)));
+    return totalSeconds(pieces.filter(piece => !['복습', '이음'].includes(piece.kind) && !isBreak(piece)));
   }
 
   // 수업 중 내비의 남은 시간이 바뀌면, 앞으로 할 조각을 대본에서 다시 고른다.
@@ -163,10 +210,14 @@
   }
 
   // 교시마다 다른 수업을 듣도록 추천 차례대로 줄을 세운다. 고른 수업이 있으면 1교시로 올린다.
-  function tripOrder(lessons, records, firstId) {
-    const order = recommend(lessons, PERIOD_MINUTES, records);
-    const first = lessons.find(lesson => lesson.id === firstId); // 고른 수업은 빼지 않는다. 다른 수업이 대신 나오지 않게 한다
-    return first ? [first, ...order.filter(lesson => lesson !== first)] : order;
+  // 시리즈를 켜면 맨 앞 수업의 다음 편(아직 안 마친 것)을 바로 뒤에 세운다.
+  function tripOrder(lessons, records, firstId, options = {}) {
+    const order = recommend(lessons, PERIOD_MINUTES, records, options);
+    const first = lessons.find(lesson => lesson.id === firstId) || order[0]; // 고른 수업은 빼지 않는다. 다른 수업이 대신 나오지 않게 한다
+    if (!first) return order;
+    const next = options.series ? seriesStep(lessons, first, 1) : null;
+    const follow = next && !finishedIds(records).has(next.id) ? [next] : [];
+    return [first, ...follow, ...order.filter(lesson => lesson !== first && !follow.includes(lesson))];
   }
 
   // 교시 사이 쉬는 시간(분). 짧은 이동에서 이어 붙인 수업은 쉬지 않고 바로 넘어간다.
@@ -181,19 +232,22 @@
   // 시간을 교시에 고르게 나눈다. 뒤에 줄 선 수업은 later에 두었다가 도착이 늦어지면 교시로 되살린다.
   // count는 지금 이어 들을 뒤 교시 수다. 수업이 모자라면 시간이 남아도 같은 수업을 다시 넣지 않는다.
   // 긴 이동이 아니어도 첫 수업이 다 들어가고 5분 넘게 남으면, 남은 시간에 들어가는 다른 수업을 쉬지 않고 이어 붙인다.
-  function planTrip(order, minutes) {
-    const follow = followTrip(order, minutes);
-    if (follow) return follow;
+  function planTrip(order, minutes, options = {}) {
+    const series = !!options.series; // 도착이 당겨져 뒤 교시를 다시 셀 때도 시리즈 규칙을 지키려고 기억한다
+    const follow = followTrip(order, minutes, options);
+    if (follow) return { ...follow, series };
     const total = Math.max(1, Math.min(order.length, periodCount(minutes)));
-    return { lesson: order[0], later: order.slice(1), count: total - 1, number: 1, minutes: periodShare(minutes, total, BREAK_MINUTES), rest: BREAK_MINUTES };
+    return { lesson: order[0], later: order.slice(1), count: total - 1, number: 1, minutes: periodShare(minutes, total, BREAK_MINUTES), rest: BREAK_MINUTES, series };
   }
 
   // 첫 수업은 들어가는 만큼 다 듣고, 남은 시간은 뒤 수업 몫(laterMinutes)으로 떼어 둔다.
-  function followTrip(order, minutes) {
+  // 시리즈를 켜면 시리즈 수업은 원래 판이 들어갈 때만 이어 붙인다. 안 들어가면 다음 이동으로 미루고 다른 수업을 붙인다.
+  function followTrip(order, minutes, options = {}) {
     if (isLongTrip(minutes) || order.length < 2 || !fits(order[0], minutes)) return null;
     const own = totalSeconds(assemble(order[0], minutes)) / 60;
     const left = minutes - own;
-    const next = left >= MIN_LESSON_MINUTES ? order.slice(1).find(lesson => fits(lesson, left)) : null;
+    const can = lesson => fits(lesson, left) && (!options.series || !lesson.series || playsFull(lesson, left));
+    const next = left >= MIN_LESSON_MINUTES ? order.slice(1).find(can) : null;
     if (!next) return null;
     const later = [next, ...order.slice(1).filter(lesson => lesson !== next)];
     return { lesson: order[0], later, count: 1, number: 1, minutes: own, laterMinutes: left, rest: 0 };
@@ -203,7 +257,7 @@
   function nextPeriod(trip, remainingSeconds) {
     const [lesson, ...later] = trip.later;
     const count = trip.count - 1;
-    return { ...trip, lesson, later, count, number: trip.number + 1, minutes: periodShare(remainingSeconds / 60, count + 1, restOf(trip)), laterMinutes: undefined };
+    return { ...trip, lesson, later, count, prev: trip.lesson, number: trip.number + 1,minutes: periodShare(remainingSeconds / 60, count + 1, restOf(trip)), laterMinutes: undefined };
   }
 
   function periods(trip) {
@@ -219,11 +273,13 @@
   function withBreak(pieces, trip) {
     if (!trip.count) return pieces;
     const next = trip.later[0];
+    const sequel = !!next.series && next.series === trip.lesson.series && next.part === trip.lesson.part + 1; // 시리즈 다음 편
     if (!restOf(trip)) {
       const taste = isShort(orderFor(next, trip.laterMinutes || trip.minutes)) ? ' 맛보기예요' : '이에요';
-      return [...pieces, { id: 'break', kind: '쉬는시간', line: `이어서 ${next.subject} 수업${taste}`, text: '', seconds: FOLLOW_SECONDS }];
+      const line = sequel ? `이어서 ${next.series} ${next.part}편${taste}` : `이어서 ${next.subject} 수업${taste}`;
+      return [...pieces, { id: 'break', kind: '쉬는시간', line, text: '', seconds: FOLLOW_SECONDS }];
     }
-    const line = `쉬는 시간이에요. 다음은 ${trip.number + 1}교시 ${trip.later[0].subject}`;
+    const line = `쉬는 시간이에요. 다음은 ${trip.number + 1}교시 ${sequel ? `${next.series} ${next.part}편` : next.subject}`;
     return [...pieces, { id: 'break', kind: '쉬는시간', line, text: '', seconds: BREAK_MINUTES * 60 }];
   }
 
@@ -236,7 +292,10 @@
       : Number(!!trip.later[0] && spare >= MIN_LESSON_MINUTES * 60 && playbackSeconds(required(trip.later[0]), rate) <= spare - ARRIVAL_MARGIN_S);
     let count = Math.min(trip.later.length, Math.max(trip.count, room));
     const need = kept => trip.later.slice(0, kept).reduce((sum, lesson) => sum + rest + playbackSeconds(required(lesson), rate), mustSeconds);
-    while (count > 0 && need(count) > budget) count--;
+    // 시리즈를 켰으면 뒤 교시의 시리즈 수업이 원래 판으로 들어갈 때만 남긴다. 아니면 다음 이동으로 미룬다.
+    const tooShort = kept => trip.series && trip.later.slice(0, kept).some(lesson =>
+      lesson.series && !playsFull(lesson, (rest ? (budget - mustSeconds) / kept - rest : spare) / 60));
+    while (count > 0 && (need(count) > budget || tooShort(count))) count--;
     return count;
   }
 
@@ -311,8 +370,8 @@
   }
 
   // Gleo로 수업을 부를 때: 말한 과목이 있으면 그 과목 가운데, 없으면 전체에서 맨 앞 추천 수업. 없으면 null.
-  function forRequest(lessons, minutes, records, subject) {
-    return bySubject(recommend(lessons, minutes, records), subject || '')[0] || null;
+  function forRequest(lessons, minutes, records, subject, options = {}) {
+    return bySubject(recommend(lessons, minutes, records, options), subject || '')[0] || null;
   }
 
   // 음원이 없는 조각의 이름. 제출용 앱을 만들기 전에 확인한다.
@@ -339,12 +398,15 @@
   }
 
   function emptyProgress() {
-    return { km: {}, records: [], homework: null, homeworkNext: [], resume: null };
+    return { km: {}, records: [], resume: null };
   }
 
   function normalize(progress) {
     const next = { ...emptyProgress(), ...(progress || {}) };
-    delete next.ieum; // 이전 보상 값은 수업·숙제 기록과 분리해 더 이상 사용하지 않는다.
+    delete next.ieum; // 이전 보상 값은 수업 기록과 분리해 더 이상 사용하지 않는다.
+    // 숙제 기능은 뺐다(2026-11-09). 예전에 남은 숙제 값도 지운다.
+    delete next.homework;
+    delete next.homeworkNext;
     // 수업 대답은 저장하지 않는다. 예전에 남은 답도 지운다.
     next.records = next.records.map(({ answers, ...record }) => record);
     return next;
@@ -359,28 +421,12 @@
     next.records = [...next.records, record].slice(-KEEP_RECORDS);
     if (!finished) return next;
     if (next.resume && next.resume.lesson === lesson.id) next.resume = null; // 이어 듣던 수업을 마쳤다
-    if (lesson.homework) {
-      // 긴 이동에서 교시마다 숙제가 생겨도 앞 숙제를 덮지 않는다. 같은 수업의 숙제만 새것으로 바꾼다.
-      const waiting = [next.homework, ...next.homeworkNext].filter(item => item && item.lesson !== lesson.id);
-      const [first, ...rest] = [...waiting, { lesson: lesson.id, title: lesson.homework, ymd }];
-      next.homework = first;
-      next.homeworkNext = rest;
-    }
     return next;
   }
 
   // 끝까지 못 들은 수업 하나만 기억한다. 다른 수업이 또 끊기면 그것으로 바뀐다.
   function keepResume(progress, point) {
     return { ...normalize(progress), resume: point };
-  }
-
-  function finishHomework(progress) {
-    const next = normalize(progress);
-    if (!next.homework) return next;
-    const [first, ...rest] = next.homeworkNext;
-    next.homework = first || null;
-    next.homeworkNext = rest;
-    return next;
   }
 
   function mileageLine(km) {
@@ -392,7 +438,8 @@
     TIME_CHOICES, LONG_CHOICES, LONG_TRIP_MINUTES, BREAK_MINUTES, DEFAULT_MINUTES, SHORT_UNDER_MINUTES, assemble, playbackSeconds, fits, recommend, minutesFor, plan, lessonSeconds, fitRemaining,
     speechSeconds, totalSeconds, required, shortOrder, isShort, recap, shortEnd, isQuestion, isClosing, isLongTrip, periodCount, tripOrder, planTrip, nextPeriod, periods, restOf, isBreak, withBreak, fitTrip,
     resumePoint, resumeFresh, resumeFits, resumePlan, resumeHeard, keepResume, RESUME_DAYS,
-    subjects, bySubject, forRequest, unvoiced, countsAsFinished, monthOf, normalize, finishLesson, finishHomework, mileageLine
+    seriesStep, seriesDue, seriesWaiting, playsFull, bridge,
+    subjects, bySubject, forRequest, unvoiced, countsAsFinished, monthOf, normalize, finishLesson, mileageLine
   };
   root.Lesson = Lesson;
   if (typeof module !== 'undefined') module.exports = Lesson;

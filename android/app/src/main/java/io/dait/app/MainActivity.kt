@@ -28,6 +28,7 @@ class MainActivity : Activity() {
     private var isRestricted = true // 차 상태를 받기 전에는 주행 중으로 둔다.
     private var navi: NaviBridge? = null
     private var voice: VoiceSession? = null
+    private var bed: BedSound? = null
     private var journeyActive = false
     private var pageReady = false
     private val gleoWaiting = mutableListOf<String>()
@@ -72,6 +73,7 @@ class MainActivity : Activity() {
         voice = VoiceSession(this) { event ->
             callPage("window.onSpeechEvent && window.onSpeechEvent(${JSONObject.quote(event.toString())});")
         }
+        bed = BedSound(this).also { it.setVolume(currentSpeechVolume()) }
         navi = NaviBridge(this) { json ->
             callPage("window.onNaviUpdate && window.onNaviUpdate(${JSONObject.quote(json.toString())});")
         }.also { it.connect() }
@@ -153,6 +155,8 @@ class MainActivity : Activity() {
         JourneyService.stop(this)
         voice?.release()
         voice = null
+        bed?.stop()
+        bed = null
         navi?.release()
         navi = null
         try { restrictions?.unregisterListener() } catch (_: Exception) {}
@@ -197,6 +201,9 @@ class MainActivity : Activity() {
         val effective = blocked || simulatedDriving
         callPage("window.setDrivingMode && window.setDrivingMode($effective, $blocked);")
     }
+
+    private fun currentSpeechVolume(): Int = (getSharedPreferences("dait.audio", MODE_PRIVATE)
+        .getFloat("volume", 1f).coerceIn(0f, 1f) * 100).roundToInt()
 
     private fun callPage(script: String) {
         runOnUiThread { if (!isDestroyed) webView.evaluateJavascript(script, null) }
@@ -255,15 +262,25 @@ class MainActivity : Activity() {
         }
 
         @JavascriptInterface
-        fun getSpeechVolume(): Int = (getSharedPreferences("dait.audio", MODE_PRIVATE)
-            .getFloat("volume", 1f).coerceIn(0f, 1f) * 100).roundToInt()
+        fun getSpeechVolume(): Int = currentSpeechVolume()
 
         @JavascriptInterface
         fun setSpeechVolume(percent: Int) {
             val level = percent.coerceIn(0, 100)
             getSharedPreferences("dait.audio", MODE_PRIVATE).edit()
                 .putFloat("volume", level / 100f).apply()
-            runOnUiThread { voice?.setVolume(level) }
+            runOnUiThread { voice?.setVolume(level); bed?.setVolume(level) }
+        }
+
+        // 발문 뒤 생각할 틈과 쉬는 시간에 작게 까는 배경음. 수업 말을 시작하기 전에 화면이 끈다.
+        @JavascriptInterface
+        fun startBed() {
+            runOnUiThread { bed?.start() }
+        }
+
+        @JavascriptInterface
+        fun stopBed() {
+            runOnUiThread { bed?.stop() }
         }
 
         // 화면이 Gleo 부름에 답한다. 답이 늦어 이미 실패로 답한 부름이면 버린다.

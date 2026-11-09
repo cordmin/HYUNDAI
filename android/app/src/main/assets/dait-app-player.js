@@ -9,9 +9,10 @@ function renderLessonPick(container) {
   const eta = remainMinutes();
   const choices = eta !== null ? [Lesson.minutesFor(eta)] : [...Lesson.TIME_CHOICES, ...Lesson.LONG_CHOICES];
   if (!choices.includes(lessonMinutes)) lessonMinutes = eta !== null ? choices[0] : Lesson.DEFAULT_MINUTES;
-  const trip = Lesson.planTrip(Lesson.tripOrder(DAIT_LESSONS, progress.records, armed && armed.lesson), lessonMinutes);
+  const rules = lessonRules();
+  const trip = Lesson.planTrip(Lesson.tripOrder(DAIT_LESSONS, progress.records, armed && armed.lesson, rules), lessonMinutes, rules);
   const periods = trip.lesson ? Lesson.periods(trip) : [];
-  const lessons = Lesson.recommend(DAIT_LESSONS, trip.minutes, progress.records);
+  const lessons = Lesson.recommend(DAIT_LESSONS, trip.minutes, progress.records, rules);
   const reserved = armed && armed.lesson ? DAIT_LESSONS.find(lesson => lesson.id === armed.lesson) : null;
   const stopped = stoppedLesson(lessonMinutes);
   const stopReserved = !!reserved && armed.fromStop;
@@ -56,9 +57,8 @@ function renderLessonPick(container) {
           </div>
         </div>
         <div class="pearl-record-scroll" aria-label="수업 목록 이동"><button id="lessonScrollUp" onclick="scrollList(-1, 'lessonList')" aria-label="이전 수업"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button><div class="pearl-record-track" aria-hidden="true"><div id="lessonScrollThumb" class="pearl-scroll-thumb"></div></div><button id="lessonScrollDown" onclick="scrollList(1, 'lessonList')" aria-label="다음 수업"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div>
-        ${mileage || progress.homework ? `<div class="lesson-side">
-          ${mileage ? `<div class="card-sub">${escapeHtml(mileage)}</div>` : ''}
-          ${progress.homework ? `<div class="card-label">숙제</div><div class="card-sub">${escapeHtml(progress.homework.title)}</div><button class="card-btn" onclick="doneHomework()">했어요</button>` : ''}
+        ${mileage ? `<div class="lesson-side">
+          <div class="card-sub">${escapeHtml(mileage)}</div>
         </div>` : ''}
       </div>
       </div>

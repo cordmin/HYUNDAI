@@ -127,6 +127,7 @@ window.onAppResumed = function() {
 let sentLessonMedia = '';
 
 function syncLessonMedia() {
+  syncLessonBed();
   if (!window.AndroidBridge) return;
   const run = lessonRun, active = !!run && !run.done && currentMode === 'lesson';
   const state = active ? (isLessonResting() ? 'paused' : run.playback.state) : 'ended';
@@ -197,7 +198,7 @@ function gleoStartLesson(params) {
   const asked = Math.floor(Number(params.minutes));
   const wanted = asked > 0 ? asked : null;
   lessonMinutes = eta !== null ? Math.min(Lesson.minutesFor(eta), wanted || Infinity) : (wanted || Lesson.DEFAULT_MINUTES);
-  const lesson = Lesson.forRequest(DAIT_LESSONS, lessonMinutes, lessonProgress().records, params.subject);
+  const lesson = Lesson.forRequest(DAIT_LESSONS, lessonMinutes, lessonProgress().records, params.subject, lessonRules());
   if (!lesson) { gleoReply(fn, 'fail', 'There is no DAIT lesson that fits this time.'); return; }
   const before = lessonRun;
   startLesson(lesson.id);

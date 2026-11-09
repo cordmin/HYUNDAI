@@ -11,7 +11,7 @@ const { spawnSync } = require('node:child_process');
 
 const piece = (id, kind, must, seconds) => ({ id, kind, must, seconds, text: '말', line: id });
 const lesson = {
-  id: 'a', title: '가', homework: '숙제',
+  id: 'a', title: '가',
   pieces: [
     piece('r1', '복습', true, 20), piece('i1', '도입', true, 60), piece('b1', '전개', false, 120), piece('q1', '발문', true, 30),
     piece('b2', '전개', false, 200), piece('c1', '정리', true, 60), piece('s1', '짧은정리', true, 15)
@@ -129,18 +129,12 @@ test('목적지가 없으면 보통 15분으로, 있으면 남은 시간으로 �
   assert.deepStrictEqual(Lesson.recommend([lesson], Lesson.minutesFor(0), []), []);
 });
 
-test('지난 수업을 마쳤을 때만 다른 수업 앞에 복습을 붙이고, 같은 수업을 다시 들을 때는 붙이지 않는다', () => {
+test('지난 수업을 마쳤어도 「지난 시간에는」 복습을 붙이지 않고 바로 본 수업으로 들어간다', () => {
   const other = { ...lesson, id: 'b' };
-  assert.strictEqual(Lesson.plan(other, [lesson, other], 8, [{ lesson: 'a', finished: true }])[0].id, 'r1');
+  assert.strictEqual(Lesson.plan(other, [lesson, other], 8, [{ lesson: 'a', finished: true }])[0].id, 'i1');
   assert.strictEqual(Lesson.plan(other, [lesson, other], 8, [{ lesson: 'a', finished: false }])[0].id, 'i1');
   assert.strictEqual(Lesson.plan(other, [lesson, other], 8, [{ lesson: 'b', finished: true }])[0].id, 'i1');
-});
-
-test('복습도 시간 안에 넣고, 복습 때문에 필수 조각이 빠지면 복습을 뺀다', () => {
-  const other = { ...lesson, id: 'b' };
-  const done = [{ lesson: 'a', finished: true }];
-  assert.ok(Lesson.totalSeconds(Lesson.plan(other, [lesson, other], 8, done)) <= 8 * 60);
-  assert.strictEqual(Lesson.plan(other, [lesson, other], 170 / 60, done)[0].id, 'i1');
+  assert.ok(lessons.every(item => Lesson.plan(item, lessons, 30, lessons.filter(x => x !== item).map(x => ({ lesson: x.id, finished: true }))).every(p => p.kind !== '복습')));
 });
 
 test('도착이 앞당겨지면 뒤의 선택 조각부터 빼고, 필수도 안 들어가면 짧은 정리로 끝낸다', () => {
@@ -191,24 +185,16 @@ test('도착으로 잘린 수업은 남은 조각을 다 들어도 마친 수업
   assert.strictEqual(Lesson.countsAsFinished({ plannedSeconds: 120, heard: [lesson.pieces[0], lesson.pieces[6]], reachedEnd: true }), false);
 });
 
-test('마친 수업은 거리·숙제를 남기며 보상은 적립하지 않는다', () => {
+test('마친 수업은 거리를 남기며 보상·숙제는 남기지 않는다', () => {
   const done = Lesson.finishLesson(null, lesson, '2026-11-02', true, 12.5);
   assert.strictEqual(done.ieum, undefined);
   assert.strictEqual(done.km['2026-11'], 12.5);
-  assert.strictEqual(done.homework.title, '숙제');
+  assert.ok(!('homework' in done)); // 숙제 기능은 뺐다(2026-11-09)
   assert.ok(!('answers' in done.records[0]));
   const stopped = Lesson.finishLesson(done, lesson, '2026-11-03', false, 5);
   assert.strictEqual(stopped.ieum, undefined);
   assert.strictEqual(stopped.km['2026-11'], 12.5);
   assert.strictEqual(stopped.records.length, 2);
-});
-
-test('숙제를 마치면 숙제만 정리하고 보상은 적립하지 않는다', () => {
-  const given = Lesson.finishLesson(null, lesson, '2026-11-02', true, 0);
-  const done = Lesson.finishHomework(given);
-  assert.strictEqual(done.ieum, undefined);
-  assert.strictEqual(done.homework, null);
-  assert.strictEqual(Lesson.finishHomework(done).ieum, undefined);
 });
 
 test('예전에 저장된 답은 읽을 때 지우고 들은 수업 기록은 남긴다', () => {
@@ -374,36 +360,19 @@ test('쉬는 시간 뒤에는 남은 시간을 남은 교시에 다시 나눠, �
 
 test('과목 목록은 자료에서 겹치지 않게 만들고, 과목으로 거른다', () => {
   assert.deepStrictEqual(Lesson.subjects(lessons), ['국어', '수학', '기술', '과학']);
-  assert.deepStrictEqual(Lesson.bySubject(lessons, '수학').map(item => item.id), ['prime']);
+  assert.deepStrictEqual(Lesson.bySubject(lessons, '수학').map(item => item.id), ['cicada', 'prime']);
   assert.strictEqual(Lesson.bySubject(lessons, '').length, lessons.length);
 });
 
-test('마친 교시는 기록과 숙제를 남기고, 숙제는 하나씩 마친다', () => {
-  const first = { ...lesson, id: 'a', homework: '첫 숙제' };
-  const second = { ...lesson, id: 'b', homework: '둘째 숙제' };
+test('마친 교시는 기록과 거리만 남기고 숙제는 남기지 않는다', () => {
+  const first = { ...lesson, id: 'a' };
+  const second = { ...lesson, id: 'b' };
   const done = Lesson.finishLesson(Lesson.finishLesson(null, first, '2026-11-02', true, 1), second, '2026-11-02', true, 2);
   assert.strictEqual(done.ieum, undefined);
   assert.strictEqual(done.records.length, 2);
   assert.strictEqual(done.km['2026-11'], 3);
-  assert.strictEqual(done.homework.title, '첫 숙제');
-  const one = Lesson.finishHomework(done);
-  assert.strictEqual(one.ieum, undefined);
-  assert.strictEqual(one.homework.title, '둘째 숙제');
-  const two = Lesson.finishHomework(one);
-  assert.strictEqual(two.ieum, undefined);
-  assert.strictEqual(two.homework, null);
-  assert.strictEqual(Lesson.finishHomework(two).ieum, undefined);
-});
-
-test('같은 수업을 다시 마치면 그 수업의 숙제만 새로 바뀌어 쌓이지 않는다', () => {
-  const first = { ...lesson, id: 'a', homework: '첫 숙제' };
-  const again = Lesson.finishLesson(Lesson.finishLesson(null, first, '2026-11-02', true, 0), first, '2026-11-03', true, 0);
-  assert.strictEqual(again.homework.ymd, '2026-11-03');
-  assert.deepStrictEqual(again.homeworkNext, []);
-});
-
-test('이전에 저장한 진도에도 뒤에 기다리는 숙제 자리가 생긴다', () => {
-  assert.deepStrictEqual(Lesson.normalize({ ieum: 3, homework: null }).homeworkNext, []);
+  assert.ok(!('homework' in done) && !('homeworkNext' in done));
+  assert.strictEqual(Lesson.finishHomework, undefined); // 숙제 기능은 뺐다(2026-11-09)
 });
 
 function checkVoices(data) {
@@ -482,12 +451,84 @@ test('Gleo 설명서(schema.json)는 문서 규칙을 지키고 앱과 맞는다
 });
 
 
-test('기존 보상 값만 제거하고 수업·숙제·이어 듣기 기록을 보존한다', () => {
+test('예전 보상·숙제 값은 지우고 수업·이어 듣기 기록을 보존한다', () => {
   const old = { ieum: 42, records: [{ lesson: 'a' }], homework: { title: '숙제' }, resume: { lesson: 'a' } };
   const normalized = Lesson.normalize(old);
   assert.ok(!Object.hasOwn(normalized, 'ieum'));
   assert.deepStrictEqual(normalized.records, old.records);
-  assert.deepStrictEqual(normalized.homework, old.homework);
+  assert.ok(!Object.hasOwn(normalized, 'homework'));
   assert.deepStrictEqual(normalized.resume, old.resume);
   assert.strictEqual(old.ieum, 42);
+});
+
+// ---- 시리즈 차례대로 듣기 (2026-11-09) ----
+const sPiece = (id, kind, must, seconds, extra = {}) => ({ ...piece(id, kind, must, seconds), ...extra });
+const seriesLesson = (id, part, extra = []) => ({
+  id, title: id, subject: '수학', series: '소수 이야기', part,
+  pieces: [sPiece('r1', '복습', true, 20), ...extra, sPiece('i1', '도입', true, 60), sPiece('b1', '전개', true, 300), sPiece('c1', '정리', true, 60), sPiece('s1', '짧은정리', true, 15),
+    sPiece('m1', '도입', true, 60, { short: true }), sPiece('m2', '정리', true, 60, { short: true })]
+});
+const part1 = seriesLesson('p1', 1);
+const part2 = seriesLesson('p2', 2, [sPiece('j1', '이음', false, 10)]);
+const otherLesson = { id: 'o', title: '다른', subject: '국어', pieces: [sPiece('r1', '복습', true, 20), sPiece('i1', '도입', true, 60), sPiece('b1', '전개', true, 600), sPiece('c1', '정리', true, 60), sPiece('s1', '짧은정리', true, 15)] };
+const shelf = [part2, otherLesson, part1];
+const done = (...names) => names.map(name => ({ lesson: name, finished: true, ymd: '20261109' }));
+const on = { series: true };
+
+test('시리즈를 켜면 앞 편을 안 마친 뒤 편은 맨 뒤로, 마친 뒤에는 다음 편이 맨 앞에 온다', () => {
+  assert.deepStrictEqual(ids(Lesson.recommend(shelf, 15, [], on)), ['o', 'p1', 'p2']);
+  assert.deepStrictEqual(ids(Lesson.recommend(shelf, 15, done('p1'), on)), ['p2', 'o', 'p1']);
+  assert.strictEqual(Lesson.seriesDue(shelf, done('p1')), part2);
+  assert.strictEqual(Lesson.seriesDue(shelf, [...done('p1'), ...done('o')]), part2); // 사이에 다른 수업을 들어도 차례를 기억한다
+  assert.strictEqual(Lesson.seriesDue(shelf, done('p1', 'p2')), null);
+  // 끄면 시리즈와 상관없이 지금처럼 고른다
+  assert.deepStrictEqual(ids(Lesson.recommend(shelf, 15, [], {})), ['o', 'p2', 'p1']);
+});
+
+test('시리즈 수업은 원래 판이 안 들어가면 맛보기로 권하지 않고 다음 이동으로 미룬다', () => {
+  assert.ok(Lesson.fits(part2, 6)); // 짧은 판으로는 들어간다
+  assert.strictEqual(Lesson.playsFull(part2, 6), false);
+  assert.ok(!Lesson.recommend(shelf, 6, done('p1'), on).includes(part2));
+  assert.ok(Lesson.recommend(shelf, 6, done('p1'), {}).includes(part2));
+});
+
+test('시리즈를 켜고 1편을 고르면 남은 시간에 2편 원래 판이 들어갈 때만 바로 이어 붙인다', () => {
+  const order = Lesson.tripOrder(shelf, [], 'p1', on);
+  assert.deepStrictEqual(ids(order), ['p1', 'p2', 'o']);
+  const roomy = Lesson.planTrip(order, 20, on);
+  assert.strictEqual(roomy.later[0], part2);
+  assert.strictEqual(roomy.count, 1);
+  assert.ok(Lesson.withBreak([], roomy)[0].line.includes('소수 이야기 2편'));
+  const tight = Lesson.planTrip(order, 16, on); // 1편 뒤에 남는 시간이 2편 원래 판에 모자란다
+  assert.ok(tight.count === 0 || tight.later[0] !== part2); // 2편을 맛보기로 붙이지 않는다
+  assert.deepStrictEqual(ids(Lesson.tripOrder(shelf, [], 'p1', {})), ['p1', 'o', 'p2']);
+});
+
+test('2편은 앞 편을 바로 들었을 때만 앞에 이음 말을 붙이고, 이음은 본 차례에 없다', () => {
+  assert.deepStrictEqual(ids(Lesson.plan(part2, shelf, 15, done('p1'))).slice(0, 2), ['j1', 'i1']);
+  assert.deepStrictEqual(ids(Lesson.plan(part2, shelf, 15, [], { after: part1 })).slice(0, 2), ['j1', 'i1']); // 쉬지 않고 이어 붙였을 때
+  assert.ok(!ids(Lesson.plan(part2, shelf, 15, done('o'))).includes('j1'));
+  assert.ok(!ids(Lesson.plan(part2, shelf, 6, done('p1'))).includes('j1')); // 짧은 판에는 붙이지 않는다
+  assert.ok(!ids(Lesson.assemble(part2, 30)).includes('j1'));
+  assert.strictEqual(Lesson.lessonSeconds(Lesson.plan(part2, shelf, 15, done('p1'))), Lesson.lessonSeconds(Lesson.assemble(part2, 15)));
+});
+
+test('앱 수업: 매미가 소수 이야기 1편, 소수가 2편이고 매미 정리에는 다음 수업 예고가 없다', () => {
+  const cicada = appLessons.find(item => item.id === 'cicada');
+  const prime = appLessons.find(item => item.id === 'prime');
+  assert.deepStrictEqual([cicada.series, cicada.part, prime.series, prime.part], ['소수 이야기', 1, '소수 이야기', 2]);
+  assert.ok(Lesson.bridge(prime));
+  assert.ok(appLessons.every(item => item.pieces.every(p => !p.text.includes('다음 시간에는'))));
+  assert.strictEqual(Lesson.seriesDue(appLessons, done('cicada')), prime);
+});
+
+test('시리즈를 켜고 이어 붙인 2편은 도착이 당겨져 원래 판이 안 들어가면 빠지고, 이어 붙임 문구는 맛보기를 밝힌다', () => {
+  const trip = Lesson.planTrip(Lesson.tripOrder(shelf, [], 'p1', on), 20, on);
+  assert.strictEqual(trip.later[0], part2);
+  const pieces = Lesson.withBreak(Lesson.plan(part1, shelf, trip.minutes, []), trip);
+  assert.strictEqual(Lesson.fitTrip(pieces, 0, 20 * 60, part1, trip).count, 1);
+  assert.strictEqual(Lesson.fitTrip(pieces, 0, 10.5 * 60, part1, trip).count, 0); // 2편은 짧은 판만 들어간다 → 다음 이동으로
+  assert.strictEqual(Lesson.fitTrip(pieces, 0, 10.5 * 60, part1, { ...trip, series: false }).count, 1); // 끄면 예전처럼 맛보기로 남긴다
+  const tasting = Lesson.withBreak([], { ...trip, laterMinutes: 6 });
+  assert.strictEqual(tasting[0].line, '이어서 소수 이야기 2편 맛보기예요');
 });

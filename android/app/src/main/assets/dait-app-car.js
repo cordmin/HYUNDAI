@@ -472,7 +472,6 @@ window.setDrivingMode = function(isDriving, isRealDriving) {
   document.body.classList.toggle('driving', isDriving);
   document.body.classList.toggle('real-driving', !!isRealDriving);
   trackDoorTrip(isDriving);
-  document.getElementById('demoDrive').classList.toggle('on', isDriving);
   if (isDriving && (isParkedScreen() || (departing && currentMode === 'lesson' && isDialogueDone()))) goHome();
   trackTrip(isDriving);
   if (!isDriving && isLessonResting() && lessonRun.trip.rest) endLesson(); // 쉬는 시간에 주차하면 내린 것으로 보고 수업을 닫는다
@@ -565,14 +564,6 @@ function driveNext() {
   updateDriveScreen();
 }
 
-function toggleDrivingDemo() {
-  if (window.AndroidBridge) {
-    window.AndroidBridge.toggleDrivingSim();
-  } else {
-    window.setDrivingMode(!isDrivingMode);
-  }
-}
-
 // 차가 보내는 목적지와 남은 시간. 앱의 NaviBridge가 부른다.
 // 실제 값이 오면 시연 조작(8분 전·4분 전·2분 전)보다 우선한다.
 let naviInfo = null;
@@ -585,7 +576,7 @@ window.onNaviUpdate = function(jsonText) {
   else if (info.event === 'destination' || info.event === 'routeStarted') {
     if (info.event === 'routeStarted') routeStartedAt = performance.now();
     // 길 안내가 없을 때는 이름 없이 0으로 오므로 도착 직전과 구분한다.
-    if (!info.name && !(Number(info.remainTime) > 0)) { const had = !!naviInfo; naviInfo = null; renderDemoPanel(); if (had) refreshHomeIfIdle(); return; }
+    if (!info.name && !(Number(info.remainTime) > 0)) { const had = !!naviInfo; naviInfo = null; if (had) refreshHomeIfIdle(); return; }
     const changed = !naviInfo || naviInfo.name !== (info.name || '') || (currentMode === 'settings' && !document.querySelector('[onclick="saveHomeFromNavi()"]') && canSaveHomeFor(info));
     naviInfo = { name: info.name || '', address: info.address || '', remainTime: Number(info.remainTime), remainDistance: Number(info.remainDistance), at: Date.now() };
     noteNaviPlace();
@@ -598,12 +589,10 @@ window.onNaviUpdate = function(jsonText) {
     if (reached) noteTripArrival();
     naviPlace = '';
     naviInfo = null;
-    renderDemoPanel();
     refreshHomeIfIdle();
     if (reached) finishOnArrival();
   } else if (info.event === 'status' && info.status !== 'ROUTE_DRIVE') {
     naviInfo = null;
-    renderDemoPanel();
     refreshHomeIfIdle();
   }
 };
@@ -874,45 +863,10 @@ function naviRemainMinutes() {
 
 // 도착이 가까워지면 말하던 문장은 끝까지 하고, 다음 내비 응답 때 마무리로 넘어간다.
 function applyNaviEta() {
-  renderDemoPanel();
   if (currentMode === 'lesson') { noteLessonNavi(); fitLessonToEta(hasArrived ? 0 : remainMinutes()); return; } // 도착한 뒤 늦게 온 남은 시간으로 교시를 되살리지 않는다
   if (!currentMode || isParkedScreen() || speechPhase === 'speaking' || speechPaused || hasArrived) return;
   if (Journey.tierFor(remainMinutes()) !== 'arrive') return;
   if (stage === 'ETA_SHORT' || stage === 'PARENT_BRIDGE' || stage === 'NEXT_DAY') return; // 가족 대화는 끊지 않는다
   // 대화를 일찍 마친 등교도 내리기 전 준비물 확인은 한 번 한다 (기획안 ④)
   if (!isDialogueDone() || currentMode === 'morning') setStage('ETA_SHORT');
-}
-
-function renderDemoPanel() {
-  const minutes = naviRemainMinutes();
-  const live = minutes !== null;
-  const shown = remainMinutes();
-  const buttons = [['demoEtaLong', 8], ['demoEtaMid', 4], ['demoEtaShort', 2]];
-  buttons.forEach(([id, value]) => {
-    const button = document.getElementById(id);
-    button.classList.toggle('on', !live && shown === value);
-    button.disabled = live;
-  });
-  document.getElementById('demoEtaLong').textContent = live ? `${Math.max(1, Math.round(minutes))}분 전` : '8분 전';
-  document.getElementById('demoEtaLong').classList.toggle('on', live || shown === 8);
-}
-
-// 시연용 목적지. 차에서 실제 값이 오면(앱 안) 쓰지 않는다. 없음 → 학교 → 집 → 없음 순으로 돈다.
-let destDemoStep = 0;
-function cycleDestDemo() {
-  if (window.AndroidBridge) return;
-  destDemoStep = (destDemoStep + 1) % 3;
-  const fake = destDemoStep === 1 && school ? { name: school.name, address: school.address, remainTime: 480, remainDistance: 4000 }
-    : destDemoStep === 2 ? { name: homePlace ? homePlace.name : '우리집', address: homePlace ? homePlace.address : '', remainTime: 480, remainDistance: 4000 }
-    : null;
-  document.getElementById('demoDest').classList.toggle('on', !!fake);
-  if (fake) window.onNaviUpdate(JSON.stringify({ event: 'destination', ...fake }));
-  else window.onNaviUpdate(JSON.stringify({ event: 'routeCancelled' }));
-}
-
-// 시연용 남은 시간. 차에서 실제 값이 오면 쓰지 않는다.
-function setEtaDemo(minutes) {
-  if (naviRemainMinutes() !== null) return;
-  demoMinutes = demoMinutes === minutes ? null : minutes;
-  applyNaviEta();
 }

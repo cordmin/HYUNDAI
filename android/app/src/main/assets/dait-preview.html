@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DAIT</title>
   <link rel="stylesheet" href="dait-base.css?v=split-20261109">
-  <link rel="stylesheet" href="dait-pearl.css?v=card-play-20261109">
+  <link rel="stylesheet" href="dait-pearl.css?v=press3-20261109">
 </head>
 <body>
 
@@ -20,17 +20,10 @@
         <svg id="splashLogoSvg" class="splash-logo-svg" viewBox="0 0 100 34" fill="none">
           <defs>
             <linearGradient id="splashFlowGrad" x1="0" y1="0" x2="100" y2="0" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#38BDF8"/>
-              <stop offset="50%" stop-color="#FFFFFF"/>
-              <stop offset="100%" stop-color="#38BDF8"/>
+              <stop offset="0%" stop-color="var(--logo-start)"/>
+              <stop offset="50%" stop-color="var(--logo-mid)"/>
+              <stop offset="100%" stop-color="var(--logo-end)"/>
             </linearGradient>
-            <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="2.5" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
           </defs>
 
           <!-- Main cursive ribbon D-a-i-t -->
@@ -43,13 +36,12 @@
           <path id="splashCrossbarPath"
                 class="splash-ribbon-path"
                 d="M74 16 h12"
-                stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+                stroke="var(--logo-mid)" stroke-width="3.2" stroke-linecap="round" fill="none"/>
 
           <!-- i Dot Accent (with shockwave ring) -->
+          <circle id="splashDotRipple" class="splash-dot-ripple" cx="62" cy="7.5" r="3" fill="none" stroke="var(--logo-start)" stroke-width="2"/>
           <g id="splashDotGroup" class="splash-dot-group">
-            <circle id="splashDotRipple" class="splash-dot-ripple" cx="62" cy="7.5" r="3" fill="none" stroke="#38BDF8" stroke-width="2"/>
-            <circle id="splashDot" cx="62" cy="7.5" r="3.2" fill="#38BDF8" filter="url(#neonGlow)"/>
-            <circle cx="62" cy="7.5" r="1.5" fill="#FFFFFF"/>
+            <circle id="splashDot" cx="62" cy="7.5" r="3.2" fill="var(--logo-start)"/>
           </g>
         </svg>
       </div>
@@ -72,30 +64,21 @@
       </div>
     </div>
 
-    <!-- Demo Panel: 시연용 주행 상태와 남은 시간 -->
-    <div class="demo-panel">
-      <button id="demoDrive" onclick="toggleDrivingDemo()">주행</button>
-      <button id="demoEtaLong" onclick="setEtaDemo(8)">8분 전</button>
-      <button id="demoEtaMid" onclick="setEtaDemo(4)">4분 전</button>
-      <button id="demoEtaShort" onclick="setEtaDemo(2)">2분 전</button>
-      <button id="demoDest" onclick="cycleDestDemo()">목적지</button>
-      <button onclick="window.onDoorOpened()">문 열림</button>
-    </div>
-
   </div>
 
   <audio id="audioPlayer" preload="metadata"></audio>
 
   <script src="dait-rules.js"></script>
   <script src="dait-journey.js"></script>
-  <script src="dait-lesson.js?v=no-slider-20261109"></script>
+  <script src="dait-lesson.js?v=pick2-20261109"></script>
   <script src="dait-lessons.js"></script>
   <script src="dait-playback.js?v=color-modes-20261108-final"></script>
-  <script src="dait-app.js?v=split-20261109"></script>
-  <script src="dait-app-lesson.js?v=split-20261109"></script>
+  <script src="dait-sound-levels.js?v=bands-20261109"></script>
+  <script src="dait-app.js?v=pick2-20261109"></script>
+  <script src="dait-app-lesson.js?v=bands3-20261109"></script>
   <script src="dait-app-car.js?v=split-20261109"></script>
   <script src="dait-app-start.js?v=split-20261109"></script>
-  <script src="dait-appearance.js?v=color-modes-20261108-final"></script>
-  <script src="dait-volume.js?v=color-modes-20261108-final"></script>
+  <script src="dait-appearance.js?v=tools-pill-20261109"></script>
+  <script src="dait-volume.js?v=tools-pill-20261109"></script>
 </body>
 </html>

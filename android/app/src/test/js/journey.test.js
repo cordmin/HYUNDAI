@@ -1035,20 +1035,40 @@ test('주행 중 제안도 남은 시간이 40분을 넘으면 교시로 듣는�
   page(`window.setDrivingMode(false); goHome(); demoMinutes = null;`);
 });
 
-test('수업 고르는 화면에는 시간·과목 버튼 없이 수업 카드만 둔다', () => {
+test('수업 시간은 기록 화면 같은 탭에서 8분·15분·20분만 고른다', () => {
   page(`localStorage.values.clear(); openLessons();`);
   assert.ok(!stageHtml().includes('data-lesson-filter'));
   assert.ok(!stageHtml().includes('>전체</button>'));
+  assert.match(stageHtml(), /class="pearl-record-tabs lesson-time-tabs" role="tablist" aria-label="수업 시간">/);
+  assert.match(stageHtml(), /class="lesson-pick pearl-record-content"/);
+  assert.match(stageHtml(), /aria-selected="true" onclick="pickLessonTime\(8\)"/); // 처음 열면 8분 탭
+  for (const minutes of [8,15,20]) assert.ok(stageHtml().includes(`onclick="pickLessonTime(${minutes})"`));
+  assert.ok(!stageHtml().includes('onclick="pickLessonTime(30)"'));
+  assert.ok(stageHtml().includes('id="lessonList"'));
+  assert.ok(stageHtml().includes('id="lessonScrollDown"'));
+  assert.ok(stageHtml().includes(`onclick="scrollList(1, 'lessonList')"`));
   assert.ok(stageHtml().includes('AI는 왜 자신 있게 틀릴까요?</span>')); // 카드 큰 글은 수업의 질문
-  assert.ok(/<span class="lesson-meta"[^>]*>기술 · 약 \d+분<\/span>/.test(stageHtml())); // 부제는 과목과 재생 시간만
+  assert.ok(/<span class="lesson-meta"[^>]*>기술 · 약 \d+분 · AI는 왜 자신 있게 틀릴까<\/span>/.test(stageHtml()));
+  page(`pickLessonTime(8);`);
+  assert.strictEqual(page('lessonMinutes'), 8);
+  assert.match(stageHtml(), /aria-selected="true" onclick="pickLessonTime\(8\)"/);
+  page(`pickLessonTime(20); pickLessonTime(30);`);
+  assert.strictEqual(page('lessonMinutes'), 20);
+  page(`isDrivingMode = true; pickLessonTime(15); isDrivingMode = false;`);
+  assert.strictEqual(page('lessonMinutes'), 20);
+  page(`naviInfo = {remainTime:480,at:Date.now()}; pickLessonTime(15);`);
+  assert.strictEqual(page('lessonMinutes'), 20);
+  page(`render();`);
+  assert.ok(!stageHtml().includes('lesson-time-tabs'));
+  page(`naviInfo = null;`);
   page(`goHome();`);
 });
 
 test('출발하면 듣기로 고른 수업은 출발할 때 시작하고, 고르는 동안에는 말하지 않는다', () => {
   page(`localStorage.values.clear(); openLessons(); toggleLessonArm('ai');`);
   assert.strictEqual(page(`armed.mode`), 'lesson');
-  assert.ok(stageHtml().includes('출발하면 들려줄게요: AI는 왜 자신 있게 틀릴까'));
-  assert.ok(!stageHtml().includes('toggleLessonArm')); // 카드에 예약 버튼은 두지 않는다
+  assert.ok(!stageHtml().includes('출발하면 들려줄게요')); // 예약은 버튼 글자(예약 취소)로만 보여 준다
+  assert.ok(stageHtml().includes(`onclick="toggleLessonArm('ai')">예약 취소</button>`));
   assert.strictEqual(page(`currentMode`), 'lessonPick');
   assert.strictEqual(page(`lessonRun`), null);
   assert.strictEqual(page(`speechPhase`), 'idle');
@@ -1166,7 +1186,7 @@ test('수업 예약은 등하교 예약과 말이 다르다', () => {
 test('학교 등록 전 첫 화면은 빈 칸 없이 수업의 질문을 보여 주고, 도착 시간을 모르면 도착을 약속하지 않는다', () => {
   page(`localStorage.values.clear(); goHome(); demoMinutes = null; lessonMinutes = 15; renderStage();`);
   const html = page(`document.getElementById('stageArea').innerHTML`);
-  assert.ok(html.includes('왜 낮 하늘은 파랗고 노을은 붉을까?'));
+  assert.ok(html.includes(page('escapeHtml(homePick.question)'))); // 추천 수업은 무작위다
   assert.ok(html.includes('분이면 답을 알게 돼요'));
   assert.ok(!html.includes('등록 필요'));
   assert.ok(!html.includes('하교 대화'));
@@ -1409,7 +1429,8 @@ test('브라우저 탐색은 새 음원 metadata 뒤에도 정확한 위치를 �
 test('기록 화면은 수업 기록과 기존 배지 여섯 장을 보여 준다', () => {
   page(`goHome(); localStorage.values.clear(); openPearlTab('records');`);
   assert.ok(!stageHtml().includes('내 배움 보관함'));
-  assert.ok(stageHtml().includes('수업 기록'));
+  assert.ok(stageHtml().includes('>배움 기록</button>'));
+  assert.ok(stageHtml().includes('>획득 배지</button>'));
   page(`selectRecordTab('badges');`);
   assert.equal((stageHtml().match(/<img src="badges\//g) || []).length, 6);
   for (const id of ['first-discovery','korean','math','exploration','well-rounded-explorer','everyday-discoverer']) {
@@ -1417,6 +1438,82 @@ test('기록 화면은 수업 기록과 기존 배지 여섯 장을 보여 준�
   }
   assert.ok(!stageHtml().includes('받는 방법은 준비 중'));
   page(`selectRecordTab('lessons'); goHome();`);
+});
+
+test('기록의 큰 위아래 버튼은 화면 높이만큼 이동하고 끝·주행 중 조작을 막는다', () => {
+  const result = page(`(() => {
+    const original = document.getElementById;
+    const up = {}, down = {}, positions = [];
+    const panel = {scrollTop:0,scrollHeight:1000,clientHeight:300,scrollBy({top}) { this.scrollTop = Math.max(0, Math.min(700, this.scrollTop + top)); }};
+    const thumb = {style:{setProperty(key,value){positions.push(value)}}};
+    document.getElementById = id => ({recordPanel:panel,recordScrollUp:up,recordScrollDown:down,recordScrollThumb:thumb,lessonList:panel,lessonScrollUp:up,lessonScrollDown:down,lessonScrollThumb:thumb}[id] || original(id));
+    try {
+      updateListScroll(); const atStart = up.disabled && !down.disabled;
+      scrollList(1); updateListScroll(); const moved = panel.scrollTop;
+      panel.scrollTop = 700; updateListScroll(); const atEnd = down.disabled && !up.disabled;
+      isDrivingMode = true; scrollList(-1); updateListScroll();
+      const blocked = panel.scrollTop===700 && up.disabled && down.disabled;
+      isDrivingMode = false; panel.scrollTop = 0;
+      updateListScroll('lessonList','lessonScroll'); const lessonAtStart = up.disabled && !down.disabled;
+      scrollList(1,'lessonList'); const lessonMoved = panel.scrollTop;
+      isDrivingMode = true; scrollList(-1,'lessonList'); updateListScroll('lessonList','lessonScroll');
+      return {atStart,moved,atEnd,blocked,lessonAtStart,lessonMoved,lessonBlocked:panel.scrollTop===240 && up.disabled && down.disabled};
+    } finally {document.getElementById = original; isDrivingMode = false;}
+  })()`);
+  assert.strictEqual(result.atStart, true);
+  assert.strictEqual(result.moved, 240);
+  assert.strictEqual(result.atEnd, true);
+  assert.strictEqual(result.blocked, true);
+  assert.strictEqual(result.lessonAtStart, true);
+  assert.strictEqual(result.lessonMoved, 240);
+  assert.strictEqual(result.lessonBlocked, true);
+});
+
+test('배움 기록은 날짜를 제목 위에 월·일로 표시하고 완료 문구를 바꾼다', () => {
+  page(`goHome(); localStorage.values.clear(); writeStored(LESSON_KEY, { ...Lesson.normalize(), records: [
+    { lesson: 'prime', title: '소수 기록', ymd: '20261106', finished: true },
+    { lesson: 'ai', title: 'AI 기록', ymd: '2026-11-09', finished: false }
+  ] }); openPearlTab('records');`);
+  assert.match(stageHtml(), /11월 6일<\/span><strong>소수 기록<\/strong><span class="pearl-record-complete">배움 완료!/);
+  assert.match(stageHtml(), /11월 9일<\/span><strong>AI 기록<\/strong>/);
+  assert.match(stageHtml(), /<span class="pearl-record-status">듣던 수업<\/span><\/div><button class="pearl-record-resume"[^>]*aria-label="이어 들을 위치가 없는 기록" disabled><span class="lesson-play"/);
+  assert.ok(!stageHtml().includes('마저 듣기'));
+  assert.ok(!stageHtml().includes('20261106'));
+  assert.ok(!stageHtml().includes('마친 수업'));
+  page(`resumeRecord(1);`);
+  assert.strictEqual(page('currentMode'), 'records');
+  page(`goHome(); localStorage.values.clear();`);
+});
+
+test('배움 기록의 마저 듣기는 다른 수업을 들은 뒤에도 그 기록의 구간과 초부터 재생한다', () => {
+  page(`goHome(); localStorage.values.clear(); demoMinutes = null; lessonMinutes = 15; startLesson('prime');
+    lessonRun.wait.endsAt = Date.now() + (lessonRun.wait.endPosition - 2.5) * 1000;
+    pauseLesson(); openPearlTab('records');`);
+  const point = page(`lessonProgress().records[0].resume`);
+  assert.strictEqual(point.lesson, 'prime');
+  assert.ok(Math.abs(point.offset - 2.5) < .1);
+  page(`startLesson('ai');`);
+  for (let i = 0; i < 3; i++) hearLesson('ended');
+  page(`openPearlTab('records');`);
+  assert.strictEqual(page(`lessonProgress().resume.lesson`), 'ai');
+  page(`resumeRecord(0);`);
+  assert.strictEqual(page('lessonRun.lesson.id'), 'prime');
+  assert.strictEqual(page('lessonRun.pieces[0].id'), point.from);
+  assert.ok(Math.abs(page('lessonRun.positionSeconds') - point.offset) < .1);
+  page(`goHome(); window.setDrivingMode(true); resumeRecord(0);`);
+  assert.strictEqual(page('currentMode'), null);
+  page(`window.setDrivingMode(false); goHome(); localStorage.values.clear();`);
+});
+
+test('배움 기록에서 구형 중단 위치도 연결하며 네이티브 음원을 저장된 초로 이동한다', () => {
+  page(`localStorage.values.clear(); var legacyPoint = {lesson:'prime',from:'b4',heard:['i1','i2'],ymd:toYmd(new Date()),offset:3};
+    writeStored(LESSON_KEY, { ...Lesson.normalize(), resume: legacyPoint, records: [{lesson:'prime',title:'소수',ymd:legacyPoint.ymd,finished:false}] });
+    var recordSeek = null; DAIT_LESSONS.find(item => item.id === 'prime').pieces.forEach(piece => piece.voiced = true);
+    window.AndroidBridge = {micState:()=> 'none',speak(){},stopSpeech(){},setJourneyActive(){},seekSpeech(ms){recordSeek=ms}};
+    openPearlTab('records'); resumeRecord(0);`);
+  assert.strictEqual(page('lessonRun.pieces[0].id'), 'b4');
+  assert.strictEqual(page('recordSeek'), 3000);
+  page(`goHome(); delete window.AndroidBridge; DAIT_LESSONS.find(item => item.id === 'prime').pieces.forEach(piece => delete piece.voiced); localStorage.values.clear();`);
 });
 
 test('기록 탭은 주행 중 열리지 않고 수업을 닫을 때 중단 위치를 남긴다', () => {
@@ -1555,10 +1652,41 @@ test('상단 로고를 누르면 인트로 없이 메인 화면으로 가고 주
   page(handler);
   assert.strictEqual(page('currentMode'), null);
   assert.ok(navHtml().includes(`aria-current="page" onclick="openPearlTab('now')"`));
+  assert.ok(!navHtml().includes('pearl-eta')); // 15분 수업 버튼은 없다
+  assert.ok(navHtml().includes('onclick="togglePearlTheme()"'));
   assert.strictEqual(page('logoReplays'), 0);
   page(`openPearlTab('records'); window.setDrivingMode(true);`);
   const before = page('currentMode');
   page(handler);
   assert.strictEqual(page('currentMode'), before);
   page('window.setDrivingMode(false); playSplashIntro = originalSplash; goHome();');
+});
+
+test('메인 카드는 수업마다 주제 무늬와 과목 꼬리표를 단다', () => {
+  assert.strictEqual(page(`DAIT_LESSONS.filter(lesson => !LESSON_PATTERNS[lesson.id]).map(lesson => lesson.id).join(',')`), '');
+  page(`localStorage.values.clear(); goHome();`);
+  assert.match(stageHtml(), /class="home-card start question-card pearl-hero" data-pattern="\w+" style="--pattern:url\(&quot;data:image\/svg\+xml,/);
+  assert.match(stageHtml(), /<span class="pearl-subject">[^<]+<\/span>/);
+});
+
+test('추천 탭은 시간에 맞는 수업 중 안 들은 수업에서 무작위로 고르고, 다 들었으면 전체에서 고른다', () => {
+  assert.ok(navHtml().includes(`onclick="openPearlTab('now')">추천</button>`));
+  page(`localStorage.values.clear(); disarm(); lessonMinutes = 15; var __random = Math.random;`);
+  const fitting = JSON.parse(page(`JSON.stringify(Lesson.recommend(DAIT_LESSONS, 15, []).map(lesson => lesson.id))`));
+  assert.ok(fitting.length > 2);
+  const record = id => `{ lesson: '${id}', ymd: '20261109', title: '${id}', finished: true }`;
+  // 하나만 안 들었으면 무작위 값과 상관없이 그 수업이다.
+  const left = fitting[fitting.length - 1];
+  for (const value of [0, .5, .99]) {
+    page(`writeStored(LESSON_KEY, { records: [${fitting.slice(0, -1).map(record).join(',')}] }); Math.random = () => ${value}; openPearlTab('now');`);
+    assert.strictEqual(page(`homePick.id`), left);
+  }
+  // 다 들었으면 시간에 맞는 수업 전체에서 고른다. 다시 그려도 바뀌지 않는다.
+  page(`writeStored(LESSON_KEY, { records: [${fitting.map(record).join(',')}] }); Math.random = () => .99; openPearlTab('now');`);
+  assert.strictEqual(page(`homePick.id`), fitting[fitting.length - 1]);
+  page(`Math.random = () => 0; render();`);
+  assert.strictEqual(page(`homePick.id`), fitting[fitting.length - 1]);
+  page(`openPearlTab('now');`);
+  assert.strictEqual(page(`homePick.id`), fitting[0]);
+  page(`Math.random = __random; localStorage.values.clear();`);
 });

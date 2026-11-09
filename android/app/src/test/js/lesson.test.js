@@ -90,12 +90,12 @@ test('복습을 붙여도 판은 고른 시간으로 정하고, 짧은 판에는
   assert.ok(short.every(line => line.kind !== '복습'));
 });
 
-test('짧은 판만 들은 수업은 추천에서 뒤로 보내지 않는다', () => {
+test('짧은 판으로 들은 수업도 들은 수업이라 추천에서 뒤로 간다', () => {
   const other = { ...lesson, id: 'o', pieces: withShort.pieces.map(item => ({ ...item })) };
   const shortDone = Lesson.finishLesson(null, withShort, '2026-11-02', true, 0, [], true);
   assert.strictEqual(shortDone.records[0].short, true);
   assert.strictEqual(shortDone.ieum, undefined);
-  assert.deepStrictEqual(Lesson.recommend([withShort, other], 15, shortDone.records).map(item => item.id), ['w', 'o']);
+  assert.deepStrictEqual(Lesson.recommend([withShort, other], 15, shortDone.records).map(item => item.id), ['o', 'w']);
   const fullDone = Lesson.finishLesson(null, withShort, '2026-11-02', true, 0, []);
   assert.deepStrictEqual(Lesson.recommend([withShort, other], 15, fullDone.records).map(item => item.id), ['o', 'w']);
 });

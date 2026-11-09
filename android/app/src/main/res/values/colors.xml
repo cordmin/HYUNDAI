@@ -1,10 +1,10 @@
 <resources>
-  <color name="surface">#171C38</color>
-  <color name="ink">#203C3C</color>
-  <color name="muted">#62716A</color>
-  <color name="accent">#255B50</color>
-  <color name="on_accent">#FFFFFF</color>
-  <color name="control">#E8EAE0</color>
-  <color name="paper">#FFFCF5</color>
-  <color name="outline">#D6DCCC</color>
+  <color name="surface">#F8E9EB</color>
+  <color name="ink">#352832</color>
+  <color name="muted">#715E69</color>
+  <color name="accent">#884D62</color>
+  <color name="on_accent">#FFFAFB</color>
+  <color name="control">#F1DFE5</color>
+  <color name="paper">#FCF5F6</color>
+  <color name="outline">#E5CDD6</color>
 </resources>

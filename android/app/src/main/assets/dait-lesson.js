@@ -108,7 +108,7 @@
   // 남은 시간에 들어가는 수업을, 그 시간을 많이 채우는 순서로 고른다. 들은 수업은 뒤로 보낸다.
   // 짧은 판만 들은 수업은 맛보기를 한 것이라 뒤로 보내지 않는다. 다음 긴 이동에서 원래 판으로 이어 듣게 한다.
   function recommend(lessons, minutes, records) {
-    const heard = new Set((records || []).filter(record => !record.short).map(record => record.lesson));
+    const heard = new Set((records || []).map(record => record.lesson)); // 짧은 판으로 들었어도 들은 수업이다(2026-11-09)
     if (minutes < MIN_LESSON_MINUTES) return [];
     return lessons
       .filter(lesson => fits(lesson, minutes))

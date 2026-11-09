@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>메인 화면 보강 시안</title>
+<style>
+:root { --card:#fffafb; --ink:#352832; --lilac:#884d62; --rose:#c98fa5; --pink:#e8b9c9; --line:#e5cdd6; --muted:#715e69; --paper:#fcf5f6; --soft:#f1dfe5; }
+* { box-sizing:border-box; }
+body { margin:0; padding:20px; background:#ecd9df; font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif; color:var(--ink); }
+.grid { display:flex; flex-direction:column; gap:36px; max-width:1100px; margin:0 auto; }
+h2 { margin:0 0 4px; font-size:20px; color:var(--lilac); } .note { margin:0 0 10px; font-size:14px; color:var(--muted); }
+/* 앱 틀 */
+.frame { aspect-ratio:16/9.4; border:7px solid rgba(255,255,255,.86); border-radius:26px; padding:14px 18px 18px; display:flex; flex-direction:column; gap:12px; box-shadow:0 18px 50px #3528321a;
+  background:linear-gradient(135deg,transparent 30%,#d7a9ba59),linear-gradient(120deg,#f8e9eb,#ecd9df); container-type:inline-size; }
+.top { display:flex; align-items:center; gap:12px; }
+.logo { font:italic 700 clamp(18px,3cqw,30px) Georgia,serif; color:var(--lilac); width:9%; }
+.nav { display:flex; background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:3px; }
+.nav b { padding:9px 15px; font-size:clamp(12px,1.7cqw,18px); border-radius:12px; }
+.nav b.on { background:var(--soft); color:var(--lilac); }
+.tools { margin-left:auto; display:flex; gap:8px; padding:4px 6px; background:var(--paper); border:1px solid var(--line); border-radius:99px; }
+.tools i { width:clamp(26px,4cqw,40px); aspect-ratio:1; border-radius:50%; background:var(--soft); }
+.card { flex:1; min-height:0; position:relative; overflow:hidden; background:var(--paper); border-radius:20px; display:flex; align-items:center; padding:0 5cqw; gap:4cqw; }
+.copy { position:relative; z-index:1; flex:1; min-width:0; }
+.q { font-size:4.4cqw; font-weight:800; letter-spacing:-.03em; line-height:1.25; margin:0 0 1.4cqw; }
+.promise { font-size:1.6cqw; font-weight:600; margin:0 0 2.4cqw; }
+.btn { display:inline-flex; align-items:center; gap:8px; background:var(--lilac); color:#fff; border-radius:14px; padding:1.3cqw 2.4cqw; font-weight:700; font-size:1.7cqw; }
+.btn.ghost { background:var(--soft); color:var(--lilac); margin-left:8px; }
+.chip { display:inline-flex; align-items:center; gap:6px; background:var(--soft); color:var(--lilac); border-radius:99px; padding:.6cqw 1.4cqw; font-size:1.4cqw; font-weight:700; margin-bottom:1.6cqw; }
+.muted { color:var(--muted); }
+
+/* A 과목 그림 */
+.art { width:38%; flex:none; }
+.art svg { width:100%; height:auto; display:block; }
+
+/* B 큰 글자 재배치 + 물음표 */
+.b .card { align-items:stretch; padding:4cqw 5cqw; }
+.b .copy { display:flex; flex-direction:column; justify-content:space-between; }
+.b .eyebrow { font-size:1.6cqw; font-weight:700; color:var(--lilac); letter-spacing:.02em; }
+.b .q { font-size:6.6cqw; line-height:1.15; margin:0; }
+.b .sub { font-size:1.9cqw; color:var(--muted); margin-top:1.2cqw; }
+.b .row { display:flex; align-items:center; justify-content:space-between; }
+.b .big { position:absolute; right:-1cqw; bottom:-9cqw; font:900 44cqw/1 Georgia,serif; color:var(--soft); z-index:0; }
+
+/* C 은은한 무늬 */
+.c .card::before { content:''; position:absolute; inset:0; background-image:var(--pattern); background-size:22cqw; opacity:.5; }
+.c .card::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,var(--paper) 30%,#fcf5f600 75%); }
+
+/* D 반반: 오른쪽 색 판 */
+.d .card { padding:0 0 0 5cqw; }
+.d .panel { align-self:stretch; width:40%; flex:none; background:linear-gradient(160deg,#f6e4ea,#ecd0db); display:flex; flex-direction:column; justify-content:center; align-items:center; gap:2cqw; position:relative; }
+.d .orb { width:13cqw; aspect-ratio:1; border-radius:50%; background:var(--card); display:grid; place-items:center; box-shadow:0 10px 30px #884d6226; font:800 4.4cqw/1 Georgia,serif; color:var(--lilac); }
+.d .facts { display:flex; gap:1cqw; } .d .facts span { background:#fffafbcc; border-radius:12px; padding:1cqw 1.4cqw; text-align:center; font-size:1.3cqw; color:var(--muted); }
+.d .facts b { display:block; font-size:2.2cqw; color:var(--ink); }
+
+/* E 다음 수업 미리보기 */
+.e .body { flex:1; min-height:0; display:flex; flex-direction:column; gap:12px; }
+.e .card { flex:1.6; }
+.e .q { font-size:4cqw; }
+.e .next { flex:1; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.e .mini { background:var(--paper); border-radius:16px; padding:1.6cqw 2cqw; display:flex; flex-direction:column; justify-content:space-between; }
+.e .mini small { font-size:1.3cqw; color:var(--lilac); font-weight:700; } .e .mini b { font-size:1.75cqw; line-height:1.3; }
+.e .mini span { font-size:1.2cqw; color:var(--muted); }
+</style></head><body>
+<div class="grid" id="grid"></div>
+<script>
+// 과목 그림: 수학(소수) 예시. 실제로는 과목마다 하나씩 그린다.
+const MATH_ART = `<svg viewBox="0 0 320 240" aria-hidden="true">
+  <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8b9c9"/><stop offset="1" stop-color="#c98fa5"/></linearGradient></defs>
+  <circle cx="190" cy="120" r="110" fill="#f6e4ea"/>
+  ${[['2',70,150,54],['3',130,126,62],['5',196,100,70],['7',268,74,58]].map(([n,x,y,s],i)=>`<g transform="translate(${x-s/2} ${y-s/2}) rotate(${[-6,4,-3,7][i]} ${s/2} ${s/2})"><rect width="${s}" height="${s}" rx="${s*.28}" fill="${i%2?'#884d62':'url(#g1)'}"/><text x="${s/2}" y="${s*.68}" text-anchor="middle" font-family="Georgia" font-weight="800" font-size="${s*.52}" fill="#fffafb">${n}</text></g>`).join('')}
+  <path d="M300 40 q12 -10 18 -24" stroke="#c98fa5" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 9" fill="none"/>
+  <text x="250" y="210" font-family="Georgia" font-size="40" fill="#c98fa5" font-weight="700">…∞</text>
+</svg>`;
+const MATH_PATTERN = `url("data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" font-family="Georgia" font-weight="700" fill="#d9a8ba"><text x="20" y="50" font-size="34">2</text><text x="120" y="40" font-size="26">÷</text><text x="80" y="110" font-size="38">7</text><text x="160" y="120" font-size="30">∞</text><text x="20" y="170" font-size="26">+</text><text x="120" y="185" font-size="32">5</text><text x="55" y="70" font-size="20">×</text></svg>')}")`;
+const topBar = `<div class="top"><span class="logo">Dait</span><div class="nav"><b class="on">지금</b><b>수업</b><b>기록</b></div><div class="tools"><i></i><i></i><i></i></div></div>`;
+const copy = (extra = '') => `<div class="copy">${extra}<div class="q">소수는 끝이 있을까?</div><div class="promise">약 6분이면 답을 알게 돼요</div><span class="btn">▶ 듣기</span></div>`;
+const looks = [
+  ['A · 과목 그림 오브젝트', '오른쪽에 과목마다 다른 그림(수학은 소수 2·3·5·7 블록이 끝없이 이어짐). 위에 과목 꼬리표. 그림 6장만 그리면 됨.', 'a',
+    `<div class="card">${copy('<span class="chip">수학 · 6분</span>')}<div class="art">${MATH_ART}</div></div>`],
+  ['B · 큰 글자로 다시 배치', '질문을 아주 크게 두 줄로, 위에는 과목, 아래에는 수업 제목. 뒤에 큰 물음표가 은은하게. 그림 없이 글자만으로 꽉 참.', 'b',
+    `<div class="card"><div class="big">?</div><div class="copy"><div class="eyebrow">오늘의 질문 · 수학</div><div><div class="q">소수는<br>끝이 있을까?</div><div class="sub">소수는 어디까지 있을까 · 약 6분</div></div><div class="row"><span class="btn">▶ 듣기</span></div></div></div>`],
+  ['C · 은은한 과목 무늬', '카드 바닥에 과목 기호(숫자·∞·÷)를 아주 옅게 깔고 왼쪽 글자 쪽은 흐리게 지움. 가장 조용한 보강.', 'c',
+    `<div class="card" style="--pattern:${MATH_PATTERN.replace(/"/g,'&quot;')}">${copy('<span class="chip">수학 · 6분</span>')}</div>`],
+  ['D · 반반 카드 (오른쪽 색 판)', '오른쪽 40%를 장밋빛 판으로 나눠 과목 상징과 수업 정보(길이·질문 수·과목)를 보여 줌. 정보가 늘어 덜 비어 보임.', 'd',
+    `<div class="card">${copy()}<div class="panel"><div class="orb">∞</div><div class="facts"><span><b>6분</b>길이</span><span><b>3개</b>질문</span><span><b>수학</b>과목</span></div></div></div>`],
+  ['E · 아래에 다음 수업 미리보기', '큰 카드를 줄이고 아래에 이어 들을 수 있는 수업 3개를 작은 카드로. 빈 곳을 쓸모 있는 내용으로 채움.', 'e',
+    `<div class="body"><div class="card">${copy('<span class="chip">수학 · 6분</span>')}<div class="art" style="width:26%">${MATH_ART}</div></div><div class="next">${[['과학','왜 낮 하늘은 파랗고 노을은 붉을까?','약 7분'],['음악','같은 네 박인데 왜 다르게 들릴까?','약 7분'],['국어','점순이는 왜 자꾸 닭싸움을 붙였을까?','약 7분']].map(([s,q,m])=>`<div class="mini"><small>${s}</small><b>${q}</b><span>${m}</span></div>`).join('')}</div></div>`],
+];
+document.getElementById('grid').innerHTML = looks.map(([t,n,cls,body]) => `<section class="${cls}"><h2>${t}</h2><p class="note">${n}</p><div class="frame">${topBar}${body}</div></section>`).join('');
+</script>
+</body></html>

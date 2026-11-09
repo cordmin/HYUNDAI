@@ -1,0 +1,926 @@
+{
+  "date": "2026-11-09",
+  "status": "proposal-only",
+  "sourceRoot": "D:\\6. 각종 자료\\코딩\\현대자동차 공모전",
+  "filesScanned": [
+    "android/app/src/main/assets/dait-preview.html",
+    "android/app/src/main/assets/dait-base.css",
+    "android/app/src/main/assets/dait-pearl.css",
+    "android/app/src/main/assets/dait-rules.js",
+    "android/app/src/main/assets/dait-journey.js",
+    "android/app/src/main/assets/dait-lesson.js",
+    "android/app/src/main/assets/dait-lessons.js",
+    "android/app/src/main/assets/dait-playback.js",
+    "android/app/src/main/assets/dait-app.js",
+    "android/app/src/main/assets/dait-app-lesson.js",
+    "android/app/src/main/assets/dait-app-car.js",
+    "android/app/src/main/assets/dait-app-start.js",
+    "android/app/src/main/assets/dait-appearance.js",
+    "android/app/src/main/assets/dait-volume.js",
+    "android/app/src/main/res/drawable/ic_dait.xml",
+    "android/app/src/main/res/values/colors.xml",
+    "android/app/src/main/res/values/styles.xml",
+    "android/app/src/main/res/values-night/colors.xml",
+    "android/app/src/main/res/xml/data_extraction_rules.xml",
+    "android/app/src/main/java/io/dait/app/ContextRecognizer.kt",
+    "android/app/src/main/java/io/dait/app/DoorBridge.kt",
+    "android/app/src/main/java/io/dait/app/GleoBridge.kt",
+    "android/app/src/main/java/io/dait/app/HttpText.kt",
+    "android/app/src/main/java/io/dait/app/JourneyService.kt",
+    "android/app/src/main/java/io/dait/app/LessonMedia.kt",
+    "android/app/src/main/java/io/dait/app/LocalVoiceInput.kt",
+    "android/app/src/main/java/io/dait/app/LocationBridge.kt",
+    "android/app/src/main/java/io/dait/app/MainActivity.kt",
+    "android/app/src/main/java/io/dait/app/NaviBridge.kt",
+    "android/app/src/main/java/io/dait/app/NeisClient.kt",
+    "android/app/src/main/java/io/dait/app/TourClient.kt",
+    "android/app/src/main/java/io/dait/app/VoiceSession.kt"
+  ],
+  "coolColorFindings": [
+    {
+      "file": "android/app/src/main/assets/dait-preview.html",
+      "line": 23,
+      "colors": [
+        "#38BDF8"
+      ],
+      "source": "<stop offset=\"0%\" stop-color=\"#38BDF8\"/>"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-preview.html",
+      "line": 25,
+      "colors": [
+        "#38BDF8"
+      ],
+      "source": "<stop offset=\"100%\" stop-color=\"#38BDF8\"/>"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-preview.html",
+      "line": 50,
+      "colors": [
+        "#38BDF8"
+      ],
+      "source": "<circle id=\"splashDotRipple\" class=\"splash-dot-ripple\" cx=\"62\" cy=\"7.5\" r=\"3\" fill=\"none\" stroke=\"#38BDF8\" stroke-width=\"2\"/>"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-preview.html",
+      "line": 51,
+      "colors": [
+        "#38BDF8"
+      ],
+      "source": "<circle id=\"splashDot\" cx=\"62\" cy=\"7.5\" r=\"3.2\" fill=\"#38BDF8\" filter=\"url(#neonGlow)\"/>"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-base.css",
+      "line": 3,
+      "colors": [
+        "#3D3C70"
+      ],
+      "source": "--bg-top: #3D3C70;"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-base.css",
+      "line": 4,
+      "colors": [
+        "#171C38"
+      ],
+      "source": "--bg-bottom: #171C38;"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-base.css",
+      "line": 10,
+      "colors": [
+        "#B3A6F5"
+      ],
+      "source": "--lilac: #B3A6F5;"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-base.css",
+      "line": 11,
+      "colors": [
+        "#C6BCF8"
+      ],
+      "source": "--lilac-hover: #C6BCF8;"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-base.css",
+      "line": 12,
+      "colors": [
+        "#1B1E3D"
+      ],
+      "source": "--on-lilac: #1B1E3D;"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-base.css",
+      "line": 267,
+      "colors": [
+        "#4B6BE8",
+        "#7D59D8"
+      ],
+      "source": "background: linear-gradient(150deg, #4B6BE8 0%, #7D59D8 58%, #B85BB4 100%);"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-base.css",
+      "line": 363,
+      "colors": [
+        "#B8A9F5"
+      ],
+      "source": ".lesson-progress-segments span { min-width: 0; border-radius: calc(2 * var(--u)); background: linear-gradient(to right, #B8A9F5 var(--heard, 0%), rgba(255,255,255,.18) var(--heard, 0%)); }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-base.css",
+      "line": 364,
+      "colors": [
+        "#D4C7FF"
+      ],
+      "source": ".lesson-progress-track input { position: absolute; inset: 0; margin: 0; width: 100%; height: 100%; appearance: none; background: transparent; cursor: pointer; accent-color: #D4C7FF; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-base.css",
+      "line": 366,
+      "colors": [
+        "#E3D9FF"
+      ],
+      "source": ".lesson-progress-track input::-webkit-slider-thumb { appearance: none; width: calc(16 * var(--u)); height: calc(16 * var(--u)); border-radius: 50%; background: #E3D9FF; margin-top: calc(-5 * var(--u)); }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-base.css",
+      "line": 367,
+      "colors": [
+        "#D4C7FF"
+      ],
+      "source": ".lesson-progress-track input:focus-visible { outline: 2px solid #D4C7FF; border-radius: calc(6 * var(--u)); }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-base.css",
+      "line": 370,
+      "colors": [
+        "#C4B5FD"
+      ],
+      "source": ".lesson-sections button[aria-current=\"step\"] { border-color: #C4B5FD; background: rgba(167,139,250,.25); }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-base.css",
+      "line": 401,
+      "colors": [
+        "#B3A6F5",
+        "#7D59D8",
+        "#3A2F80"
+      ],
+      "source": "background: radial-gradient(circle at 35% 35%, #B3A6F5 0%, #7D59D8 55%, #3A2F80 100%);"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 8,
+      "colors": [
+        "#172236"
+      ],
+      "source": "--ink: #172236;"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 9,
+      "colors": [
+        "#526175"
+      ],
+      "source": "--muted: #526175;"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 10,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": "--lilac: #245ed0;"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 11,
+      "colors": [
+        "#174cac"
+      ],
+      "source": "--lilac-hover: #174cac;"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 17,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": "button:focus-visible, input:focus-visible { outline: 3px solid #245ed0; outline-offset: 3px; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 18,
+      "colors": [
+        "#2633491a"
+      ],
+      "source": ".pleos-display { border: 7px solid rgba(255,255,255,.86); background: linear-gradient(120deg,var(--bg-top),var(--bg-bottom)); box-shadow: 0 18px 50px #2633491a; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 30,
+      "colors": [
+        "#6358690b"
+      ],
+      "source": ".home-card, .dialogue-card, .settings-card, .pearl-record-row, .pearl-badge { background: var(--glass); border: 1px solid var(--line); box-shadow: 0 8px 20px #6358690b; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 35,
+      "colors": [
+        "#2633490c"
+      ],
+      "source": "box-shadow: inset 0 1px 0 #ffffffa6, inset 0 0 0 1px #ffffff21, 0 8px 24px #2633490c;"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 48,
+      "colors": [
+        "#e6effa",
+        "#354c67",
+        "#dce5f0"
+      ],
+      "source": ".card-btn.quiet, .primary-btn.secondary { background: #e6effa; color: #354c67; border: 1px solid #dce5f0; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 50,
+      "colors": [
+        "#99b9f3",
+        "#2d70d8"
+      ],
+      "source": ".pearl-wave i { display: block; width: calc(3 * var(--u)); height: calc(var(--bar) * var(--u)); border-radius: 10px; background: linear-gradient(#99b9f3,#2d70d8); }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 67,
+      "colors": [
+        "#d8e0eb"
+      ],
+      "source": ".choice-chip { background: #ffffff80; color: var(--ink); border-color: #d8e0eb; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 68,
+      "colors": [
+        "#e0ebff",
+        "#1d55b6",
+        "#bdd0f0"
+      ],
+      "source": ".choice-chip[aria-pressed=true] { background: #e0ebff; color: #1d55b6; border-color: #bdd0f0; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 120,
+      "colors": [
+        "#b9d4fc",
+        "#172236"
+      ],
+      "source": "::selection { background: #b9d4fc; color: #172236; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 121,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": "input { caret-color: #245ed0; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 127,
+      "colors": [
+        "#172236"
+      ],
+      "source": "color: #172236; background: rgba(245,249,255,.82); border: 1px solid #ffffffc7;"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 128,
+      "colors": [
+        "#15243b33"
+      ],
+      "source": "border-radius: 20px; box-shadow: inset 0 1px 0 #fff, 0 18px 60px #15243b33;"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 131,
+      "colors": [
+        "#10213724"
+      ],
+      "source": ".pearl-settings-dialog::backdrop { background: #10213724; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 134,
+      "colors": [
+        "#172236"
+      ],
+      "source": ".pearl-settings-dialog .icon-btn { width: 44px; height: 44px; flex-shrink: 0; color: #172236; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 136,
+      "colors": [
+        "#172236"
+      ],
+      "source": ".pearl-settings-menu button { text-align: left; font-size: 18px; padding: 12px 16px; background: #ffffff55; color: #172236; border: 1px solid #ffffffbf; border-radius: 12px; cursor: pointer; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 137,
+      "colors": [
+        "#3d536c"
+      ],
+      "source": ".pearl-settings-menu small { display: block; margin-top: 5px; font-size: 13px; color: #3d536c; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 138,
+      "colors": [
+        "#3d536c"
+      ],
+      "source": ".pearl-color-note { font-size: 14px; margin: 10px 0 18px; color: #3d536c; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 142,
+      "colors": [
+        "#bacbdf"
+      ],
+      "source": ".pearl-color-control input[type=color] { width: 48px; height: 48px; border: 1px solid #bacbdf; padding: 4px; border-radius: 12px; background: #ffffff66; cursor: pointer; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 143,
+      "colors": [
+        "#bacbdf",
+        "#172236"
+      ],
+      "source": ".pearl-color-control input[type=text] { min-width: 0; width: 100%; height: 48px; font-size: 16px; padding: 0 10px; border: 1px solid #bacbdf; border-radius: 12px; background: #ffffff88; color: #172236; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 145,
+      "colors": [
+        "#bacbdf",
+        "#172236"
+      ],
+      "source": ".pearl-color-presets button { padding: 0 12px; min-height: 44px; border-radius: 12px; border: 1px solid #bacbdf; background: #ffffff66; color: #172236; cursor: pointer; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 148,
+      "colors": [
+        "#3d536c"
+      ],
+      "source": ".pearl-settings-footer p { font-size: 13px; color: #3d536c; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 150,
+      "colors": [
+        "#172236f2",
+        "#15243b33"
+      ],
+      "source": ".pearl-notice { position: absolute; z-index: 10001; left: 50%; bottom: 26px; transform: translateX(-50%); max-width: calc(100% - 28px); padding: 14px 20px; border-radius: 14px; background: #172236f2; color: #fff; font-size: 16px; text-align: center; box-shadow: 0 8px 24px #15243b33; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 163,
+      "colors": [
+        "#2633490c"
+      ],
+      "source": ".pearl-tools { display:flex; align-items:flex-start; flex-shrink:0; gap:4px; padding:3px; height:calc(max(44px, 44 * var(--u)) + 6px); background:var(--glass); border:1px solid var(--line); border-radius:calc(16 * var(--u)); box-shadow:inset 0 1px 0 #ffffffa6, 0 8px 24px #2633490c; backdrop-filter:blur(18px) saturate(120%); -webkit-backdrop-filter:blur(18px) saturate(120%); position:relative; z-index:5; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 166,
+      "colors": [
+        "#15243b22"
+      ],
+      "source": ".pearl-volume-control.is-open { height:calc(max(44px,44 * var(--u)) + 188 * var(--u)); background:rgba(245,249,255,.82); box-shadow:inset 0 1px 0 #fff, 0 12px 30px #15243b22; backdrop-filter:blur(22px) saturate(120%); -webkit-backdrop-filter:blur(22px) saturate(120%); }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 167,
+      "colors": [
+        "#172236"
+      ],
+      "source": ".pearl-nav .pearl-tools .pearl-volume-control.is-open > .icon-btn { color:#172236!important; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 171,
+      "colors": [
+        "#245ed0",
+        "#dbe5f1"
+      ],
+      "source": ".pearl-volume-panel input::-webkit-slider-runnable-track { width:6px; height:100%; border-radius:6px; background:linear-gradient(to top,#245ed0 0 var(--volume-fill),#dbe5f1 var(--volume-fill) 100%); }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 172,
+      "colors": [
+        "#245ed0",
+        "#1f4a7a25"
+      ],
+      "source": ".pearl-volume-panel input::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; margin-left:-8px; border:0; border-radius:50%; background:#245ed0; box-shadow:0 3px 7px #1f4a7a25; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 173,
+      "colors": [
+        "#dbe5f1"
+      ],
+      "source": ".pearl-volume-panel input::-moz-range-track { width:6px; background:#dbe5f1; border-radius:6px; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 174,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": ".pearl-volume-panel input::-moz-range-progress { background:#245ed0; width:6px; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 175,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": ".pearl-volume-panel input::-moz-range-thumb { width:22px; height:22px; border:0; border-radius:50%; background:#245ed0; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 176,
+      "colors": [
+        "#273f58"
+      ],
+      "source": ".pearl-volume-panel output { font-size:calc(13 * var(--u)); font-variant-numeric:tabular-nums; color:#273f58; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 184,
+      "colors": [
+        "#17223666"
+      ],
+      "source": ".pearl-color-cursor { position:absolute; display:block; width:20px; height:20px; border:2px solid #fff; border-radius:50%; transform:translate(-50%,-50%); box-shadow:0 1px 4px #0009,0 0 0 1px #17223666; pointer-events:none; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 187,
+      "colors": [
+        "#0ff",
+        "#00f"
+      ],
+      "source": ".pearl-hue::-webkit-slider-runnable-track { height:18px; border-radius:12px; background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00); }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 188,
+      "colors": [
+        "#17223655"
+      ],
+      "source": ".pearl-hue::-webkit-slider-thumb { -webkit-appearance:none; width:28px; height:28px; margin-top:-5px; border:3px solid #fff; border-radius:50%; background:hsl(var(--picker-hue) 100% 50%); box-shadow:0 2px 5px #17223655; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 189,
+      "colors": [
+        "#0ff",
+        "#00f"
+      ],
+      "source": ".pearl-hue::-moz-range-track { height:18px; border-radius:12px; background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00); }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 190,
+      "colors": [
+        "#17223655"
+      ],
+      "source": ".pearl-hue::-moz-range-thumb { width:22px; height:22px; border:3px solid #fff; border-radius:50%; background:hsl(var(--picker-hue) 100% 50%); box-shadow:0 2px 5px #17223655; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 193,
+      "colors": [
+        "#172236",
+        "#bacbdf"
+      ],
+      "source": ".pearl-color-choice { display:flex; align-items:center; justify-content:flex-start; gap:10px; min-height:48px; padding:0 12px; color:#172236; border:1px solid #bacbdf; background:#ffffff55; border-radius:12px; font-size:15px; cursor:pointer; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 194,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": ".pearl-color-choice[aria-pressed=true] { border:2px solid #245ed0; padding:0 11px; background:#ffffff88; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 195,
+      "colors": [
+        "#17223626"
+      ],
+      "source": ".pearl-color-choice>span { width:24px; height:24px; flex-shrink:0; border:1px solid #17223626; border-radius:7px; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 199,
+      "colors": [
+        "#254d7c"
+      ],
+      "source": ".pearl-color-details { min-height:44px; padding:0 8px; border:0; border-radius:10px; background:transparent; color:#254d7c; font-size:14px; text-decoration:underline; text-underline-offset:4px; cursor:pointer; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 220,
+      "colors": [
+        "#a0bdf5",
+        "#3674da"
+      ],
+      "source": ".pearl-player-wave i { width:calc(5 * var(--u)); height:calc(var(--wave-height) * var(--u)); background:linear-gradient(#a0bdf5,#3674da); border-radius:10px; transform:scaleY(.55); }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 227,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": ".pearl-play { width:calc(74 * var(--u)); height:calc(74 * var(--u)); min-width:64px; min-height:64px!important; flex-shrink:0; border-radius:50%; background:#245ed0; color:white; display:grid; place-items:center; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 229,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": ".pearl-seek:hover { color:#245ed0; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 230,
+      "colors": [
+        "#174cac"
+      ],
+      "source": ".pearl-play:hover { background:#174cac; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 233,
+      "colors": [
+        "#245ed0",
+        "#afc2df70"
+      ],
+      "source": ".pearl-player-progress input::-webkit-slider-runnable-track { height:4px; border-radius:4px; background:linear-gradient(to right,#245ed0 var(--seek-fill,0%),#afc2df70 var(--seek-fill,0%)); }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 234,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": ".pearl-player-progress input::-webkit-slider-thumb { appearance:none; -webkit-appearance:none; width:12px; height:12px; border-radius:50%; border:0; background:#245ed0; margin-top:-4px; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 235,
+      "colors": [
+        "#afc2df70"
+      ],
+      "source": ".pearl-player-progress input::-moz-range-track { height:4px; background:#afc2df70; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 236,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": ".pearl-player-progress input::-moz-range-progress { height:4px; background:#245ed0; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 237,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": ".pearl-player-progress input::-moz-range-thumb { width:12px; height:12px; border:0; background:#245ed0; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 243,
+      "colors": [
+        "#526175"
+      ],
+      "source": ".pearl-settings-switch span { font-size:14px; color:#526175; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 244,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": ".pearl-settings-switch[aria-checked=true] span { color:#245ed0; font-weight:700; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 246,
+      "colors": [
+        "#bed0e45c"
+      ],
+      "source": ".pearl-pb-row { padding:12px 0; border-bottom:1px solid #bed0e45c; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 249,
+      "colors": [
+        "#dfe7f366",
+        "#29425e"
+      ],
+      "source": ".pearl-pb-choices button { flex:1; min-width:0; border:0; border-radius:10px; background:#dfe7f366; padding:0 6px; font-size:15px; color:#29425e; cursor:pointer; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 250,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": ".pearl-pb-choices button[aria-pressed=true] { background:#245ed0; color:#fff; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 254,
+      "colors": [
+        "#a9bfdc",
+        "#172236"
+      ],
+      "source": ".pearl-pb-custom input { width:100%; display:block; min-height:44px; margin-top:6px; padding:8px; border:1px solid #a9bfdc; border-radius:10px; background:#ffffffb3; color:#172236; font-size:17px; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 255,
+      "colors": [
+        "#a9bfdc",
+        "#172236"
+      ],
+      "source": ".pearl-pb-custom select { min-height:44px; padding:8px; border:1px solid #a9bfdc; border-radius:10px; background:#ffffffb3; color:#172236; font-size:16px; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 280,
+      "colors": [
+        "#d8e5f7"
+      ],
+      "source": ".pearl-night .pearl-settings-menu small, .pearl-night .pearl-settings-footer p, .pearl-night .pearl-settings-switch span, .pearl-night .pearl-color-note { color:#d8e5f7; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 281,
+      "colors": [
+        "#a8cdff"
+      ],
+      "source": ".pearl-night .pearl-settings-switch[aria-checked=true] span { color:#a8cdff; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 282,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": ".pearl-night .pearl-pb-choices button[aria-pressed=true] { background:#245ed0; color:white; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 288,
+      "colors": [
+        "#b9cadd",
+        "#172236"
+      ],
+      "source": ".pearl-settings-dialog .pearl-color-mode { display:flex; align-items:center; justify-content:center; gap:9px; flex:1; min-height:44px; height:44px; padding:0 10px; border:1px solid #b9cadd; border-radius:12px; background:#ffffff55; color:#172236; font-size:15px; font-weight:650; cursor:pointer; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 289,
+      "colors": [
+        "#52617555"
+      ],
+      "source": ".pearl-color-mode span { width:24px; height:24px; border-radius:50%; border:1px solid #52617555; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 290,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": ".pearl-settings-dialog .pearl-color-mode[aria-pressed=true] { box-shadow:inset 0 0 0 2px #245ed0; border-color:#245ed0; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 292,
+      "colors": [
+        "#a8cdff"
+      ],
+      "source": ".pearl-night .pearl-color-mode[aria-pressed=true] { box-shadow:inset 0 0 0 2px #a8cdff; border-color:#a8cdff; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 303,
+      "colors": [
+        "#b8d7ff"
+      ],
+      "source": ".pearl-night .pearl-color-details { color:#b8d7ff; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-pearl.css",
+      "line": 305,
+      "colors": [
+        "#a8cdff"
+      ],
+      "source": ".pearl-night .pearl-color-choice[aria-pressed=true] { background:#ffffff20; border-color:#a8cdff; }"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-app.js",
+      "line": 60,
+      "colors": [
+        "#38BDF8"
+      ],
+      "source": "<circle class=\"brand-dot\" cx=\"62\" cy=\"7.5\" r=\"2.8\" fill=\"#38BDF8\"/>"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-app.js",
+      "line": 63,
+      "colors": [
+        "#38BDF8"
+      ],
+      "source": "<stop stop-color=\"#38BDF8\"/>"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-app.js",
+      "line": 65,
+      "colors": [
+        "#38BDF8"
+      ],
+      "source": "<stop offset=\"1\" stop-color=\"#38BDF8\"/>"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-appearance.js",
+      "line": 15,
+      "colors": [
+        "#151719",
+        "#1f2937"
+      ],
+      "source": "let profiles = { mode: 'light', light: { ...DEFAULT }, dark: { start: '#151719', end: '#1f2937' } };"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-appearance.js",
+      "line": 49,
+      "colors": [
+        "#172236"
+      ],
+      "source": "const dark = Math.min(...samples.map(v => contrast(v, luminance(rgb('#172236')))));"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-appearance.js",
+      "line": 51,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": "const blue = Math.min(...samples.map(v => contrast(v, luminance(rgb('#245ed0')))));"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-appearance.js",
+      "line": 52,
+      "colors": [
+        "#245ed0"
+      ],
+      "source": "if (element.matches('[aria-current=page],[aria-selected=true]') && blue >= 4.5) return { ink: '#245ed0', score: blue };"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-appearance.js",
+      "line": 53,
+      "colors": [
+        "#172236"
+      ],
+      "source": "return white > dark ? { ink: '#ffffff', score: white } : { ink: '#172236', score: dark };"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-appearance.js",
+      "line": 85,
+      "colors": [
+        "#38bdf8"
+      ],
+      "source": "return max && 1 - min / max > .18 && hue >= 185 && hue <= 215 && contrast(lum, luminance(rgb('#38bdf8'))) < 1.25 && contrast(lum, 1) < 2.7;"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-appearance.js",
+      "line": 127,
+      "colors": [
+        "#18314a"
+      ],
+      "source": "svg.querySelector('.pearl-logo-outline')?.setAttribute('stroke', bright ? '#18314a' : '#ffffff');"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-appearance.js",
+      "line": 131,
+      "colors": [
+        "#397694",
+        "#a3ddff"
+      ],
+      "source": "if (halo) halo.style.color = bright ? '#397694' : '#a3ddff';"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-appearance.js",
+      "line": 143,
+      "colors": [
+        "#172236"
+      ],
+      "source": "document.documentElement.style.setProperty('--ink', dark ? '#ffffff' : '#172236');"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-appearance.js",
+      "line": 144,
+      "colors": [
+        "#e3ebf7",
+        "#526175"
+      ],
+      "source": "document.documentElement.style.setProperty('--muted', dark ? '#e3ebf7' : '#526175');"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-appearance.js",
+      "line": 241,
+      "colors": [
+        "#151719",
+        "#112c51"
+      ],
+      "source": "shell('앱 색상', `<form id=\"pearlColorForm\" novalidate><div class=\"pearl-color-modes\" role=\"group\" aria-label=\"색상을 설정할 모드\">${[['light','라이트 모드'],['dark','다크 모드']].map(([mode,label])=>`<button type=\"button\" class=\"pearl-color-mode\" data-color-mode=\"${mode}\" aria-pressed=\"${profiles.mode===mode}\"><span data-mode-swatch=\"${mode}\" aria-hidden=\"true\"></span>${label}</button>`).join('')}</div><div class=\"pearl-color-workbench\"><div class=\"pearl-color-picker\"><button type=\"button\" class=\"pearl-color-plane\" aria-label=\"색상판\" aria-keyshortcuts=\"ArrowLeft ArrowRight ArrowUp ArrowDown\"><span class=\"pearl-color-cursor\" aria-hidden=\"true\"></span></button><label class=\"pearl-hue-label\" for=\"pearlHue\">색상</label><input id=\"pearlHue\" class=\"pearl-hue\" type=\"range\" min=\"0\" max=\"359\" step=\"1\" aria-label=\"색상\"><div class=\"pearl-color-preview\" aria-label=\"선택한 두 색의 배경 미리보기\"></div></div><div class=\"pearl-color-actions\">${[['start','시작 색'],['end','끝 색']].map(([key,label])=>`<button type=\"button\" class=\"pearl-color-choice\" data-endpoint=\"${key}\" aria-pressed=\"${key==='start'}\"><span data-swatch=\"${key}\" aria-hidden=\"true\"></span>${label}</button>`).join('')}<div class=\"pearl-color-presets\" aria-label=\"색상 조합\"><button type=\"button\" data-palette=\"pearl\" aria-label=\"진주색\" style=\"--preset:linear-gradient(120deg,#f8e9eb,#e7edf5)\"></button><button type=\"button\" data-palette=\"dark\" aria-label=\"블랙 · 블랙\" style=\"--preset:#151719\"></button><button type=\"button\" data-palette=\"mixed\" aria-label=\"화이트 · 네이비\" style=\"--preset:linear-gradient(120deg,#ffffff,#112c51)\"></button></div><button type=\"button\" class=\"pearl-color-details\" aria-expanded=\"false\" aria-controls=\"pearlColorCodes\">상세 입력</button></div></div><div id=\"pearlColorCodes\" class=\"pearl-color-fields\" hidden>${[['start','시작 색'],['end','끝 색']].map(([key,label])=>`<div><label for=\"pearlHex-${key}\">${label} 색상 코드</label><div class=\"pearl-color-control\"><input type=\"text\" id=\"pearlHex-${key}\" data-hex=\"${key}\" value=\"${saved[key].toUpperCase()}\" aria-label=\"${label} 색상 코드\" maxlength=\"7\" spellcheck=\"false\" autocomplete=\"off\"></div></div>`).join('')}</div><div class=\"pearl-settings-footer\"><p id=\"pearlColorMessage\" role=\"status\">이 기기에 저장돼요.</p><button class=\"primary-btn\" type=\"submit\">저장</button></div></form>`);"
+    },
+    {
+      "file": "android/app/src/main/assets/dait-appearance.js",
+      "line": 291,
+      "colors": [
+        "#151719",
+        "#112c51"
+      ],
+      "source": "const presets={pearl:DEFAULT,dark:{start:'#151719',end:'#151719'},mixed:{start:'#ffffff',end:'#112c51'}};"
+    },
+    {
+      "file": "android/app/src/main/res/values/colors.xml",
+      "line": 2,
+      "colors": [
+        "#171C38"
+      ],
+      "source": "<color name=\"surface\">#171C38</color>"
+    },
+    {
+      "file": "android/app/src/main/res/values/colors.xml",
+      "line": 3,
+      "colors": [
+        "#203C3C"
+      ],
+      "source": "<color name=\"ink\">#203C3C</color>"
+    },
+    {
+      "file": "android/app/src/main/res/values-night/colors.xml",
+      "line": 2,
+      "colors": [
+        "#171C38"
+      ],
+      "source": "<color name=\"surface\">#171C38</color>"
+    },
+    {
+      "file": "android/app/src/main/res/values-night/colors.xml",
+      "line": 4,
+      "colors": [
+        "#BCC7CC"
+      ],
+      "source": "<color name=\"muted\">#BCC7CC</color>"
+    },
+    {
+      "file": "android/app/src/main/res/values-night/colors.xml",
+      "line": 6,
+      "colors": [
+        "#203C49"
+      ],
+      "source": "<color name=\"on_accent\">#203C49</color>"
+    },
+    {
+      "file": "android/app/src/main/res/values-night/colors.xml",
+      "line": 7,
+      "colors": [
+        "#35434C"
+      ],
+      "source": "<color name=\"control\">#35434C</color>"
+    },
+    {
+      "file": "android/app/src/main/res/values-night/colors.xml",
+      "line": 8,
+      "colors": [
+        "#1D3733"
+      ],
+      "source": "<color name=\"paper\">#1D3733</color>"
+    }
+  ],
+  "note": "Includes dormant CSS and native resources; a finding is not proof of current runtime visibility. Badge artwork colors are content assets and are preserved."
+}

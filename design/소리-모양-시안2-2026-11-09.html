@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>소리 모션 시안 2</title>
+<style>
+:root { --ink:#352832; --lilac:#884d62; --rose:#c98fa5; --pink:#e8b9c9; --soft:#f1dfe5; --paper:#fcf5f6; --line:#e5cdd6; --muted:#715e69; }
+* { box-sizing:border-box; }
+body { margin:0; padding:20px; background:linear-gradient(135deg,transparent 30%,#d7a9ba59),linear-gradient(120deg,#f8e9eb,#ecd9df); min-height:100vh; font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif; color:var(--ink); }
+.head { max-width:1000px; margin:0 auto 14px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.head p { margin:0; color:var(--muted); font-size:14px; flex:1; min-width:260px; }
+.head button { border:0; border-radius:999px; padding:10px 18px; background:var(--lilac); color:#fff; font:700 15px inherit; cursor:pointer; }
+.grid { max-width:1000px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
+.card { background:var(--paper); border:1px solid var(--line); border-radius:18px; padding:16px; }
+.card h2 { margin:0; font-size:18px; color:var(--lilac); }
+.card p { margin:4px 0 12px; font-size:13px; color:var(--muted); min-height:52px; line-height:1.45; }
+.stage { height:140px; display:grid; place-items:center; background:#fff8f9; border-radius:14px; position:relative; overflow:hidden; }
+.tag { display:inline-block; font-size:11px; font-weight:700; color:var(--lilac); background:var(--soft); border-radius:99px; padding:2px 8px; margin-left:6px; vertical-align:middle; }
+.bars { display:flex; align-items:center; gap:10px; height:72px; }
+.bars i { display:block; width:14px; border-radius:99px; background:var(--lilac); height:72px; transform:scaleY(.25); transition:transform .09s linear; }
+.bars i:nth-child(even) { background:var(--rose); }
+/* G: 위아래로 대칭 + 아래 반사 */
+.g { display:flex; flex-direction:column; align-items:center; }
+.g .bars { height:56px; align-items:flex-end; }
+.g .bars i { height:56px; transform-origin:bottom; }
+.g .mirror { transform:scaleY(-1); opacity:.22; filter:blur(1px); margin-top:4px; }
+/* H: 재생 버튼 둘레를 도는 막대 */
+.h { position:relative; width:120px; height:120px; }
+.h .ray { position:absolute; left:57px; top:60px; width:6px; height:22px; border-radius:6px; background:var(--rose); transform-origin:3px 0; }
+.h .btn { position:absolute; inset:34px; border-radius:50%; background:var(--lilac); display:grid; place-items:center; color:#fff; box-shadow:0 6px 16px #884d6240; }
+.h .btn svg { width:22px; }
+/* I: 재생 버튼 + 진행 고리 + 맥박 */
+.i { position:relative; width:110px; height:110px; }
+.i svg.ring { position:absolute; inset:0; transform:rotate(-90deg); }
+.i .pulse { position:absolute; inset:18px; border-radius:50%; background:var(--pink); opacity:.55; }
+.i .btn { position:absolute; inset:27px; border-radius:50%; background:var(--lilac); display:grid; place-items:center; color:#fff; }
+.i .btn svg { width:20px; }
+/* J: 말풍선 속 막대 */
+.j { position:relative; background:var(--lilac); border-radius:26px; padding:16px 22px; }
+.j::after { content:''; position:absolute; left:24px; bottom:-10px; border:10px solid transparent; border-top-color:var(--lilac); border-bottom:0; }
+.j .bars { height:40px; gap:7px; } .j .bars i { width:9px; height:40px; background:#fff; } .j .bars i:nth-child(even) { background:var(--pink); }
+/* K: 리본 물결 (소리 크기에 따라 출렁) */
+.k canvas { width:260px; height:110px; }
+/* L: 막대 + 빛이 지나감 */
+.l .bars i { background:linear-gradient(180deg,var(--rose),var(--lilac)); position:relative; overflow:hidden; }
+.l .bars { position:relative; }
+.l .bars::after { content:''; position:absolute; inset:-10px; background:linear-gradient(100deg,transparent 35%,#ffffffa0 50%,transparent 65%); background-size:250% 100%; animation:shine 2.4s linear infinite; mix-blend-mode:soft-light; }
+@keyframes shine { from{background-position:120% 0} to{background-position:-120% 0} }
+.paused .l .bars::after { animation-play-state:paused; }
+</style></head><body>
+<div class="head"><p>A안(굵은 막대)을 바탕으로, 소리가 나오는 동안 쓸 수 있는 움직임을 모았어요. 정해진 박자로 반복하지 않고 말소리처럼 들쭉날쭉 움직이게 했어요. 운전 중에는 멈춰요.</p><button id="toggle">멈춘 모양 보기</button></div>
+<div class="grid" id="grid"></div>
+<script>
+const PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l12-7.5z"/></svg>';
+const bars = n => `<div class="bars">${'<i></i>'.repeat(n)}</div>`;
+const looks = [
+  ['A+ · 말소리처럼 움직이는 굵은 막대', '고른 A안 그대로인데, 일정한 박자 대신 말할 때처럼 크고 작게 들쭉날쭉. 반복 느낌이 없어 훨씬 자연스러움.', 'a', bars(5), '추천'],
+  ['G · 물에 비친 막대', '막대 아래에 흐릿한 그림자가 비침. 바닥에 서 있는 느낌이라 덜 휑하고 고급스러움.', 'g', `<div class="g">${bars(5)}<div class="mirror">${bars(5)}</div></div>`],
+  ['H · 재생 버튼 둘레 햇살', '재생 버튼 둘레의 짧은 막대들이 소리에 맞춰 늘었다 줄었다. 버튼과 소리 모양이 하나로 합쳐짐.', 'h', `<div class="h">${Array.from({length:16},(_,k)=>`<span class="ray" style="--a:${k*22.5}deg"></span>`).join('')}<div class="btn">${PLAY}</div></div>`],
+  ['I · 진행 고리 + 숨쉬기', '버튼 둘레 고리가 들은 만큼 차오르고, 뒤의 동그라미가 소리 크기에 맞춰 커졌다 작아짐. 얼마나 남았는지도 보임.', 'i', `<div class="i"><div class="pulse"></div><svg class="ring" viewBox="0 0 110 110"><circle cx="55" cy="55" r="50" fill="none" stroke="#f1dfe5" stroke-width="6"/><circle class="prog" cx="55" cy="55" r="50" fill="none" stroke="#884d62" stroke-width="6" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="200"/></svg><div class="btn">${PLAY}</div></div>`],
+  ['J · 말풍선 속 막대', '"지금 이야기해 주고 있어요" 느낌. 수업 선생님 목소리라는 뜻이 잘 보임.', 'j', `<div class="j">${bars(5)}</div>`],
+  ['K · 출렁이는 리본', '부드러운 리본 두 겹이 소리 크기만큼 출렁임. 막대보다 덜 딱딱함.', 'k', '<div class="k"><canvas width="520" height="220"></canvas></div>'],
+  ['L · 막대 위로 빛이 지나감', 'A+ 막대에 반짝이는 빛이 천천히 지나감. 멈춰 있을 때(운전 중)도 살짝 살아 있는 느낌.', 'l', `<div class="l">${bars(5)}</div>`],
+];
+document.getElementById('grid').innerHTML = looks.map(([t,n,c,html,tag]) => `<div class="card"><h2>${t}${tag?`<span class="tag">${tag}</span>`:''}</h2><p>${n}</p><div class="stage">${html}</div></div>`).join('');
+document.querySelectorAll('.h .ray').forEach(r => r.style.transform = `rotate(${r.style.getPropertyValue('--a')}) translateY(44px)`);
+
+// 말소리처럼: 큰 흐름(음절) + 작은 떨림. 실제 앱에서는 소리 파일에서 미리 뽑은 크기 값으로 바꿀 수 있다.
+let paused = false, t0 = performance.now();
+const level = (t, k) => {
+  const syll = Math.max(0, Math.sin(t * 7.3 + k * .7) * Math.sin(t * 2.1 + k * 1.3));
+  const pause = (Math.sin(t * .9) + 1) / 2 > .18 ? 1 : .15;
+  return Math.min(1, .2 + pause * (syll * .75 + Math.random() * .2));
+};
+const smooth = new Map();
+function frame(now) {
+  const t = (now - t0) / 1000;
+  if (!paused) {
+    document.querySelectorAll('.bars').forEach((b, bi) => [...b.children].forEach((i, k) => {
+      const key = bi + ':' + k, target = level(t, k + bi * .3);
+      const v = (smooth.get(key) ?? .3) * .7 + target * .3; smooth.set(key, v);
+      i.style.transform = `scaleY(${Math.max(.22, v)})`;
+    }));
+    document.querySelectorAll('.h .ray').forEach((r, k) => {
+      const key = 'h' + k, v = (smooth.get(key) ?? .3) * .75 + level(t, k * .5) * .25; smooth.set(key, v);
+      r.style.height = (10 + v * 26) + 'px'; r.style.opacity = .45 + v * .55;
+    });
+    const p = (smooth.get('p') ?? .5) * .8 + level(t, 2) * .2; smooth.set('p', p);
+    const pulse = document.querySelector('.i .pulse'); if (pulse) pulse.style.transform = `scale(${1 + p * .45})`;
+    const prog = document.querySelector('.i .prog'); if (prog) prog.setAttribute('stroke-dashoffset', 314 - ((t * 12) % 314));
+    const cv = document.querySelector('.k canvas'); if (cv) {
+      const g = cv.getContext('2d'), W = cv.width, H = cv.height; g.clearRect(0, 0, W, H);
+      const amp = (smooth.get('k') ?? .4) * .85 + level(t, 1) * .15; smooth.set('k', amp);
+      [['#c98fa5', 1.3, .7, 14], ['#884d62', 1, 0, 16]].forEach(([col, f, ph, w]) => {
+        g.beginPath(); g.lineWidth = w; g.lineCap = 'round'; g.strokeStyle = col; g.globalAlpha = col === '#c98fa5' ? .6 : 1;
+        for (let x = 20; x <= W - 20; x += 4) {
+          const env = Math.sin(Math.PI * (x - 20) / (W - 40));
+          const y = H / 2 + Math.sin(x / 38 * f - t * 3 + ph) * env * amp * 70;
+          x === 20 ? g.moveTo(x, y) : g.lineTo(x, y);
+        }
+        g.stroke();
+      });
+      g.globalAlpha = 1;
+    }
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+const btn = document.getElementById('toggle');
+btn.onclick = () => { paused = !paused; document.body.classList.toggle('paused', paused); btn.textContent = paused ? '움직이는 모양 보기' : '멈춘 모양 보기'; };
+</script>
+</body></html>

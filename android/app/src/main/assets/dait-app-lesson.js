@@ -47,8 +47,14 @@ function lessonProgress() {
 function openLessons() {
   if (isDrivingMode) return;
   const eta = remainMinutes();
-  lessonMinutes = eta !== null ? Lesson.minutesFor(eta) : Lesson.DEFAULT_MINUTES;
+  lessonMinutes = eta !== null ? Lesson.minutesFor(eta) : 8; // 수업 화면은 8분 탭부터 보여 준다
   currentMode = 'lessonPick';
+  render();
+}
+
+function pickLessonTime(minutes) {
+  if (isDrivingMode || remainMinutes() !== null || ![8, 15, 20].includes(minutes)) return;
+  lessonMinutes = minutes;
   render();
 }
 
@@ -96,43 +102,49 @@ function renderLessonPick(container) {
         <button class="back-btn" onclick="goHome()">처음으로</button>
         <span class="top-label">수업</span>
       </div>
-      <div class="lesson-pick"${mileage || progress.homework ? '' : ' style="grid-template-columns:1fr"'}>
-        <div class="lesson-main">
+      <div class="pearl-records">
+      ${eta !== null ? '' : `<div class="pearl-record-tabs lesson-time-tabs" role="tablist" aria-label="수업 시간">${[8,15,20].map(minutes => `<button role="tab" aria-controls="lessonList" aria-selected="${minutes === lessonMinutes}" onclick="pickLessonTime(${minutes})">${minutes}분 수업</button>`).join('')}</div>`}
+      <div class="lesson-pick pearl-record-content">
+        <div class="lesson-main" id="lessonList" onscroll="updateListScroll('lessonList', 'lessonScroll')">
           ${eta !== null ? `<div class="lesson-filters"><span class="lesson-eta-summary">도착까지 ${Lesson.minutesFor(eta)}분, ${periods.length > 1 ? (trip.rest ? `${periods.length}교시로 들어요` : '수업을 이어 들어요') : '이 수업을 들어요'}</span></div>` : ''}
           ${periods.length > 1 && trip.rest ? `<div class="lesson-plan-summary">${periods.map((lesson, i) => `${i + 1}교시 ${escapeHtml(lesson.subject)}`).join(' · ')} · 쉬는 시간 ${trip.rest}분</div>` : ''}
           ${periods.length > 1 && !trip.rest ? '<div class="lesson-plan-summary">고른 수업이 끝나고 남는 시간은 다른 수업으로 이어 채워요</div>' : ''}
-          ${reserved ? `<div class="card-sub">출발하면 들려줄게요: ${escapeHtml(reserved.title)}${stopReserved ? ' (멈춘 곳부터)' : ''}</div>` : ''}
           ${lessons.length === 0 && !stopped ? '<div class="settings-message">이 시간에 맞는 수업이 아직 없어요</div>' : ''}
           <div class="lesson-grid">
           ${stopped ? `<div class="lesson-row">
             <button class="choice-chip" onclick="startLesson('${stopped.id}', true)">
+              ${LESSON_PLAY_ICON}
               <span class="lesson-text">
                 <span class="lesson-title">지난번 멈춘 곳부터: ${escapeHtml(stopped.title)}</span>
                 <span class="lesson-meta">${escapeHtml(stopped.subject)} · 남은 약 ${stopMinutesLeft(stopped, lessonMinutes)}분</span>
               </span>
-              ${LESSON_PLAY_ICON}
             </button>
+            <button class="card-btn quiet" onclick="toggleLessonArm('${stopped.id}', true)">${stopReserved && reserved === stopped ? '예약 취소' : '출발하면 듣기'}</button>
           </div>` : ''}
           ${lessons.filter(lesson => lesson !== stopped).map(lesson => `<div class="lesson-row">
             <button class="choice-chip" onclick="startLesson('${lesson.id}')">
+              ${LESSON_PLAY_ICON}
               <span class="lesson-text">
                 <span class="lesson-title">${escapeHtml(lesson.question || lesson.title)}</span>
-                <span class="lesson-meta">${escapeHtml(lesson.subject)} · 약 ${Math.round(Lesson.totalSeconds(Lesson.assemble(lesson, trip.minutes)) / 60)}분</span>
+                <span class="lesson-meta">${escapeHtml(lesson.subject)} · 약 ${Math.round(Lesson.totalSeconds(Lesson.assemble(lesson, trip.minutes)) / 60)}분 · ${escapeHtml(lesson.title)}</span>
               </span>
-              ${LESSON_PLAY_ICON}
             </button>
+            <button class="card-btn quiet" onclick="toggleLessonArm('${lesson.id}')">${reserved === lesson && !stopReserved ? '예약 취소' : '출발하면 듣기'}</button>
           </div>`).join('')}
           </div>
         </div>
+        <div class="pearl-record-scroll" aria-label="수업 목록 이동"><button id="lessonScrollUp" onclick="scrollList(-1, 'lessonList')" aria-label="이전 수업"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button><div class="pearl-record-track" aria-hidden="true"><div id="lessonScrollThumb" class="pearl-scroll-thumb"></div></div><button id="lessonScrollDown" onclick="scrollList(1, 'lessonList')" aria-label="다음 수업"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div>
         ${mileage || progress.homework ? `<div class="lesson-side">
           ${mileage ? `<div class="card-sub">${escapeHtml(mileage)}</div>` : ''}
           ${progress.homework ? `<div class="card-label">숙제</div><div class="card-sub">${escapeHtml(progress.homework.title)}</div><button class="card-btn" onclick="doneHomework()">했어요</button>` : ''}
         </div>` : ''}
       </div>
+      </div>
     </div>
   `;
   const main = document.querySelector('.lesson-main');
   if (main) main.scrollTop = scrolled; // 예약을 눌러도 보던 자리에 머문다
+  updateListScroll('lessonList', 'lessonScroll');
 }
 
 function renderLesson(container) {
@@ -183,7 +195,7 @@ function renderLessonPlayer(container, run) {
       <p class="pearl-player-meta">${escapeHtml(lessonLabel(run, false))}${prefs.rate !== 1 ? ` · ${prefs.rate.toFixed(1)}배속` : ''}</p>
       <div id="heardLine" class="heard-bubble"${heard || speechPhase === 'listening' ? '' : ' hidden'}>${escapeHtml(heardLineText())}</div>
     </div>
-    <div class="pearl-player-wave" aria-hidden="true">${[12,19,26,34,39,34,28,38,32,23,16,10].map((n,i) => `<i style="--wave-height:${n};--wave-delay:${-i*.13}s"></i>`).join('')}</div>
+    <div class="pearl-player-wave dait-sound" aria-hidden="true">${SOUND_BARS}</div>
     <div class="pearl-transport">
       <button class="pearl-seek" onclick="seekLessonBy(-lessonPlaybackPrefs.back)" aria-label="${lessonIntervalText(prefs.back)} 뒤로">${lessonTransportIcon('back')}<span>${lessonIntervalText(prefs.back)}</span></button>
       <button class="pearl-play" onclick="lessonMainAction()" aria-label="${playing ? '일시정지' : '이어 듣기'}">${lessonTransportIcon(playing ? 'pause' : 'play')}</button>
@@ -195,6 +207,56 @@ function renderLessonPlayer(container, run) {
     </div>
   </div>`;
   tickLessonProgress();
+  startSoundMotion();
+}
+
+// 소리 막대: 왼쪽부터 저음 → 고음 5칸. 음원마다 미리 재 둔 칸별 소리 크기(dait-sound-levels.js)를
+// 지금 재생 위치에서 읽어 움직인다. 차에서는 기기 재생기가 소리를 틀어 화면이 직접 듣지 못하기 때문이다.
+// 말하지 않는 동안(생각할 시간·쉬는 시간)은 낮게 쉬고, 운전 중이거나 움직임 줄이기를 켰으면 멈춘 높이로 둔다.
+const SOUND_BARS = [.45, .75, 1, .7, .5].map((s, k) => `<i style="--s:${s};--k:${k}"></i>`).join('');
+const SOUND_REST = .18;
+let soundFrame = 0, soundClock = { pos: -1, at: 0 };
+
+// 기기 재생기는 위치를 0.25초마다 알려 주므로, 그 사이는 흐른 시간으로 메운다.
+function soundPosition(run, now) {
+  if (!window.AndroidBridge) {
+    const time = document.getElementById('audioPlayer')?.currentTime;
+    if (Number.isFinite(time)) return time;
+  }
+  const pos = run.positionSeconds || 0;
+  if (pos !== soundClock.pos) soundClock = { pos, at: now };
+  return pos + Math.min(.5, (now - soundClock.at) / 1000) * (lessonPlaybackPrefs.rate || 1);
+}
+
+function soundBandLevels(clip, seconds) {
+  const table = typeof DAIT_SOUND_LEVELS !== 'undefined' ? DAIT_SOUND_LEVELS : null;
+  const data = table?.clips[clip], bands = table?.bands || 5;
+  const at = Math.floor(seconds * (table?.fps || 0)) * bands;
+  if (!data || at < 0 || at + bands > data.length) return null;
+  return Array.from({ length: bands }, (_, k) => (Number(data[at + k]) / 9) ** 1.6); // 큰 소리만 크게 튀어 오르게
+}
+
+function startSoundMotion() {
+  if (soundFrame || typeof requestAnimationFrame !== 'function') return;
+  const shown = [];
+  const step = now => {
+    const bars = document.querySelectorAll('.pearl-player.is-playing .dait-sound i'), run = lessonRun;
+    if (!bars.length || !run) { soundFrame = 0; return; }
+    const still = isDrivingMode || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const piece = run.pieces[run.index];
+    const speaking = piece?.voiced && speechPhase === 'speaking' && !speechPaused;
+    const target = speaking ? soundBandLevels(piece.clip, soundPosition(run, now)) : null;
+    bars.forEach((bar, k) => {
+      if (still) { bar.style.height = ''; return; }
+      const goal = SOUND_REST + (target ? target[k] : 0) * (1 - SOUND_REST);
+      // 작은 변화(0.12 미만)는 무시하고, 큰 변화도 천천히 따라가 자잘하게 떨리지 않게 한다.
+      const was = shown[k] ?? SOUND_REST;
+      shown[k] = Math.abs(goal - was) < .12 ? was : was * .8 + goal * .2;
+      bar.style.height = `${(shown[k] * 100).toFixed(1)}%`;
+    });
+    soundFrame = requestAnimationFrame(step);
+  };
+  soundFrame = requestAnimationFrame(step);
 }
 
 function lessonTimeline(run) {
@@ -337,8 +399,10 @@ function isLessonResting() {
 }
 
 // fromStop이면 지난번 멈춘 곳부터 잇는다.
-function startLesson(lessonId, fromStop) {
-  const trip = fromStop ? stopTrip(lessonId) : lessonTripFor(lessonId);
+function startLesson(lessonId, fromStop, recordPoint) {
+  const recordLesson = recordPoint && DAIT_LESSONS.find(item => item.id === lessonId);
+  const trip = recordLesson ? { ...Lesson.planTrip([recordLesson], lessonMinutes), resume: recordPoint }
+    : fromStop ? stopTrip(lessonId) : lessonTripFor(lessonId);
   if (!trip || !trip.lesson || !(trip.resume || Lesson.fits(trip.lesson, trip.minutes))) return;
   disarm();
   tripForDoor = null; // 내릴 때 한마디가 수업을 끊고 지나가지 않게 한다
@@ -391,7 +455,7 @@ function startPeriod(trip) {
   heard = '';
   noteLessonNavi();
   fitLessonToEta(remainMinutes());
-  playLessonPiece();
+  playLessonPiece(Math.max(0, Number(trip.resume?.offset) || 0));
 }
 
 // 길 안내가 있으면 남은 시간을, 없으면 고른 시간에서 지난 만큼 뺀 시간을 뒤 교시에 나눈다.
@@ -589,6 +653,7 @@ function endLesson() {
   const run = lessonRun;
   if (!run || run.done) return;
   clearTimeout(lessonTimer);
+  run.savedPosition = currentLessonPosition(run);
   stopSpeech();
   run.done = true;
   saveLesson(run);
@@ -603,10 +668,18 @@ function saveLesson(run) {
   if (run.saved) return;
   run.saved = true;
   run.finished = Lesson.countsAsFinished(run);
-  if (run.heard.length > run.heardBefore) { // 멈춘 곳부터 잇다가 새로 들은 조각이 없으면 기록도 멈춘 날짜도 그대로 둔다
+  const position = run.savedPosition ?? currentLessonPosition(run);
+  if (run.heard.length > run.heardBefore || position >= 1) {
     const ymd = toYmd(new Date());
     const progress = Lesson.finishLesson(lessonProgress(), run.lesson, ymd, run.finished, run.meters / 1000, run.answers, run.short);
     const point = run.finished ? null : Lesson.resumePoint(run.lesson, run.heard, ymd); // 다음 이동에서 멈춘 곳부터 잇게 한다
+    const piece = run.pieces[run.index];
+    if (!run.finished && piece && run.lesson.pieces.some(item => item.id === piece.id)) {
+      progress.records[progress.records.length - 1].resume = {
+        lesson: run.lesson.id, from: piece.id, heard: run.heard.map(item => item.id), short: run.short, ymd,
+        offset: Math.max(0, Math.min(Number(position) || 0, Lesson.totalSeconds([piece]) - .05))
+      };
+    } else if (point) progress.records[progress.records.length - 1].resume = point;
     writeStored(LESSON_KEY, point ? Lesson.keepResume(progress, point) : progress);
   }
 }

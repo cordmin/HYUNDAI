@@ -32,10 +32,11 @@
     sync();
   }
   function mount() {
-    const nav = document.getElementById('pearlNav'), settingsButton = nav?.querySelector(':scope > .icon-btn');
+    const nav = document.getElementById('pearlNav'), buttons = [...(nav?.querySelectorAll(':scope > .icon-btn') || [])];
+    const settingsButton = buttons.find(button => button.getAttribute('aria-label') === '설정');
     if (!settingsButton) return;
     const toolbar = document.createElement('div'); toolbar.className = 'pearl-tools';
-    settingsButton.replaceWith(toolbar); toolbar.append(settingsButton);
+    buttons[0].replaceWith(toolbar); toolbar.append(...buttons);
     toolbar.insertAdjacentHTML('beforeend', `<div class="pearl-volume-control" id="pearlVolume"><button type="button" class="icon-btn" aria-label="음량 조절" aria-controls="pearlVolumePanel" aria-expanded="false"></button><div class="pearl-volume-panel" id="pearlVolumePanel" hidden><input id="pearlVolumeRange" type="range" min="0" max="100" step="1" value="${volume}" aria-label="음량" aria-orientation="vertical"><output for="pearlVolumeRange"></output></div></div>`);
     toolbar.querySelector('#pearlVolume button').addEventListener('click', () => { opened = !opened; sync(); });
     toolbar.querySelector('input').addEventListener('input', e => setVolume(e.target.value));

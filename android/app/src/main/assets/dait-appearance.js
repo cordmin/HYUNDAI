@@ -1,9 +1,11 @@
 /* Appearance only: native lesson, navigation, rewards and driving rules stay in the app. */
 (() => {
   'use strict';
-  const KEY = 'dait.pearl.colors.v2';
+  const KEY = 'dait.pearl.colors.v3';
+  const PREVIOUS_KEY = 'dait.pearl.colors.v2';
   const LEGACY_KEY = 'dait.pearl.colors.v1';
-  const DEFAULT = { start: '#f8e9eb', end: '#e7edf5' };
+  const DEFAULT = { start: '#f8e9eb', end: '#ecd9df' };
+  const DARK = { start: '#30212a', end: '#452e38' };
   const HEX = /^#[0-9a-f]{6}$/i;
   const host = document.querySelector('.pleos-display');
   const rgb = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
@@ -12,17 +14,21 @@
   const valid = colors => colors && HEX.test(colors.start) && HEX.test(colors.end);
   const cloneProfiles = value => ({ mode: value.mode, light: { ...value.light }, dark: { ...value.dark } });
   const isDark = colors => luminance(rgb(colors.start)) + luminance(rgb(colors.end)) < .55;
-  let profiles = { mode: 'light', light: { ...DEFAULT }, dark: { start: '#151719', end: '#1f2937' } };
+  let profiles = { mode: 'light', light: { ...DEFAULT }, dark: { ...DARK } };
   const stored = settingsStore.read(KEY, null);
   if (stored && ['light','dark'].includes(stored.mode) && valid(stored.light) && valid(stored.dark)) profiles = cloneProfiles(stored);
   else {
+    const previous = settingsStore.read(PREVIOUS_KEY, null);
     const legacy = settingsStore.read(LEGACY_KEY, null);
-    if (valid(legacy)) { profiles.mode = isDark(legacy) ? 'dark' : 'light'; profiles[profiles.mode] = { start: legacy.start, end: legacy.end }; }
+    // The approved theme replaces old palettes once; keep their saved mode and leave old keys intact.
+    if (previous && ['light','dark'].includes(previous.mode)) profiles.mode = previous.mode;
+    else if (valid(legacy)) profiles.mode = isDark(legacy) ? 'dark' : 'light';
+    try { settingsStore.write(KEY, profiles); } catch (_) { /* Still apply the new theme if storage is unavailable. */ }
   }
   let saved = { ...profiles[profiles.mode] };
   let active = { ...saved }, draft = null, dialog = null, focusBefore = null, frame = 0, noticeTimer;
-  const PANES = '.home-card,.dialogue-card,.settings-card,.pearl-record-row,.pearl-badge,.pearl-page-title,.lesson-row,.pearl-homework,.pearl-nav nav,.pearl-eta,.pearl-nav .icon-btn';
-  const TEXT = '.pearl-badge span,.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-nav nav button,.pearl-eta,.pearl-nav .icon-btn,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.school-input,.choice-chip,.heard-bubble,.place-name,.place-address,.pearl-homework>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times,.pearl-seek';
+  const PANES = '.home-card,.dialogue-card,.settings-card,.pearl-record-row,.pearl-badge,.pearl-page-title,.lesson-row,.pearl-homework,.pearl-nav nav,.pearl-nav .icon-btn';
+  const TEXT = '.pearl-badge span,.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-nav nav button,.pearl-nav .icon-btn,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.school-input,.choice-chip,.heard-bubble,.place-name,.place-address,.pearl-homework>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times,.pearl-seek';
 
   function backgroundAt(x, y) {
     const rect = host.getBoundingClientRect(), dx = Math.sin(2 * Math.PI / 3), dy = -Math.cos(2 * Math.PI / 3);
@@ -31,7 +37,9 @@
     return a.map((v, i) => v + (b[i] - v) * t);
   }
   function rgba(element) {
-    const n = (getComputedStyle(element).backgroundColor.match(/[\d.]+/g) || []).map(Number);
+    const color = getComputedStyle(element).backgroundColor;
+    const n = (color.match(/[\d.]+/g) || []).map(Number);
+    if (color.startsWith('color(srgb ')) return [...n.slice(0, 3).map(value => value * 255), n[3] ?? 1];
     return n.length >= 3 ? [...n.slice(0, 3), n.length === 4 ? n[3] : 1] : [0, 0, 0, 0];
   }
   function measure(element) {
@@ -46,11 +54,12 @@
       for (const layer of layers) c = c.map((v, i) => v * (1 - layer[3]) + layer[i] * layer[3]);
       return luminance(c);
     });
-    const dark = Math.min(...samples.map(v => contrast(v, luminance(rgb('#172236')))));
+    const dark = Math.min(...samples.map(v => contrast(v, luminance(rgb('#352832')))));
     const white = Math.min(...samples.map(v => contrast(v, 1)));
-    const blue = Math.min(...samples.map(v => contrast(v, luminance(rgb('#245ed0')))));
-    if (element.matches('[aria-current=page],[aria-selected=true]') && blue >= 4.5) return { ink: '#245ed0', score: blue };
-    return white > dark ? { ink: '#ffffff', score: white } : { ink: '#172236', score: dark };
+    const rose = host.classList.contains('pearl-night') ? '#f0b9cc' : '#884d62';
+    const accent = Math.min(...samples.map(v => contrast(v, luminance(rgb(rose)))));
+    if (element.matches('[aria-current=page],[aria-selected=true],[aria-pressed=true]') && accent >= 4.5) return { ink: rose, score: accent };
+    return white > dark ? { ink: '#fffafb', score: Math.min(...samples.map(v => contrast(v, luminance(rgb('#fffafb'))))) } : { ink: '#352832', score: dark };
   }
   function refreshInk() {
     host.querySelectorAll('[data-pearl-tint]').forEach(e => { e.style.removeProperty('background-color'); e.removeAttribute('data-pearl-tint'); });
@@ -60,10 +69,10 @@
       if (!result || result.score >= 4.65) continue;
       const pane = element.closest(PANES);
       if (!pane) continue;
-      pane.style.setProperty('background-color', result.ink === '#ffffff' ? 'rgba(15,27,43,.16)' : 'rgba(255,255,255,.34)');
+      pane.style.setProperty('background-color', result.ink === '#fffafb' ? 'rgba(53,40,50,.16)' : 'rgba(255,250,251,.34)');
       pane.setAttribute('data-pearl-tint', '');
       result = measure(element);
-      if (result.score < 4.5) pane.style.setProperty('background-color', 'rgba(255,255,255,.6)');
+      if (result.score < 4.5) pane.style.setProperty('background-color', '#fffafb');
     }
     for (const element of elements) {
       const result = measure(element); if (!result) continue;
@@ -77,13 +86,10 @@
     const rect = svg.getBoundingClientRect();
     const colors = [[.2, .25], [.5, .5], [.8, .75]].map(([x, y]) => backgroundAt(rect.left + rect.width * x, rect.top + rect.height * y));
     const bright = luminance(colors[1]) >= .32;
-    const needsOutline = colors.filter(c => {
-      const max = Math.max(...c), min = Math.min(...c), d = max - min;
-      let hue = d ? (max === c[0] ? (c[1] - c[2]) / d : max === c[1] ? (c[2] - c[0]) / d + 2 : (c[0] - c[1]) / d + 4) * 60 : 0;
-      hue = (hue + 360) % 360;
-      const lum = luminance(c);
-      return max && 1 - min / max > .18 && hue >= 185 && hue <= 215 && contrast(lum, luminance(rgb('#38bdf8'))) < 1.25 && contrast(lum, 1) < 2.7;
-    }).length >= 2;
+    const stops = bright ? ['#7b405a','#b66d87','#914f67'] : ['#f0c0d0','#fbe9ee','#cb91a6'];
+    svg.querySelectorAll('#flowGradBadge stop').forEach((stop, index) => stop.setAttribute('stop-color', stops[index]));
+    svg.querySelector('.brand-dot')?.setAttribute('fill', stops[0]);
+    const needsOutline = colors.filter(c => contrast(luminance(c), luminance(rgb(stops[0]))) < 3).length >= 2;
     const path = svg.querySelector(':scope > path:not(.pearl-logo-outline)');
     let halo = svg.querySelector('.pearl-logo-halo');
     if (path && !halo) {
@@ -93,7 +99,7 @@
       filter.setAttribute('filterUnits', 'userSpaceOnUse');
       filter.setAttribute('x', '-20'); filter.setAttribute('y', '-20');
       filter.setAttribute('width', '140'); filter.setAttribute('height', '80');
-      filter.innerHTML = '<feGaussianBlur stdDeviation="1.57"/>';
+      filter.innerHTML = '<feGaussianBlur stdDeviation="0.8"/>';
       const mask = document.createElementNS(ns, 'mask');
       mask.id = 'pearlLogoOutside';
       mask.setAttribute('maskUnits', 'userSpaceOnUse');
@@ -113,7 +119,7 @@
       halo.setAttribute('mask', 'url(#pearlLogoOutside)');
       const blurred = document.createElementNS(ns, 'g');
       blurred.setAttribute('filter', 'url(#pearlLogoOuterBlur)');
-      blurred.setAttribute('opacity', '.76');
+      blurred.setAttribute('opacity', '.24');
       const ribbon = path.cloneNode();
       ribbon.setAttribute('stroke', 'currentColor'); ribbon.setAttribute('stroke-width', '4.8');
       blurred.append(ribbon);
@@ -124,12 +130,12 @@
       const outline = path.cloneNode(); outline.classList.add('pearl-logo-outline');
       outline.setAttribute('stroke-width', '4.4'); outline.setAttribute('aria-hidden', 'true'); svg.insertBefore(outline, path);
     }
-    svg.querySelector('.pearl-logo-outline')?.setAttribute('stroke', bright ? '#18314a' : '#ffffff');
+    svg.querySelector('.pearl-logo-outline')?.setAttribute('stroke', bright ? '#352832' : '#fff1f5');
     brand.dataset.logoOutline = needsOutline ? 'on' : 'off'; brand.dataset.logoEffect = bright ? 'shadow' : 'glow';
     // Keep the original ribbon completely unfiltered. Only its exterior receives light.
     svg.style.filter = 'none';
-    if (halo) halo.style.color = bright ? '#397694' : '#a3ddff';
-    brand.dataset.logoOuter = 'sky';
+    if (halo) halo.style.color = bright ? '#884d62' : '#f0b9cc';
+    brand.dataset.logoOuter = 'rose';
   }
   function refresh() { frame = 0; refreshInk(); refreshLogo(); }
   function queueRefresh() { if (!frame) frame = requestAnimationFrame(refresh); }
@@ -140,8 +146,8 @@
     const dark = luminance(rgb(colors.start)) + luminance(rgb(colors.end)) < .55;
     host.classList.toggle('pearl-night', mode === 'dark');
     host.dataset.colorMode = mode;
-    document.documentElement.style.setProperty('--ink', dark ? '#ffffff' : '#172236');
-    document.documentElement.style.setProperty('--muted', dark ? '#e3ebf7' : '#526175');
+    document.documentElement.style.setProperty('--ink', dark ? '#fff1f5' : '#352832');
+    document.documentElement.style.setProperty('--muted', dark ? '#d7bec8' : '#715e69');
     queueRefresh();
   }
   function notice(message) {
@@ -238,7 +244,7 @@
     return '#'+channels.map(n=>Math.round((n+m)*255).toString(16).padStart(2,'0')).join('');
   }
   function openColors() {
-    shell('앱 색상', `<form id="pearlColorForm" novalidate><div class="pearl-color-modes" role="group" aria-label="색상을 설정할 모드">${[['light','라이트 모드'],['dark','다크 모드']].map(([mode,label])=>`<button type="button" class="pearl-color-mode" data-color-mode="${mode}" aria-pressed="${profiles.mode===mode}"><span data-mode-swatch="${mode}" aria-hidden="true"></span>${label}</button>`).join('')}</div><div class="pearl-color-workbench"><div class="pearl-color-picker"><button type="button" class="pearl-color-plane" aria-label="색상판" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown"><span class="pearl-color-cursor" aria-hidden="true"></span></button><label class="pearl-hue-label" for="pearlHue">색상</label><input id="pearlHue" class="pearl-hue" type="range" min="0" max="359" step="1" aria-label="색상"><div class="pearl-color-preview" aria-label="선택한 두 색의 배경 미리보기"></div></div><div class="pearl-color-actions">${[['start','시작 색'],['end','끝 색']].map(([key,label])=>`<button type="button" class="pearl-color-choice" data-endpoint="${key}" aria-pressed="${key==='start'}"><span data-swatch="${key}" aria-hidden="true"></span>${label}</button>`).join('')}<div class="pearl-color-presets" aria-label="색상 조합"><button type="button" data-palette="pearl" aria-label="진주색" style="--preset:linear-gradient(120deg,#f8e9eb,#e7edf5)"></button><button type="button" data-palette="dark" aria-label="블랙 · 블랙" style="--preset:#151719"></button><button type="button" data-palette="mixed" aria-label="화이트 · 네이비" style="--preset:linear-gradient(120deg,#ffffff,#112c51)"></button></div><button type="button" class="pearl-color-details" aria-expanded="false" aria-controls="pearlColorCodes">상세 입력</button></div></div><div id="pearlColorCodes" class="pearl-color-fields" hidden>${[['start','시작 색'],['end','끝 색']].map(([key,label])=>`<div><label for="pearlHex-${key}">${label} 색상 코드</label><div class="pearl-color-control"><input type="text" id="pearlHex-${key}" data-hex="${key}" value="${saved[key].toUpperCase()}" aria-label="${label} 색상 코드" maxlength="7" spellcheck="false" autocomplete="off"></div></div>`).join('')}</div><div class="pearl-settings-footer"><p id="pearlColorMessage" role="status">이 기기에 저장돼요.</p><button class="primary-btn" type="submit">저장</button></div></form>`);
+    shell('앱 색상', `<form id="pearlColorForm" novalidate><div class="pearl-color-modes" role="group" aria-label="색상을 설정할 모드">${[['light','라이트 모드'],['dark','다크 모드']].map(([mode,label])=>`<button type="button" class="pearl-color-mode" data-color-mode="${mode}" aria-pressed="${profiles.mode===mode}"><span data-mode-swatch="${mode}" aria-hidden="true"></span>${label}</button>`).join('')}</div><div class="pearl-color-workbench"><div class="pearl-color-picker"><button type="button" class="pearl-color-plane" aria-label="색상판" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown"><span class="pearl-color-cursor" aria-hidden="true"></span></button><label class="pearl-hue-label" for="pearlHue">색상</label><input id="pearlHue" class="pearl-hue" type="range" min="0" max="359" step="1" aria-label="색상"><div class="pearl-color-preview" aria-label="선택한 두 색의 배경 미리보기"></div></div><div class="pearl-color-actions">${[['start','시작 색'],['end','끝 색']].map(([key,label])=>`<button type="button" class="pearl-color-choice" data-endpoint="${key}" aria-pressed="${key==='start'}"><span data-swatch="${key}" aria-hidden="true"></span>${label}</button>`).join('')}<div class="pearl-color-presets" aria-label="색상 조합"><button type="button" data-palette="pearl" aria-label="로즈 소프트" style="--preset:linear-gradient(120deg,#f8e9eb,#ecd9df)"></button><button type="button" data-palette="dark" aria-label="다크 로즈" style="--preset:linear-gradient(120deg,#30212a,#452e38)"></button><button type="button" data-palette="mixed" aria-label="웜 로즈" style="--preset:linear-gradient(120deg,#fffafb,#e2c3cf)"></button></div><button type="button" class="pearl-color-details" aria-expanded="false" aria-controls="pearlColorCodes">상세 입력</button></div></div><div id="pearlColorCodes" class="pearl-color-fields" hidden>${[['start','시작 색'],['end','끝 색']].map(([key,label])=>`<div><label for="pearlHex-${key}">${label} 색상 코드</label><div class="pearl-color-control"><input type="text" id="pearlHex-${key}" data-hex="${key}" value="${saved[key].toUpperCase()}" aria-label="${label} 색상 코드" maxlength="7" spellcheck="false" autocomplete="off"></div></div>`).join('')}</div><div class="pearl-settings-footer"><p id="pearlColorMessage" role="status">이 기기에 저장돼요.</p><button class="primary-btn" type="submit">저장</button></div></form>`);
     dialog.classList.add('pearl-color-dialog');
     const draftProfiles = cloneProfiles(profiles);
     let editingMode = profiles.mode;
@@ -288,7 +294,7 @@
       if(endpoint){ selected=endpoint; sync(false); }
       if(e.target===details){ showDetails(codes.hidden); if(!codes.hidden)dialog.querySelector(`[data-hex=${selected}]`).focus(); }
       const palette=e.target.closest('[data-palette]')?.dataset.palette;
-      const presets={pearl:DEFAULT,dark:{start:'#151719',end:'#151719'},mixed:{start:'#ffffff',end:'#112c51'}};
+      const presets={pearl:DEFAULT,dark:DARK,mixed:{start:'#fffafb',end:'#e2c3cf'}};
       if(presets[palette]){ draft={...presets[palette]}; draftProfiles[editingMode]=draft; hsv.start=toHsv(draft.start); hsv.end=toHsv(draft.end); sync(); }
     });
     dialog.querySelector('form').addEventListener('submit',e=>{
@@ -302,6 +308,14 @@
     });
     sync();
   }
+  window.togglePearlTheme = () => {
+    if (isDrivingMode) return;
+    profiles.mode = profiles.mode === 'dark' ? 'light' : 'dark';
+    saved = { ...profiles[profiles.mode] };
+    try { settingsStore.write(KEY, profiles); } catch (_) { /* 이번 화면에서만 바꾼다. */ }
+    apply(saved);
+    document.querySelector('.pearl-theme-btn')?.setAttribute('aria-pressed', String(profiles.mode === 'dark'));
+  };
   appEvents.on('rendered', queueRefresh);
   appEvents.on('vehicleChanged', ({ driving }) => { if (driving) close(); queueRefresh(); });
   appEvents.on('closeOverlays', close);

@@ -69,3 +69,16 @@ test('오디오 API가 없어도 인트로는 오류 없이 계속된다', async
   assert.ok(f.timers.size>0);assert.equal(f.notes.length,0);
 });
 
+test('인트로 점은 필터 없는 원이고 링은 점 확대와 분리되어 로고 축소 전에 사라진다', () => {
+  const markup = fs.readFileSync(path.join(assets, 'dait-preview.html'), 'utf8');
+  const css = fs.readFileSync(path.join(assets, 'dait-base.css'), 'utf8');
+  const group = markup.match(/<g id="splashDotGroup"[^>]*>([\s\S]*?)<\/g>/)[1];
+  assert.match(group, /<circle id="splashDot"[^>]*\br="3\.2"/);
+  assert.ok(!/filter=|splashDotRipple/.test(group));
+  const duration = Number(css.match(/\.splash-dot-ripple\.expand\s*\{[^}]*animation:\s*rippleExpand\s*([\d.]+)s/)[1]) * 1000;
+  const f = fixture(); f.context.playSplashIntro();
+  const ring = [...f.timers.values()].find(timer => timer.fn.toString().includes("dotRipple.classList.add('expand')"));
+  const moving = [...f.timers.values()].find(timer => timer.fn.toString().includes('brand.style.transform'));
+  assert.ok(ring.ms + duration < moving.ms);
+});
+

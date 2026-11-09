@@ -33,7 +33,7 @@ function playlistHint(id){const series=lessonQueue.seriesFor(id);return series?`
 function nextLessonCandidate(run){
   if(!run||hasArrived||isArriving(remainMinutes()))return null;
   const next=lessonQueue.next(run.lesson.id),eta=remainMinutes(),minutes=eta===null?lessonMinutes:Lesson.minutesFor(eta);
-  if(next){const target=DAIT_LESSONS.find(item=>item.id===next.lesson);return target&&Lesson.fits(target,minutes)?{...next,target,minutes,token:next.source+':'+(next.key||next.lesson)}:null}
+  if(next){const target=DAIT_LESSONS.find(item=>item.id===next.lesson);return target&&Lesson.fits(target,minutes)&&(next.source!=='series'||Lesson.playsFull(target,minutes))?{...next,target,minutes,token:next.source+':'+(next.key||next.lesson)}:null}
   if(run.trip.count>0&&run.trip.later?.length){const trip=Lesson.nextPeriod(run.trip,tripSeconds(run.trip));if(trip?.lesson&&Lesson.fits(trip.lesson,trip.minutes))return{lesson:trip.lesson.id,target:trip.lesson,trip,token:'trip:'+trip.lesson.id}}
   return null;
 }

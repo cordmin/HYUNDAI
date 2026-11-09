@@ -1163,3 +1163,9 @@ test('수동 종료는 5초 자동 재생을 시작하지 않으며 완료 직�
  page(`window.onSpeechEvent(JSON.stringify({event:'paused',seq:speechSeq}));nextLessonCountdownTick(lessonRun,Date.now()+6000)`);
  assert.equal(page('lessonRun.done'),true);assert.equal(page('lessonQueue.items.length'),1);page('speechPaused=false');resetPlaylistTest();
 });
+
+
+test('제작자 시리즈 다음 편은 원래 판이 들어갈 때만 자동 전환 후보로 삼는다',()=>{
+ resetPlaylistTest();page(`lessonQueue.series=new DaitPlaylist.Playlist(DAIT_LESSONS,{},[{title:'소수 이야기',lessons:['cicada','prime']}]).series;var authorRun={lesson:{id:'cicada'},trip:{count:0}};lessonMinutes=8;`);
+ assert.equal(page('nextLessonCandidate(authorRun)'),null);page('lessonMinutes=20');assert.equal(page('nextLessonCandidate(authorRun).lesson'),'prime');resetPlaylistTest();
+});

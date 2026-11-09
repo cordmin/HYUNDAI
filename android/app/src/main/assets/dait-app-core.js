@@ -60,8 +60,16 @@ function render() {
 function renderStage() {
   try {
   const stageArea = document.getElementById('stageArea');
-  document.body.classList.toggle('lesson-playing', !!(currentMode === 'lesson' && lessonRun && !lessonRun.done && !isLessonResting()));
+  const browsing = hasActiveLesson() && lessonView;
+  document.body.classList.toggle('lesson-playing', !!(hasActiveLesson() && !lessonView && !isLessonResting()));
+  document.body.classList.toggle('lesson-browsing', !!browsing);
   renderPearlNav();
+  if (browsing) {
+    if (browsing === 'lessons') renderLessonPick(stageArea);
+    else if (browsing === 'records') renderRecords(stageArea);
+    else renderHome(stageArea);
+    return;
+  }
   if (currentMode === 'records') { renderRecords(stageArea); return; }
 
   // 1. Home Screen (단일 완성형 스마트 벤토)
@@ -76,7 +84,7 @@ function renderStage() {
     return;
   }
   if (currentMode === 'lesson') renderLesson(stageArea);
-  } finally { appEvents.emit('rendered'); }
+  } finally { renderLessonDock(); appEvents.emit('rendered'); }
 }
 
 function isParkedScreen() {
@@ -86,6 +94,7 @@ function isParkedScreen() {
 function goHome() {
   appEvents.emit('closeOverlays');
   if (currentMode === 'lesson') closeLesson();
+  lessonView = null;
   stopSpeech();
   currentMode = null;
   hasArrived = false;
@@ -116,7 +125,7 @@ function arm(choice) {
   armed = { ...choice, timer: setTimeout(() => {
     disarm();
     refreshHomeIfIdle();
-    if (currentMode === 'lessonPick') render();
+    if (currentMode === 'lessonPick' || (hasActiveLesson() && lessonView === 'lessons')) render();
   }, ARM_MS) };
 }
 

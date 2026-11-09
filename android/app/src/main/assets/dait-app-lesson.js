@@ -2,6 +2,7 @@
 // 수업 조립과 판단은 dait-lesson.js, 화면 그리기는 dait-app-player.js가 맡는다. 발문 뒤에는 생각할 시간을 둔다.
 const LESSON_KEY = 'dait.lessonProgress';
 let lessonRun = null; // 지금 듣는 교시: { lesson, trip, pieces, index, heard, reachedEnd, done, finished, stopped, saved }
+let lessonView = null; // null: 재생 화면. 'now'·'lessons'·'records': 수업을 멈추지 않고 그 화면을 둘러보는 중
 let lessonMinutes = Lesson.DEFAULT_MINUTES;
 let lessonTimer = null;
 let lessonProgressTimer = null;
@@ -50,7 +51,8 @@ function openLessons() {
   if (isDrivingMode) return;
   const eta = remainMinutes();
   lessonMinutes = eta !== null ? Lesson.minutesFor(eta) : 8; // 수업 화면은 8분 탭부터 보여 준다
-  currentMode = 'lessonPick';
+  if (hasActiveLesson()) lessonView = 'lessons';
+  else currentMode = 'lessonPick';
   render();
 }
 
@@ -134,10 +136,13 @@ function isLessonResting() {
 
 // fromStop이면 지난번 멈춘 곳부터 잇는다.
 function startLesson(lessonId, fromStop, recordPoint) {
+  if (hasActiveLesson() && lessonRun.lesson.id === lessonId && !fromStop && !recordPoint) { returnToLesson(); return; }
   const recordLesson = recordPoint && DAIT_LESSONS.find(item => item.id === lessonId);
   const trip = recordLesson ? { ...Lesson.planTrip([recordLesson], lessonMinutes), resume: recordPoint }
     : fromStop ? stopTrip(lessonId) : lessonTripFor(lessonId);
   if (!trip || !trip.lesson || !(trip.resume || Lesson.fits(trip.lesson, trip.minutes))) return;
+  if (hasActiveLesson()) endLesson(); // 다른 수업으로 바꾸기 전에 듣던 수업의 기록과 멈춘 곳을 남긴다
+  lessonView = null;
   disarm();
   currentMode = 'lesson';
   hasArrived = false;
@@ -404,6 +409,27 @@ function saveLesson(run) {
 function closeLesson() {
   endLesson();
   lessonRun = null;
+  lessonView = null;
+}
+
+// 듣는 중인 수업이 있는가. 둘러보기는 그 수업의 다른 화면일 뿐 새 재생이 아니다.
+function hasActiveLesson() {
+  return currentMode === 'lesson' && !!lessonRun && !lessonRun.done;
+}
+
+function returnToLesson() {
+  if (isDrivingMode || !hasActiveLesson()) return;
+  lessonView = null;
+  renderStage();
+}
+
+// 미니 플레이어의 끝내기: 수업을 닫고 보던 화면에 머문다.
+function stopLessonFromDock() {
+  if (isDrivingMode || !hasActiveLesson()) return;
+  const view = lessonView;
+  closeLesson();
+  currentMode = view === 'records' ? 'records' : view === 'lessons' ? 'lessonPick' : null;
+  render();
 }
 
 // 주행 중에는 고르는 화면을 열지 않고, 가는 길에 들어갈 수업 하나를 버튼 하나로 제안한다.

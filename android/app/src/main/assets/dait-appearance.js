@@ -28,8 +28,8 @@
   let saved = { ...profiles[profiles.mode] };
   let active = { ...saved }, draft = null, dialog = null, focusBefore = null, frame = 0, noticeTimer;
   let backdropGlow = [0, 0, 0, 0];
-  const PANES = '.home-card,.dialogue-card,.settings-card,.pearl-record-row,.pearl-badge,.pearl-page-title,.lesson-row,.pearl-homework,.pearl-nav nav,.pearl-nav .icon-btn,.pearl-record-tabs button';
-  const TEXT = '.pearl-badge span,.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-nav nav button,.pearl-nav .icon-btn,.pearl-record-tabs button,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.choice-chip,.pearl-homework>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times span,.pearl-seek';
+  const PANES = '.home-card,.dialogue-card,.settings-card,.pearl-record-row,.pearl-badge,.pearl-page-title,.lesson-row,.pearl-homework,.pearl-nav nav,.pearl-nav .icon-btn,.pearl-record-tabs button,.lesson-dock';
+  const TEXT = '.pearl-badge span,.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-nav nav button,.pearl-nav .icon-btn,.pearl-record-tabs button,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.choice-chip,.pearl-homework>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times span,.pearl-seek,.lesson-dock-copy strong,.lesson-dock-copy>span';
 
   function backgroundAt(x, y) {
     const rect = host.getBoundingClientRect(), dx = Math.sin(2 * Math.PI / 3), dy = -Math.cos(2 * Math.PI / 3);
@@ -208,6 +208,19 @@
       ${row('colors', '앱 색상', '라이트·다크 모드별 배경')}
       ${currentMode === 'lesson' && lessonRun && !lessonRun.done && !isLessonResting() ? row('restart', '처음부터 듣기', '지금 수업을 처음부터') : ''}
     </div>`);
+  };
+  window.openLessonOptions = (id, fromStop = false) => {
+    if (!vehiclePolicy.allows('settings')) { notice('주행중엔 설정을 바꿀 수 없어요.'); return; }
+    const lesson = DAIT_LESSONS.find(item => item.id === id);
+    if (!lesson) return;
+    const reserved = armed?.lesson === id && !!armed.fromStop === !!fromStop;
+    shell('수업 옵션', `<p class="pearl-option-title">${escapeHtml(lesson.title)}</p><div class="pearl-settings-menu"><button data-lesson-reservation><strong>${reserved ? '예약 취소' : '출발하면 듣기'}</strong></button></div>`);
+    dialog.classList.add('pearl-lesson-options');
+    dialog.addEventListener('click', e => {
+      if (!e.target.closest('[data-lesson-reservation]') || isDrivingMode) return;
+      close();
+      toggleLessonArm(id, fromStop);
+    });
   };
   function openPlayback() {
     if (!vehiclePolicy.allows('settings')) { notice('주행중엔 설정을 바꿀 수 없어요.'); return; }

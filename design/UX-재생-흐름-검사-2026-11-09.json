@@ -1,0 +1,59 @@
+[
+  {
+    "width": 1000,
+    "status": "PASS",
+    "checks": [
+      "continuous audio across tabs",
+      "manual pause stable",
+      "return without seek/restart",
+      "paused shine stopped",
+      "six preview badges",
+      "real audio ended at 16x test speed advances while browsing",
+      "media-key relative seek keeps browse/pause",
+      "options Escape",
+      "reserve new lesson while current session survives",
+      "driving consumes reservation and returns fullscreen",
+      "driving options blocked",
+      "old session position saved",
+      "explicit stop removes dock"
+    ]
+  },
+  {
+    "width": 665,
+    "status": "PASS",
+    "checks": [
+      "continuous audio across tabs",
+      "manual pause stable",
+      "return without seek/restart",
+      "paused shine stopped",
+      "six preview badges",
+      "real audio ended at 16x test speed advances while browsing",
+      "media-key relative seek keeps browse/pause",
+      "options Escape",
+      "reserve new lesson while current session survives",
+      "driving consumes reservation and returns fullscreen",
+      "driving options blocked",
+      "old session position saved",
+      "explicit stop removes dock"
+    ]
+  },
+  {
+    "width": 420,
+    "status": "PASS",
+    "checks": [
+      "continuous audio across tabs",
+      "manual pause stable",
+      "return without seek/restart",
+      "paused shine stopped",
+      "six preview badges",
+      "real audio ended at 16x test speed advances while browsing",
+      "media-key relative seek keeps browse/pause",
+      "options Escape",
+      "reserve new lesson while current session survives",
+      "driving consumes reservation and returns fullscreen",
+      "driving options blocked",
+      "old session position saved",
+      "explicit stop removes dock"
+    ]
+  }
+]

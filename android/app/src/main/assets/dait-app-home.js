@@ -25,7 +25,7 @@ function getDaitLogoHtml() {
 
 function renderPearlNav() {
   const lessonTab = currentMode === 'lessonPick' || currentMode === 'lesson';
-  const active = currentMode === 'records' ? 'records' : lessonTab ? 'lessons' : 'now';
+  const active = hasActiveLesson() && lessonView ? lessonView : currentMode === 'records' ? 'records' : lessonTab ? 'lessons' : 'now';
   const dark = document.querySelector('.pleos-display')?.dataset.colorMode === 'dark';
   document.getElementById('pearlNav').innerHTML = `
     <button class="pearl-brand" aria-label="다잇 첫 화면" onclick="openPearlTab('now')">${getDaitLogoHtml()}</button>
@@ -37,7 +37,14 @@ function renderPearlNav() {
 
 function openPearlTab(tab) {
   if (isDrivingMode) return;
-  if (tab === 'lessons' && currentMode === 'lesson' && lessonRun && !lessonRun.done) return; // 듣던 수업을 계속 보여 준다.
+  // 듣는 수업이 있으면 멈추지 않고 다른 화면을 둘러본다. 아래쪽 미니 플레이어로 돌아가거나 끝낸다.
+  if (hasActiveLesson()) {
+    appEvents.emit('closeOverlays');
+    lessonView = tab;
+    if (tab === 'lessons') openLessons();
+    else render();
+    return;
+  }
   if (currentMode === 'lesson') closeLesson();
   stopSpeech();
   if (tab === 'lessons') { openLessons(); return; }
@@ -189,7 +196,7 @@ function renderRecords(container) {
   container.innerHTML = `<section class="pearl-records">
     <div class="pearl-record-tabs" role="tablist" aria-label="배움 기록 종류">
       <button id="recordLessonsTab" role="tab" aria-controls="recordPanel" aria-selected="${recordTab === 'lessons'}" onclick="selectRecordTab('lessons')">배움 기록</button>
-      <button id="recordBadgesTab" role="tab" aria-controls="recordPanel" aria-selected="${recordTab === 'badges'}" onclick="selectRecordTab('badges')">획득 배지</button>
+      <button id="recordBadgesTab" role="tab" aria-controls="recordPanel" aria-selected="${recordTab === 'badges'}" onclick="selectRecordTab('badges')">배지 둘러보기</button>
     </div>
     <div class="pearl-record-content"><div class="pearl-record-body" id="recordPanel" onscroll="updateListScroll()" role="tabpanel" aria-labelledby="${recordTab === 'badges' ? 'recordBadgesTab' : 'recordLessonsTab'}">${recordTab === 'badges'
       ? `<div class="pearl-badges">${PEARL_BADGES.map(([id,name]) => `<div class="pearl-badge"><img src="badges/${id}.png" alt="${name} 배지"><span>${name}</span></div>`).join('')}</div>`

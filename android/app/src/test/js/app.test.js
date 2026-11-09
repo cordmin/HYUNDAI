@@ -5,6 +5,8 @@ const path = require('node:path');
 const vm = require('node:vm');
 const { appScripts, appSource } = require('./app-files.js');
 const Lesson = require('../../main/assets/dait-lesson.js');
+// 어떤 수업이 몇 교시에 오는지는 수업 길이에 따라 바뀐다. 시험은 같은 계획 함수의 답과 화면이 맞는지 본다.
+const plan = (minutes, first) => Lesson.periods(Lesson.planTrip(Lesson.tripOrder(DAIT_LESSONS, [], first), minutes));
 const APP_LESSONS = require('../../main/assets/dait-lessons.js');
 const STARRY_LESSON = JSON.parse(JSON.stringify(APP_LESSONS.find(item => item.id === 'starry')));
 const DAIT_LESSONS = APP_LESSONS.filter(item => item.id !== 'rhythm');
@@ -184,14 +186,14 @@ test('남은 시간이 40분이면 고르는 화면이 2교시로 짜고, 39분�
   assert.ok(!stageHtml().includes('교시'));
   page(`goHome(); setEta(40); openLessons();`);
   assert.ok(stageHtml().includes('도착까지 40분, 2교시로 들어요'));
-  assert.ok(stageHtml().includes('1교시 수학 · 2교시 기술 · 쉬는 시간 10분'));
+  assert.ok(stageHtml().includes(`1교시 ${plan(40)[0].subject} · 2교시 ${plan(40)[1].subject} · 쉬는 시간 10분`));
   page(`goHome(); setEta(null);`);
 });
 
 test('목적지가 없을 때 긴 시간이면 교시로 나눈다', () => {
   page(`localStorage.values.clear(); openLessons();`);
   page(`lessonMinutes = 90; render();`);
-  assert.ok(stageHtml().includes('4교시 국어'));
+  assert.ok(stageHtml().includes(`4교시 ${plan(90)[3].subject}`));
   page(`startLesson('ai');`);
   assert.strictEqual(page(`lessonRun.lesson.id`), 'ai');
   assert.strictEqual(page(`lessonRun.trip.count`), 3);
@@ -205,14 +207,15 @@ test('긴 이동은 교시마다 다른 수업을 듣고, 보상 없이 숙제�
   assert.strictEqual(page(`lessonProgress().ieum`), undefined); // 쉬는 시간이 시작될 때 바로 남긴다
   assert.strictEqual(page(`lessonRun.done`), false);
   assert.strictEqual(page(`journeyActive`), true);
-  assert.ok(stageHtml().includes('쉬는 시간이에요. 다음은 2교시 수학'));
+  const second = plan(45, 'dongbaek')[1];
+  assert.ok(stageHtml().includes(`쉬는 시간이에요. 다음은 2교시 ${second.subject}`));
   assert.ok(!stageHtml().includes('음원 준비 중'));
   assert.ok(!stageHtml().includes('다시 듣기'));
   page(`window.setDrivingMode(true);`);
   hearLesson('ended');
-  assert.strictEqual(page(`lessonRun.lesson.id`), 'prime');
+  assert.strictEqual(page(`lessonRun.lesson.id`), second.id);
   assert.strictEqual(page(`lessonRun.pieces[0].clip`), 'lesson/dongbaek_r1'); // 마친 앞 교시의 복습
-  assert.ok(stageHtml().includes('2교시 수학'));
+  assert.ok(stageHtml().includes(`2교시 ${second.subject}`));
   hearPeriod();
   page(`window.setDrivingMode(false);`);
   assert.strictEqual(page(`lessonRun.done`), true);
@@ -223,7 +226,7 @@ test('긴 이동은 교시마다 다른 수업을 듣고, 보상 없이 숙제�
   assert.strictEqual(page(`lessonProgress().ieum`), undefined);
   assert.strictEqual(page(`lessonProgress().records.filter(record => record.finished).length`), 2);
   assert.ok(page(`lessonProgress().homework.title`).includes('점순이'));
-  assert.ok(page(`lessonProgress().homeworkNext[0].title`).includes('소수'));
+  assert.strictEqual(page(`lessonProgress().homeworkNext[0].title`), second.homework);
   page(`goHome(); setEta(null);`);
   assert.strictEqual(page(`lessonProgress().records.length`), 2);
 });
@@ -256,7 +259,7 @@ test('주행 중 쉬는 시간도 문장 하나와 버튼 둘이고, 이전은 �
     var realGet = document.getElementById; var driveShown = {};
     document.getElementById = id => (id.startsWith('drive') ? (driveShown[id] = driveShown[id] || {}) : realGet(id));
     updateDriveScreen(lessonRun.pieces[lessonRun.index].line);`);
-  assert.strictEqual(page(`driveShown.driveSentence.textContent`), '쉬는 시간이에요. 다음은 2교시 수학');
+  assert.strictEqual(page(`driveShown.driveSentence.textContent`), `쉬는 시간이에요. 다음은 2교시 ${plan(45, 'dongbaek')[1].subject}`);
   assert.strictEqual(page(`driveShown.driveReplay.disabled`), true);
   assert.strictEqual(page(`driveShown.driveNext.textContent`), '다음 교시 듣기');
   page(`document.getElementById = realGet; window.setDrivingMode(false); goHome(); setEta(null);`);
@@ -353,16 +356,19 @@ test('이전은 조각을 조금 들었으면 그 조각을, 막 시작했으면
 test('끝까지 못 들은 수업은 다음 이동에서 멈춘 곳부터 잇고, 앞에서 들은 것까지 합쳐 마친 수업이 된다', () => {
   page(`localStorage.values.clear(); setEta(null); lessonMinutes = 15; startLesson('prime');`);
   for (let i = 0; i < 6; i++) hearLesson('ended');
-  page(`goHome();`); // 들은 조각: i1 i2 b1 b1a b2 b3, 발문 q1 앞에서 멈춤
+  const stopAt = page(`lessonRun.pieces[lessonRun.index].id`); // 여섯 조각을 듣고 일곱째 조각 앞에서 멈춘다
+  page(`goHome();`);
   const resume = page(`lessonProgress().resume`);
   assert.strictEqual(resume.lesson, 'prime');
-  assert.strictEqual(resume.from, 'q1');
+  assert.strictEqual(resume.from, stopAt);
   assert.strictEqual(resume.short, false);
   page(`openLessons();`);
   assert.ok(stageHtml().includes('지난번 멈춘 곳부터: 소수는 어디까지 있을까'));
   assert.strictEqual(stageHtml().split(`startLesson('prime'`).length - 1, 1); // 같은 수업을 목록에 두 번 두지 않는다
   page(`startLesson('prime', true);`);
-  assert.strictEqual(page(`lessonRun.pieces[0].id`), 'q1');
+  // 멈춘 곳부터 잇는다. 이번 시간에 들어가지 않는 더 듣기 조각은 건너뛸 수 있다.
+  const order = page(`DAIT_LESSONS.find(item => item.id === 'prime').pieces.map(piece => piece.id)`);
+  assert.ok(order.indexOf(page(`lessonRun.pieces[0].id`)) >= order.indexOf(stopAt));
   assert.strictEqual(page(`lessonRun.heard.length`), 6);
   hearPeriod();
   assert.strictEqual(page(`lessonRun.finished`), true);
@@ -642,14 +648,15 @@ test('30분 이동은 동백꽃 뒤에 쉬지 않고 다른 수업을 이어 듣
   assert.ok(stageHtml().includes('고른 수업이 끝나고 남는 시간은 다른 수업으로 이어 채워요'));
   assert.ok(!stageHtml().includes('교시'));
   page(`startLesson('dongbaek'); while (!isLessonResting()) skipLessonPiece();`);
-  assert.ok(stageHtml().includes('이어서 수학 수업 맛보기예요')); // 남은 약 9분은 수학 짧은 판으로 채운다
+  const next = plan(30, 'dongbaek')[1];
+  assert.ok(stageHtml().includes(`이어서 ${next.subject} 수업 맛보기예요`)); // 남은 약 9분은 다른 수업의 짧은 판으로 채운다
   assert.ok(stageHtml().includes('국어 수업 마침'));
   assert.ok(stageHtml().includes('다음 수업 듣기'));
   page(`onLessonSpeech({ event: 'ended' });`); // 잠깐 보여 준 뒤 넘어간다. 주차 중이어도 사람이 그대로 있다
   assert.strictEqual(page(`lessonRun.done`), false);
-  assert.strictEqual(page(`lessonRun.lesson.id`), 'prime');
+  assert.strictEqual(page(`lessonRun.lesson.id`), next.id);
   assert.notStrictEqual(page(`lessonRun.pieces[0].kind`), '복습'); // 방금 들은 동백꽃을 「지난 시간에는」으로 되풀이하지 않는다
-  assert.ok(stageHtml().includes('수학 수업'));
+  assert.ok(stageHtml().includes(`${next.subject} 수업`));
   assert.ok(!stageHtml().includes('2교시'));
   page(`goHome(); setEta(null);`);
 });
@@ -739,7 +746,7 @@ test('진행바는 음원 경계를 표시하고 구간·초 단위 탐색과 �
     startLesson('rhythm'); var seekTimeline = lessonTimeline(lessonRun);`);
   assert.ok(stageHtml().includes('aria-label="수업 재생 위치"'));
   assert.strictEqual(page('seekTimeline.sections.length'), 11);
-  assert.ok(Math.abs(page('seekTimeline.seconds') - 440.64) < .01);
+  assert.ok(Math.abs(page('seekTimeline.seconds') - page('Lesson.totalSeconds(lessonRun.pieces)')) < .01);
   page('seekLessonSection(2);');
   assert.strictEqual(page('lessonRun.index'), 2);
   assert.strictEqual(page('lessonRun.heard.length'), 0); // 건너뛴 조각을 들었다고 기록하지 않는다.

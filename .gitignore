@@ -21,3 +21,4 @@ current_api_key.txt
 *.jks
 *.keystore
 /android/keystore.properties
+/voice/generated/**/takes/

@@ -1,14 +1,14 @@
 {
-  "duration": 17.08,
+  "duration": 16.64,
   "sample_rate": 24000,
-  "peak": 22472,
-  "rms": 2663.76,
-  "sha256": "1a3705a75e23823302a7777fdbd3d53cb7d5bb1ca4d95a08831eb3a45a4eea45",
+  "peak": 19086,
+  "rms": 2361.86,
+  "sha256": "84097fd3bc302cc9e8fc79fbe0de544598a3b87fe6ffaa6c653d126d6e6590a7",
   "id": "sky_m5",
   "voice": "Nika",
   "model": "gemini-3.8-flash-tts",
-  "text": "여기서 잠깐 생각해 볼 질문을 드릴게요. 만약 지구에 빛을 흩어 줄 공기가 전혀 없다면, 해가 떠 있는 낮에도 하늘은 무슨 색으로 보일까요? 운전 중에는 대답하지 않고 속으로만 떠올려 보셔도 괜찮습니다.",
-  "fingerprint": "32491d8b7c4a216d81e73b1fa2f35afc5b80b7a0acb27dbb9d1f554f2b3bbc30",
-  "generated_at": "2026-11-06T00:26:28+0900",
+  "text": "여기서 잠깐 생각해 볼 질문을 드릴게요. 만약 지구에 빛을 흩어 줄 공기가 전혀 없다면, 해가 떠 있는 낮에도 하늘은 무슨 색으로 보일까요? 속으로만 떠올려 보셔도 괜찮습니다.",
+  "fingerprint": "b29a05a14d270888cb433422a5fd7e9b2c549e333b4a23ac6585f30b2f17f373",
+  "generated_at": "2026-11-09T21:18:19+0900",
   "review": "generated_not_listening_reviewed"
 }

@@ -16,7 +16,6 @@ android {
         targetSdk 34
         versionCode 4
         versionName '0.4-pearl'
-        testInstrumentationRunner 'io.dait.app.OfflineVoiceCheck'
     }
     signingConfigs {
         if (keystoreFile.exists()) {
@@ -30,7 +29,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false // Vosk and JNA reach native code by reflection.
+            minifyEnabled false
             if (keystoreFile.exists()) signingConfig signingConfigs.release
         }
     }
@@ -42,10 +41,7 @@ android {
     androidResources { noCompress += ['wav', 'm4a'] }
 }
 dependencies {
-    implementation 'net.java.dev.jna:jna:5.18.1@aar'
-    implementation 'com.alphacephei:vosk-android:0.3.75@aar'
     implementation 'ai.pleos.playground:NaviHelper:3.0.5'
-    implementation 'ai.pleos.playground:Vehicle:2.3.2'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.json:json:20240303' // 컴퓨터에서 도는 시험에는 Android의 org.json이 없다
 }

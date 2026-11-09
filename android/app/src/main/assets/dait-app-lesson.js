@@ -2,10 +2,10 @@
 // ========================================================
 // 시간 맞춤 수업 (11.01 회의)
 // 조립과 판단은 dait-lesson.js가 맡고, 여기는 수업을 틀고 화면을 그린다.
-// 수업의 발문 뒤에는 마이크를 열지 않고 생각할 시간을 둔다.
+// 수업의 발문 뒤에는 생각할 시간을 둔다.
 // ========================================================
 const LESSON_KEY = 'dait.lessonProgress';
-let lessonRun = null; // 지금 듣는 교시: { lesson, trip, pieces, index, heard, answers, reachedEnd, done, finished, stopped, saved }
+let lessonRun = null; // 지금 듣는 교시: { lesson, trip, pieces, index, heard, reachedEnd, done, finished, stopped, saved }
 let lessonMinutes = Lesson.DEFAULT_MINUTES;
 let lessonTimer = null;
 let lessonProgressTimer = null;
@@ -35,6 +35,7 @@ function saveLessonPlaybackPrefs(prefs) {
 }
 const LESSON_RESUME_MS = 30 * 1000; // 이보다 오래 멈추면 이어 들을 때 지금 조각을 처음부터 다시 말한다
 const LESSON_BACK_MS = 3000; // 조각을 이만큼 들었으면 「이전」은 그 조각을 처음부터, 덜 들었으면 앞 조각을 말한다
+const TRIP_CAP_MS = 2 * 60 * 60 * 1000; // 차 상태가 멈춰도 앞쪽 작업이 끝없이 남지 않게 수업을 닫는 시간
 const TOP_SPEED_MPS = 50; // 이보다 빨리 줄어든 남은 거리는 달린 것이 아니라 목적지를 바꾼 것이다
 
 function lessonProgress() {
@@ -167,7 +168,6 @@ function renderLesson(container) {
         <div class="card-center">
           <div class="main-question">${escapeHtml(title)}</div>
           ${run.done || resting ? '' : run.paused ? '<div class="card-sub">잠시 멈췄어요</div>' : piece.voiced ? '' : '<div class="card-sub">음원 준비 중</div>'}
-          <div id="heardLine" class="heard-bubble"${heard || speechPhase === 'listening' ? '' : ' hidden'}>${escapeHtml(heardLineText())}</div>
         </div>
       </div>
       ${!isDrivingMode && !resting ? lessonProgressHtml(run) : ''}
@@ -193,7 +193,6 @@ function renderLessonPlayer(container, run) {
     <div class="pearl-player-heading">
       <h1 class="main-question">${escapeHtml(piece.line)}</h1>
       <p class="pearl-player-meta">${escapeHtml(lessonLabel(run, false))}${prefs.rate !== 1 ? ` · ${prefs.rate.toFixed(1)}배속` : ''}</p>
-      <div id="heardLine" class="heard-bubble"${heard || speechPhase === 'listening' ? '' : ' hidden'}>${escapeHtml(heardLineText())}</div>
     </div>
     <div class="pearl-player-wave dait-sound" aria-hidden="true">${SOUND_BARS}</div>
     <div class="pearl-transport">
@@ -405,12 +404,9 @@ function startLesson(lessonId, fromStop, recordPoint) {
     : fromStop ? stopTrip(lessonId) : lessonTripFor(lessonId);
   if (!trip || !trip.lesson || !(trip.resume || Lesson.fits(trip.lesson, trip.minutes))) return;
   disarm();
-  tripForDoor = null; // 내릴 때 한마디가 수업을 끊고 지나가지 않게 한다
-  clearTimeout(doorTimer);
   currentMode = 'lesson';
   stage = '';
   hasArrived = false;
-  micBroken = false;
   startPeriod({ ...trip, endsAt: Date.now() + lessonMinutes * 60 * 1000 });
   syncJourney();
 }
@@ -445,7 +441,7 @@ function startPeriod(trip) {
     : Lesson.plan(trip.lesson, DAIT_LESSONS, trip.minutes, records);
   const run = {
     lesson: trip.lesson, trip, pieces: Lesson.withBreak(pieces, trip), plannedSeconds: Lesson.lessonSeconds([...before, ...pieces]), short: Lesson.isShort([...before, ...pieces]),
-    index: 0, heard: before, heardBefore: before.length, answers: [], meters: 0, lastMeters: null, lastMetersAt: 0, startedAt: Date.now(),
+    index: 0, heard: before, heardBefore: before.length, meters: 0, lastMeters: null, lastMetersAt: 0, startedAt: Date.now(),
     reachedEnd: false, done: false, finished: false, stopped: false, saved: false
   };
   run.playback = new DaitPlayback.LessonSession();
@@ -603,7 +599,7 @@ function nextLessonPiece() {
 
 function onLessonSpeech(info) {
   const run = lessonRun;
-  if (!run || run.done || info.event === 'listening') return;
+  if (!run || run.done) return;
   if (run.paused && info.event !== 'stopped') { run.wait = { then: () => onLessonSpeech(info), left: 0 }; return; } // 일시정지와 거의 같이 조각이 끝났으면 이어 듣기를 누른 뒤에 넘어간다
   const piece = run.pieces[run.index];
   if (Lesson.isBreak(piece) && !isDrivingMode && run.trip.rest) { endLesson(); return; } // 쉬는 시간이 끝났을 때 주차 중이면 사람 없는 차에서 말을 시작하지 않는다. 바로 이어 붙인 수업은 사람이 그대로 있다
@@ -615,14 +611,8 @@ function onLessonSpeech(info) {
   }
   if (Lesson.isBreak(piece)) { nextLessonPiece(); return; }
   if (run.partialPiece !== piece.id && !run.heard.includes(piece)) run.heard.push(piece);
-  if (info.event === 'heard') {
-    if (info.text.length <= 12 && Journey.isQuiet(info.text)) { endLesson(); return; }
-    nextLessonPiece();
-  } else if (info.event === 'silence') nextLessonPiece(); // 답하지 않아도 재촉하지 않는다
-  else if (Lesson.isQuestion(piece)) {
-    if (info.event === 'micFailed') micBroken = true;
-    lessonWait(piece.wait * 1000, nextLessonPiece, 'thinking'); // 생각할 틈
-  } else nextLessonPiece();
+  if (Lesson.isQuestion(piece)) lessonWait(piece.wait * 1000, nextLessonPiece, 'thinking'); // 생각할 틈
+  else nextLessonPiece();
 }
 
 // 내비의 남은 거리로 이번 수업에서 달린 거리를 잰다. 길 안내가 없으면 거리를 더하지 않는다.
@@ -671,7 +661,7 @@ function saveLesson(run) {
   const position = run.savedPosition ?? currentLessonPosition(run);
   if (run.heard.length > run.heardBefore || position >= 1) {
     const ymd = toYmd(new Date());
-    const progress = Lesson.finishLesson(lessonProgress(), run.lesson, ymd, run.finished, run.meters / 1000, run.answers, run.short);
+    const progress = Lesson.finishLesson(lessonProgress(), run.lesson, ymd, run.finished, run.meters / 1000, run.short);
     const point = run.finished ? null : Lesson.resumePoint(run.lesson, run.heard, ymd); // 다음 이동에서 멈춘 곳부터 잇게 한다
     const piece = run.pieces[run.index];
     if (!run.finished && piece && run.lesson.pieces.some(item => item.id === piece.id)) {
@@ -692,7 +682,6 @@ function closeLesson() {
 
 // 주행 중에는 고르는 화면을 열지 않고, 가는 길에 들어갈 수업 하나를 버튼 하나로 제안한다.
 function lessonOffer(trip) {
-  if (school && trip.mode === 'afternoon' && trip.kind !== 'weekend' && !(naviInfo && !trip.known)) return null; // 학교가 없는 사람에게는 등하교를 묻지 않는다
   const minutes = Lesson.minutesFor(remainMinutes());
   return stoppedLesson(minutes) || Lesson.recommend(DAIT_LESSONS, minutes, lessonProgress().records)[0] || null;
 }

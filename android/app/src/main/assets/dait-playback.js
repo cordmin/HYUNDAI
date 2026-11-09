@@ -35,7 +35,7 @@
   class AudioAdapter {
     constructor(getBridge, getAudio) { this.getBridge = getBridge; this.getAudio = getAudio; }
     get bridge() { return this.getBridge(); }
-    speak(clips, listen, seq, browserPlay) { if (this.bridge) this.bridge.speak(JSON.stringify(clips), listen, seq); else browserPlay(); }
+    speak(clips, seq, browserPlay) { if (this.bridge) this.bridge.speak(JSON.stringify(clips), seq); else browserPlay(); }
     playClip(src, onError) { const audio = this.getAudio(); audio.src = src; audio.play().catch(onError); }
     stop() { if (this.bridge) this.bridge.stopSpeech(); else this.getAudio().pause(); }
     seek(positionMs, seq, isCurrent) {

@@ -1,13 +1,11 @@
 package io.dait.app
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.car.Car
 import android.car.drivingstate.CarUxRestrictionsManager
 import android.content.Intent
 import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -29,11 +27,7 @@ class MainActivity : Activity() {
     private var simulatedDriving = false
     private var isRestricted = true // 차 상태를 받기 전에는 주행 중으로 둔다.
     private var navi: NaviBridge? = null
-    private var doors: DoorBridge? = null
-    private var location: LocationBridge? = null
     private var voice: VoiceSession? = null
-    private var hasSpeechModel = false
-    private var speechInput: LocalVoiceInput? = null
     private var journeyActive = false
     private var pageReady = false
     private val gleoWaiting = mutableListOf<String>()
@@ -47,9 +41,6 @@ class MainActivity : Activity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Removed preparation feature: discard its old cached response.
-        getSharedPreferences("gleo", MODE_PRIVATE).edit().remove("schoolBrief").apply()
-
         if (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) WebView.setWebContentsDebuggingEnabled(true)
         webView = WebView(this).apply {
             settings.apply {
@@ -65,7 +56,6 @@ class MainActivity : Activity() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
                     applyPlatformRestriction(isRestricted)
-                    navi?.requestPlaces()
                     pageReady = true
                     // Gleo에는 이미 답했으므로, 내비의 남은 시간이 화면에 올 틈을 두고 수업을 고른다.
                     val waiting = gleoWaiting.toList()
@@ -79,16 +69,12 @@ class MainActivity : Activity() {
 
         setContentView(webView)
 
-        hasSpeechModel = !assets.list("model-ko").isNullOrEmpty()
-        speechInput = if (hasSpeechModel) LocalVoiceInput(this) {} else null
-        voice = VoiceSession(this, speechInput) { event ->
+        voice = VoiceSession(this) { event ->
             callPage("window.onSpeechEvent && window.onSpeechEvent(${JSONObject.quote(event.toString())});")
         }
         navi = NaviBridge(this) { json ->
             callPage("window.onNaviUpdate && window.onNaviUpdate(${JSONObject.quote(json.toString())});")
         }.also { it.connect() }
-        doors = DoorBridge(this) { callPage("window.onDoorOpened && window.onDoorOpened();") }.also { it.connect() }
-        location = LocationBridge(this) { lat, lng -> callPage("window.onCarLocation && window.onCarLocation($lat, $lng);") }
         connectCarService()
         currentRef = WeakReference(this)
         // 최근 앱 목록에서 다시 열거나 시스템이 되살린 화면은 지난 Gleo 부름을 다시 하지 않는다.
@@ -169,10 +155,6 @@ class MainActivity : Activity() {
         voice = null
         navi?.release()
         navi = null
-        doors?.release()
-        doors = null
-        location?.stop()
-        location = null
         try { restrictions?.unregisterListener() } catch (_: Exception) {}
         restrictions = null
         car?.disconnect()
@@ -190,12 +172,6 @@ class MainActivity : Activity() {
                 if (webView.canGoBack()) webView.goBack() else finish()
             }
         }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == MIC_REQUEST) callPage("window.onMicAnswered && window.onMicAnswered();")
-        if (requestCode == LOCATION_REQUEST) callPage("window.onLocationAnswered && window.onLocationAnswered();")
     }
 
     // 내비가 앱을 덮은 채로 출발해도 주행 시작을 알 수 있게 앱이 살아 있는 동안 계속 듣는다.
@@ -226,28 +202,7 @@ class MainActivity : Activity() {
         runOnUiThread { if (!isDestroyed) webView.evaluateJavascript(script, null) }
     }
 
-    private fun micGranted() = checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
-
-    // 대략적인 위치로는 집과 학교를 나눌 수 없으므로 정확한 위치를 허락받아야 쓴다.
-    private fun locationGranted() = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-
     inner class WebAppInterface {
-        @JavascriptInterface
-        fun neisGet(requestId: Int, service: String, query: String) {
-            Thread {
-                val body = try { NeisClient.fetch(service, query) } catch (_: Exception) { "" }
-                callPage("window.onNeisResult && window.onNeisResult($requestId, ${JSONObject.quote(body)});")
-            }.start()
-        }
-
-        @JavascriptInterface
-        fun tourGet(requestId: Int, service: String, query: String) {
-            Thread {
-                val body = try { TourClient.fetch(service, query) } catch (_: Exception) { "" }
-                callPage("window.onTourResult && window.onTourResult($requestId, ${JSONObject.quote(body)});")
-            }.start()
-        }
-
         // 개발용 앱인지 알려 준다. 화면은 제출용 앱에서 시연 버튼 줄을 숨긴다.
         @JavascriptInterface
         fun isDebugBuild(): Boolean = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
@@ -262,16 +217,10 @@ class MainActivity : Activity() {
         }
 
         @JavascriptInterface
-        fun speak(clipsJson: String, listen: String, turn: Int) {
+        fun speak(clipsJson: String, turn: Int) {
             val array = JSONArray(clipsJson)
             val clips = List(array.length()) { array.getString(it) }
-            runOnUiThread { voice?.speak(clips, listen, turn) }
-        }
-
-        @JavascriptInterface
-        fun startRoute(placeJson: String) {
-            val place = JSONObject(placeJson)
-            runOnUiThread { navi?.startRoute(place) }
+            runOnUiThread { voice?.speak(clips, turn) }
         }
 
         @JavascriptInterface
@@ -317,39 +266,6 @@ class MainActivity : Activity() {
             runOnUiThread { voice?.setVolume(level) }
         }
 
-        // 'none'은 음성 인식 모델이 없음, 'ask'는 아직 마이크 허락을 받지 않음,
-        // 'loading'은 모델을 읽는 중, 'ready'는 들을 수 있음.
-        @JavascriptInterface
-        fun micState(): String = when {
-            !hasSpeechModel -> "none"
-            !micGranted() -> "ask"
-            speechInput?.ready == true -> "ready"
-            else -> "loading"
-        }
-
-        @JavascriptInterface
-        fun requestMic() {
-            runOnUiThread { requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), MIC_REQUEST) }
-        }
-
-        @JavascriptInterface
-        fun locationState(): String = when {
-            location?.available != true -> "none"
-            locationGranted() -> "ready"
-            else -> "ask"
-        }
-
-        @JavascriptInterface
-        fun requestLocation() {
-            val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-            runOnUiThread { requestPermissions(permissions, LOCATION_REQUEST) }
-        }
-
-        @JavascriptInterface
-        fun setLocationOn(on: Boolean) {
-            runOnUiThread { if (on && locationGranted()) location?.start() else location?.stop() }
-        }
-
         // 화면이 Gleo 부름에 답한다. 답이 늦어 이미 실패로 답한 부름이면 버린다.
         @JavascriptInterface
         fun gleoRespond(responseJson: String) {
@@ -390,8 +306,6 @@ class MainActivity : Activity() {
     }
 
     companion object {
-        private const val MIC_REQUEST = 1
-        private const val LOCATION_REQUEST = 2
         private const val GLEO_GUARD_MS = 6000L
         private const val GLEO_WAKE_DELAY_MS = 2000L
         private var currentRef = WeakReference<MainActivity>(null)

@@ -29,7 +29,7 @@
   let active = { ...saved }, draft = null, dialog = null, focusBefore = null, frame = 0, noticeTimer;
   let backdropGlow = [0, 0, 0, 0];
   const PANES = '.home-card,.dialogue-card,.settings-card,.pearl-record-row,.pearl-badge,.pearl-page-title,.lesson-row,.pearl-homework,.pearl-nav nav,.pearl-nav .icon-btn,.pearl-record-tabs button';
-  const TEXT = '.pearl-badge span,.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-nav nav button,.pearl-nav .icon-btn,.pearl-record-tabs button,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.school-input,.choice-chip,.heard-bubble,.place-name,.place-address,.pearl-homework>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times span,.pearl-seek';
+  const TEXT = '.pearl-badge span,.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-nav nav button,.pearl-nav .icon-btn,.pearl-record-tabs button,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.choice-chip,.heard-bubble,.pearl-homework>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times span,.pearl-seek';
 
   function backgroundAt(x, y) {
     const rect = host.getBoundingClientRect(), dx = Math.sin(2 * Math.PI / 3), dy = -Math.cos(2 * Math.PI / 3);
@@ -194,7 +194,6 @@
       else if (action === 'playback') openPlayback();
       else if (action === 'settings') window.openPearlSettings();
       else if (action === 'questions') { toggleQuestions(); window.openPearlSettings(); }
-      else if (action === 'voice') { toggleVoiceAnswers(); window.openPearlSettings(); }
       else if (action === 'restart') { close(); restartLesson(); }
       if (e.target === dialog) { const r = dialog.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) close(); }
     });
@@ -209,7 +208,6 @@
       ${row('playback', '재생 설정', `뒤로 ${lessonIntervalText(prefs.back)} · 앞으로 ${lessonIntervalText(prefs.forward)} · ${prefs.rate.toFixed(1)}배속`)}
       ${row('colors', '앱 색상', '라이트·다크 모드별 배경')}
       ${toggle('questions', '대화 중 질문', readStored(QUESTIONS_KEY) !== false)}
-      ${micState() === 'none' ? '' : toggle('voice', '말로 답하기', readStored(VOICE_KEY) !== false)}
       ${currentMode === 'lesson' && lessonRun && !lessonRun.done && !isLessonResting() ? row('restart', '처음부터 듣기', '지금 수업을 처음부터') : ''}
     </div>`);
   };

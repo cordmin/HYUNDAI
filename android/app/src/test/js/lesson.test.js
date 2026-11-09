@@ -92,11 +92,11 @@ test('복습을 붙여도 판은 고른 시간으로 정하고, 짧은 판에는
 
 test('짧은 판으로 들은 수업도 들은 수업이라 추천에서 뒤로 간다', () => {
   const other = { ...lesson, id: 'o', pieces: withShort.pieces.map(item => ({ ...item })) };
-  const shortDone = Lesson.finishLesson(null, withShort, '2026-11-02', true, 0, [], true);
+  const shortDone = Lesson.finishLesson(null, withShort, '2026-11-02', true, 0, true);
   assert.strictEqual(shortDone.records[0].short, true);
   assert.strictEqual(shortDone.ieum, undefined);
   assert.deepStrictEqual(Lesson.recommend([withShort, other], 15, shortDone.records).map(item => item.id), ['o', 'w']);
-  const fullDone = Lesson.finishLesson(null, withShort, '2026-11-02', true, 0, []);
+  const fullDone = Lesson.finishLesson(null, withShort, '2026-11-02', true, 0);
   assert.deepStrictEqual(Lesson.recommend([withShort, other], 15, fullDone.records).map(item => item.id), ['o', 'w']);
 });
 
@@ -192,30 +192,30 @@ test('도착으로 잘린 수업은 남은 조각을 다 들어도 마친 수업
 });
 
 test('마친 수업은 거리·숙제를 남기며 보상은 적립하지 않는다', () => {
-  const done = Lesson.finishLesson(null, lesson, '2026-11-02', true, 12.5, [{ text: '답' }]);
+  const done = Lesson.finishLesson(null, lesson, '2026-11-02', true, 12.5);
   assert.strictEqual(done.ieum, undefined);
   assert.strictEqual(done.km['2026-11'], 12.5);
   assert.strictEqual(done.homework.title, '숙제');
-  assert.strictEqual(done.records[0].answers[0].text, '답');
-  const stopped = Lesson.finishLesson(done, lesson, '2026-11-03', false, 5, []);
+  assert.ok(!('answers' in done.records[0]));
+  const stopped = Lesson.finishLesson(done, lesson, '2026-11-03', false, 5);
   assert.strictEqual(stopped.ieum, undefined);
   assert.strictEqual(stopped.km['2026-11'], 12.5);
   assert.strictEqual(stopped.records.length, 2);
 });
 
 test('숙제를 마치면 숙제만 정리하고 보상은 적립하지 않는다', () => {
-  const given = Lesson.finishLesson(null, lesson, '2026-11-02', true, 0, []);
+  const given = Lesson.finishLesson(null, lesson, '2026-11-02', true, 0);
   const done = Lesson.finishHomework(given);
   assert.strictEqual(done.ieum, undefined);
   assert.strictEqual(done.homework, null);
   assert.strictEqual(Lesson.finishHomework(done).ieum, undefined);
 });
 
-test('남긴 답을 지워도 들은 수업 기록은 남는다', () => {
-  const given = Lesson.finishLesson(null, lesson, '2026-11-02', true, 0, [{ text: '답' }]);
-  const forgotten = Lesson.forgetAnswers(given);
-  assert.deepStrictEqual(forgotten.records[0].answers, []);
-  assert.strictEqual(forgotten.ieum, undefined);
+test('예전에 저장된 답은 읽을 때 지우고 들은 수업 기록은 남긴다', () => {
+  const old = { records: [{ lesson: 'x', title: 'X', ymd: '20261101', finished: true, answers: [{ text: '답' }] }] };
+  const read = Lesson.normalize(old);
+  assert.strictEqual(read.records.length, 1);
+  assert.ok(!('answers' in read.records[0]));
 });
 
 test('달린 거리를 아는 말로 바꾼다', () => {
@@ -379,7 +379,7 @@ test('과목 목록은 자료에서 겹치지 않게 만들고, 과목으로 거
 test('마친 교시는 기록과 숙제를 남기고, 숙제는 하나씩 마친다', () => {
   const first = { ...lesson, id: 'a', homework: '첫 숙제' };
   const second = { ...lesson, id: 'b', homework: '둘째 숙제' };
-  const done = Lesson.finishLesson(Lesson.finishLesson(null, first, '2026-11-02', true, 1, []), second, '2026-11-02', true, 2, []);
+  const done = Lesson.finishLesson(Lesson.finishLesson(null, first, '2026-11-02', true, 1), second, '2026-11-02', true, 2);
   assert.strictEqual(done.ieum, undefined);
   assert.strictEqual(done.records.length, 2);
   assert.strictEqual(done.km['2026-11'], 3);
@@ -395,7 +395,7 @@ test('마친 교시는 기록과 숙제를 남기고, 숙제는 하나씩 마친
 
 test('같은 수업을 다시 마치면 그 수업의 숙제만 새로 바뀌어 쌓이지 않는다', () => {
   const first = { ...lesson, id: 'a', homework: '첫 숙제' };
-  const again = Lesson.finishLesson(Lesson.finishLesson(null, first, '2026-11-02', true, 0, []), first, '2026-11-03', true, 0, []);
+  const again = Lesson.finishLesson(Lesson.finishLesson(null, first, '2026-11-02', true, 0), first, '2026-11-03', true, 0);
   assert.strictEqual(again.homework.ymd, '2026-11-03');
   assert.deepStrictEqual(again.homeworkNext, []);
 });

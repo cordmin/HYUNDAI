@@ -345,14 +345,16 @@
   function normalize(progress) {
     const next = { ...emptyProgress(), ...(progress || {}) };
     delete next.ieum; // 이전 보상 값은 수업·숙제 기록과 분리해 더 이상 사용하지 않는다.
+    // 수업 대답은 저장하지 않는다. 예전에 남은 답도 지운다.
+    next.records = next.records.map(({ answers, ...record }) => record);
     return next;
   }
 
-  function finishLesson(progress, lesson, ymd, finished, km, answers, short) {
+  function finishLesson(progress, lesson, ymd, finished, km, short) {
     const next = normalize(progress);
     const heldKm = Math.max(0, km || 0);
     next.km = { ...next.km, [monthOf(ymd)]: (next.km[monthOf(ymd)] || 0) + (finished ? heldKm : 0) };
-    const record = { lesson: lesson.id, title: lesson.title, ymd, finished, answers: answers || [] };
+    const record = { lesson: lesson.id, title: lesson.title, ymd, finished };
     if (short) record.short = true; // 짧은 판으로 들었다는 표시. 추천에서 이 수업을 뒤로 보내지 않는다
     next.records = [...next.records, record].slice(-KEEP_RECORDS);
     if (!finished) return next;
@@ -381,13 +383,6 @@
     return next;
   }
 
-  // 기록 칸의 답을 지운다. 들은 수업은 남긴다.
-  function forgetAnswers(progress) {
-    const next = normalize(progress);
-    next.records = next.records.map(record => ({ ...record, answers: [] }));
-    return next;
-  }
-
   function mileageLine(km) {
     const mark = DISTANCE_MARKS.find(item => km >= item.km);
     return mark ? `${mark.text} 배움으로 이었어요` : '';
@@ -397,7 +392,7 @@
     TIME_CHOICES, LONG_CHOICES, LONG_TRIP_MINUTES, BREAK_MINUTES, DEFAULT_MINUTES, SHORT_UNDER_MINUTES, assemble, playbackSeconds, fits, recommend, minutesFor, plan, lessonSeconds, fitRemaining,
     speechSeconds, totalSeconds, required, shortOrder, isShort, recap, shortEnd, isQuestion, isClosing, isLongTrip, periodCount, tripOrder, planTrip, nextPeriod, periods, restOf, isBreak, withBreak, fitTrip,
     resumePoint, resumeFresh, resumeFits, resumePlan, resumeHeard, keepResume, RESUME_DAYS,
-    subjects, bySubject, forRequest, unvoiced, countsAsFinished, monthOf, normalize, finishLesson, finishHomework, forgetAnswers, mileageLine
+    subjects, bySubject, forRequest, unvoiced, countsAsFinished, monthOf, normalize, finishLesson, finishHomework, mileageLine
   };
   root.Lesson = Lesson;
   if (typeof module !== 'undefined') module.exports = Lesson;

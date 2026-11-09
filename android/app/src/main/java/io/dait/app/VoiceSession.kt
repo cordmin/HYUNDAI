@@ -8,11 +8,11 @@ import android.media.MediaPlayer
 import android.media.PlaybackParams
 import org.json.JSONObject
 
-// 미리 만든 음원을 차례로 틀고, 필요하면 이어서 아이의 답을 듣는다.
+// 미리 만든 음원을 차례로 튼다.
 // 길 안내나 통화가 소리를 가져가면 멈췄다가, 돌아오면 그 문장을 처음부터 다시 말한다.
 // 모든 알림에 speak의 순번을 실어, 화면이 지난 말에 대한 늦은 알림을 버릴 수 있게 한다.
-class VoiceSession(context: Context, private val input: LocalVoiceInput?, private val onEvent: (JSONObject) -> Unit) {
-    private enum class Phase { IDLE, SPEAKING, LISTENING }
+class VoiceSession(context: Context, private val onEvent: (JSONObject) -> Unit) {
+    private enum class Phase { IDLE, SPEAKING }
 
     private val appContext = context.applicationContext
     private val audio = appContext.getSystemService(AudioManager::class.java)
@@ -32,7 +32,6 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
     private var held = false // 사람이 일시정지를 눌렀다. 소리를 돌려받아도 저절로 잇지 않는다
     private var clips: List<String> = emptyList()
     private var index = 0
-    private var listen = ""
     private var turn = 0
     private var player: MediaPlayer? = null
     private var playbackVolume = appContext.getSharedPreferences("dait.audio", Context.MODE_PRIVATE)
@@ -71,10 +70,9 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
         }
     }
 
-    fun speak(nextClips: List<String>, nextListen: String, nextTurn: Int) {
+    fun speak(nextClips: List<String>, nextTurn: Int) {
         clear()
         clips = nextClips
-        listen = nextListen
         turn = nextTurn
         phase = Phase.SPEAKING
         when (audio.requestAudioFocus(focus)) {
@@ -88,7 +86,7 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
     fun hold() {
         if (phase == Phase.IDLE || held) return
         held = true
-        if (phase == Phase.SPEAKING) player?.pause() else input?.stop()
+        player?.pause()
         audio.abandonAudioFocusRequest(focus)
         emit("paused")
     }
@@ -110,18 +108,10 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
         audio.abandonAudioFocusRequest(focus)
     }
 
-    fun release() {
-        stop()
-        input?.close()
-    }
+    fun release() = stop()
 
-    // 말할 음원이 남았으면 틀고, 없으면 듣기로 넘어간다. 음원 없이 부르면 말없이 다시 듣는다.
     private fun playNext() {
-        when {
-            index < clips.size -> playCurrent()
-            listen.isEmpty() -> finish("ended")
-            !startListening() -> finish("micFailed")
-        }
+        if (index < clips.size) playCurrent() else finish("ended")
     }
 
     private fun playCurrent() {
@@ -158,19 +148,6 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
         if (!suspended && !held) playNext() // 소리를 빼앗겼거나 멈춘 사이라면 돌아왔을 때 이어 간다.
     }
 
-    private fun startListening(): Boolean {
-        val voiceInput = input ?: return false
-        val started = voiceInput.start(listen.takeUnless { it == FREE_SPEECH }, { text, reference ->
-            phase = Phase.IDLE
-            onEvent(JSONObject().put("event", "heard").put("seq", turn).put("text", text).put("reference", reference))
-        }, {
-            phase = Phase.IDLE
-            emit("silence")
-        })
-        if (started) { phase = Phase.LISTENING; emit("listening") }
-        return started
-    }
-
     private fun onFocusChange(change: Int) {
         when (change) {
             AudioManager.AUDIOFOCUS_GAIN -> if (suspended && !held) resume()
@@ -182,22 +159,18 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
     private fun suspend() {
         if (phase == Phase.IDLE || suspended || held) return
         suspended = true
-        if (phase == Phase.SPEAKING) player?.pause() else input?.stop()
+        player?.pause()
         emit("paused")
     }
 
     private fun resume(rewind: Boolean = true) {
         suspended = false
         emit("resumed")
-        if (phase == Phase.LISTENING) {
-            if (!startListening()) finish("micFailed")
-        } else {
-            val paused = player
-            if (paused == null) playNext() else {
-                if (rewind) paused.seekTo(resumePosition(paused))
-                paused.playbackParams = PlaybackParams().setSpeed(playbackRate)
-                paused.start()
-            }
+        val paused = player
+        if (paused == null) playNext() else {
+            if (rewind) paused.seekTo(resumePosition(paused))
+            paused.playbackParams = PlaybackParams().setSpeed(playbackRate)
+            paused.start()
         }
     }
 
@@ -212,7 +185,6 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
 
     private fun clear() {
         releasePlayer()
-        input?.stop()
         phase = Phase.IDLE
         suspended = false
         held = false
@@ -229,7 +201,6 @@ class VoiceSession(context: Context, private val input: LocalVoiceInput?, privat
     private fun emit(event: String) = onEvent(JSONObject().put("event", event).put("seq", turn))
 
     companion object {
-        const val FREE_SPEECH = "free"
         private const val LESSON_REWIND_MS = 3000
     }
 }

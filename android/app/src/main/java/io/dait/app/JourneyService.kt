@@ -1,6 +1,5 @@
 package io.dait.app
 
-import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -8,13 +7,12 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 
-// 내비가 앱을 덮어도 여정 동안 말하고 들을 수 있게 앱을 앞쪽 작업으로 유지한다.
-// 하는 일은 알림을 띄우는 것뿐이고, 말과 듣기는 VoiceSession이 맡는다.
+// 내비가 앱을 덮어도 여정 동안 소리를 낼 수 있게 앱을 앞쪽 작업으로 유지한다.
+// 하는 일은 알림을 띄우는 것뿐이고, 소리는 VoiceSession이 맡는다.
 class JourneyService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -29,9 +27,7 @@ class JourneyService : Service() {
             .setContentIntent(open)
             .setOngoing(true)
             .build()
-        // 위치 때문에 거부되면 위치만 빼고 다시 시도해 음성은 이어 가게 한다.
-        val types = foregroundTypes()
-        if (!runInFront(notification, types) && !runInFront(notification, types and ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION.inv())) stopSelf()
+        if (!runInFront(notification)) stopSelf()
         starting = false
         if (stopWhenStarted) {
             stopWhenStarted = false
@@ -40,20 +36,12 @@ class JourneyService : Service() {
         return START_NOT_STICKY
     }
 
-    private fun runInFront(notification: Notification, types: Int): Boolean = try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) startForeground(NOTIFICATION_ID, notification, types)
+    private fun runInFront(notification: Notification): Boolean = try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
         else startForeground(NOTIFICATION_ID, notification)
         true
     } catch (_: RuntimeException) {
         false
-    }
-
-    private fun foregroundTypes(): Int {
-        val mic = checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
-        val media = ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
-        val sound = if (mic && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) media or ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE else media
-        // 내비가 앱을 덮어도 도착한 곳을 알 수 있게 한다. 보호자가 켰을 때만 위치 작업으로 올린다.
-        return if (LocationBridge.running) sound or ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION else sound
     }
 
     companion object {
@@ -62,7 +50,7 @@ class JourneyService : Service() {
         private var starting = false
         private var stopWhenStarted = false
 
-        // 뒤에서 처음 시작하는 것은 안드로이드가 막는다. 그때는 앱이 앞에 있는 동안만 말하고 듣는다.
+        // 뒤에서 처음 시작하는 것은 안드로이드가 막는다. 그때는 앱이 앞에 있는 동안만 소리를 낸다.
         fun start(context: Context) {
             stopWhenStarted = false
             try {

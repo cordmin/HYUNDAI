@@ -3,6 +3,7 @@
 // 시그니처 인트로 스플래시 애니메이션 엔진
 // ========================================================
 let isIntroPlaying = false;
+let homeStale = false; // 인트로 중에 바뀐 첫 화면은 인트로가 끝난 뒤 다시 그린다
 let introTimers = [];
 
 function clearIntroTimers() {
@@ -207,8 +208,6 @@ if (window.AndroidBridge && (!window.AndroidBridge.isDebugBuild || !window.Andro
 
 // Initial render and signature splash intro
 render();
-refreshSchoolDays();
-syncLocation();
 setTimeout(() => {
   playSplashIntro();
 }, 120);

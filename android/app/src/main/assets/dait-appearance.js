@@ -224,8 +224,8 @@
       started=performance.now();noticeProgress?.play();noticeTimer=setTimeout(()=>{if(generation===noticeGeneration)dismissNotice()},remaining);
     };
     noticeTimer=null;node.onpointerenter=null;node.onpointerleave=null;
-    node.onfocusin=()=>{if(document.activeElement.matches(':focus-visible'))pause()};
-    node.onfocusout=()=>queueMicrotask(resume);
+    const actionButton=node.querySelector('button');
+    if(actionButton){actionButton.onfocus=()=>{if(actionButton.matches(':focus-visible'))pause()};actionButton.onblur=()=>queueMicrotask(resume)}
     resume();queueRefresh();
   }
   function close() {

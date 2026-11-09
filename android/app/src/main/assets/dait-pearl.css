@@ -410,3 +410,47 @@ body.driving .lesson-dock { display:none; }
 .pearl-record-content { scrollbar-color:var(--lilac) var(--soft); }
 .splash-aura { background:radial-gradient(circle, var(--soft), transparent 70%); }
 body.lesson-playing .pleos-display { background-image:linear-gradient(to bottom,transparent 65%,var(--player-shade)),linear-gradient(135deg,transparent 30%,var(--bg-glow)),linear-gradient(120deg,var(--bg-top),var(--bg-bottom)); }
+
+/* Queue editing is parked-only; playback stays visible behind the compact sheet. */
+.playlist-list-toolbar { display:flex;align-items:center;gap:8px;flex-shrink:0;min-height:44px; }
+.playlist-list-toolbar .pearl-record-tabs { flex:1;min-width:0;gap:calc(10 * var(--u)); }
+.playlist-open-btn { border:0;background:var(--soft);color:var(--lilac);border-radius:12px;padding:0 12px;min-height:44px;font-size:14px;font-weight:650;white-space:nowrap; }
+.playlist-dialog { width:min(650px,calc(100% - 24px));padding:18px; }
+.playlist-dialog .pearl-settings-heading h2 { margin:0;font-size:22px; }
+.queue-now { margin:10px 0;display:flex;gap:10px;align-items:center;font-size:14px; }
+.queue-now>span { color:var(--muted);flex-shrink:0; }
+.queue-now strong { overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+.queue-switch { display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;min-height:44px;background:none;color:var(--ink);padding:8px 0;border:0;font-size:15px;text-align:left; }
+.queue-switch>span:last-child { color:var(--muted);font-size:13px; }
+.queue-switch[aria-checked=true]>span:last-child { color:var(--lilac);font-weight:700; }
+.queue-switch>span:last-child { position:relative;display:block;flex:0 0 44px;width:44px;height:26px;border-radius:20px;background:var(--soft);font-size:0; }
+.queue-switch>span:last-child::after { content:'';position:absolute;top:4px;left:4px;width:18px;height:18px;border-radius:50%;background:var(--muted); }
+.queue-switch[aria-checked=true]>span:last-child { background:var(--lilac); }
+.queue-switch[aria-checked=true]>span:last-child::after { left:22px;background:var(--on-lilac); }
+.queue-tabs { display:flex;gap:18px;border-bottom:1px solid var(--line); }
+.queue-tabs button { position:relative;min-height:44px;border:0;background:none;color:var(--muted);padding:0 4px;font-size:16px; }
+.queue-tabs button[aria-selected=true] { color:var(--lilac);font-weight:700; }
+.queue-tabs button[aria-selected=true]::after { position:absolute;content:'';left:4px;right:4px;bottom:0;height:3px;border-radius:2px;background:currentColor; }
+.queue-scroll { max-height:220px;overflow:auto;overscroll-behavior:contain;scrollbar-color:var(--lilac) var(--soft); }
+.queue-items { list-style:none;padding:0;margin:0; }
+.queue-items li { display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line);min-height:62px; }
+.queue-items li:last-child { border-bottom:0; }
+.queue-title { display:flex;align-items:center;flex:1;min-width:0;gap:10px;min-height:52px;border:0;text-align:left;background:none;color:var(--ink);padding:6px 0; }
+.queue-title>span { color:var(--muted);width:20px;flex-shrink:0;text-align:center;font-variant-numeric:tabular-nums; }
+.queue-title strong { font-size:15px;line-height:1.4;overflow-wrap:anywhere; }
+.queue-actions { display:flex;flex-shrink:0;gap:2px; }
+.queue-actions button { width:44px;height:44px;padding:10px;border:0;background:none;color:var(--muted);border-radius:10px; }
+.queue-actions button:disabled { opacity:.35; }
+.queue-actions svg { width:22px;height:22px; }
+.queue-footer { margin-top:10px;border-top:1px solid var(--line);padding-top:6px; }
+.queue-save,.queue-back { min-height:44px;padding:0 10px;border:0;background:none;color:var(--lilac);font-size:14px;font-weight:650; }
+.queue-save:disabled { color:var(--muted);opacity:.6; }
+.queue-empty,.queue-order-message { font-size:15px;line-height:1.6;margin:18px 0;color:var(--muted); }
+.queue-series-list { display:grid; }
+.queue-series-list button { min-height:64px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);padding:12px 0;text-align:left; }
+.queue-series-list strong,.queue-series-list span { display:block; }
+.queue-series-list span { font-size:13px;color:var(--muted);margin-top:5px; }
+.queue-series-name { font-size:18px;margin:6px 0; }
+.series-name { width:100%;min-height:48px;font-size:17px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px;box-sizing:border-box;margin-top:8px; }
+@media(max-height:460px) { .playlist-dialog {padding:12px 18px} .playlist-dialog .pearl-settings-heading .icon-btn {width:44px;height:44px;min-height:44px} .queue-scroll {max-height:148px} .queue-now {margin:4px 0} .queue-footer {margin-top:4px;padding-top:2px} }
+@media(max-width:460px) { .queue-actions {gap:0} .queue-actions button {width:44px} .queue-title strong {font-size:14px} .playlist-list-toolbar .pearl-record-tabs {gap:2px;padding:0} .playlist-list-toolbar .pearl-record-tabs button {font-size:14px;padding:0 7px} .playlist-open-btn {padding:0 9px;font-size:13px} }

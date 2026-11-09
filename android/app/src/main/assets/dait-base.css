@@ -131,14 +131,6 @@ body.driving .drive-screen { display: flex; }
   height: calc(19 * var(--u));
 }
 .dait-brand-badge .brand-dot { transform-origin: 62px 7.5px; }
-.dait-brand-badge.waiting .brand-dot { animation: brandBreath 2.4s ease-in-out infinite; }
-@keyframes brandBreath {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.35; transform: scale(1.35); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .dait-brand-badge.waiting .brand-dot { animation: none; }
-}
 .icon-btn {
   width: calc(44 * var(--u));
   height: calc(44 * var(--u));

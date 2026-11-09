@@ -17,7 +17,6 @@ window.setDrivingMode = function(isDriving, isRealDriving) {
   document.body.classList.toggle('real-driving', !!isRealDriving);
   if (isDriving && (isParkedScreen() || (departing && currentMode === 'lesson' && isLessonDone()))) goHome();
   if (!isDriving && isLessonResting() && lessonRun.trip.rest) endLesson(); // 쉬는 시간에 주차하면 내린 것으로 보고 수업을 닫는다
-  if (departing && armed) startArmed();
   if (currentMode === 'lesson' && lessonRun && !lessonRun.done) { lessonRun.scrubbing = false; renderStage(); }
   updateDriveScreen();
   syncJourney();

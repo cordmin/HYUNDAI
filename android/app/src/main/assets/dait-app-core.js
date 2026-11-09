@@ -1,4 +1,4 @@
-// 다잇 화면의 바탕: 공통 상태, 저장소·글자 도구, 화면 고르기, 출발 예약, 도착 처리.
+// 다잇 화면의 바탕: 공통 상태, 저장소·글자 도구, 화면 고르기, 도착 처리.
 // 불러오는 차례: dait-app-core → audio → home → lesson → player → car → start (dait-preview.html).
 // 수업 조립 규칙은 dait-lesson.js, 재생·주행 제한 부품은 dait-playback.js에 있다.
 
@@ -16,10 +16,8 @@ let previewQueue = []; // 브라우저 미리보기에서 이어 틀 음원
 let speechPaused = false; // 길 안내나 통화가 소리를 가져간 동안
 let closeTimer = null;
 let routeStartedAt = 0;
-let armed = null; // 출발하면 들려주기: { mode, timer }. 수업이면 mode는 'lesson'이고 lesson과 minutes를 함께 둔다
 let hasArrived = false;
 let journeyActive = false;
-const ARM_MS = 30 * 60 * 1000;
 const ARRIVAL_CLOSE_MS = 4000;
 const ROUTE_SWAP_MS = 3000;
 
@@ -116,40 +114,11 @@ function remainMinutes() {
   return naviRemainMinutes();
 }
 
-// ========================================================
-// 출발하면 들려주기
-// 시동만으로 말을 시작하지 않는다. 주차 중에 고른 수업만 출발할 때 시작한다.
-// ========================================================
-function arm(choice) {
-  if (choice.mode !== 'lesson') return;
-  armed = { ...choice, timer: setTimeout(() => {
-    disarm();
-    refreshHomeIfIdle();
-    if (currentMode === 'lessonPick' || (hasActiveLesson() && lessonView === 'lessons')) render();
-  }, ARM_MS) };
-}
-
-// 고른 대로 출발할 때 시작한다. 수업은 출발할 때 아는 남은 시간을 먼저 쓴다.
-// 그 시간에 들어가지 않는 수업이면 말을 시작하지 않고 예약만 지운다.
-function startArmed() {
-  const { lesson, minutes, fromStop } = armed;
-  disarm();
-  const eta = remainMinutes();
-  lessonMinutes = eta !== null ? Lesson.minutesFor(eta) : minutes;
-  startLesson(lesson, fromStop);
-  refreshHomeIfIdle(); // 시간이 모자라 시작하지 못했으면 예약이 사라진 것을 보여 준다
-}
-
-function disarm() {
-  if (armed) clearTimeout(armed.timer);
-  armed = null;
-}
-
 // 여정 동안에는 내비가 앱을 덮어도 소리를 낼 수 있게 앱을 유지한다.
 // 달리는 중에 내려놓으면 내비 뒤에서 다시 올릴 수 없으므로 주차하거나 수업을 닫을 때까지 둔다.
 function syncJourney() {
   const finishedParked = isLessonDone() && speechPhase === 'idle' && !isDrivingMode;
-  const active = !!armed || (currentMode === 'lesson' && !finishedParked);
+  const active = (currentMode === 'lesson' && !finishedParked);
   if (active === journeyActive) return;
   journeyActive = active;
   if (window.AndroidBridge) window.AndroidBridge.setJourneyActive(active);

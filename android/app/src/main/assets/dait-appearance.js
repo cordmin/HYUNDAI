@@ -202,6 +202,7 @@
       if (action === 'close') close();
       else if (action === 'colors') openColors();
       else if (action === 'playback') openPlayback();
+      else if (action === 'playlist') { close(); window.openPlaylist(); }
       else if (action === 'settings') window.openPearlSettings();
       else if (action === 'restart') { close(); restartLesson(); }
       if (e.target === dialog) { const r = dialog.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) close(); }
@@ -215,23 +216,19 @@
     const toggle = (action, label, on) => `<button class="pearl-settings-switch" data-appearance-action="${action}" role="switch" aria-checked="${on}"><strong>${label}</strong><span aria-hidden="true">${on ? '켜짐' : '꺼짐'}</span></button>`;
     shell('설정', `<div class="pearl-settings-menu">
       ${row('playback', '재생 설정', `뒤로 ${lessonIntervalText(prefs.back)} · 앞으로 ${lessonIntervalText(prefs.forward)} · ${prefs.rate.toFixed(1)}배속`)}
+      ${row('playlist', '재생목록과 시리즈', '자동 재생 · 수업 순서 · 연결 안내')}
       ${row('colors', '앱 색상', '라이트·다크 모드별 배경')}
       ${currentMode === 'lesson' && lessonRun && !lessonRun.done && !isLessonResting() ? row('restart', '처음부터 듣기', '지금 수업을 처음부터') : ''}
     </div>`);
   };
-  window.openLessonOptions = (id, fromStop = false) => {
-    if (!vehiclePolicy.allows('settings')) { notice('주행중엔 설정을 바꿀 수 없어요.'); return; }
-    const lesson = DAIT_LESSONS.find(item => item.id === id);
-    if (!lesson) return;
-    const reserved = armed?.lesson === id && !!armed.fromStop === !!fromStop;
-    shell('수업 옵션', `<p class="pearl-option-title">${escapeHtml(lesson.title)}</p><div class="pearl-settings-menu"><button data-lesson-reservation><strong>${reserved ? '예약 취소' : '출발하면 듣기'}</strong></button></div>`);
-    dialog.classList.add('pearl-lesson-options');
-    dialog.addEventListener('click', e => {
-      if (!e.target.closest('[data-lesson-reservation]') || isDrivingMode) return;
-      close();
-      toggleLessonArm(id, fromStop);
-    });
+  window.playlistNotice = notice;
+  window.openDaitPanel = (title, body, className, handler) => {
+    if (!vehiclePolicy.allows('settings')) { notice('주행중엔 재생목록을 바꿀 수 없어요.'); return null; }
+    shell(title,body); if(className)dialog.classList.add(className);
+    if(handler)dialog.addEventListener('click',handler);
+    return dialog;
   };
+  window.closeDaitPanel = close;
   function openPlayback() {
     if (!vehiclePolicy.allows('settings')) { notice('주행중엔 설정을 바꿀 수 없어요.'); return; }
     let prefs = { ...lessonPlaybackPrefs }, editing = null;

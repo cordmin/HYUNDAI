@@ -1,0 +1,328 @@
+{
+  "cases": [
+    {
+      "size": {
+        "width": 665,
+        "height": 420
+      },
+      "mode": "light",
+      "views": [
+        {
+          "name": "list",
+          "labels": 9,
+          "minContrast": 4.96
+        },
+        {
+          "name": "add-last",
+          "labels": 4,
+          "minContrast": 16.2
+        },
+        {
+          "name": "add-next",
+          "labels": 4,
+          "minContrast": 16.2
+        },
+        {
+          "name": "queue",
+          "labels": 7,
+          "minContrast": 5.79
+        },
+        {
+          "name": "series",
+          "labels": 8,
+          "minContrast": 5.79
+        },
+        {
+          "name": "order-prompt",
+          "labels": 4,
+          "minContrast": 16.2
+        },
+        {
+          "name": "playing-queue",
+          "labels": 8,
+          "minContrast": 5.79
+        }
+      ],
+      "realClipAutoAdvance": true,
+      "reloadPersistence": true,
+      "drivingBlocked": true
+    },
+    {
+      "size": {
+        "width": 665,
+        "height": 420
+      },
+      "mode": "dark",
+      "views": [
+        {
+          "name": "list",
+          "labels": 9,
+          "minContrast": 6.75
+        },
+        {
+          "name": "add-last",
+          "labels": 4,
+          "minContrast": 13.22
+        },
+        {
+          "name": "add-next",
+          "labels": 4,
+          "minContrast": 13.22
+        },
+        {
+          "name": "queue",
+          "labels": 7,
+          "minContrast": 9.55
+        },
+        {
+          "name": "series",
+          "labels": 8,
+          "minContrast": 9.56
+        },
+        {
+          "name": "order-prompt",
+          "labels": 4,
+          "minContrast": 13.22
+        },
+        {
+          "name": "playing-queue",
+          "labels": 8,
+          "minContrast": 9.55
+        }
+      ],
+      "reloadPersistence": true,
+      "drivingBlocked": true
+    },
+    {
+      "size": {
+        "width": 665,
+        "height": 420
+      },
+      "mode": "green",
+      "views": [
+        {
+          "name": "list",
+          "labels": 9,
+          "minContrast": 5.76
+        },
+        {
+          "name": "add-last",
+          "labels": 4,
+          "minContrast": 12.03
+        },
+        {
+          "name": "add-next",
+          "labels": 4,
+          "minContrast": 12.03
+        },
+        {
+          "name": "queue",
+          "labels": 7,
+          "minContrast": 9.89
+        },
+        {
+          "name": "series",
+          "labels": 8,
+          "minContrast": 9.9
+        },
+        {
+          "name": "order-prompt",
+          "labels": 4,
+          "minContrast": 12.03
+        },
+        {
+          "name": "playing-queue",
+          "labels": 8,
+          "minContrast": 9.89
+        }
+      ],
+      "reloadPersistence": true,
+      "drivingBlocked": true
+    },
+    {
+      "size": {
+        "width": 1000,
+        "height": 632
+      },
+      "mode": "light",
+      "views": [
+        {
+          "name": "list",
+          "labels": 11,
+          "minContrast": 4.96
+        },
+        {
+          "name": "add-last",
+          "labels": 4,
+          "minContrast": 16.2
+        },
+        {
+          "name": "add-next",
+          "labels": 4,
+          "minContrast": 16.2
+        },
+        {
+          "name": "queue",
+          "labels": 7,
+          "minContrast": 5.79
+        },
+        {
+          "name": "series",
+          "labels": 9,
+          "minContrast": 5.79
+        },
+        {
+          "name": "order-prompt",
+          "labels": 4,
+          "minContrast": 16.2
+        },
+        {
+          "name": "playing-queue",
+          "labels": 8,
+          "minContrast": 5.79
+        }
+      ],
+      "reloadPersistence": true,
+      "drivingBlocked": true
+    },
+    {
+      "size": {
+        "width": 1000,
+        "height": 632
+      },
+      "mode": "dark",
+      "views": [
+        {
+          "name": "list",
+          "labels": 11,
+          "minContrast": 6.75
+        },
+        {
+          "name": "add-last",
+          "labels": 4,
+          "minContrast": 13.22
+        },
+        {
+          "name": "add-next",
+          "labels": 4,
+          "minContrast": 13.22
+        },
+        {
+          "name": "queue",
+          "labels": 7,
+          "minContrast": 9.56
+        },
+        {
+          "name": "series",
+          "labels": 9,
+          "minContrast": 9.56
+        },
+        {
+          "name": "order-prompt",
+          "labels": 4,
+          "minContrast": 13.22
+        },
+        {
+          "name": "playing-queue",
+          "labels": 8,
+          "minContrast": 9.56
+        }
+      ],
+      "reloadPersistence": true,
+      "drivingBlocked": true
+    },
+    {
+      "size": {
+        "width": 420,
+        "height": 640
+      },
+      "mode": "light",
+      "views": [
+        {
+          "name": "list",
+          "labels": 13,
+          "minContrast": 4.96
+        },
+        {
+          "name": "add-last",
+          "labels": 4,
+          "minContrast": 16.2
+        },
+        {
+          "name": "add-next",
+          "labels": 4,
+          "minContrast": 16.2
+        },
+        {
+          "name": "queue",
+          "labels": 7,
+          "minContrast": 5.79
+        },
+        {
+          "name": "series",
+          "labels": 9,
+          "minContrast": 5.79
+        },
+        {
+          "name": "order-prompt",
+          "labels": 4,
+          "minContrast": 16.2
+        },
+        {
+          "name": "playing-queue",
+          "labels": 8,
+          "minContrast": 5.79
+        }
+      ],
+      "reloadPersistence": true,
+      "drivingBlocked": true
+    },
+    {
+      "size": {
+        "width": 420,
+        "height": 640
+      },
+      "mode": "dark",
+      "views": [
+        {
+          "name": "list",
+          "labels": 13,
+          "minContrast": 6.75
+        },
+        {
+          "name": "add-last",
+          "labels": 4,
+          "minContrast": 13.22
+        },
+        {
+          "name": "add-next",
+          "labels": 4,
+          "minContrast": 13.22
+        },
+        {
+          "name": "queue",
+          "labels": 7,
+          "minContrast": 9.52
+        },
+        {
+          "name": "series",
+          "labels": 9,
+          "minContrast": 9.56
+        },
+        {
+          "name": "order-prompt",
+          "labels": 4,
+          "minContrast": 13.22
+        },
+        {
+          "name": "playing-queue",
+          "labels": 8,
+          "minContrast": 9.52
+        }
+      ],
+      "reloadPersistence": true,
+      "drivingBlocked": true
+    }
+  ],
+  "failures": []
+}

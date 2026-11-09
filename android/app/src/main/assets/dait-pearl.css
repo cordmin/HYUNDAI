@@ -109,7 +109,6 @@ body.driving .dait-sound i { animation: none; background-size: 0 0, 100% 100%; }
 .back-btn { color: var(--muted); }
 .dialogue-top { min-height: calc(32 * var(--u)); margin-bottom: calc(7 * var(--u)); }
 .dialogue-card .main-question { font-size: calc(25 * var(--u)); }
-.heard-bubble, .school-input { color: var(--ink); background: #ffffffa0; }
 .drive-screen { background: linear-gradient(120deg,var(--bg-top),var(--bg-bottom)); }
 .pearl-nav, .pearl-records { color: var(--ink); }
 body.driving .pearl-nav { visibility: hidden; }

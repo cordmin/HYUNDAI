@@ -132,14 +132,8 @@ class VoiceSession(context: Context, private val onEvent: (JSONObject) -> Unit) 
         } catch (_: Exception) { onClipDone() }
     }
 
-    // 'temp/...'처럼 폴더가 붙은 것은 임시 음성이고, 나머지는 팀 음원이다.
-    private fun assetPath(clip: String) = when {
-        isLessonClip(clip) -> "voices/$clip.m4a"
-        '/' in clip -> "voices/$clip.wav"
-        else -> "voices/nika/$clip.wav"
-    }
-
-    private fun isLessonClip(clip: String) = clip.startsWith("lesson/")
+    // 수업 음원은 'lesson/동백꽃_i1'처럼 온다.
+    private fun assetPath(clip: String) = "voices/$clip.m4a"
 
     private fun onClipDone() {
         releasePlayer()
@@ -174,9 +168,8 @@ class VoiceSession(context: Context, private val onEvent: (JSONObject) -> Unit) 
         }
     }
 
-    // 짧은 문장은 처음부터 다시 말하고, 긴 수업 조각은 끊긴 곳 조금 앞에서 잇는다.
-    private fun resumePosition(paused: MediaPlayer) =
-        if (isLessonClip(clips[index])) (paused.currentPosition - LESSON_REWIND_MS).coerceAtLeast(0) else 0
+    // 끊긴 곳 조금 앞에서 잇는다.
+    private fun resumePosition(paused: MediaPlayer) = (paused.currentPosition - LESSON_REWIND_MS).coerceAtLeast(0)
 
     private fun finish(event: String) {
         stop()

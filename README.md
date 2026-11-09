@@ -1,6 +1,6 @@
 # 다잇(DAIT)
 
-현대자동차그룹 차량용 앱 개발 공모전(Pleos App Market)에 내는 차 안 수업 앱입니다. 이동 시간에 맞춰 짧은 오디오 수업을 들려줍니다.
+현대자동차그룹 차량용 앱 개발 공모전(Pleos App Market)에 내는 차 안 수업 앱입니다. 운전하는 사람이 이동 시간에 맞춰 짧은 오디오 수업을 듣고, 같이 탄 사람도 함께 들을 수 있습니다.
 
 ## 기능
 
@@ -10,7 +10,6 @@
 - **출발하면 듣기** — 주차 중에 수업을 예약하면 출발할 때 시작합니다.
 - **이어 듣기와 기록** — 멈춘 곳부터 다시 듣고, 들은 수업·숙제를 기록에 남깁니다. 기록 메뉴에 배지 그림 6장이 있습니다(획득 조건 없음).
 - **차량 연결** — 주행 중에는 문장 하나와 큰 버튼 둘만 보입니다. 핸들 버튼, Gleo 음성 비서(수업 시작·멈춤·이어 듣기)로 조작합니다.
-- **하교 대화** — 오후에 버튼으로 답하는 짧은 대화입니다(마이크를 쓰지 않음).
 
 ## 수업
 
@@ -39,11 +38,28 @@ powershell -ExecutionPolicy Bypass -File .\tools\Build-App.ps1
 
 | 폴더 | 내용 |
 |---|---|
-| `android/` | 앱. 화면은 `app/src/main/assets`의 HTML·JS·CSS, 차 연결은 `app/src/main/java` |
+| `android/` | 앱. 화면은 `app/src/main/assets`의 HTML·JS·CSS, 차 연결은 `app/src/main/java` (아래 「화면 코드」) |
 | `lessons/` | 수업 대본 표(CSV). `tools/build-lessons.js`가 앱용 파일을 만듭니다 |
 | `tools/` | 빌드·에뮬레이터·음원 길이 측정·음원 제작 도구 |
 | `voice/`, `team/a/voice/` | 수업 음원 제작 도구와 대본 목록 |
 | `design/`, `character/` | 화면 시안과 로고 자료 |
+
+## 화면 코드
+
+`android/app/src/main/assets/dait-preview.html`이 아래 차례로 불러옵니다. 모두 같은 화면의 전역 함수를 나눠 가진 일반 스크립트입니다.
+
+| 파일 | 맡은 일 |
+|---|---|
+| `dait-lesson.js`, `dait-lessons.js` | 수업 조립 규칙(화면 없음)과 수업 자료(`lessons/`에서 만든 파일) |
+| `dait-playback.js`, `dait-sound-levels.js` | 재생 상태·주행 제한·도착 계획 부품, 소리 막대 자료 |
+| `dait-app-core.js` | 공통 상태, 저장소, 화면 고르기, 출발 예약, 도착 처리 |
+| `dait-app-audio.js` | 소리 내기(앱은 Kotlin `VoiceSession`, 미리보기는 audio 태그) |
+| `dait-app-home.js` | 위쪽 메뉴, 추천 카드, 기록 화면 |
+| `dait-app-lesson.js` | 수업 진행: 시작·멈춤·이어 듣기·이동·도착 맞춤·기록 |
+| `dait-app-player.js` | 수업 고르기·재생 화면 그리기 |
+| `dait-app-car.js` | 주행 화면, 내비 남은 시간, 핸들 버튼, Gleo |
+| `dait-app-start.js` | 시작 인트로, 첫 화면 |
+| `dait-appearance.js`, `dait-volume.js` | 설정 창·색상, 소리 크기 |
 
 ## 문서
 

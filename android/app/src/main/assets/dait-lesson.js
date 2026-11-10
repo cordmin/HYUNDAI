@@ -408,7 +408,12 @@
     delete next.homework;
     delete next.homeworkNext;
     // 수업 대답은 저장하지 않는다. 예전에 남은 답도 지운다.
-    next.records = next.records.map(({ answers, ...record }) => record);
+    const latest = new Set();
+    next.records = next.records.map(({ answers, ...record }) => record).reverse().filter(record => {
+      const keep = record.finished || !latest.has(record.lesson);
+      latest.add(record.lesson);
+      return keep;
+    }).reverse();
     return next;
   }
 
@@ -418,7 +423,7 @@
     next.km = { ...next.km, [monthOf(ymd)]: (next.km[monthOf(ymd)] || 0) + (finished ? heldKm : 0) };
     const record = { lesson: lesson.id, title: lesson.title, ymd, finished };
     if (short) record.short = true; // 짧은 판으로 들었다는 표시. 추천에서 이 수업을 뒤로 보내지 않는다
-    next.records = [...next.records, record].slice(-KEEP_RECORDS);
+    next.records = [...next.records.filter(item => item.finished || item.lesson !== lesson.id), record].slice(-KEEP_RECORDS);
     if (!finished) return next;
     if (next.resume && next.resume.lesson === lesson.id) next.resume = null; // 이어 듣던 수업을 마쳤다
     return next;

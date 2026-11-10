@@ -1,0 +1,230 @@
+{
+  "functionalChecks": [
+    "custom interval and rate save",
+    "invalid interval blocked",
+    "queue reorder/remove",
+    "color mode/preset/hex save",
+    "invalid hex blocked",
+    "cancel restores palette",
+    "driving blocks settings"
+  ],
+  "renders": [
+    {
+      "width": 665,
+      "height": 420,
+      "mode": "light",
+      "screen": "settings",
+      "minContrast": 14.14,
+      "scrollWidth": 618,
+      "clientWidth": 618
+    },
+    {
+      "width": 665,
+      "height": 420,
+      "mode": "light",
+      "screen": "playback",
+      "minContrast": 6.15,
+      "scrollWidth": 618,
+      "clientWidth": 618
+    },
+    {
+      "width": 665,
+      "height": 420,
+      "mode": "light",
+      "screen": "playlist",
+      "minContrast": 14.14,
+      "scrollWidth": 631,
+      "clientWidth": 631
+    },
+    {
+      "width": 665,
+      "height": 420,
+      "mode": "light",
+      "screen": "colors",
+      "minContrast": 5.06,
+      "scrollWidth": 618,
+      "clientWidth": 618
+    },
+    {
+      "width": 665,
+      "height": 420,
+      "mode": "dark",
+      "screen": "settings",
+      "minContrast": 9.9,
+      "scrollWidth": 618,
+      "clientWidth": 618
+    },
+    {
+      "width": 665,
+      "height": 420,
+      "mode": "dark",
+      "screen": "playback",
+      "minContrast": 9.9,
+      "scrollWidth": 618,
+      "clientWidth": 618
+    },
+    {
+      "width": 665,
+      "height": 420,
+      "mode": "dark",
+      "screen": "playlist",
+      "minContrast": 9.9,
+      "scrollWidth": 631,
+      "clientWidth": 631
+    },
+    {
+      "width": 665,
+      "height": 420,
+      "mode": "dark",
+      "screen": "colors",
+      "minContrast": 5.71,
+      "scrollWidth": 618,
+      "clientWidth": 618
+    },
+    {
+      "width": 1000,
+      "height": 632,
+      "mode": "light",
+      "screen": "settings",
+      "minContrast": 14.14,
+      "scrollWidth": 618,
+      "clientWidth": 618
+    },
+    {
+      "width": 1000,
+      "height": 632,
+      "mode": "light",
+      "screen": "playback",
+      "minContrast": 6.15,
+      "scrollWidth": 618,
+      "clientWidth": 618
+    },
+    {
+      "width": 1000,
+      "height": 632,
+      "mode": "light",
+      "screen": "playlist",
+      "minContrast": 14.14,
+      "scrollWidth": 648,
+      "clientWidth": 648
+    },
+    {
+      "width": 1000,
+      "height": 632,
+      "mode": "light",
+      "screen": "colors",
+      "minContrast": 5.06,
+      "scrollWidth": 618,
+      "clientWidth": 618
+    },
+    {
+      "width": 1000,
+      "height": 632,
+      "mode": "dark",
+      "screen": "settings",
+      "minContrast": 9.9,
+      "scrollWidth": 618,
+      "clientWidth": 618
+    },
+    {
+      "width": 1000,
+      "height": 632,
+      "mode": "dark",
+      "screen": "playback",
+      "minContrast": 9.9,
+      "scrollWidth": 618,
+      "clientWidth": 618
+    },
+    {
+      "width": 1000,
+      "height": 632,
+      "mode": "dark",
+      "screen": "playlist",
+      "minContrast": 9.9,
+      "scrollWidth": 648,
+      "clientWidth": 648
+    },
+    {
+      "width": 1000,
+      "height": 632,
+      "mode": "dark",
+      "screen": "colors",
+      "minContrast": 5.71,
+      "scrollWidth": 618,
+      "clientWidth": 618
+    },
+    {
+      "width": 420,
+      "height": 640,
+      "mode": "light",
+      "screen": "settings",
+      "minContrast": 14.14,
+      "scrollWidth": 386,
+      "clientWidth": 386
+    },
+    {
+      "width": 420,
+      "height": 640,
+      "mode": "light",
+      "screen": "playback",
+      "minContrast": 6.15,
+      "scrollWidth": 386,
+      "clientWidth": 386
+    },
+    {
+      "width": 420,
+      "height": 640,
+      "mode": "light",
+      "screen": "playlist",
+      "minContrast": 14.14,
+      "scrollWidth": 386,
+      "clientWidth": 386
+    },
+    {
+      "width": 420,
+      "height": 640,
+      "mode": "light",
+      "screen": "colors",
+      "minContrast": 5.06,
+      "scrollWidth": 386,
+      "clientWidth": 386
+    },
+    {
+      "width": 420,
+      "height": 640,
+      "mode": "dark",
+      "screen": "settings",
+      "minContrast": 9.9,
+      "scrollWidth": 386,
+      "clientWidth": 386
+    },
+    {
+      "width": 420,
+      "height": 640,
+      "mode": "dark",
+      "screen": "playback",
+      "minContrast": 9.9,
+      "scrollWidth": 386,
+      "clientWidth": 386
+    },
+    {
+      "width": 420,
+      "height": 640,
+      "mode": "dark",
+      "screen": "playlist",
+      "minContrast": 9.9,
+      "scrollWidth": 386,
+      "clientWidth": 386
+    },
+    {
+      "width": 420,
+      "height": 640,
+      "mode": "dark",
+      "screen": "colors",
+      "minContrast": 5.71,
+      "scrollWidth": 386,
+      "clientWidth": 386
+    }
+  ],
+  "pageErrors": []
+}

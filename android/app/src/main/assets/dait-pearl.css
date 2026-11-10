@@ -34,6 +34,7 @@
   --wave-top: #f4ccd9; --wave-bottom: #bf7f98;
   --logo-start: #f0c0d0; --logo-mid: #fbe9ee; --logo-end: #cb91a6;
 }
+.pleos-display { --card-radius: calc(18 * var(--u)); }
 body { background: var(--bg-bottom); }
 button { color: inherit; }
 button { min-height: 44px; }
@@ -62,7 +63,7 @@ body.in-app .pleos-display { border: 0; }
 .pearl-record-row, .pearl-badge { background: var(--glass-raised); }
 .home-card.start { background: var(--glass); }
 .pearl-home { display: flex; flex-direction: column; gap: calc(10 * var(--u)); min-height: 0; flex: 1; }
-.home-card.pearl-hero { position: relative; overflow: hidden; display: flex; flex-direction: row; align-items: center; text-align: left; gap: calc(24 * var(--u)); flex: 1; padding: calc(22 * var(--u)) calc(34 * var(--u)); border-radius: calc(18 * var(--u)); }
+.home-card.pearl-hero { position: relative; overflow: hidden; display: flex; flex-direction: row; align-items: center; text-align: left; gap: calc(24 * var(--u)); flex: 1; padding: calc(22 * var(--u)) calc(34 * var(--u)); border-radius: var(--card-radius); }
 .pearl-hero-copy { position: relative; z-index: 1; flex: 1; min-width: 0; }
 /* 수업 주제 그림: 오른쪽에 크게 한 장. 가운데(글자 쪽)로 오기 전에 흐려진다. */
 .pearl-hero[data-pattern]::before { content: ''; position: absolute; inset: 0 calc(14 * var(--u)) 0 0; pointer-events: none; background: var(--lilac); opacity: .13;
@@ -378,9 +379,9 @@ body.lesson-playing .stage-container { padding:calc(6 * var(--u)) calc(28 * var(
 /* 설정 창의 닫기(X) 버튼: 위쪽 도구 버튼과 같은 동그란 연분홍 버튼 */
 .pearl-settings-dialog .pearl-settings-heading .icon-btn, .pearl-night .pearl-settings-dialog .pearl-settings-heading .icon-btn { width:52px; height:52px; min-height:52px; padding:0; border:0; border-radius:50%; background:var(--soft); color:var(--lilac); box-shadow:none; display:grid; place-items:center; }
 .pearl-settings-dialog .pearl-settings-heading .icon-btn svg { width:24px; height:24px; stroke-width:2.2; }
-/* 모든 버튼: 누르면 살짝 들어가고(조금 작아짐) 안쪽에 옅은 그늘이 진다(2026-11-09 전수 적용). */
+/* 누를 때 네모 안쪽 그늘 없이 크기와 밝기로만 반응한다. */
 button { transition: transform .12s ease, box-shadow .12s ease, filter .12s ease; }
-button:active:not(:disabled) { transform: scale(.95); box-shadow: inset 0 2px 6px rgba(var(--shadow-rgb, 53, 40, 50), 0.18) !important; filter: brightness(.96); }
+button:active:not(:disabled) { transform: scale(.95); box-shadow: none !important; filter: brightness(.96); }
 /* 넓은 줄 버튼은 덜 줄여 들썩이지 않게 한다. */
 .lesson-row > .choice-chip:active:not(:disabled), .pearl-settings-menu button:active:not(:disabled) { transform: scale(.985); }
 /* 카드에 붙은 탭은 이음새가 어긋나지 않게, 색상판은 끌어서 고르므로 크기와 그늘을 바꾸지 않는다. */
@@ -402,7 +403,7 @@ button { -webkit-tap-highlight-color: transparent; }
 .pearl-option-title { margin:12px 0 0; font-size:17px; font-weight:650; }
 .pearl-lesson-options { width:min(380px,calc(100% - 32px)); }
 .pearl-record-content { box-shadow:inset 0 1px 0 var(--glass-sheen), 0 4px 16px rgba(var(--shadow-rgb, 53, 40, 50), 0.031); }
-.lesson-dock { display:flex; align-items:center; flex-shrink:0; gap:8px; min-height:64px; padding:6px 8px; margin:0 12px 10px; border-radius:16px; color:var(--ink); background:var(--glass-menu); border:1px solid var(--glass-edge); box-shadow:var(--glass-shadow); -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); }
+.lesson-dock { display:flex; align-items:center; flex-shrink:0; gap:8px; min-height:64px; padding:6px 8px; margin:0 12px 10px; border-radius:var(--card-radius); color:var(--ink); background:var(--glass-menu); border:1px solid var(--glass-edge); box-shadow:var(--glass-shadow); -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); }
 .lesson-dock[hidden] { display:none; }
 .lesson-dock button { min-height:48px; border:0; cursor:pointer; }
 .lesson-dock-open { flex:1; min-width:0; display:flex; align-items:center; gap:12px; padding:0 8px; text-align:left; background:none; color:inherit; border-radius:10px; }
@@ -411,7 +412,7 @@ button { -webkit-tap-highlight-color: transparent; }
 .lesson-dock-copy>span { font-size:13px; color:var(--muted); }
 .lesson-dock-toggle { flex:0 0 48px; width:48px; height:48px; border-radius:50%; background:var(--lilac); color:var(--on-lilac); display:grid; place-items:center; }
 .lesson-dock-toggle svg { width:24px; height:24px; }
-.lesson-dock-stop { flex:0 0 48px; width:48px; height:48px; border-radius:12px; background:none; color:var(--muted); display:grid; place-items:center; }
+.lesson-dock-stop { flex:0 0 48px; width:48px; height:48px; border-radius:50%; background:color-mix(in srgb,var(--soft) 60%,transparent); color:var(--muted); display:grid; place-items:center; }
 .lesson-dock-stop svg { width:22px; height:22px; }
 body.driving .lesson-dock { display:none; }
 
@@ -434,10 +435,10 @@ body.lesson-playing .pleos-display { background-image:linear-gradient(to bottom,
 .queue-switch { display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;min-height:44px;background:none;color:var(--ink);padding:8px 0;border:0;font-size:15px;text-align:left; }
 .queue-switch>span:last-child { color:var(--muted);font-size:13px; }
 .queue-switch[aria-checked=true]>span:last-child { color:var(--lilac);font-weight:700; }
-.queue-switch>span:last-child { position:relative;display:block;flex:0 0 44px;width:44px;height:26px;border-radius:20px;background:var(--soft);font-size:0; }
-.queue-switch>span:last-child::after { content:'';position:absolute;top:4px;left:4px;width:18px;height:18px;border-radius:50%;background:var(--muted); }
-.queue-switch[aria-checked=true]>span:last-child { background:var(--lilac); }
-.queue-switch[aria-checked=true]>span:last-child::after { left:22px;background:var(--on-lilac); }
+:is(.queue-switch,.pearl-settings-switch)>span:last-child { position:relative;display:block;flex:0 0 44px;width:44px;height:26px;border-radius:20px;background:var(--soft);font-size:0; }
+:is(.queue-switch,.pearl-settings-switch)>span:last-child::after { content:'';position:absolute;top:4px;left:4px;width:18px;height:18px;border-radius:50%;background:var(--muted); }
+:is(.queue-switch,.pearl-settings-switch)[aria-checked=true]>span:last-child { background:var(--lilac); }
+:is(.queue-switch,.pearl-settings-switch)[aria-checked=true]>span:last-child::after { left:22px;background:var(--on-lilac); }
 .queue-tabs { display:flex;gap:18px;border-bottom:1px solid var(--line); }
 .queue-tabs button { position:relative;min-height:44px;border:0;background:none;color:var(--muted);padding:0 4px;font-size:16px; }
 .queue-tabs button[aria-selected=true] { color:var(--lilac);font-weight:700; }
@@ -513,3 +514,95 @@ body.lesson-playing .pleos-display { background-image:linear-gradient(to bottom,
 .lesson-end .lesson-end-finish { display:flex;align-items:center;justify-content:center;gap:10px;align-self:auto;margin-left:auto;flex-shrink:0;border:1px solid currentColor;border-radius:999px;padding:8px 20px;min-height:44px;font-size:calc(15 * var(--u)); }
 .lesson-end-finish svg { width:18px;height:18px; }
 @media(max-width:480px) { .pearl-player-times {grid-template-columns:minmax(0,1fr) minmax(0,2fr) minmax(0,1fr);gap:8px;} .pearl-timing-status {gap:4px;} .pearl-timing-status svg {width:16px;height:16px;} .pearl-player-times>#lessonRemaining {font-size:12px;} .lesson-end {padding:12px 14px;}.lesson-end h1 {font-size:30px;}.lesson-end-bottom {gap:12px;}.lesson-end .lesson-end-note {font-size:14px;}.lesson-end .lesson-end-finish {font-size:14px;padding:8px 16px;} }
+
+/* 진주 목록: 설정과 하위 화면이 같은 재료·간격·둥근 조작부를 쓴다. */
+.pleos-display[data-settings-palette=rose] .pearl-settings-dialog { --glass-menu:#f8edef;--glass-raised:#fcf6f7;--card:#fcf6f7;--ink:#352832;--muted:#715e69;--lilac:#884d62;--on-lilac:#fffafb;--soft:#f0e1e6;--line:#e5cdd6;--glass-edge:#fffafb; }
+.pleos-display.pearl-night[data-settings-palette=rose] .pearl-settings-dialog { --glass-menu:#332831;--glass-raised:#3d2d37;--card:#3d2d37;--ink:#fff1f5;--muted:#d7bec8;--lilac:#f0b9cc;--on-lilac:#392a33;--soft:#573746;--line:#795564;--glass-edge:#795564; }
+.pearl-settings-dialog { position:fixed;width:min(620px,calc(100% - 32px));max-width:calc(var(--settings-width,100vw) - 32px);max-height:calc(var(--settings-height,100vh) - 24px);padding:24px;border-radius:28px;scrollbar-width:thin;scrollbar-color:var(--lilac) transparent; }
+.pearl-settings-dialog::backdrop { background:transparent; }
+.pearl-settings-shade { position:absolute;inset:0;border-radius:inherit;background:rgba(var(--shadow-rgb,53,40,50),.14);pointer-events:none;z-index:10000; }
+.pearl-settings-heading { gap:12px;margin-bottom:20px; }
+.pearl-settings-heading h2 { flex:1;font-size:24px;letter-spacing:-.03em; }
+.pearl-settings-dialog .pearl-settings-heading .icon-btn { width:44px;height:44px;min-height:44px; }
+.pearl-settings-dialog .pearl-settings-heading .pearl-settings-back { width:36px;min-width:36px;background:none; }
+.pearl-settings-group { padding:0 18px;background:var(--glass-raised);border:1px solid var(--glass-edge);border-radius:18px; }
+.pearl-settings-dialog .pearl-settings-home { display:block;margin:0; }
+.pearl-settings-dialog .pearl-settings-home .pearl-settings-row { display:flex;align-items:center;gap:14px;width:100%;min-height:74px;padding:14px 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent; }
+.pearl-settings-dialog .pearl-settings-home .pearl-settings-row:last-child { border-bottom:0; }
+.pearl-settings-symbol { width:40px;height:40px;display:grid;place-items:center;flex-shrink:0;border-radius:50%;background:var(--soft);color:var(--lilac); }
+.pearl-settings-symbol svg { width:21px;height:21px; }
+.pearl-settings-copy { flex:1;min-width:0; }
+.pearl-settings-copy small { line-height:1.5; }
+.pearl-settings-chevron { width:18px;height:18px;flex-shrink:0;color:var(--muted); }
+.pearl-settings-section { margin:22px 0 4px;font-size:13px;font-weight:600;color:var(--muted); }
+.pearl-settings-dialog .pearl-settings-home .pearl-settings-switch { gap:16px;width:100%;min-height:60px;padding:12px 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:none; }
+.pearl-settings-dialog .pearl-settings-home .pearl-settings-switch:last-child { border-bottom:0; }
+.pearl-settings-home .pearl-settings-switch strong { font-size:16px;font-weight:500; }
+.pearl-settings-dialog .pearl-pb-row { grid-template-columns:90px minmax(0,1fr);gap:12px;min-height:76px;padding:16px 0; }
+.pearl-pb-row:last-child { border-bottom:0; }
+.pearl-settings-dialog .pearl-pb-choices { display:flex;flex-wrap:wrap;gap:6px; }
+.pearl-settings-dialog .pearl-pb-choices button { flex:1 0 48px;min-height:44px;padding:0 8px;border:1px solid var(--line);border-radius:99px;background:none;color:var(--ink);font-size:14px; }
+.pearl-settings-dialog .pearl-pb-choices button[aria-pressed=true] { background:var(--lilac);border-color:var(--lilac);color:var(--on-lilac);box-shadow:none; }
+.pearl-settings-dialog .pearl-settings-footer { gap:12px;padding-top:16px;margin-top:18px;border-top:1px solid var(--line); }
+.pearl-settings-footer p { flex:1;line-height:1.5; }
+.pearl-settings-dialog .pearl-settings-footer button { border-radius:99px;min-width:100px; }
+.pearl-pb-custom { padding:14px 0 0; }
+.pearl-pb-custom .card-btn { min-width:72px;border-radius:99px; }
+.playlist-dialog { width:min(650px,calc(100% - 32px)); }
+.queue-now { margin:0 0 14px;align-items:flex-start;padding:12px 16px;background:var(--soft);border-radius:16px; }
+.queue-summary { margin:0 0 10px;font-size:13px;color:var(--muted); }
+.queue-scroll { max-height:300px;background:var(--glass-raised);border:1px solid var(--glass-edge);border-radius:18px;padding:0 16px; }
+.queue-items li { gap:12px;min-height:82px; }
+.queue-title { gap:12px; }
+.queue-title>span:first-child { display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--soft);color:var(--lilac);font-size:13px; }
+.queue-title>.queue-lesson-copy { display:block;flex:1;width:auto;text-align:left;color:var(--ink); }
+.queue-lesson-copy small { display:block;font-size:13px;margin-top:4px;color:var(--muted); }
+.queue-title strong { font-size:16px; }
+.queue-actions { gap:4px; }
+.queue-actions button { min-height:44px;height:44px;border-radius:50%;background:var(--soft); }
+.queue-empty { display:grid;place-content:center;text-align:center;min-height:150px;padding:24px 12px;margin:0; }
+.queue-empty strong { color:var(--ink);font-size:17px; }
+.queue-empty p { font-size:14px;margin:8px 0 0;line-height:1.6; }
+.pearl-settings-dialog .pearl-color-modes { padding:4px;gap:4px;margin:0;background:var(--soft);border-radius:99px; }
+.pearl-settings-dialog .pearl-color-mode { border:0;border-radius:99px;background:none;color:var(--muted);font-weight:500; }
+.pearl-settings-dialog .pearl-color-mode[aria-pressed=true] { background:var(--card);color:var(--ink);box-shadow:0 2px 8px rgba(var(--shadow-rgb,53,40,50),.08); }
+.pearl-color-mode span { width:20px;height:20px;border-color:var(--line); }
+.pearl-color-dialog .pearl-color-preview { height:84px;margin:16px 0;border-radius:18px;border:1px solid var(--glass-edge); }
+.pearl-color-dialog .pearl-color-presets { gap:10px; }
+.pearl-color-dialog .pearl-color-presets button { display:flex;flex-direction:column;gap:8px;flex:1;min-width:0;width:auto;height:auto;min-height:76px;padding:8px;border:1px solid var(--line);border-radius:16px;background:none;font-size:13px; }
+.pearl-color-dialog .pearl-color-presets button::before { position:static;inset:auto;display:block;width:100%;height:32px;border-radius:10px;flex-shrink:0; }
+.pearl-color-dialog .pearl-color-presets button[aria-pressed=true] { border-color:var(--lilac);box-shadow:inset 0 0 0 1px var(--lilac); }
+.pearl-color-custom { margin-top:14px;border-top:1px solid var(--line); }
+.pearl-color-custom summary { display:list-item;min-height:48px;padding:12px 0;font-size:14px;color:var(--muted);cursor:pointer; }
+.pearl-color-custom .pearl-color-workbench { margin-top:4px; }
+.pearl-color-dialog .pearl-color-details { padding:8px 0;text-align:left;text-decoration:none;color:var(--lilac); }
+.pearl-color-dialog .pearl-color-choice { border-radius:14px; }
+.pearl-color-dialog .pearl-color-plane { border-radius:14px; }
+@container(max-height:460px) {
+  .pearl-settings-dialog { padding:16px 20px; }
+  .pearl-settings-heading { margin-bottom:12px; }
+  .pearl-settings-heading h2 { font-size:22px; }
+  .pearl-settings-dialog .pearl-settings-home .pearl-settings-row { min-height:58px;padding:8px 0; }
+  .pearl-settings-dialog .pearl-settings-home .pearl-settings-switch { min-height:48px;padding:8px 0; }
+  .pearl-settings-section { margin-top:14px; }
+  .pearl-settings-dialog .pearl-pb-row { min-height:64px;padding:10px 0; }
+  .pearl-settings-dialog .pearl-settings-footer { margin-top:12px;padding-top:12px; }
+  .queue-scroll { max-height:230px; }
+  .pearl-color-dialog .pearl-color-preview { height:40px;margin:10px 0; }
+  .pearl-color-dialog .pearl-color-presets button { min-height:64px;padding:6px;gap:6px; }
+  .pearl-color-dialog .pearl-color-presets button::before { height:28px; }
+  .pearl-color-dialog .pearl-color-custom { margin-top:8px; }
+  .pearl-color-dialog .pearl-color-custom summary { min-height:44px;padding:10px 0; }
+}
+@container(max-width:480px) {
+  .pearl-settings-dialog { padding:18px 16px;border-radius:24px; }
+  .pearl-settings-group { padding:0 12px; }
+  .pearl-settings-dialog .pearl-settings-home .pearl-settings-row { gap:10px; }
+  .pearl-settings-dialog .pearl-pb-row { grid-template-columns:1fr;gap:10px; }
+  .queue-items li { flex-wrap:wrap;gap:0;padding:8px 0; }
+  .queue-title { flex-basis:100%; }
+  .queue-actions { margin-left:auto; }
+  .queue-scroll { padding:0 12px; }
+  .pearl-color-dialog .pearl-color-presets { gap:6px; }
+  .pearl-color-dialog .pearl-color-presets button { padding:6px;font-size:12px; }
+}

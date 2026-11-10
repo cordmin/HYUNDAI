@@ -1,0 +1,401 @@
+{
+  "checks": [
+    {
+      "width": 665,
+      "height": 420,
+      "screen": "settings",
+      "app": {
+        "left": 367.5,
+        "top": 240,
+        "right": 1032.5,
+        "bottom": 660,
+        "width": 665,
+        "height": 420
+      },
+      "modal": {
+        "left": 390,
+        "top": 252,
+        "right": 1010,
+        "bottom": 648,
+        "width": 620,
+        "height": 396
+      },
+      "shade": {
+        "left": 374.5,
+        "top": 247,
+        "right": 1025.5,
+        "bottom": 653,
+        "width": 651,
+        "height": 406
+      },
+      "background": "rgb(248, 237, 239)",
+      "group": "rgb(252, 246, 247)",
+      "backdrop": "rgba(0, 0, 0, 0)",
+      "line": "#e5cdd6"
+    },
+    {
+      "width": 665,
+      "height": 420,
+      "screen": "playback",
+      "app": {
+        "left": 367.5,
+        "top": 240,
+        "right": 1032.5,
+        "bottom": 660,
+        "width": 665,
+        "height": 420
+      },
+      "modal": {
+        "left": 390,
+        "top": 270.5,
+        "right": 1010,
+        "bottom": 629.5,
+        "width": 620,
+        "height": 359
+      },
+      "shade": {
+        "left": 374.5,
+        "top": 247,
+        "right": 1025.5,
+        "bottom": 653,
+        "width": 651,
+        "height": 406
+      },
+      "background": "rgb(248, 237, 239)",
+      "group": "rgb(252, 246, 247)",
+      "backdrop": "rgba(0, 0, 0, 0)",
+      "line": "#e5cdd6"
+    },
+    {
+      "width": 665,
+      "height": 420,
+      "screen": "playlist",
+      "app": {
+        "left": 367.5,
+        "top": 240,
+        "right": 1032.5,
+        "bottom": 660,
+        "width": 665,
+        "height": 420
+      },
+      "modal": {
+        "left": 383.5,
+        "top": 315.5,
+        "right": 1016.5,
+        "bottom": 584.5,
+        "width": 633,
+        "height": 269
+      },
+      "shade": {
+        "left": 374.5,
+        "top": 247,
+        "right": 1025.5,
+        "bottom": 653,
+        "width": 651,
+        "height": 406
+      },
+      "background": "rgb(248, 237, 239)",
+      "group": "rgb(252, 246, 247)",
+      "backdrop": "rgba(0, 0, 0, 0)",
+      "line": "#e5cdd6"
+    },
+    {
+      "width": 665,
+      "height": 420,
+      "screen": "colors",
+      "app": {
+        "left": 367.5,
+        "top": 240,
+        "right": 1032.5,
+        "bottom": 660,
+        "width": 665,
+        "height": 420
+      },
+      "modal": {
+        "left": 390,
+        "top": 255.5,
+        "right": 1010,
+        "bottom": 644.5,
+        "width": 620,
+        "height": 389
+      },
+      "shade": {
+        "left": 374.5,
+        "top": 247,
+        "right": 1025.5,
+        "bottom": 653,
+        "width": 651,
+        "height": 406
+      },
+      "background": "rgb(248, 237, 239)",
+      "group": "rgb(252, 246, 247)",
+      "backdrop": "rgba(0, 0, 0, 0)",
+      "line": "#e5cdd6"
+    },
+    {
+      "width": 420,
+      "height": 640,
+      "screen": "settings",
+      "app": {
+        "left": 490,
+        "top": 130,
+        "right": 910,
+        "bottom": 770,
+        "width": 420,
+        "height": 640
+      },
+      "modal": {
+        "left": 506,
+        "top": 205,
+        "right": 894,
+        "bottom": 695,
+        "width": 388,
+        "height": 490
+      },
+      "shade": {
+        "left": 497,
+        "top": 137,
+        "right": 903,
+        "bottom": 763,
+        "width": 406,
+        "height": 626
+      },
+      "background": "rgb(248, 237, 239)",
+      "group": "rgb(252, 246, 247)",
+      "backdrop": "rgba(0, 0, 0, 0)",
+      "line": "#e5cdd6"
+    },
+    {
+      "width": 420,
+      "height": 640,
+      "screen": "playback",
+      "app": {
+        "left": 490,
+        "top": 130,
+        "right": 910,
+        "bottom": 770,
+        "width": 420,
+        "height": 640
+      },
+      "modal": {
+        "left": 506,
+        "top": 196.5,
+        "right": 894,
+        "bottom": 703.5,
+        "width": 388,
+        "height": 507
+      },
+      "shade": {
+        "left": 497,
+        "top": 137,
+        "right": 903,
+        "bottom": 763,
+        "width": 406,
+        "height": 626
+      },
+      "background": "rgb(248, 237, 239)",
+      "group": "rgb(252, 246, 247)",
+      "backdrop": "rgba(0, 0, 0, 0)",
+      "line": "#e5cdd6"
+    },
+    {
+      "width": 420,
+      "height": 640,
+      "screen": "playlist",
+      "app": {
+        "left": 490,
+        "top": 130,
+        "right": 910,
+        "bottom": 770,
+        "width": 420,
+        "height": 640
+      },
+      "modal": {
+        "left": 506,
+        "top": 309.5,
+        "right": 894,
+        "bottom": 590.5,
+        "width": 388,
+        "height": 281
+      },
+      "shade": {
+        "left": 497,
+        "top": 137,
+        "right": 903,
+        "bottom": 763,
+        "width": 406,
+        "height": 626
+      },
+      "background": "rgb(248, 237, 239)",
+      "group": "rgb(252, 246, 247)",
+      "backdrop": "rgba(0, 0, 0, 0)",
+      "line": "#e5cdd6"
+    },
+    {
+      "width": 420,
+      "height": 640,
+      "screen": "colors",
+      "app": {
+        "left": 490,
+        "top": 130,
+        "right": 910,
+        "bottom": 770,
+        "width": 420,
+        "height": 640
+      },
+      "modal": {
+        "left": 506,
+        "top": 206,
+        "right": 894,
+        "bottom": 694,
+        "width": 388,
+        "height": 488
+      },
+      "shade": {
+        "left": 497,
+        "top": 137,
+        "right": 903,
+        "bottom": 763,
+        "width": 406,
+        "height": 626
+      },
+      "background": "rgb(248, 237, 239)",
+      "group": "rgb(252, 246, 247)",
+      "backdrop": "rgba(0, 0, 0, 0)",
+      "line": "#e5cdd6"
+    },
+    {
+      "width": 1000,
+      "height": 632,
+      "screen": "settings",
+      "app": {
+        "left": 200,
+        "top": 134,
+        "right": 1200,
+        "bottom": 766,
+        "width": 1000,
+        "height": 632
+      },
+      "modal": {
+        "left": 390,
+        "top": 199,
+        "right": 1010,
+        "bottom": 701,
+        "width": 620,
+        "height": 502
+      },
+      "shade": {
+        "left": 207,
+        "top": 141,
+        "right": 1193,
+        "bottom": 759,
+        "width": 986,
+        "height": 618
+      },
+      "background": "rgb(248, 237, 239)",
+      "group": "rgb(252, 246, 247)",
+      "backdrop": "rgba(0, 0, 0, 0)",
+      "line": "#e5cdd6"
+    },
+    {
+      "width": 1000,
+      "height": 632,
+      "screen": "playback",
+      "app": {
+        "left": 200,
+        "top": 134,
+        "right": 1200,
+        "bottom": 766,
+        "width": 1000,
+        "height": 632
+      },
+      "modal": {
+        "left": 390,
+        "top": 235.5,
+        "right": 1010,
+        "bottom": 664.5,
+        "width": 620,
+        "height": 429
+      },
+      "shade": {
+        "left": 207,
+        "top": 141,
+        "right": 1193,
+        "bottom": 759,
+        "width": 986,
+        "height": 618
+      },
+      "background": "rgb(248, 237, 239)",
+      "group": "rgb(252, 246, 247)",
+      "backdrop": "rgba(0, 0, 0, 0)",
+      "line": "#e5cdd6"
+    },
+    {
+      "width": 1000,
+      "height": 632,
+      "screen": "playlist",
+      "app": {
+        "left": 200,
+        "top": 134,
+        "right": 1200,
+        "bottom": 766,
+        "width": 1000,
+        "height": 632
+      },
+      "modal": {
+        "left": 375,
+        "top": 303.5,
+        "right": 1025,
+        "bottom": 596.5,
+        "width": 650,
+        "height": 293
+      },
+      "shade": {
+        "left": 207,
+        "top": 141,
+        "right": 1193,
+        "bottom": 759,
+        "width": 986,
+        "height": 618
+      },
+      "background": "rgb(248, 237, 239)",
+      "group": "rgb(252, 246, 247)",
+      "backdrop": "rgba(0, 0, 0, 0)",
+      "line": "#e5cdd6"
+    },
+    {
+      "width": 1000,
+      "height": 632,
+      "screen": "colors",
+      "app": {
+        "left": 200,
+        "top": 134,
+        "right": 1200,
+        "bottom": 766,
+        "width": 1000,
+        "height": 632
+      },
+      "modal": {
+        "left": 390,
+        "top": 189.625,
+        "right": 1010,
+        "bottom": 710.359375,
+        "width": 620,
+        "height": 520.734375
+      },
+      "shade": {
+        "left": 207,
+        "top": 141,
+        "right": 1193,
+        "bottom": 759,
+        "width": 986,
+        "height": 618
+      },
+      "background": "rgb(248, 237, 239)",
+      "group": "rgb(252, 246, 247)",
+      "backdrop": "rgba(0, 0, 0, 0)",
+      "line": "#e5cdd6"
+    }
+  ],
+  "resizeWhileOpen": true
+}

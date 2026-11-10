@@ -204,6 +204,23 @@ test('예전에 저장된 답은 읽을 때 지우고 들은 수업 기록은 �
   assert.ok(!('answers' in read.records[0]));
 });
 
+test('같은 수업의 중단 기록은 최신 위치 하나로 합치고 완료 기록은 보존한다', () => {
+  const completed = { lesson: lesson.id, finished: true, ymd: '20261101' };
+  const latest = { lesson: lesson.id, finished: false, ymd: '20261103', resume: { from: 'b4', offset: 7 } };
+  const other = { lesson: 'other', finished: false, ymd: '20261102' };
+  const old = { records: [completed, { ...latest, ymd: '20261102', resume: { from: 'b1', offset: 1 } }, other, latest] };
+  const normalized = Lesson.normalize(old);
+  assert.deepStrictEqual(normalized.records, [completed, other, latest]);
+  assert.strictEqual(old.records.length, 4);
+  const stopped = Lesson.finishLesson(normalized, lesson, '20261104', false, 0);
+  assert.deepStrictEqual(stopped.records.slice(0, -1), [completed, other]);
+  assert.strictEqual(stopped.records.at(-1).ymd, '20261104');
+  const done = Lesson.finishLesson(stopped, lesson, '20261105', true, 0);
+  assert.deepStrictEqual(done.records.slice(0, -1), [completed, other]);
+  assert.strictEqual(done.records.at(-1).finished, true);
+  assert.strictEqual(Lesson.normalize({ records: [...old.records, done.records.at(-1)] }).records.filter(item => item.lesson === lesson.id && !item.finished).length, 0);
+});
+
 test('달린 거리를 아는 말로 바꾼다', () => {
   assert.strictEqual(Lesson.mileageLine(412), '서울에서 부산까지 배움으로 이었어요');
   assert.strictEqual(Lesson.mileageLine(10), '');

@@ -62,7 +62,7 @@ function toggleSeries() {
 function lessonProgress() {
   const stored = readStored(LESSON_KEY);
   const progress = Lesson.normalize(stored);
-  if (stored && Object.hasOwn(stored, 'ieum')) writeStored(LESSON_KEY, progress);
+  if (stored && (Object.hasOwn(stored, 'ieum') || stored.records?.length !== progress.records.length)) writeStored(LESSON_KEY, progress);
   return progress;
 }
 

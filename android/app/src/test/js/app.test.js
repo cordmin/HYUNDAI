@@ -800,6 +800,23 @@ test('배움 기록은 날짜를 제목 위에 월·일로 표시하고 완료 �
   page(`goHome(); localStorage.values.clear();`);
 });
 
+test('중복 중단 기록을 읽을 때 저장소도 정리하고 최신 기록 버튼이 그 위치를 이어 듣는다', () => {
+  page(`goHome(); localStorage.values.clear(); var latestRecordPoint = { lesson:'prime', from:'b4', heard:['i1','i2'], ymd:toYmd(new Date()), offset:7 };
+    writeStored(LESSON_KEY, { records: [
+      {lesson:'prime',title:'옛 소수',finished:false,ymd:'20261101',resume:{...latestRecordPoint,from:'b1',offset:1}},
+      {lesson:'ai',title:'AI',finished:false,ymd:'20261102'},
+      {lesson:'prime',title:'최신 소수',finished:false,ymd:latestRecordPoint.ymd,resume:latestRecordPoint}
+    ] }); openPearlTab('records');`);
+  assert.ok(!stageHtml().includes('옛 소수'));
+  assert.match(stageHtml(), /최신 소수/);
+  assert.strictEqual(page(`readStored(LESSON_KEY).records.length`), 2);
+  page(`resumeRecord(1);`);
+  assert.strictEqual(page('lessonRun.lesson.id'), 'prime');
+  assert.strictEqual(page('lessonRun.pieces[0].id'), 'b4');
+  assert.strictEqual(page('lessonRun.positionSeconds'), 7);
+  page(`goHome(); localStorage.values.clear();`);
+});
+
 test('배움 기록의 마저 듣기는 다른 수업을 들은 뒤에도 그 기록의 구간과 초부터 재생한다', () => {
   page(`goHome(); localStorage.values.clear(); setEta(null); lessonMinutes = 15; startLesson('prime');
     lessonRun.wait.endsAt = Date.now() + (lessonRun.wait.endPosition - 2.5) * 1000;

@@ -1,0 +1,37 @@
+/* Parked-only playlist editing uses the same readable glass panel as other settings. */
+(()=>{
+  'use strict';
+  const icons={up:'<path d="m6 15 6-6 6 6"/>',down:'<path d="m6 9 6 6 6-6"/>',remove:'<path d="m6 6 12 12M18 6 6 18"/>'};
+  const icon=name=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]}</svg>`;
+  const lesson=id=>DAIT_LESSONS.find(item=>item.id===id);
+  function edit(){cancelNextLessonCountdown();const saved=persistPlaylist();renderStage();window.openPlaylist();return saved}
+  window.restoreQueueAddFocus=(id,fromStop)=>document.querySelector(`[data-queue-add="${id}"][data-from-stop="${!!fromStop}"]`)?.focus({preventScroll:true});
+  window.quickAddLesson=(id,fromStop=false)=>{
+    const focused=document.activeElement?.matches('[data-queue-add]');
+    if(!lesson(id)||!addLessonToQueue(id,'last',fromStop))return;
+    if(focused)window.restoreQueueAddFocus(id,fromStop);
+    const button=document.querySelector(`[data-queue-add="${id}"][data-from-stop="${!!fromStop}"]`);
+    if(button){button.classList.add('just-added');setTimeout(()=>button.classList.remove('just-added'),750)}
+  };
+  window.showSeriesOrderPrompt=(id,options={})=>{
+    const prior=lessonQueue.prior(id,lessonProgress().records),before=lesson(prior);if(!before)return;
+    window.openDaitPanel('이전 수업부터 들어볼까요?',`<p class="queue-order-message">${escapeHtml(before.title)}부터 들으면 흐름을 따라가기 좋아요. 지금 고른 수업부터 들어도 괜찮아요.</p><div class="pearl-settings-menu"><button data-series-start="previous"><strong>이전 수업 먼저 듣기</strong><small>${escapeHtml(before.title)}</small></button><button data-series-start="selected"><strong>이 수업 바로 듣기</strong><small>${escapeHtml(lesson(id).title)}</small></button></div>`,'queue-order-dialog',e=>{
+      const choice=e.target.closest('[data-series-start]')?.dataset.seriesStart;if(!choice||isDrivingMode)return;
+      window.closeDaitPanel();if(choice==='previous')startLesson(prior,false,null,{skipSeriesPrompt:true});else startLesson(id,false,null,{...options,skipSeriesPrompt:true});
+    });
+  };
+  window.refreshPlaylistPanel=()=>{if(document.querySelector('.playlist-dialog[open]'))window.openPlaylist()};
+  window.openPlaylist=()=>{
+    const items=lessonQueue.items;
+    const now=hasActiveLesson()?`<div class="queue-now"><span>지금 듣는 수업</span><strong>${escapeHtml(lessonRun.lesson.title)}</strong></div>`:'';
+    const queue=items.length?`<ol class="queue-items">${items.map((item,index)=>`<li><button class="queue-title" data-queue-play="${item.key}"><span>${index+1}</span><strong>${escapeHtml(lesson(item.lesson).title)}</strong></button><div class="queue-actions"><button data-queue-move="${item.key}" data-delta="-1" aria-label="${escapeHtml(lesson(item.lesson).title)} 위로"${index===0?' disabled':''}>${icon('up')}</button><button data-queue-move="${item.key}" data-delta="1" aria-label="${escapeHtml(lesson(item.lesson).title)} 아래로"${index===items.length-1?' disabled':''}>${icon('down')}</button><button data-queue-remove="${item.key}" aria-label="${escapeHtml(lesson(item.lesson).title)} 재생목록에서 삭제">${icon('remove')}</button></div></li>`).join('')}</ol>`:'<p class="queue-empty">수업 옆 +를 누르면 맨 뒤에 추가돼요.</p>';
+    const panel=window.openDaitPanel('재생목록',`${now}<p class="queue-summary">다음 재생${items.length?' · '+items.length+'개':''}</p><div class="queue-scroll">${queue}</div>`,'playlist-dialog',e=>{
+      if(isDrivingMode)return;
+      const b=e.target.closest('button');if(!b)return;
+      if(b.dataset.queueRemove){lessonQueue.remove(Number(b.dataset.queueRemove));edit();}
+      else if(b.dataset.queueMove){lessonQueue.move(Number(b.dataset.queueMove),Number(b.dataset.delta));edit();}
+      else if(b.dataset.queuePlay){const key=Number(b.dataset.queuePlay);window.closeDaitPanel();playQueuedLesson(key);}
+    });
+    return panel;
+  };
+})();

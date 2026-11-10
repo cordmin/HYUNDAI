@@ -1,0 +1,52 @@
+{
+  "cases": [
+    {
+      "size": {
+        "width": 665,
+        "height": 420
+      },
+      "mode": "light",
+      "views": [
+        {
+          "name": "list",
+          "labels": 9,
+          "minContrast": 4.96
+        },
+        {
+          "name": "add-last",
+          "labels": 4,
+          "minContrast": 16.2
+        },
+        {
+          "name": "add-next",
+          "labels": 4,
+          "minContrast": 16.2
+        },
+        {
+          "name": "queue",
+          "labels": 7,
+          "minContrast": 5.79
+        },
+        {
+          "name": "series",
+          "labels": 8,
+          "minContrast": 5.79
+        },
+        {
+          "name": "order-prompt",
+          "labels": 4,
+          "minContrast": 16.2
+        },
+        {
+          "name": "playing-queue",
+          "labels": 8,
+          "minContrast": 5.79
+        }
+      ],
+      "realClipAutoAdvance": true,
+      "reloadPersistence": true,
+      "drivingBlocked": true
+    }
+  ],
+  "failures": []
+}

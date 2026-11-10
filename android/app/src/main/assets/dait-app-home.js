@@ -3,10 +3,10 @@
 // DAIT 공식 확정 캘리그래피 로고 (시안 2 커넥티드 리본 + i Dot)
 const DAIT_LOGO_PATH = 'M10 26 C12 10, 16 6, 22 6 C28 6, 32 12, 30 20 C28 28, 20 28, 16 28 C26 28, 38 28, 42 20 C44 14, 48 14, 50 18 C52 24, 48 28, 54 28 C60 28, 62 18, 62 14 C62 26, 68 28, 72 28 C76 28, 80 18, 80 10 M74 16 h12';
 
-// 첫 화면 로고: 「출발하면 듣기」를 예약해 두면 i 점이 숨 쉬듯 깜빡인다.
+// 첫 화면의 Dait 필기체 로고.
 function getDaitLogoHtml() {
   return `
-    <div class="dait-brand-badge${armed ? ' waiting' : ''}" onclick="event.stopPropagation(); playSplashIntro();">
+    <div class="dait-brand-badge" onclick="event.stopPropagation(); playSplashIntro();">
       <svg width="94" height="28" viewBox="0 0 100 32" fill="none">
         <path d="${DAIT_LOGO_PATH}"
               stroke="url(#flowGradBadge)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
@@ -30,6 +30,7 @@ function renderPearlNav() {
   document.getElementById('pearlNav').innerHTML = `
     <button class="pearl-brand" aria-label="다잇 첫 화면" onclick="openPearlTab('now')">${getDaitLogoHtml()}</button>
     <nav>${[['now','추천'],['lessons','수업'],['records','기록']].map(([id,label]) => `<button aria-current="${active === id ? 'page' : 'false'}" onclick="openPearlTab('${id}')">${label}</button>`).join('')}</nav>
+    ${hasActiveLesson() && !lessonView ? `<button class="icon-btn" aria-label="재생목록" onclick="openPlaylist()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M4 6h16M4 11h16M4 16h9M17 15l4 3-4 3z"/></svg></button>` : ''}
     <button class="icon-btn pearl-theme-btn" aria-label="어두운 화면" aria-pressed="${dark}" onclick="togglePearlTheme()"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 15.5A7.5 7.5 0 1 1 8.5 6a6 6 0 0 0 9.5 9.5z"/><path d="M17 3.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7zM21 8.5l.45 1.05 1.05.45-1.05.45L21 11.5l-.45-1.05L19.5 10l1.05-.45z"/></svg></button>
     <button class="icon-btn" aria-label="설정" onclick="openPearlSettings()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="17" r="2" fill="currentColor"/></svg></button>`;
   appEvents.emit('navigationRendered');
@@ -72,8 +73,6 @@ function homeLesson() {
   const eta = remainMinutes();
   if (eta !== null) lessonMinutes = Lesson.minutesFor(eta);
   else if (!Lesson.TIME_CHOICES.includes(lessonMinutes)) lessonMinutes = Lesson.DEFAULT_MINUTES;
-  const reserved = armed && armed.lesson ? DAIT_LESSONS.find(item => item.id === armed.lesson) : null;
-  if (reserved) return { reserved, lesson: reserved };
   const records = lessonProgress().records;
   const rules = lessonRules();
   const fitting = Lesson.recommend(DAIT_LESSONS, lessonMinutes, records, rules);

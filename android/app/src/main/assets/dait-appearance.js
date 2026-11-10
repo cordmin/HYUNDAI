@@ -28,8 +28,8 @@
   let saved = { ...profiles[profiles.mode] };
   let active = { ...saved }, draft = null, dialog = null, focusBefore = null, frame = 0, noticeTimer;
   let backdropGlow = [0, 0, 0, 0], palette = DaitPalette.derive(active, profiles.mode);
-  const PANES = '.home-card,.dialogue-card,.settings-card,.pearl-record-row,.pearl-badge,.pearl-page-title,.lesson-row,.pearl-nav nav,.pearl-nav .icon-btn,.pearl-record-tabs button,.lesson-dock,.pearl-settings-dialog,.pearl-settings-menu button,.pearl-pb-choices button';
-  const TEXT = '.pearl-badge span,.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-nav nav button,.pearl-nav .icon-btn,.pearl-record-tabs button,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.choice-chip,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times span,.pearl-seek,.lesson-dock-copy strong,.lesson-dock-copy>span,.pearl-settings-dialog h2,.pearl-settings-dialog h3,.pearl-settings-dialog strong,.pearl-settings-dialog small,.pearl-settings-dialog p,.pearl-settings-dialog label,.pearl-settings-dialog input:not([type=range]),.pearl-settings-dialog select,.pearl-settings-dialog button:not(.primary-btn):not(.card-btn),.pearl-settings-switch span,.pearl-volume-panel output';
+  const PANES = '.lesson-up-next,.pearl-notice,.home-card,.dialogue-card,.settings-card,.pearl-record-row,.pearl-badge,.pearl-page-title,.lesson-row,.pearl-nav nav,.pearl-nav .icon-btn,.pearl-record-tabs button,.lesson-dock,.pearl-settings-dialog,.pearl-settings-menu button,.pearl-pb-choices button';
+  const TEXT = '.lesson-end h1,.lesson-end header p,.lesson-up-next h2,.lesson-up-next p,.lesson-next-top>span,.next-autoplay span,.lesson-end-note,.lesson-end-finish,.notice-copy strong,.notice-copy span,.pearl-notice>button,.pearl-badge span,.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-nav nav button,.pearl-nav .icon-btn,.pearl-record-tabs button,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.choice-chip>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times span,.pearl-seek,.lesson-dock-copy strong,.lesson-dock-copy>span,.pearl-settings-dialog h2,.pearl-settings-dialog h3,.pearl-settings-dialog strong,.pearl-settings-dialog small,.pearl-settings-dialog p,.pearl-settings-dialog label,.pearl-settings-dialog input:not([type=range]),.pearl-settings-dialog select,.pearl-settings-dialog button:not(.primary-btn):not(.card-btn),.pearl-settings-switch span,.pearl-volume-panel output';
 
   function backgroundAt(x, y) {
     const rect = host.getBoundingClientRect(), dx = Math.sin(2 * Math.PI / 3), dy = -Math.cos(2 * Math.PI / 3);
@@ -178,11 +178,53 @@
     host.dataset.colorMode = mode;
     queueRefresh();
   }
-  function notice(message) {
+  let noticeGeneration=0, noticeMotion=null, noticeExitTimer;
+  const quietMotion=()=>isDrivingMode||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  function dismissNotice(immediate=false){
+    const generation=++noticeGeneration,node=document.getElementById('pearlNotice');
+    clearTimeout(noticeTimer);clearTimeout(noticeExitTimer);noticeMotion?.cancel();
+    if(!node||node.hidden)return;
+    node.dataset.state='leaving';node.setAttribute('aria-hidden','true');
+    const hide=()=>{if(generation===noticeGeneration)node.hidden=true};
+    if(immediate||quietMotion()||!node.animate){hide();return}
+    noticeMotion=node.animate([{opacity:1},{opacity:0}],{duration:320,easing:'ease-out',fill:'forwards'});
+    noticeExitTimer=setTimeout(hide,320);
+  }
+  function notice(message, action = null) {
     let node = document.getElementById('pearlNotice');
-    if (!node) { node = document.createElement('div'); node.id = 'pearlNotice'; node.className = 'pearl-notice'; node.setAttribute('role', 'status'); host.append(node); }
-    node.textContent = message; node.hidden = false;
-    clearTimeout(noticeTimer); noticeTimer = setTimeout(() => { node.hidden = true; }, 3500);
+    if (!node) { node = document.createElement('div'); node.id = 'pearlNotice'; node.className = 'pearl-notice'; node.setAttribute('role', 'status'); node.setAttribute('aria-atomic','true'); host.append(node); }
+    const replacing=!node.hidden&&node.dataset.state==='visible',generation=++noticeGeneration;
+    clearTimeout(noticeTimer);clearTimeout(noticeExitTimer);noticeMotion?.cancel();
+    node.replaceChildren();node.hidden=false;node.dataset.state='visible';node.removeAttribute('aria-hidden');
+    const actionable=!!action&&typeof action.onClick==='function'&&!isDrivingMode;
+    node.classList.toggle('has-action',actionable);
+    if(actionable){const icon=document.createElement('span');icon.className='notice-check';icon.setAttribute('aria-hidden','true');icon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12 4 4 8-8"/></svg>';node.append(icon)}
+    const copy=document.createElement('div');copy.className='notice-copy';
+    if(actionable&&action.title){const title=document.createElement('strong');title.textContent=action.title;copy.append(title)}
+    const text=document.createElement('span');text.textContent=message+(actionable&&Number.isInteger(action.count)?' · '+action.count+'개':'');copy.append(text);node.append(copy);
+    if(actionable){
+      const button=document.createElement('button');button.type='button';button.textContent=action.label;
+      button.setAttribute('aria-label',action.ariaLabel||action.label);
+      button.addEventListener('click',()=>{if(generation!==noticeGeneration||node.hidden||node.dataset.state!=='visible'||isDrivingMode)return;const focused=document.activeElement===button;dismissNotice(true);action.onClick();if(focused)action.restoreFocus?.()});
+      node.append(button);
+    }
+    if(actionable){const add=host.querySelector('[data-queue-add]');if(add){node.style.right=Math.max(12,host.getBoundingClientRect().right-add.getBoundingClientRect().left+8)+'px'}else node.style.right='12px'}else node.style.right='12px';
+    if(!quietMotion()&&node.animate){
+      // Repeated additions update the receipt in place instead of stacking or re-opening a panel.
+      const moving=replacing?copy:node;
+      noticeMotion=moving.animate(replacing?[{opacity:.35},{opacity:1}]:[{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}],{duration:replacing?130:210,easing:'cubic-bezier(.16,1,.3,1)'});
+    }
+    let remaining=actionable?4500:2800,started=performance.now();
+    const pause=()=>{if(!noticeTimer)return;clearTimeout(noticeTimer);noticeTimer=null;remaining=Math.max(0,remaining-(performance.now()-started));};
+    const resume=()=>{
+      if(generation!==noticeGeneration||node.hidden||node.dataset.state!=='visible'||noticeTimer)return;
+      if(node.contains(document.activeElement)&&document.activeElement.matches(':focus-visible'))return;
+      started=performance.now();noticeTimer=setTimeout(()=>{if(generation===noticeGeneration)dismissNotice()},remaining);
+    };
+    noticeTimer=null;node.onpointerenter=null;node.onpointerleave=null;
+    const actionButton=node.querySelector('button');
+    if(actionButton){actionButton.onfocus=()=>{if(actionButton.matches(':focus-visible'))pause()};actionButton.onblur=()=>queueMicrotask(resume)}
+    resume();queueRefresh();
   }
   function close() {
     if (!dialog) return;
@@ -202,9 +244,10 @@
       if (action === 'close') close();
       else if (action === 'colors') openColors();
       else if (action === 'playback') openPlayback();
+      else if (action === 'playlist') { close(); window.openPlaylist(); }
       else if (action === 'settings') window.openPearlSettings();
-      else if (action === 'restart') { close(); restartLesson(); }
       else if (action === 'series') { if (toggleSeries()) window.openPearlSettings(); }
+      else if (action === 'series-cues') { lessonQueue.cues=!lessonQueue.cues;persistPlaylist();window.openPearlSettings(); }
       if (e.target === dialog) { const r = dialog.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) close(); }
     });
     dialog.showModal(); queueRefresh();
@@ -216,24 +259,20 @@
     const toggle = (action, label, on) => `<button class="pearl-settings-switch" data-appearance-action="${action}" role="switch" aria-checked="${on}"><strong>${label}</strong><span aria-hidden="true">${on ? '켜짐' : '꺼짐'}</span></button>`;
     shell('설정', `<div class="pearl-settings-menu">
       ${row('playback', '재생 설정', `뒤로 ${lessonIntervalText(prefs.back)} · 앞으로 ${lessonIntervalText(prefs.forward)} · ${prefs.rate.toFixed(1)}배속`)}
+      ${row('playlist', '재생목록', '다음 수업 · 순서 바꾸기')}
       ${row('colors', '앱 색상', '라이트·다크 모드별 배경')}
-      ${toggle('series', '시리즈 차례대로 듣기', seriesOn())}
-      ${currentMode === 'lesson' && lessonRun && !lessonRun.done && !isLessonResting() ? row('restart', '처음부터 듣기', '지금 수업을 처음부터') : ''}
+      ${toggle('series', '시리즈 순서대로 듣기', seriesOn())}
+      ${toggle('series-cues', '시리즈 연결 안내', lessonQueue.cues)}
     </div>`);
   };
-  window.openLessonOptions = (id, fromStop = false) => {
-    if (!vehiclePolicy.allows('settings')) { notice('주행중엔 설정을 바꿀 수 없어요.'); return; }
-    const lesson = DAIT_LESSONS.find(item => item.id === id);
-    if (!lesson) return;
-    const reserved = armed?.lesson === id && !!armed.fromStop === !!fromStop;
-    shell('수업 옵션', `<p class="pearl-option-title">${escapeHtml(lesson.title)}</p><div class="pearl-settings-menu"><button data-lesson-reservation><strong>${reserved ? '예약 취소' : '출발하면 듣기'}</strong></button></div>`);
-    dialog.classList.add('pearl-lesson-options');
-    dialog.addEventListener('click', e => {
-      if (!e.target.closest('[data-lesson-reservation]') || isDrivingMode) return;
-      close();
-      toggleLessonArm(id, fromStop);
-    });
+  window.playlistNotice = notice;
+  window.openDaitPanel = (title, body, className, handler) => {
+    if (!vehiclePolicy.allows('settings')) { notice('주행중엔 재생목록을 바꿀 수 없어요.'); return null; }
+    shell(title,body); if(className)dialog.classList.add(className);
+    if(handler)dialog.addEventListener('click',handler);
+    return dialog;
   };
+  window.closeDaitPanel = close;
   function openPlayback() {
     if (!vehiclePolicy.allows('settings')) { notice('주행중엔 설정을 바꿀 수 없어요.'); return; }
     let prefs = { ...lessonPlaybackPrefs }, editing = null;
@@ -357,7 +396,7 @@
     document.querySelector('.pearl-theme-btn')?.setAttribute('aria-pressed', String(profiles.mode === 'dark'));
   };
   appEvents.on('rendered', queueRefresh);
-  appEvents.on('vehicleChanged', ({ driving }) => { if (driving) close(); queueRefresh(); });
+  appEvents.on('vehicleChanged', ({ driving }) => { if (driving) { close(); dismissNotice(); } queueRefresh(); });
   appEvents.on('closeOverlays', close);
   appEvents.on('back', () => { if (!dialog) return false; close(); return true; });
   window.addEventListener('resize', queueRefresh);

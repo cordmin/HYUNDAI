@@ -1,0 +1,14 @@
+{
+  "duration": 28.32,
+  "sample_rate": 24000,
+  "peak": 24017,
+  "rms": 2835.77,
+  "sha256": "e966d6dc37ab4377e77cf6ed93583c353856a72a9abb913f155209ae0888bf15",
+  "id": "cicada_c2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘 수업은 여기까지입니다. 우리나라에서도 여름이면 매미가 울지요. 다음에 매미 소리를 들으시면, 땅속에서 십삼 년, 십칠 년을 지내는 북아메리카의 매미와 오늘의 최소공배수 이야기를 한 번 떠올려 보세요. 주기가 다른 둘이 만나는 해는 최소공배수이고, 소수 주기는 다른 주기와 잘 만나지 않는다는 것. 그 한 가지면 충분합니다. 안전하게 도착하세요.",
+  "fingerprint": "973c6bb3a10ac94fdccbb3af18a227b3d7cd7575babcc55b7078c01e590672a4",
+  "generated_at": "2026-11-10T14:11:44+0900",
+  "review": "generated_not_listening_reviewed"
+}

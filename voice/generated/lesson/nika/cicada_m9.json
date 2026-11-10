@@ -1,0 +1,14 @@
+{
+  "duration": 20.28,
+  "sample_rate": 24000,
+  "peak": 21893,
+  "rms": 2950.5,
+  "sha256": "ee45df7a836a53efd2c6b64c4fdf7eef34a3f7a8399ef5486e72cf6d757a08e7",
+  "id": "cicada_m9",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "최소공배수는 생활에도 있습니다. 십이 분마다 오는 버스와 십팔 분마다 오는 버스가 함께 떠났다면, 다시 함께 오는 것은 삼십육 분 뒤입니다. 배차가 십삼 분과 십칠 분이면 이백이십일 분 뒤, 세 시간 반이 넘게 지나서야 함께 옵니다.",
+  "fingerprint": "39f665a75efb71ae2596b06ac83e615cd5059a92dad419bb623aa36fdd32d00c",
+  "generated_at": "2026-11-10T14:13:13+0900",
+  "review": "generated_not_listening_reviewed"
+}

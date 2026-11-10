@@ -1,0 +1,14 @@
+{
+  "duration": 36.0,
+  "sample_rate": 24000,
+  "peak": 23027,
+  "rms": 2744.18,
+  "sha256": "582945d7f3493e1e84fb933c99ee47958ce3f42edf90c5d29a0eb716e65d1374",
+  "id": "cicada_i1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "안녕하세요, 다잇입니다. 오늘은 수학 시간입니다. 북아메리카 동부에는 땅속에서 오랜 세월을 보내다가 정해진 해에 한꺼번에 땅 위로 나오는 매미가 있습니다. 어떤 무리는 십삼 년마다, 어떤 무리는 십칠 년마다 나옵니다. 십삼과 십칠, 둘 다 소수입니다. 오늘의 질문은 이것입니다. 매미는 왜 하필 소수 해마다 나올까요? 운전에 집중하시면서 편하게 들어 주세요. 계산은 하지 않으셔도 괜찮습니다.",
+  "fingerprint": "0634dce0465a574bdd8cccd1c453c193a6aadb82fc51b04a96e9a7d266e8ad74",
+  "generated_at": "2026-11-10T14:04:32+0900",
+  "review": "generated_not_listening_reviewed"
+}

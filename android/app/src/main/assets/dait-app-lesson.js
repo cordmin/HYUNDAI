@@ -130,11 +130,6 @@ function moveLessonTo(seconds) {
   if (paused) pauseLesson();
 }
 
-function seekLessonSection(index) {
-  const section = lessonRun && lessonTimeline(lessonRun).sections.find(item => item.index === index);
-  if (section) seekLessonAt(section.start);
-}
-
 function isLessonResting() {
   return !!lessonRun && !lessonRun.done && Lesson.isBreak(lessonRun.pieces[lessonRun.index]);
 }

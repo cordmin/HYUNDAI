@@ -1,0 +1,14 @@
+{
+  "duration": 26.24,
+  "sample_rate": 24000,
+  "peak": 22112,
+  "rms": 3077.73,
+  "sha256": "42b1435f7b3af2fa8e84e71f8e6c09fae83113a6b85adb7806c7021eda5bfdd5",
+  "id": "cicada_q1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "여기서 잠깐 생각해 볼 것이 있습니다. 대답은 하지 않으셔도 괜찮습니다. 매미를 잡아먹는 동물 가운데 이 년, 삼 년, 사 년, 육 년마다 수가 크게 늘어나는 동물이 있다고 해 보겠습니다. 매미 주기가 십이 년이라면, 매미가 나오는 해에 이 네 동물 가운데 몇이나 함께 늘어나 있을까요? 십이의 약수를 떠올려 보세요. 잠시 뒤에 말씀드릴게요.",
+  "fingerprint": "c0e38f120ce440d303b31ca00f6f22013229189a39b38acf02daff3cfac61979",
+  "generated_at": "2026-11-10T14:10:18+0900",
+  "review": "generated_not_listening_reviewed"
+}

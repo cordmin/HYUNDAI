@@ -1,0 +1,14 @@
+{
+  "duration": 20.92,
+  "sample_rate": 24000,
+  "peak": 23782,
+  "rms": 2613.83,
+  "sha256": "2a939b61885ae1e188e172fabefb84371d6ee8cbdbd7ee0f80bc253f8bdf018c",
+  "id": "dongbaek_c2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "차에서 내린 뒤 편한 때에, 점순이가 왜 닭싸움을 붙였는지 함께 탄 사람이나 가까운 사람과 한 문장으로 이야기해 보셔도 좋겠습니다. 좋아하는 마음과 괴롭히는 행동을 구별해 보시면 더 좋습니다. 오늘 수업은 여기까지입니다. 안전하게 도착하세요.",
+  "fingerprint": "49ccc5c3de14616f9f760a6944b9ab1e580faf26d7e75ad3f8fd52606505ee5c",
+  "generated_at": "2026-11-10T14:03:42+0900",
+  "review": "generated_not_listening_reviewed"
+}

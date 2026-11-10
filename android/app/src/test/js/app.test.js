@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const { appScripts, appSource } = require('./app-files.js');
 const Lesson = require('../../main/assets/dait-lesson.js');
 // 어떤 수업이 몇 교시에 오는지는 수업 길이에 따라 바뀐다. 시험은 같은 계획 함수의 답과 화면이 맞는지 본다.
-const plan = (minutes, first) => Lesson.periods(Lesson.planTrip(Lesson.tripOrder(DAIT_LESSONS, [], first), minutes));
+const plan = (minutes, first) => Lesson.periods(Lesson.planTrip(Lesson.tripOrder(DAIT_LESSONS, [], first, { series: true }), minutes, { series: true }));
 const APP_LESSONS = require('../../main/assets/dait-lessons.js');
 const STARRY_LESSON = JSON.parse(JSON.stringify(APP_LESSONS.find(item => item.id === 'starry')));
 const DAIT_LESSONS = APP_LESSONS.filter(item => item.id !== 'rhythm');
@@ -48,6 +48,9 @@ test('화면 코드가 끝까지 실행되고 시작 화면을 그린다', () =>
   vm.createContext(sandbox);
   for (const { name, code } of appScripts()) vm.runInContext(code, sandbox, { filename: name });
   page = source => vm.runInContext(source, sandbox);
+  // 시험을 빨리 진행하는 도우미는 앱에 싣지 않는다. 실제 UI의 이동 경로는 seekLessonAt이다.
+  page(`function skipLessonPiece() { if (currentMode === 'lesson' && lessonRun && !lessonRun.done) nextLessonPiece(true); }
+    function seekLessonSection(index) { const section = lessonRun && lessonTimeline(lessonRun).sections.find(item => item.index === index); if (section) seekLessonAt(section.start); }`);
   // 남은 시간은 내비가 알려 준 값으로만 정해진다. 시험에서는 내비 값을 꾸며 넣는다.
   page(`function setEta(minutes) { naviInfo = minutes === null ? null : { name: '', remainTime: minutes * 60, remainDistance: NaN, at: Date.now() }; }`);
   assert.ok(stage.innerHTML.includes('question-title'));

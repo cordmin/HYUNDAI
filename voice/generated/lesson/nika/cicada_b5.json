@@ -1,0 +1,14 @@
+{
+  "duration": 38.64,
+  "sample_rate": 24000,
+  "peak": 24579,
+  "rms": 3153.76,
+  "sha256": "0fe363f1cc62a1ff410555bd145d5bec3320e87c3d867b2f9b3b0821cb06c988",
+  "id": "cicada_b5",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "왜 이런 차이가 날까요? 두 주기가 만나는 간격은 최소공배수이고, 공통인 소인수가 없을수록 최소공배수는 커집니다. 소수는 일과 자기 자신 말고는 약수가 없습니다. 그래서 자기보다 짧은 어떤 주기와도 공통인 소인수가 없고, 만나는 간격은 두 주기를 곱한 만큼으로 커집니다. 십이처럼 약수가 많은 수는 그 반대입니다. 이, 삼, 사, 육 어느 주기와도 잘 맞물립니다. 수의 성질이 그대로 만나는 횟수의 차이가 됩니다.",
+  "fingerprint": "002f0621aacce359ca6a77822af54debb974c32582bf9a7bcb0c448d8afe6726",
+  "generated_at": "2026-11-10T14:10:41+0900",
+  "review": "generated_not_listening_reviewed"
+}

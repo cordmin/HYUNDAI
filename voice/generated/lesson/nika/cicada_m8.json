@@ -1,0 +1,14 @@
+{
+  "duration": 27.24,
+  "sample_rate": 24000,
+  "peak": 27140,
+  "rms": 2446.28,
+  "sha256": "dbbb5f0c7882a68ba9f5c91d7b452718493e6290229f41a3d5768c3d37512a81",
+  "id": "cicada_m8",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "다만 계산이 맞는다고 해서 매미가 바로 그 까닭으로 소수 주기를 갖게 되었다고 단정할 수는 없습니다. 과학자들은 천적과 덜 만난다는 설명 말고도, 주기가 다른 무리끼리 섞여 주기가 흐트러지는 일을 피한다는 설명을 내놓았습니다. 두 설명 모두 아직 따지는 중입니다. 계산이 맞는 것과 자연에서 실제로 그렇게 된 까닭은 따로 확인해야 합니다.",
+  "fingerprint": "634a912fad0f21a5a6b165c7f0a0731ac8a9f825d22ca3efa792e9c19b7ecbdb",
+  "generated_at": "2026-11-10T14:13:06+0900",
+  "review": "generated_not_listening_reviewed"
+}

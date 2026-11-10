@@ -1,0 +1,14 @@
+{
+  "duration": 31.12,
+  "sample_rate": 24000,
+  "peak": 23908,
+  "rms": 3092.6,
+  "sha256": "4bbe610f3a7f97b3387cddc133559ae5d8dd023f1057713f7229ff2602a8e9ae",
+  "id": "cicada_m2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이 매미들을 주기매미라고 부릅니다. 애벌레는 땅속에서 나무뿌리의 즙을 빨며 십삼 년이나 십칠 년을 지내고, 정해진 해의 늦봄에 같은 무리가 한꺼번에 올라옵니다. 새를 비롯한 여러 동물이 매미를 잡아먹지만, 엄청난 수가 한꺼번에 나오면 다 먹지 못해 살아남는 매미가 많아집니다. 그래서 다 함께 같은 해에 나오는 것, 곧 주기를 정확히 지키는 것이 중요합니다.",
+  "fingerprint": "d94b1cbbf78fc1c20f715ef75eb24b32e2a43a56448bbd240925dfc93306c1f0",
+  "generated_at": "2026-11-10T14:12:10+0900",
+  "review": "generated_not_listening_reviewed"
+}

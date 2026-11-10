@@ -106,11 +106,6 @@ function isLessonDone() {
   return currentMode === 'lesson' && !!lessonRun && lessonRun.done;
 }
 
-// 지금 조각을 건너뛴다.
-function skipLessonPiece() {
-  if (currentMode === 'lesson' && lessonRun && !lessonRun.done) nextLessonPiece(true);
-}
-
 function remainMinutes() {
   return naviRemainMinutes();
 }

@@ -2,7 +2,7 @@
 
 python tools/generate-lesson-voices.py ai
 Uses the studio's key lookup, request limits, cache, lock and take archive.
-Listening review remains pending. Only current, validated takes are exported.
+Only current, technically validated takes are exported.
 """
 import argparse
 import csv

@@ -1,0 +1,14 @@
+{
+  "duration": 35.44,
+  "sample_rate": 24000,
+  "peak": 26729,
+  "rms": 2923.67,
+  "sha256": "71672ed3643c88dcb3293351a56e5777ce9d58fb7189891f5ca3c3d106b26a3b",
+  "id": "cicada_m3",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "주기가 다른 둘이 같은 해에 만나려면 그해가 두 주기의 공배수여야 합니다. 그 가운데 가장 작은 것이 최소공배수입니다. 십이는 이 곱하기 이 곱하기 삼, 십팔은 이 곱하기 삼 곱하기 삼입니다. 두 수의 소인수를 빠짐없이 모으되 겹치는 것은 한 번만 세면 이, 이, 삼, 삼이 남고, 곱하면 삼십육입니다. 겹치는 소인수가 많을수록 최소공배수는 작아지고, 두 주기는 자주 만납니다.",
+  "fingerprint": "1107f6f789aa93dfc17e95ccb02ba42d3178f0da8418ff0e52095f80ddf3d381",
+  "generated_at": "2026-11-10T14:12:21+0900",
+  "review": "generated_not_listening_reviewed"
+}

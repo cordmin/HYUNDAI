@@ -1,0 +1,12 @@
+{
+  "lesson": "cicada",
+  "clip": "file:///D:/6.%20%EA%B0%81%EC%A2%85%20%EC%9E%90%EB%A3%8C/%EC%BD%94%EB%94%A9/%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8%20%EA%B3%B5%EB%AA%A8%EC%A0%84/android/app/src/main/assets/voices/lesson/cicada_m1.m4a",
+  "checks": [
+    "actual audio play",
+    "pause",
+    "resume",
+    "seek 10 seconds",
+    "driving blocks seek",
+    "resume record saved"
+  ]
+}

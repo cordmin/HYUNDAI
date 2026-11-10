@@ -1,0 +1,14 @@
+{
+  "duration": 26.0,
+  "sample_rate": 24000,
+  "peak": 23753,
+  "rms": 3032.58,
+  "sha256": "b964b45ba2717f3470f08bfbb958447c582c02ca5d7fd83d0e948bd57d46ed78",
+  "id": "dongbaek_m11",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "닭싸움에는 서툰 호감과 서운함이 얽혔다고 읽을 수 있습니다. 소년의 집안 형편과 두려움도 기억해 주세요. 호감이 괴롭힘을 정당화하지는 않습니다. 내린 뒤, 닭싸움의 까닭과 근거 장면 하나를 함께 탄 사람이나 가까운 사람에게 한 문장으로 들려주세요. 안전하게 도착하세요.",
+  "fingerprint": "7334244aae51862ef9bbd1a335f9dc3786c65e1bb96507d7cffc0892879992df",
+  "generated_at": "2026-11-10T14:03:51+0900",
+  "review": "generated_not_listening_reviewed"
+}

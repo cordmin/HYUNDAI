@@ -1,0 +1,14 @@
+{
+  "duration": 39.36,
+  "sample_rate": 24000,
+  "peak": 25075,
+  "rms": 2682.95,
+  "sha256": "b385c3b428ea316294a5ef35a437468d4f48ea97d8b8ebdaa64cd3d907d30d64",
+  "id": "cicada_b6",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이번에는 매미끼리의 만남입니다. 십삼 년 무리와 십칠 년 무리가 같은 해에 다시 나오려면 몇 년이 걸릴까요? 십삼과 십칠은 서로 다른 소수라서 공통인 소인수가 없습니다. 그래서 최소공배수는 두 수를 곱한 이백이십일입니다. 실제로 이천이십사년 봄, 미국 일리노이주에서 십삼 년 무리 하나와 십칠 년 무리 하나가 함께 나왔습니다. 바로 그 두 무리가 같은 해에 나온 것은 천팔백삼년 이후 처음이었습니다. 다음은 이백이십일 년 뒤인 이천이백사십오년입니다.",
+  "fingerprint": "c410f05bc590b5eb5b373b03e098aa9b05fa07ec03d7ecfdc2dccbbc43242ed4",
+  "generated_at": "2026-11-10T14:10:52+0900",
+  "review": "generated_not_listening_reviewed"
+}

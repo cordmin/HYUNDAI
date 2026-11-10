@@ -1,0 +1,14 @@
+{
+  "duration": 22.52,
+  "sample_rate": 24000,
+  "peak": 24936,
+  "rms": 2895.57,
+  "sha256": "15e60c75cd4531406c1bd8ec596a7e397e50bb6551b29e972b4e542f120c740d",
+  "id": "cicada_s1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "곧 도착이네요. 핵심만 정리할게요. 주기가 다른 둘이 만나는 해는 최소공배수입니다. 소수 주기는 더 짧은 주기와 공통인 소인수가 없어 잘 만나지 않습니다. 그래서 십삼 년, 십칠 년 매미는 천적과 덜 만난다는 설명이 있습니다. 오늘은 여기서 마치겠습니다.",
+  "fingerprint": "1611f1498d6a4c2ff596868d8a482aaabe931578d494b3b4b0b4641519ad3378",
+  "generated_at": "2026-11-10T14:11:51+0900",
+  "review": "generated_not_listening_reviewed"
+}

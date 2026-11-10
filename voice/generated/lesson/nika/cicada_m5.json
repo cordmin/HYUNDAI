@@ -1,0 +1,14 @@
+{
+  "duration": 35.16,
+  "sample_rate": 24000,
+  "peak": 23476,
+  "rms": 3173.94,
+  "sha256": "4c5201d6246b052117ce3661f8d4ae4ae852c806e64ecd65fbf319de0bb97c1f",
+  "id": "cicada_m5",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "답은 넷 모두입니다. 이, 삼, 사, 육은 모두 십이의 약수라서, 십이 년 매미는 나올 때마다 네 천적을 한꺼번에 만납니다. 주기를 십삼 년으로 바꾸면 어떨까요? 이 년 주기 천적과는 이십육 년마다, 삼 년 주기와는 삼십구 년마다, 사 년 주기와는 오십이 년마다, 육 년 주기와는 칠십팔 년마다 만납니다. 주기를 일 년 늘렸을 뿐인데 천적과 만나는 일이 크게 줄었습니다.",
+  "fingerprint": "7e2e276c02d7c62d3b901cd4035fde468e61ae8bea5c88e2c05b848be0148cab",
+  "generated_at": "2026-11-10T14:12:39+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 35.92,
+  "sample_rate": 24000,
+  "peak": 21619,
+  "rms": 2859.65,
+  "sha256": "ea93817c1f1b8abbcae6f02419d54954c7005fe8c66adda8b70bd66ee0279f06",
+  "id": "cicada_b1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이 매미들을 주기매미라고 부릅니다. 애벌레는 땅속에서 나무뿌리의 즙을 빨며 십삼 년이나 십칠 년을 지냅니다. 그리고 정해진 해의 늦봄이 되면 같은 무리가 거의 같은 때에 한꺼번에 땅 위로 올라옵니다. 어른 매미로 사는 기간은 몇 주뿐입니다. 짝을 짓고 알을 낳은 뒤 사라지고, 알에서 깬 애벌레는 다시 땅속으로 들어가 긴 시간을 보냅니다. 같은 해에 함께 나오는 무리마다 번호가 붙어 있어서, 과학자들은 어느 무리가 언제 어디에 나올지 미리 압니다.",
+  "fingerprint": "ec5cf79bb8bee4f220b3bbbcb08095a995062221507bb64ff7bf8b6fa9d8d0a3",
+  "generated_at": "2026-11-10T14:07:55+0900",
+  "review": "generated_not_listening_reviewed"
+}

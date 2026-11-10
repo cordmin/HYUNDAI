@@ -1,0 +1,14 @@
+{
+  "duration": 16.0,
+  "sample_rate": 24000,
+  "peak": 22676,
+  "rms": 3266.19,
+  "sha256": "7dcc7ca83ec102800e843d21d3bdd71825fb9a7822959cd088471ec63a48f162",
+  "id": "prime_j1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "매미 이야기에서 십삼 년, 십칠 년 매미를 지켜 준 것은 소수였지요. 이번에는 그 소수가 주인공입니다. 소수는 어디까지 있는지, 끝이 있는지 없는지 따라가 보겠습니다.",
+  "fingerprint": "39cad89bf274eaa63bcd08a4740d5e30c34ad08d8d2cfeb2019907ffcb8fbc4f",
+  "generated_at": "2026-11-10T14:13:40+0900",
+  "review": "generated_not_listening_reviewed"
+}

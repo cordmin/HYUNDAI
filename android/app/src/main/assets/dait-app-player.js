@@ -1,7 +1,6 @@
 // 다잇 화면: 수업 고르기 화면과 수업 재생 화면 그리기(진행 막대, 시간, 소리 막대).
 
 // 카드를 누르면 바로 듣는다는 표시
-// 카드를 누르면 바로 듣는다는 표시
 const LESSON_PLAY_ICON = '<span class="lesson-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l12-7.5z"/></svg></span>';
 
 function renderLessonPick(container) {

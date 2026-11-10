@@ -1,0 +1,14 @@
+{
+  "duration": 34.28,
+  "sample_rate": 24000,
+  "peak": 24619,
+  "rms": 2621.96,
+  "sha256": "f9830ce28ec44fb6848c3a93081378131d783fe6de36df981ad3a153e39cef1a",
+  "id": "cicada_b8",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "최소공배수는 우리 생활에도 숨어 있습니다. 정류장에서 십이 분마다 오는 버스와 십팔 분마다 오는 버스가 방금 함께 떠났다고 해 보겠습니다. 두 버스가 다시 함께 오는 것은 삼십육 분 뒤입니다. 아까 소인수분해로 구한 최소공배수이지요. 배차를 십삼 분과 십칠 분으로 바꾸면 두 버스가 함께 오는 것은 이백이십일 분 뒤, 세 시간 반이 넘게 지나서입니다. 같은 계산이 매미에게는 천적과 덜 만나는 길이 됩니다.",
+  "fingerprint": "ac41493398fa1071e0f96e4bc1ee3bd24b522676b55bea3d4a79e42fea72858d",
+  "generated_at": "2026-11-10T14:11:23+0900",
+  "review": "generated_not_listening_reviewed"
+}

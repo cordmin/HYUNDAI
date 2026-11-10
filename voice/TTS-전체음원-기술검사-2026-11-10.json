@@ -1,0 +1,2169 @@
+{
+  "count": 309,
+  "decode_errors": 0,
+  "files": [
+    {
+      "clip": "ai_b1",
+      "duration": 38.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_b10",
+      "duration": 35.56,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_b10a",
+      "duration": 29.68,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_b11",
+      "duration": 37.92,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_b11a",
+      "duration": 31.64,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_b12",
+      "duration": 35.84,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_b1a",
+      "duration": 33.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_b2",
+      "duration": 39.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_b3",
+      "duration": 33.16,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_b4",
+      "duration": 36.4,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_b5",
+      "duration": 35.96,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_b6",
+      "duration": 39.36,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_b7",
+      "duration": 35.16,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_b8",
+      "duration": 33.28,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_b9",
+      "duration": 38.92,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_b9a",
+      "duration": 32.48,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_c1",
+      "duration": 35.28,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_c2",
+      "duration": 29.8,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_i1",
+      "duration": 37.08,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_i2",
+      "duration": 39.08,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_m1",
+      "duration": 34.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_m10",
+      "duration": 30.56,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_m10a",
+      "duration": 24.64,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_m11",
+      "duration": 31.6,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_m2",
+      "duration": 31.6,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_m3",
+      "duration": 31.6,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_m4",
+      "duration": 20.96,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_m5",
+      "duration": 29.72,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_m6",
+      "duration": 30.64,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_m6a",
+      "duration": 25.64,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_m7",
+      "duration": 32.0,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_m8",
+      "duration": 29.72,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_m9",
+      "duration": 28.56,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_n1",
+      "duration": 36.44,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_n2",
+      "duration": 30.52,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_n3",
+      "duration": 28.72,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_n4",
+      "duration": 31.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_n5",
+      "duration": 30.0,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_n6",
+      "duration": 30.52,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_n7",
+      "duration": 34.12,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_n8",
+      "duration": 34.92,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_n9",
+      "duration": 32.12,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_q1",
+      "duration": 16.88,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_q2",
+      "duration": 21.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_q3",
+      "duration": 24.4,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_q4",
+      "duration": 19.92,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_q5",
+      "duration": 19.16,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_r1",
+      "duration": 19.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "ai_s1",
+      "duration": 19.08,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_b1",
+      "duration": 35.92,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_b2",
+      "duration": 36.04,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_b3",
+      "duration": 47.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_b4",
+      "duration": 42.68,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_b5",
+      "duration": 38.64,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_b6",
+      "duration": 39.36,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_b7",
+      "duration": 44.28,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_b8",
+      "duration": 34.28,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_c1",
+      "duration": 42.0,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_c2",
+      "duration": 28.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_i1",
+      "duration": 36.0,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_i2",
+      "duration": 30.92,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_m1",
+      "duration": 33.52,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_m10",
+      "duration": 31.8,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_m2",
+      "duration": 31.12,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_m3",
+      "duration": 35.44,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_m4",
+      "duration": 27.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_m5",
+      "duration": 35.16,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_m6",
+      "duration": 27.8,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_m7",
+      "duration": 29.04,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_m8",
+      "duration": 27.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_m9",
+      "duration": 20.28,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_q1",
+      "duration": 26.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_q2",
+      "duration": 29.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_r1",
+      "duration": 29.4,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "cicada_s1",
+      "duration": 22.52,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_b1",
+      "duration": 36.2,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_b10",
+      "duration": 35.64,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_b11",
+      "duration": 40.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_b12",
+      "duration": 36.44,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_b13",
+      "duration": 36.68,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_b14",
+      "duration": 37.52,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_b2",
+      "duration": 36.28,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_b3",
+      "duration": 34.84,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_b4",
+      "duration": 32.52,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_b5",
+      "duration": 31.72,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_b6",
+      "duration": 42.0,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_b7",
+      "duration": 33.52,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_b8",
+      "duration": 36.56,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_b9",
+      "duration": 36.84,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_c1",
+      "duration": 43.16,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_c2",
+      "duration": 20.92,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_i1",
+      "duration": 34.92,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_i2",
+      "duration": 28.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_m1",
+      "duration": 40.08,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_m10",
+      "duration": 40.64,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_m11",
+      "duration": 26.0,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_m2",
+      "duration": 38.52,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_m3",
+      "duration": 42.2,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_m4",
+      "duration": 44.84,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_m5",
+      "duration": 25.56,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_m6",
+      "duration": 24.4,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_m7",
+      "duration": 41.92,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_m8",
+      "duration": 22.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_m9",
+      "duration": 33.84,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_n1",
+      "duration": 44.68,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_n10",
+      "duration": 42.36,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_n2",
+      "duration": 46.6,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_n3",
+      "duration": 43.8,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_n4",
+      "duration": 41.28,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_n5",
+      "duration": 43.84,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_n6",
+      "duration": 47.84,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_n7",
+      "duration": 44.08,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_n8",
+      "duration": 45.28,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_n9",
+      "duration": 43.28,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_q1",
+      "duration": 15.52,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_q2",
+      "duration": 15.48,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_q3",
+      "duration": 20.08,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_q4",
+      "duration": 14.28,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_q5",
+      "duration": 18.92,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_q6",
+      "duration": 13.72,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_r1",
+      "duration": 26.04,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "dongbaek_s1",
+      "duration": 22.84,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b1",
+      "duration": 33.28,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b10",
+      "duration": 29.96,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b11",
+      "duration": 39.6,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b12",
+      "duration": 43.08,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b12a",
+      "duration": 37.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b1a",
+      "duration": 31.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b2",
+      "duration": 39.36,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b3",
+      "duration": 29.6,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b4",
+      "duration": 39.04,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b5",
+      "duration": 40.4,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b5a",
+      "duration": 35.44,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b6",
+      "duration": 40.96,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b6a",
+      "duration": 37.16,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b7",
+      "duration": 37.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b8",
+      "duration": 35.04,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b9",
+      "duration": 45.96,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_b9a",
+      "duration": 36.68,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_c1",
+      "duration": 45.96,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_c2",
+      "duration": 22.0,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_i1",
+      "duration": 34.72,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_i2",
+      "duration": 35.04,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_j1",
+      "duration": 16.0,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_m1",
+      "duration": 41.0,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_m10",
+      "duration": 34.44,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_m11",
+      "duration": 32.92,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_m2",
+      "duration": 40.48,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_m3",
+      "duration": 38.48,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_m3a",
+      "duration": 28.16,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_m4",
+      "duration": 33.6,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_m5",
+      "duration": 18.72,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_m6",
+      "duration": 32.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_m7",
+      "duration": 19.2,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_m8",
+      "duration": 31.48,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_m8a",
+      "duration": 26.56,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_m9",
+      "duration": 40.4,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_n1",
+      "duration": 38.68,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_n2",
+      "duration": 35.08,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_n3",
+      "duration": 37.2,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_n4",
+      "duration": 39.96,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_n5",
+      "duration": 34.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_n6",
+      "duration": 34.04,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_n7",
+      "duration": 39.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_n8",
+      "duration": 38.04,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_n9",
+      "duration": 42.16,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_q1",
+      "duration": 19.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_q2",
+      "duration": 19.8,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_q3",
+      "duration": 22.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_r1",
+      "duration": 30.44,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "prime_s1",
+      "duration": 23.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_b1",
+      "duration": 44.56,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_b2",
+      "duration": 49.56,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_b3",
+      "duration": 37.52,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_b4",
+      "duration": 48.6,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_b5",
+      "duration": 37.88,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_b6",
+      "duration": 41.36,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_c1",
+      "duration": 53.36,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_e1",
+      "duration": 68.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_e11",
+      "duration": 53.12,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_e12",
+      "duration": 57.16,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_e13_14",
+      "duration": 101.28,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_e15",
+      "duration": 48.96,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_e16_17",
+      "duration": 81.8,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_e18",
+      "duration": 42.2,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_e2",
+      "duration": 58.4,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_e3_4",
+      "duration": 81.08,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_e5",
+      "duration": 62.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_e6_7_8",
+      "duration": 139.48,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_e9_10",
+      "duration": 110.64,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_i1",
+      "duration": 31.72,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_m1",
+      "duration": 31.72,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_m10",
+      "duration": 26.08,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_m11",
+      "duration": 54.88,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_m2",
+      "duration": 44.56,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_m3",
+      "duration": 49.56,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_m4",
+      "duration": 19.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_m5",
+      "duration": 37.52,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_m6",
+      "duration": 48.6,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_m7",
+      "duration": 20.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_m8",
+      "duration": 37.88,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_m9",
+      "duration": 41.36,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_q1",
+      "duration": 19.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_q2",
+      "duration": 20.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_q3",
+      "duration": 26.08,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_r1",
+      "duration": 52.64,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "rhythm_s1",
+      "duration": 55.84,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b1",
+      "duration": 34.12,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b10",
+      "duration": 31.48,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b11",
+      "duration": 32.44,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b11a",
+      "duration": 33.92,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b12",
+      "duration": 31.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b12a",
+      "duration": 34.96,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b13",
+      "duration": 33.2,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b2",
+      "duration": 34.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b3",
+      "duration": 31.4,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b4",
+      "duration": 33.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b5",
+      "duration": 32.4,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b5a",
+      "duration": 44.44,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b5b",
+      "duration": 36.08,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b6",
+      "duration": 37.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b7",
+      "duration": 31.08,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b8",
+      "duration": 30.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b8a",
+      "duration": 34.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b9",
+      "duration": 33.8,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_b9a",
+      "duration": 35.52,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_c1",
+      "duration": 34.2,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_c2",
+      "duration": 29.68,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_i1",
+      "duration": 33.56,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_i2",
+      "duration": 30.8,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_m1",
+      "duration": 29.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_m10",
+      "duration": 24.88,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_m10a",
+      "duration": 21.52,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_m11",
+      "duration": 24.0,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_m2",
+      "duration": 26.48,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_m3",
+      "duration": 25.48,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_m4",
+      "duration": 23.2,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_m4a",
+      "duration": 26.56,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_m5",
+      "duration": 16.64,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_m6",
+      "duration": 24.96,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_m6a",
+      "duration": 23.0,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_m7",
+      "duration": 25.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_m8",
+      "duration": 25.12,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_m8a",
+      "duration": 26.92,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_m9",
+      "duration": 14.2,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_n1",
+      "duration": 30.6,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_n2",
+      "duration": 38.4,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_n3",
+      "duration": 31.04,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_n4",
+      "duration": 31.96,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_n5",
+      "duration": 34.48,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_n6",
+      "duration": 29.56,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_n7",
+      "duration": 35.28,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_n8",
+      "duration": 32.96,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_n9",
+      "duration": 29.84,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_q1",
+      "duration": 32.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_q2",
+      "duration": 29.52,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_q3",
+      "duration": 18.68,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_r1",
+      "duration": 20.28,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "sky_s1",
+      "duration": 17.16,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b1",
+      "duration": 34.88,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b10",
+      "duration": 36.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b10a",
+      "duration": 31.64,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b11",
+      "duration": 35.64,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b12",
+      "duration": 40.56,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b13",
+      "duration": 38.72,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b1a",
+      "duration": 29.44,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b2",
+      "duration": 34.68,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b2a",
+      "duration": 34.64,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b3",
+      "duration": 34.28,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b4",
+      "duration": 24.52,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b5",
+      "duration": 36.92,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b5a",
+      "duration": 36.36,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b6",
+      "duration": 33.68,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b7",
+      "duration": 38.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b7a",
+      "duration": 34.52,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b8",
+      "duration": 36.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b9",
+      "duration": 37.04,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_b9a",
+      "duration": 34.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_c1",
+      "duration": 36.64,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_c2",
+      "duration": 27.56,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_i1",
+      "duration": 35.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_i2",
+      "duration": 29.64,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_n1",
+      "duration": 36.08,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_n2",
+      "duration": 31.56,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_n3",
+      "duration": 31.64,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_n4",
+      "duration": 30.44,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_n5",
+      "duration": 34.36,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_n6",
+      "duration": 28.96,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_n7",
+      "duration": 34.92,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_n8",
+      "duration": 36.4,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_q1",
+      "duration": 22.72,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_q2",
+      "duration": 23.76,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_q3",
+      "duration": 25.6,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_q4",
+      "duration": 20.96,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_r1",
+      "duration": 32.2,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_f_s1",
+      "duration": 12.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_s_b1",
+      "duration": 34.24,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_s_b2",
+      "duration": 33.8,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_s_b3",
+      "duration": 28.36,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_s_b4",
+      "duration": 34.2,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_s_b4a",
+      "duration": 26.0,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_s_b5",
+      "duration": 31.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_s_b6",
+      "duration": 30.68,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_s_b6a",
+      "duration": 24.44,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_s_c1",
+      "duration": 32.2,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_s_c2",
+      "duration": 27.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_s_i1",
+      "duration": 33.16,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_s_q1",
+      "duration": 25.32,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    },
+    {
+      "clip": "starry_s_q2",
+      "duration": 25.44,
+      "codec": "aac",
+      "channels": 1,
+      "sample_rate": 24000
+    }
+  ]
+}

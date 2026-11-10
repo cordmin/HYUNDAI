@@ -1,0 +1,14 @@
+{
+  "duration": 27.8,
+  "sample_rate": 24000,
+  "peak": 26512,
+  "rms": 2958.35,
+  "sha256": "f5d8c28c1fb1c379dd7f8e7e729c4a20ba45b3761d290ebadccc0cf82d953157",
+  "id": "cicada_m6",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "까닭은 소수의 성질에 있습니다. 소수는 일과 자기 자신 말고는 약수가 없어서, 자기보다 짧은 어떤 주기와도 공통인 소인수가 없습니다. 공통인 소인수가 없으면 최소공배수는 두 수를 곱한 만큼 커지고, 만나는 일은 그만큼 드물어집니다. 십이처럼 약수가 많은 수는 그 반대로 여러 주기와 잘 맞물립니다.",
+  "fingerprint": "820cfa05fcf99f3f8f74bd55bf16dee565b244a0e892f3a12d3e2fac883977a7",
+  "generated_at": "2026-11-10T14:12:48+0900",
+  "review": "generated_not_listening_reviewed"
+}

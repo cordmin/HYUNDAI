@@ -118,8 +118,12 @@ function seekLessonBy(delta) {
 // 기억한 조각이 빠졌으면 지금 위치까지만 간다.
 function lessonHeardLimit(run, timeline = lessonTimeline(run)) {
   const mark = run.furthest;
-  const section = mark && timeline.sections.find(item => item.piece === mark.piece);
-  return section ? section.start + Math.min(section.seconds, mark.offset) : 0;
+  const section = mark && timeline.sections.find(item => item.piece.id === mark.piece.id);
+  const retained = timeline.sections.map(item => {
+    const offset = run.heardOffsets?.[item.piece.id];
+    return Number.isFinite(offset) ? item.start + Math.min(item.seconds,offset) : 0;
+  });
+  return Math.max(0, section ? section.start + Math.min(section.seconds,mark.offset) : 0, ...retained);
 }
 
 function noteLessonHeard(run, timeline = lessonTimeline(run)) {
@@ -127,6 +131,8 @@ function noteLessonHeard(run, timeline = lessonTimeline(run)) {
   const section = timeline.sections.find(item => item.index === run.index);
   if (!section) return;
   const offset = Math.min(section.seconds, currentLessonPosition(run));
+  run.heardOffsets ||= {};
+  run.heardOffsets[section.piece.id] = Math.max(run.heardOffsets[section.piece.id] || 0, offset);
   if (section.start + offset > lessonHeardLimit(run, timeline)) run.furthest = { piece: section.piece, offset };
 }
 
@@ -139,7 +145,7 @@ function moveLessonTo(seconds) {
   const section = timeline.sections.find(item => wanted < item.start + item.seconds);
   if (!section) return;
   const here = timeline.sections.find(item => item.index === run.index);
-  if (here && seconds > wanted && Math.abs(wanted - (here.start + currentLessonPosition(run))) < .5) return; // 들은 끝에서 앞으로 누르면 그대로 듣는다
+  if (here && seconds > wanted && Math.abs(wanted - (here.start + currentLessonPosition(run))) < .05) return; // 들은 끝에서 앞으로 누르면 그대로 듣는다
   const paused = run.playback.state !== 'playing';
   stopSpeech();
   clearTimeout(lessonTimer);
@@ -156,7 +162,7 @@ function isLessonResting() {
 
 // fromStop이면 지난번 멈춘 곳부터 잇는다.
 function startLesson(lessonId, fromStop, recordPoint, options = {}) {
-  if (!options.automatic && hasActiveLesson() && lessonRun.lesson.id === lessonId && !fromStop && !recordPoint) { returnToLesson(); return; }
+  if (!options.automatic && !options.replay && (!Number.isFinite(options.minutes) || options.minutes === lessonRun?.trip.minutes) && hasActiveLesson() && lessonRun.lesson.id === lessonId && !fromStop && !recordPoint) { returnToLesson(); return; }
   if (!options.skipSeriesPrompt && !fromStop && !recordPoint && !isDrivingMode && lessonQueue.prior(lessonId,lessonProgress().records) && window.showSeriesOrderPrompt) {
     window.showSeriesOrderPrompt(lessonId,options); return;
   }
@@ -412,6 +418,7 @@ function fitLessonToEta(minutes) {
   if (!run || run.done || minutes === null) return;
   // 쉬는 시간을 지낸 만큼은 앞으로 쉴 시간이 아니므로 남은 시간에 도로 더해 맞춘다.
   const rested = isLessonResting() ? (Date.now() - run.restedFrom) / 1000 : 0;
+  if (Number.isFinite(run.pieceStartedAt)) noteLessonHeard(run);
   const fitted = arrivalPlanner.fit(run, minutes * 60, lessonPlaybackPrefs.rate, rested);
   run.pieces = fitted.pieces;
   run.trip.count = fitted.count;
@@ -442,7 +449,12 @@ function saveLesson(run) {
   const position = run.savedPosition ?? currentLessonPosition(run);
   if (run.heard.length > run.heardBefore || position >= 1) {
     const ymd = toYmd(new Date());
+    syncBadgeLedger(); // 기존 최근 기록이 잘리기 전에 배지 원장으로 먼저 이관한다.
     const progress = Lesson.finishLesson(lessonProgress(), run.lesson, ymd, run.finished, run.meters / 1000, run.short);
+    const timeline = lessonTimeline(run), section = timeline.sections.find(item=>item.index===run.index);
+    const record = progress.records[progress.records.length-1];
+    record.totalSeconds = timeline.seconds;
+    record.elapsedSeconds = run.finished ? timeline.seconds : Math.min(timeline.seconds, section ? section.start+position : timeline.seconds);
     const point = run.finished ? null : Lesson.resumePoint(run.lesson, run.heard, ymd); // 다음 이동에서 멈춘 곳부터 잇게 한다
     const piece = run.pieces[run.index];
     if (!run.finished && piece && run.lesson.pieces.some(item => item.id === piece.id)) {
@@ -452,6 +464,7 @@ function saveLesson(run) {
       };
     } else if (point) progress.records[progress.records.length - 1].resume = point;
     writeStored(LESSON_KEY, point ? Lesson.keepResume(progress, point) : progress);
+    syncBadgeLedger();
   }
 }
 

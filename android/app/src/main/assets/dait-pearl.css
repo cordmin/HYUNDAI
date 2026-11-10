@@ -64,6 +64,7 @@ body.in-app .pleos-display { border: 0; }
 .home-card.start { background: var(--glass); }
 .pearl-home { display: flex; flex-direction: column; gap: calc(10 * var(--u)); min-height: 0; flex: 1; }
 .home-card.pearl-hero { position: relative; overflow: hidden; display: flex; flex-direction: row; align-items: center; text-align: left; gap: calc(24 * var(--u)); flex: 1; padding: calc(22 * var(--u)) calc(34 * var(--u)); border-radius: var(--card-radius); }
+.home-card.pearl-hero { -webkit-backdrop-filter:none; backdrop-filter:none; isolation:isolate; }
 .pearl-hero-copy { position: relative; z-index: 1; flex: 1; min-width: 0; }
 /* 수업 주제 그림: 오른쪽에 크게 한 장. 가운데(글자 쪽)로 오기 전에 흐려진다. */
 .pearl-hero[data-pattern]::before { content: ''; position: absolute; inset: 0 calc(14 * var(--u)) 0 0; pointer-events: none; background: var(--lilac); opacity: .13;
@@ -208,7 +209,7 @@ input { caret-color: var(--lilac); }
 
 /* Existing Pearl colors; the volume button itself extends down. */
 /* 알약 카드 하나가 어두운 화면·설정·소리 버튼을 감싼다. 버튼은 동그란 연분홍 바탕이라 누르는 곳이 보인다. */
-.pearl-tools { margin-left:auto; display:flex; align-items:flex-start; flex-shrink:0; gap:calc(10 * var(--u)); padding:calc(5 * var(--u)) calc(7 * var(--u)); height:calc(max(44px, 44 * var(--u)) + 10 * var(--u)); background:var(--glass); border:1px solid var(--glass-edge); border-radius:999px; box-shadow:var(--glass-shadow); backdrop-filter:blur(18px) saturate(120%); -webkit-backdrop-filter:blur(18px) saturate(120%); position:relative; z-index:5; }
+.pearl-tools { margin-left:auto; display:flex; align-items:flex-start; flex-shrink:0; --tool-size:max(44px,calc(36 * var(--u))); --tool-pad:max(6px,calc(5 * var(--u))); gap:max(6px,calc(6 * var(--u))); padding:var(--tool-pad); height:calc(var(--tool-size) + 2 * var(--tool-pad) + 2px); background:var(--glass); border:1px solid var(--glass-edge); border-radius:999px; box-shadow:var(--glass-shadow); backdrop-filter:blur(18px) saturate(120%); -webkit-backdrop-filter:blur(18px) saturate(120%); position:relative; z-index:5; }
 .pearl-nav .pearl-tools .icon-btn { width:max(44px,calc(44 * var(--u))); height:max(44px,calc(44 * var(--u))); min-height:44px; border:0; border-radius:50%; background:var(--soft); color:var(--lilac); box-shadow:none; }
 .pearl-nav .pearl-tools .pearl-theme-btn[aria-pressed=true] { background:var(--lilac); color:var(--on-lilac); }
 .pearl-nav .pearl-tools .pearl-volume-control > .icon-btn { width:100%; background:transparent; }
@@ -314,9 +315,9 @@ body.lesson-playing .stage-container { padding:calc(6 * var(--u)) calc(28 * var(
 .pearl-settings-dialog.pearl-playback-dialog .icon-btn {width:44px;height:44px}
 
 /* Driving uses the same composition with quiet motion and larger secondary targets. */
-.pearl-tools { height:calc(max(52px,44 * var(--u)) + 10 * var(--u)); }
-.pearl-nav .pearl-tools .icon-btn, .pearl-volume-control { width:max(44px,calc(36 * var(--u))); height:max(44px,calc(36 * var(--u))); }
-.pearl-tools { height:calc(max(44px,36 * var(--u)) + 4 * var(--u)); padding:calc(1 * var(--u)) calc(3 * var(--u)); gap:calc(6 * var(--u)); box-shadow:inset 0 1px 0 var(--glass-sheen), 0 4px 12px rgba(var(--shadow-rgb, 53, 40, 50), 0.039); }
+
+.pearl-nav .pearl-tools .icon-btn, .pearl-volume-control { width:var(--tool-size); height:var(--tool-size); }
+
 .pearl-nav .pearl-tools .icon-btn svg { width:22px; height:22px; }
 .pearl-volume-control.is-open { height:calc(max(44px,36 * var(--u)) + 188 * var(--u)); }
 .pearl-settings-dialog.pearl-playback-dialog button { min-height:48px; }
@@ -643,3 +644,46 @@ body.lesson-playing .pleos-display { background-image:linear-gradient(to bottom,
 }
 /* 주행 중에는 쓸 수 없는 위쪽 버튼(재생목록·화면 색·설정)을 감추고 음량만 남긴다. */
 body.driving .pearl-tools > .icon-btn { display:none; }
+/* Acquired badges use original color; locked badges keep the same readable silhouette. */
+button.pearl-badge { color:var(--ink); cursor:pointer; font-family:inherit; }
+.pearl-badge.is-locked img { filter:grayscale(1); opacity:.55; }
+.pearl-badge.is-earned img { filter:none; opacity:1; }
+.badge-detail-dialog { width:min(720px,calc(100% - 32px)); }
+.badge-detail-layout { display:grid; grid-template-columns:minmax(150px,.9fr) minmax(0,1.2fr); gap:28px; align-items:center; }
+.badge-detail-art img { display:block;width:100%;max-width:240px;aspect-ratio:1;object-fit:contain;margin:auto; }
+.badge-detail-copy h3 { margin:16px 0 7px;font-size:16px;color:var(--ink); }
+.badge-detail-copy h3:first-child {margin-top:0}
+.badge-detail-copy p { margin:0;line-height:1.65;font-size:15px;color:var(--muted);overflow-wrap:anywhere; }
+.pearl-neutral-colors .pearl-accent-preview {padding:18px;margin:14px 0;background:var(--glass-raised);border:1px solid var(--glass-edge);border-radius:16px;display:flex;flex-direction:column;gap:8px;}
+.pearl-accent-preview strong {font-size:20px;color:var(--lilac);}
+.pearl-accent-preview span {font-size:13px;color:var(--muted);}
+.pearl-accent-preview i {height:4px;width:35%;border-radius:4px;background:var(--lilac);}
+.pearl-accent-title {font-size:16px;margin:16px 0 10px;}
+.pearl-accent-options {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;}
+.pearl-accent-options button {display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;min-height:68px;padding:8px 4px;border:1px solid transparent;border-radius:12px;background:transparent;color:var(--ink);}
+.pearl-accent-options button[aria-pressed=true] {border-color:var(--lilac);background:var(--soft);}
+.pearl-accent-options button>span {height:26px;width:26px;background:var(--swatch);border-radius:50%;}
+.pearl-accent-options small {font-size:12px;}
+@container(max-height:460px){.pearl-neutral-colors .pearl-accent-preview{display:none}.pearl-accent-options button{min-height:52px;gap:4px;padding:5px}.pearl-accent-options button>span{width:20px;height:20px}.pearl-accent-title{margin:12px 0 7px}.badge-detail-copy h3{margin:10px 0 4px}}
+@media(max-width:480px){.badge-detail-layout{grid-template-columns:1fr;gap:12px}.badge-detail-art img{max-width:130px}.pearl-nav{gap:6px}.pearl-tools{gap:4px;--tool-pad:6px}.pearl-nav nav button{padding:0 9px}.pearl-brand .dait-brand-badge svg{width:48px}}
+
+@container(max-height:460px){.badge-detail-art img{max-width:170px}.badge-detail-copy h3{font-size:14px}.badge-detail-copy p{font-size:14px;line-height:1.5}}
+/* A: paired state rings carry completion/progress; no redundant status/time copy. */
+.pearl-record-grid.pearl-record-list { display:flex; flex-direction:column; gap:0; }
+.pearl-record-list .pearl-record-row { display:flex; align-items:center; gap:calc(18 * var(--u)); min-height:max(100px,calc(90 * var(--u))); padding:calc(16 * var(--u)) calc(12 * var(--u)); border:0; border-bottom:1px solid var(--line); border-radius:0; background:transparent; box-shadow:none; -webkit-backdrop-filter:none; backdrop-filter:none; }
+.pearl-record-list .pearl-record-row:last-child { border-bottom:0; }
+.pearl-record-state-ring { display:grid;place-items:center;flex:0 0 max(44px,calc(44 * var(--u)));width:max(44px,calc(44 * var(--u)));height:max(44px,calc(44 * var(--u)));color:var(--lilac); }
+.pearl-record-state-ring svg { width:100%;height:100%;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round; }
+.record-ring-track {stroke:var(--soft)}
+.record-ring-value, .record-ring-check {stroke:currentColor}
+.pearl-record-state-ring.is-complete {color:#24775d}
+.pearl-night .pearl-record-state-ring.is-complete {color:#7dd9b6}
+.pearl-record-list .pearl-record-copy {flex:1;min-width:0;display:flex;flex-direction:column;gap:calc(7 * var(--u));}
+.pearl-record-list .pearl-record-copy strong {font-size:calc(20 * var(--u));font-weight:700;line-height:1.35;letter-spacing:-.025em;}
+.pearl-record-list .pearl-record-date {font-size:calc(13 * var(--u));color:var(--muted);}
+@media(max-width:480px){.pearl-record-list .pearl-record-row{gap:12px;padding:14px 4px}.pearl-record-list .pearl-record-copy strong{font-size:17px}.pearl-record-list .pearl-record-date{font-size:12px}}
+
+.pearl-record-list .pearl-record-state-ring{color:var(--lilac)}
+.pearl-record-list .pearl-record-state-ring.is-complete{color:#24775d}
+.pearl-night .pearl-record-list .pearl-record-state-ring.is-complete{color:#7dd9b6}
+.pearl-record-scroll[hidden]{display:none}

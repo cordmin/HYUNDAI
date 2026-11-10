@@ -23,7 +23,7 @@ function renderLessonPick(container) {
         <span class="top-label">수업</span>
       </div>
       <div class="pearl-records">
-      <div class="playlist-list-toolbar">${eta !== null ? '' : `<div class="pearl-record-tabs lesson-time-tabs" role="tablist" aria-label="수업 시간">${[8,15,20].map(minutes => `<button role="tab" aria-controls="lessonList" aria-selected="${minutes === lessonMinutes}" onclick="pickLessonTime(${minutes})">${minutes}분 수업</button>`).join('')}</div>`}<button class="playlist-open-btn" onclick="openPlaylist()">재생목록${lessonQueue.items.length ? ` · ${lessonQueue.items.length}` : ''}</button></div>
+      <div class="playlist-list-toolbar">${eta !== null ? '' : `<div class="pearl-record-tabs lesson-time-tabs" role="tablist" aria-label="수업 시간">${[8,15,20].map(minutes => `<button role="tab" aria-controls="lessonList" aria-selected="${minutes === lessonMinutes}" onclick="pickLessonTime(${minutes})">${minutes}분 수업</button>`).join('')}</div>`}</div>
       <div class="lesson-pick pearl-record-content">
         <div class="lesson-main" id="lessonList" onscroll="updateListScroll('lessonList', 'lessonScroll')">
           ${eta !== null ? `<div class="lesson-filters"><span class="lesson-eta-summary">도착까지 ${Lesson.minutesFor(eta)}분, ${periods.length > 1 ? (trip.rest ? `${periods.length}교시로 들어요` : '수업을 이어 들어요') : '이 수업을 들어요'}</span></div>` : ''}
@@ -206,7 +206,7 @@ function updateLessonProgress() {
   noteLessonHeard(run, timeline);
   const heard = run.done ? timeline.seconds : Math.max(position, lessonHeardLimit(run, timeline));
   const forward = document.getElementById('lessonForward');
-  if (forward) forward.disabled = run.done || heard - position < 1;
+  if (forward) forward.disabled = run.done || heard - position < .05;
   if (!run.scrubbing) {
     const slider = document.getElementById('lessonSeek');
     if (!slider) return;
@@ -217,9 +217,9 @@ function updateLessonProgress() {
     document.getElementById('lessonElapsed').textContent = lessonTimeText(position);
   }
   const remaining = document.getElementById('lessonRemaining');
-  if (remaining) remaining.textContent = '수업 ' + lessonTimeText(arrivalPlanner.remaining(run.pieces, run.index, currentLessonPosition(run), lessonPlaybackPrefs.rate)) + ' 남음';
+  if (remaining) remaining.textContent = lessonTimeText(arrivalPlanner.remaining(run.pieces, run.index, currentLessonPosition(run), lessonPlaybackPrefs.rate));
   const note = document.getElementById('lessonTimingNote');
-  if (note) note.textContent = run.done ? '수업을 마쳤어요' : run.playback.state === 'interrupted' ? '다른 소리가 끝나면 이어 들어요' : run.paused ? '잠시 멈췄어요' : lessonPieceUnvoiced(run) ? '음원 준비 중' : hasArrived || Lesson.isClosing(run.pieces[run.index]) ? '도착에 맞춰 마무리 중' : remainMinutes() !== null ? '도착 시간에 맞춰 조절 중' : '';
+  if (note) note.textContent = run.done ? '수업을 마쳤어요' : run.playback.state === 'interrupted' ? '다른 소리가 끝나면 이어 들어요' : run.paused ? '' : lessonPieceUnvoiced(run) ? '음원 준비 중' : hasArrived || Lesson.isClosing(run.pieces[run.index]) ? '도착에 맞춰 마무리 중' : remainMinutes() !== null ? '도착 시간에 맞춰 조절 중' : '';
   const sectionName = document.getElementById('lessonSectionName');
   if (sectionName) sectionName.textContent = section ? `${timeline.sections.indexOf(section) + 1}/${timeline.sections.length} · ${section.piece.kind}` : '';
   document.querySelectorAll('[data-lesson-segment]').forEach(element => {
@@ -281,15 +281,15 @@ function updateLessonDock() {
   if (!label) return;
   const run = lessonRun;
   const seconds = arrivalPlanner.remaining(run.pieces, run.index, currentLessonPosition(run), lessonPlaybackPrefs.rate);
-  label.textContent = `${lessonDockState(run)} · ${lessonTimeText(seconds)} 남음`;
+  label.textContent = [lessonDockState(run), lessonTimeText(seconds)].filter(Boolean).join(' · ');
 }
 
-// 사람이 멈춘 수업은 「잠시 멈췄어요」다. 앱의 재생기는 사람이 멈출 때도 멈춤을 알려 오므로,
+// 사람이 멈춘 상태는 재생 아이콘으로 표시한다. 앱의 재생기는 사람이 멈출 때도 멈춤을 알려 오므로,
 // 길 안내·통화가 소리를 가져간 때(interrupted)와 섞이지 않게 재생 상태 하나로 가린다.
 function lessonDockState(run) {
   if (isLessonResting()) return '쉬는 시간';
   const state = run.playback.state;
-  return state === 'playing' ? '듣는 중' : state === 'interrupted' ? '다른 소리가 끝나면 이어 들어요' : '잠시 멈췄어요';
+  return state === 'playing' ? '듣는 중' : state === 'interrupted' ? '다른 소리가 끝나면 이어 들어요' : '';
 }
 
 function lessonLabel(run, resting) {

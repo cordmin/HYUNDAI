@@ -1,36 +1,34 @@
 /* Appearance only: native lesson, navigation, rewards and driving rules stay in the app. */
 (() => {
   'use strict';
-  const KEY = 'dait.pearl.colors.v3';
-  const PREVIOUS_KEY = 'dait.pearl.colors.v2';
-  const LEGACY_KEY = 'dait.pearl.colors.v1';
-  const DEFAULT = { start: '#f8e9eb', end: '#ecd9df' };
-  const DARK = { start: '#30212a', end: '#452e38' };
-  const COLOR_PRESETS = { pearl: DEFAULT, dark: DARK, mixed: { start: '#fffafb', end: '#e2c3cf' } };
+  const KEY = 'dait.pearl.colors.v4';
+  const DEFAULT = { start:'#ffffff', end:'#eef1f5', accent:'#2563eb' };
+  const DARK = { start:'#090b0e', end:'#1b2028', accent:'#2563eb' };
+  const ACCENTS = [['#2563eb','블루'],['#7c3aed','바이올렛'],['#c72975','로즈'],['#d74b36','코랄'],['#a86b12','앰버'],['#16834e','그린'],['#007d87','틸'],['#536378','슬레이트']];
   const HEX = /^#[0-9a-f]{6}$/i;
   const host = document.querySelector('.pleos-display');
   const rgb = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
-  const luminance = c => c.map(v => { v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }).reduce((s, v, i) => s + v * [.2126, .7152, .0722][i], 0);
-  const contrast = (a, b) => (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
-  const valid = colors => colors && HEX.test(colors.start) && HEX.test(colors.end);
-  const cloneProfiles = value => ({ mode: value.mode, light: { ...value.light }, dark: { ...value.dark } });
-  const isDark = colors => luminance(rgb(colors.start)) + luminance(rgb(colors.end)) < .55;
-  let profiles = { mode: 'light', light: { ...DEFAULT }, dark: { ...DARK } };
-  const stored = settingsStore.read(KEY, null);
-  if (stored && ['light','dark'].includes(stored.mode) && valid(stored.light) && valid(stored.dark)) profiles = cloneProfiles(stored);
-  else {
-    const previous = settingsStore.read(PREVIOUS_KEY, null);
-    const legacy = settingsStore.read(LEGACY_KEY, null);
-    // The approved theme replaces old palettes once; keep their saved mode and leave old keys intact.
-    if (previous && ['light','dark'].includes(previous.mode)) profiles.mode = previous.mode;
-    else if (valid(legacy)) profiles.mode = isDark(legacy) ? 'dark' : 'light';
-    try { settingsStore.write(KEY, profiles); } catch (_) { /* Still apply the new theme if storage is unavailable. */ }
+  const luminance = c => c.map(v => { v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }).reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0);
+  const contrast = (a,b)=>(Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+  const cloneProfiles = value => ({mode:value.mode,light:{...value.light},dark:{...value.dark}});
+  const validAccent = value => ACCENTS.some(([hex])=>hex===value);
+  let profiles = {mode:'light',light:{...DEFAULT},dark:{...DARK}};
+  const stored = settingsStore.read(KEY,null);
+  if(stored && ['light','dark'].includes(stored.mode) && validAccent(stored.light?.accent) && validAccent(stored.dark?.accent)) {
+    profiles = {mode:stored.mode,light:{...DEFAULT,accent:stored.light.accent},dark:{...DARK,accent:stored.dark.accent}};
+  } else {
+    // Keep legacy palettes intact; only carry their mode into the new neutral appearance.
+    const previous = settingsStore.read('dait.pearl.colors.v3',null) || settingsStore.read('dait.pearl.colors.v2',null);
+    const legacy = settingsStore.read('dait.pearl.colors.v1',null);
+    if(previous && ['light','dark'].includes(previous.mode) && HEX.test(previous.light?.start||'') && HEX.test(previous.dark?.start||''))profiles.mode=previous.mode;
+    else if(legacy && HEX.test(legacy.start||'') && HEX.test(legacy.end||'') && luminance(rgb(legacy.start))+luminance(rgb(legacy.end))<.55)profiles.mode='dark';
+    try{settingsStore.write(KEY,profiles)}catch(_){/* Apply even if storage is unavailable. */}
   }
   let saved = { ...profiles[profiles.mode] };
   let active = { ...saved }, draft = null, dialog = null, focusBefore = null, frame = 0, noticeTimer;
   let backdropGlow = [0, 0, 0, 0], palette = DaitPalette.derive(active, profiles.mode);
   const PANES = '.pearl-notice,.home-card,.dialogue-card,.settings-card,.pearl-record-row,.pearl-badge,.pearl-page-title,.lesson-row,.pearl-nav nav,.pearl-nav .icon-btn,.pearl-record-tabs button,.lesson-dock,.pearl-settings-dialog,.pearl-settings-menu button,.pearl-pb-choices button';
-  const TEXT = '.lesson-end h1,.lesson-end header p,.lesson-up-next h2,.lesson-up-next p,.lesson-next-top>span,.next-autoplay span,.lesson-end-note,.lesson-end-finish,.notice-copy strong,.notice-copy span,.pearl-notice>button,.pearl-badge span,.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-row span,.pearl-hint,.pearl-empty,.pearl-nav nav button,.pearl-nav .icon-btn,.pearl-record-tabs button,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.choice-chip>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times span,.pearl-seek,.lesson-dock-copy strong,.lesson-dock-copy>span,.pearl-settings-dialog h2,.pearl-settings-dialog h3,.pearl-settings-dialog strong,.pearl-settings-dialog small,.pearl-settings-dialog p,.pearl-settings-dialog label,.pearl-settings-dialog input:not([type=range]),.pearl-settings-dialog select,.pearl-settings-dialog button:not(.primary-btn):not(.card-btn),.pearl-settings-switch span,.pearl-volume-panel output';
+  const TEXT = '.lesson-end h1,.lesson-end header p,.lesson-up-next h2,.lesson-up-next p,.lesson-next-top>span,.next-autoplay span,.lesson-end-note,.lesson-end-finish,.notice-copy strong,.notice-copy span,.pearl-notice>button,.pearl-badge span,.question-title,.card-label,.question-promise,.main-question,.card-sub,.lesson-title,.lesson-meta,.pearl-page-title h1,.pearl-page-title span,.pearl-record-row strong,.pearl-record-copy>span,.pearl-hint,.pearl-empty,.pearl-nav nav button,.pearl-nav .icon-btn,.pearl-record-tabs button,.top-label,.back-btn,.lesson-progress-times span,.drive-sentence,.drive-sub,.settings-message,.settings-title,.settings-card h2,.settings-card .card-focus,.choice-chip>span,.drive-btn:not(.primary),.pearl-player-meta,.pearl-player-times span,.pearl-seek,.lesson-dock-copy strong,.lesson-dock-copy>span,.pearl-settings-dialog h2,.pearl-settings-dialog h3,.pearl-settings-dialog strong,.pearl-settings-dialog small,.pearl-settings-dialog p,.pearl-settings-dialog label,.pearl-settings-dialog input:not([type=range]),.pearl-settings-dialog select,.pearl-settings-dialog button:not(.primary-btn):not(.card-btn),.pearl-settings-switch span,.pearl-volume-panel output';
 
   function backgroundAt(x, y) {
     const rect = host.getBoundingClientRect(), dx = Math.sin(2 * Math.PI / 3), dy = -Math.cos(2 * Math.PI / 3);
@@ -180,7 +178,7 @@
     host.classList.toggle('pearl-night', mode === 'dark');
     host.dataset.colorMode = mode;
     const reference = mode === 'dark' ? DARK : DEFAULT;
-    host.dataset.settingsPalette = colors.start.toLowerCase() === reference.start && colors.end.toLowerCase() === reference.end ? 'rose' : 'custom';
+    host.dataset.settingsPalette = colors.accent ? 'neutral' : 'custom';
     queueRefresh();
   }
   let noticeGeneration=0, noticeMotion=null, noticeExitTimer;
@@ -251,11 +249,12 @@
     dialog.style.setProperty('--settings-height', `${rect.height / zoom}px`);
   }
   function shell(title, body) {
+    dismissNotice(true);
     if (dialog) close();
     focusBefore = document.activeElement;
     dialog = document.createElement('dialog'); dialog.className = 'pearl-settings-dialog';
     dialog.setAttribute('aria-labelledby', 'pearlSettingsTitle');
-    dialog.innerHTML = `<div class="pearl-settings-heading">${!['재생 설정','재생목록','앱 색상'].includes(title) ? '' : '<button class="icon-btn pearl-settings-back" data-appearance-action="settings" aria-label="설정으로 돌아가기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button>'}<h2 id="pearlSettingsTitle">${title}</h2><button class="icon-btn" data-appearance-action="close" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>${body}`;
+    dialog.innerHTML = `<div class="pearl-settings-heading">${!['재생 설정','앱 색상'].includes(title) ? '' : '<button class="icon-btn pearl-settings-back" data-appearance-action="settings" aria-label="설정으로 돌아가기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button>'}<h2 id="pearlSettingsTitle">${title}</h2><button class="icon-btn" data-appearance-action="close" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>${body}`;
     const shade = document.createElement('div');
     shade.className = 'pearl-settings-shade'; shade.setAttribute('aria-hidden', 'true');
     host.append(shade, dialog);
@@ -282,8 +281,7 @@
     const toggle = (action, label, on) => `<button class="pearl-settings-switch" data-appearance-action="${action}" role="switch" aria-checked="${on}"><strong>${label}</strong><span aria-hidden="true">${on ? '켜짐' : '꺼짐'}</span></button>`;
     shell('설정', `<div class="pearl-settings-menu pearl-settings-home"><div class="pearl-settings-group">
       ${row('playback', '재생 설정', `뒤로 ${lessonIntervalText(prefs.back)} · 앞으로 ${lessonIntervalText(prefs.forward)} · ${prefs.rate.toFixed(1)}배속`)}
-      ${row('playlist', '재생목록', '다음 수업 · 순서 바꾸기')}
-      ${row('colors', '앱 색상', '라이트·다크 모드별 배경')}
+      ${row('colors', '앱 색상', '모드별 배경 · 8가지 포인트 색')}
       </div><h3 class="pearl-settings-section">이어서 듣기</h3>
       ${toggle('series', '시리즈 순서대로 듣기', seriesOn())}
       ${toggle('series-cues', '시리즈 연결 안내', lessonQueue.cues)}
@@ -336,89 +334,30 @@
     draw();
   }
 
-  function toHsv(hex) {
-    const [r,g,b] = rgb(hex).map(v => v / 255), max = Math.max(r,g,b), min = Math.min(r,g,b), d = max - min;
-    let h = !d ? 0 : max === r ? ((g-b)/d)%6 : max === g ? (b-r)/d+2 : (r-g)/d+4;
-    return { h: (h*60+360)%360, s: max ? d/max : 0, v: max };
-  }
-  function toHex({h,s,v}) {
-    const c=v*s, x=c*(1-Math.abs((h/60)%2-1)), m=v-c;
-    const channels=h<60?[c,x,0]:h<120?[x,c,0]:h<180?[0,c,x]:h<240?[0,x,c]:h<300?[x,0,c]:[c,0,x];
-    return '#'+channels.map(n=>Math.round((n+m)*255).toString(16).padStart(2,'0')).join('');
-  }
   function openColors() {
-    shell('앱 색상', `<form id="pearlColorForm" novalidate><div class="pearl-color-modes" role="group" aria-label="색상을 설정할 모드">${[['light','라이트 모드'],['dark','다크 모드']].map(([mode,label])=>`<button type="button" class="pearl-color-mode" data-color-mode="${mode}" aria-pressed="${profiles.mode===mode}"><span data-mode-swatch="${mode}" aria-hidden="true"></span>${label}</button>`).join('')}</div><div class="pearl-color-workbench"><div class="pearl-color-picker"><button type="button" class="pearl-color-plane" aria-label="색상판" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown"><span class="pearl-color-cursor" aria-hidden="true"></span></button><label class="pearl-hue-label" for="pearlHue">색상</label><input id="pearlHue" class="pearl-hue" type="range" min="0" max="359" step="1" aria-label="색상"><div class="pearl-color-preview" aria-label="선택한 두 색의 배경 미리보기"></div></div><div class="pearl-color-actions">${[['start','시작 색'],['end','끝 색']].map(([key,label])=>`<button type="button" class="pearl-color-choice" data-endpoint="${key}" aria-pressed="${key==='start'}"><span data-swatch="${key}" aria-hidden="true"></span>${label}</button>`).join('')}<div class="pearl-color-presets" aria-label="색상 조합"><button type="button" data-palette="pearl" aria-label="로즈 소프트" style="--preset:linear-gradient(120deg,#f8e9eb,#ecd9df)"></button><button type="button" data-palette="dark" aria-label="다크 로즈" style="--preset:linear-gradient(120deg,#30212a,#452e38)"></button><button type="button" data-palette="mixed" aria-label="웜 로즈" style="--preset:linear-gradient(120deg,#fffafb,#e2c3cf)"></button></div><button type="button" class="pearl-color-details" aria-expanded="false" aria-controls="pearlColorCodes">상세 입력</button></div></div><div id="pearlColorCodes" class="pearl-color-fields" hidden>${[['start','시작 색'],['end','끝 색']].map(([key,label])=>`<div><label for="pearlHex-${key}">${label} 색상 코드</label><div class="pearl-color-control"><input type="text" id="pearlHex-${key}" data-hex="${key}" value="${saved[key].toUpperCase()}" aria-label="${label} 색상 코드" maxlength="7" spellcheck="false" autocomplete="off"></div></div>`).join('')}</div><div class="pearl-settings-footer"><p id="pearlColorMessage" role="status">이 기기에 저장돼요.</p><button class="primary-btn" type="submit">저장</button></div></form>`);
-    dialog.classList.add('pearl-color-dialog');
-    const colorForm = dialog.querySelector('#pearlColorForm');
-    const customColors = document.createElement('details');
-    customColors.className = 'pearl-color-custom';
-    customColors.innerHTML = '<summary>직접 색 고르기</summary>';
-    customColors.addEventListener('toggle', queueRefresh);
-    const colorPresets = dialog.querySelector('.pearl-color-presets');
-    const presetNames = { pearl: '로즈 소프트', dark: '다크 로즈', mixed: '웜 로즈' };
-    colorPresets.querySelectorAll('button').forEach(button => { button.textContent = presetNames[button.dataset.palette]; });
-    colorForm.querySelector('.pearl-color-modes').after(dialog.querySelector('.pearl-color-preview'), colorPresets, customColors);
-    customColors.append(dialog.querySelector('.pearl-color-workbench'), dialog.querySelector('#pearlColorCodes'));
-    dialog.querySelector('#pearlColorMessage').textContent = '';
-    const draftProfiles = cloneProfiles(profiles);
-    let editingMode = profiles.mode;
-    draft = draftProfiles[editingMode];
-    let selected='start', pointer=null;
-    const hsv={ start:toHsv(draft.start), end:toHsv(draft.end) }, plane=dialog.querySelector('.pearl-color-plane'), hue=dialog.querySelector('#pearlHue'), cursor=dialog.querySelector('.pearl-color-cursor'), codes=dialog.querySelector('#pearlColorCodes'), details=dialog.querySelector('.pearl-color-details');
-    const showDetails=open=>{ if(open)customColors.open=true; codes.hidden=!open; details.setAttribute('aria-expanded',String(open)); details.textContent=open?'상세 입력 닫기':'상세 입력'; queueRefresh(); };
-    const sync=(updateCodes=true)=>{
-      for (const mode of ['light','dark']) {
-        dialog.querySelector(`[data-color-mode=${mode}]`).setAttribute('aria-pressed', String(mode === editingMode));
-        dialog.querySelector(`[data-mode-swatch=${mode}]`).style.background = `linear-gradient(120deg,${draftProfiles[mode].start},${draftProfiles[mode].end})`;
-      }
-      dialog.querySelector('#pearlColorMessage').textContent = '';
-      for(const key of ['start','end']){ dialog.querySelector(`[data-swatch=${key}]`).style.background=draft[key]; dialog.querySelector(`[data-endpoint=${key}]`).setAttribute('aria-pressed',String(key===selected)); if(updateCodes)dialog.querySelector(`[data-hex=${key}]`).value=draft[key].toUpperCase(); }
-      colorPresets.querySelectorAll('button').forEach(button => { const preset=COLOR_PRESETS[button.dataset.palette]; button.setAttribute('aria-pressed',String(draft.start===preset.start&&draft.end===preset.end)); });
-      const current=hsv[selected];
-      plane.style.setProperty('--picker-hue',current.h); cursor.style.left=current.s*100+'%'; cursor.style.top=(1-current.v)*100+'%'; cursor.style.background=draft[selected];
-      plane.setAttribute('aria-label',`${selected==='start'?'시작 색':'끝 색'} 색상판, 진하기 ${Math.round(current.s*100)}%, 밝기 ${Math.round(current.v*100)}%. 좌우 방향키로 진하기, 위아래 방향키로 밝기 조절`);
-      hue.value=Math.round(current.h); hue.style.setProperty('--picker-hue',current.h); hue.setAttribute('aria-valuetext',`${Math.round(current.h)}도`);
-      dialog.querySelector('.pearl-color-preview').style.background=`linear-gradient(120deg,${draft.start},${draft.end})`;
-      apply(draft, editingMode);
+    if(!vehiclePolicy.allows('settings')){notice('주행중엔 설정을 바꿀 수 없어요.');return;}
+    const draftProfiles=cloneProfiles(profiles);
+    let editingMode=profiles.mode;
+    shell('앱 색상', `<form id="pearlColorForm"><div class="pearl-color-modes" role="group" aria-label="화면 모드">${[['light','라이트 모드'],['dark','다크 모드']].map(([mode,label])=>`<button type="button" class="pearl-color-mode" data-color-mode="${mode}" aria-pressed="false">${label}</button>`).join('')}</div><div class="pearl-accent-preview"><strong>나의 배움</strong><span>화이트·블랙 기반의 차분한 배경</span><i aria-hidden="true"></i></div><h3 class="pearl-accent-title">포인트 컬러</h3><div class="pearl-accent-options" role="group" aria-label="포인트 컬러">${ACCENTS.map(([hex,name])=>`<button type="button" data-accent="${hex}" aria-label="${name}" aria-pressed="false"><span style="--swatch:${hex}" aria-hidden="true"></span><small>${name}</small></button>`).join('')}</div><div class="pearl-settings-footer"><p id="pearlColorMessage" role="status">모드마다 따로 저장돼요.</p><button class="primary-btn" type="submit">저장</button></div></form>`);
+    dialog.classList.add('pearl-color-dialog','pearl-neutral-colors');
+    const sync=()=>{
+      const selected=draftProfiles[editingMode];
+      dialog.querySelectorAll('[data-color-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.colorMode===editingMode)));
+      dialog.querySelectorAll('[data-accent]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.accent===selected.accent)));
+      apply(selected,editingMode);
     };
-    const readCodes = () => {
-      for (const key of ['start','end']) {
-        const field = dialog.querySelector(`[data-hex=${key}]`), value = field.value.trim();
-        if (!HEX.test(value)) { showDetails(true); dialog.querySelector('#pearlColorMessage').textContent = '색상 코드는 # 뒤에 6자리를 입력해 주세요.'; field.focus(); return false; }
-        draft[key] = value.toLowerCase();
-      }
-      return true;
-    };
-    const change=()=>{ draft[selected]=toHex(hsv[selected]); dialog.querySelector('#pearlColorMessage').textContent='이 기기에 저장돼요.'; sync(); };
-    const pick=e=>{ const r=plane.getBoundingClientRect(); hsv[selected].s=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)); hsv[selected].v=1-Math.max(0,Math.min(1,(e.clientY-r.top)/r.height)); change(); };
-    plane.addEventListener('pointerdown',e=>{ if(e.button!==0)return; e.preventDefault(); pointer=e.pointerId; plane.setPointerCapture(pointer); plane.focus({preventScroll:true}); pick(e); });
-    plane.addEventListener('pointermove',e=>{ if(e.pointerId===pointer)pick(e); });
-    plane.addEventListener('pointerup',e=>{ if(e.pointerId!==pointer)return; pick(e); pointer=null; if(plane.hasPointerCapture(e.pointerId))plane.releasePointerCapture(e.pointerId); });
-    plane.addEventListener('pointercancel',()=>{ pointer=null; });
-    plane.addEventListener('keydown',e=>{ const delta=e.shiftKey ? .1 : .01, c=hsv[selected]; if(e.key==='ArrowLeft')c.s=Math.max(0,c.s-delta); else if(e.key==='ArrowRight')c.s=Math.min(1,c.s+delta); else if(e.key==='ArrowUp')c.v=Math.min(1,c.v+delta); else if(e.key==='ArrowDown')c.v=Math.max(0,c.v-delta); else return; e.preventDefault(); change(); });
-    hue.addEventListener('input',()=>{ hsv[selected].h=Number(hue.value); change(); });
-    dialog.addEventListener('input',e=>{ const key=e.target.dataset.hex, value=e.target.value.trim(); if(key&&HEX.test(value)){ draft[key]=value.toLowerCase(); hsv[key]=toHsv(draft[key]); sync(false); } });
     dialog.addEventListener('click',e=>{
-      const mode = e.target.closest('[data-color-mode]')?.dataset.colorMode;
-      if (mode && mode !== editingMode) {
-        if (!readCodes()) return;
-        editingMode = mode; draft = draftProfiles[mode];
-        hsv.start = toHsv(draft.start); hsv.end = toHsv(draft.end); sync();
-      }
-      const endpoint=e.target.closest('[data-endpoint]')?.dataset.endpoint;
-      if(endpoint){ selected=endpoint; sync(false); }
-      if(e.target===details){ showDetails(codes.hidden); if(!codes.hidden)dialog.querySelector(`[data-hex=${selected}]`).focus(); }
-      const palette=e.target.closest('[data-palette]')?.dataset.palette;
-      if(COLOR_PRESETS[palette]){ draft={...COLOR_PRESETS[palette]}; draftProfiles[editingMode]=draft; hsv.start=toHsv(draft.start); hsv.end=toHsv(draft.end); sync(); }
+      const mode=e.target.closest('[data-color-mode]')?.dataset.colorMode;
+      if(mode){editingMode=mode;sync();return;}
+      const accent=e.target.closest('[data-accent]')?.dataset.accent;
+      if(validAccent(accent)){draftProfiles[editingMode].accent=accent;sync();}
     });
     dialog.querySelector('form').addEventListener('submit',e=>{
       e.preventDefault();
-      if(isDrivingMode){ close(); notice('주행중엔 설정을 바꿀 수 없어요.'); return; }
-      if (!readCodes()) return;
-      draftProfiles.mode = editingMode;
-      try { settingsStore.write(KEY, draftProfiles); }
-      catch (_) { dialog.querySelector('#pearlColorMessage').textContent='저장할 수 없어요. 기기 저장 공간을 확인해 주세요.'; return; }
-      profiles = cloneProfiles(draftProfiles); saved = { ...profiles[profiles.mode] }; close();
+      if(isDrivingMode){close();notice('주행중엔 설정을 바꿀 수 없어요.');return;}
+      draftProfiles.mode=editingMode;
+      try{settingsStore.write(KEY,draftProfiles)}catch(_){dialog.querySelector('#pearlColorMessage').textContent='저장할 수 없어요. 기기 저장 공간을 확인해 주세요.';return;}
+      profiles=cloneProfiles(draftProfiles);saved={...profiles[profiles.mode]};close();
     });
     sync();
   }

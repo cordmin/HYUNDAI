@@ -309,7 +309,7 @@ test('수업 주행 화면의 버튼은 이전과 일시정지이고, 멈추면 
   page(`driveNext();`);
   assert.strictEqual(page(`lessonRun.paused`), true);
   assert.strictEqual(page(`driveShown.driveNext.textContent`), '이어 듣기');
-  assert.strictEqual(page(`driveShown.driveSub.textContent`), '잠시 멈췄어요');
+  assert.strictEqual(page(`driveShown.driveSub.textContent`), '');
   page(`driveNext();`);
   assert.strictEqual(page(`lessonRun.paused`), false);
   page(`document.getElementById = realGet; window.setDrivingMode(false); goHome();`);
@@ -790,19 +790,23 @@ test('기록의 큰 위아래 버튼은 화면 높이만큼 이동하고 끝·�
   assert.strictEqual(result.lessonBlocked, true);
 });
 
-test('배움 기록은 날짜를 제목 위에 월·일로 표시하고 완료 문구를 바꾼다', () => {
+test('배움 기록은 날짜·수업명·상태 링·재생 버튼을 표시하고 상태 문구는 중복하지 않는다', () => {
   page(`goHome(); localStorage.values.clear(); writeStored(LESSON_KEY, { ...Lesson.normalize(), records: [
     { lesson: 'prime', title: '소수 기록', ymd: '20261106', finished: true },
     { lesson: 'ai', title: 'AI 기록', ymd: '2026-11-09', finished: false }
   ] }); openPearlTab('records');`);
-  assert.match(stageHtml(), /11월 6일<\/span><strong>소수 기록<\/strong><span class="pearl-record-complete">배움 완료!/);
+  assert.match(stageHtml(), /11월 6일<\/span><strong>소수 기록<\/strong>/);
+  assert.ok(stageHtml().includes('pearl-record-state-ring is-complete'));
   assert.match(stageHtml(), /11월 9일<\/span><strong>AI 기록<\/strong>/);
-  assert.match(stageHtml(), /<span class="pearl-record-status">듣던 수업<\/span><\/div><button class="pearl-record-resume"[^>]*aria-label="이어 들을 위치가 없는 기록" disabled><span class="lesson-play"/);
+  assert.ok(stageHtml().includes('aria-label="듣던 수업 처음부터 듣기"'));
+  const visible=stageHtml().replace(/<[^>]*>/g,'');
+  assert.ok(!/배움 완료|듣던 수업/.test(visible));
   assert.ok(!stageHtml().includes('마저 듣기'));
   assert.ok(!stageHtml().includes('20261106'));
   assert.ok(!stageHtml().includes('마친 수업'));
   page(`resumeRecord(1);`);
-  assert.strictEqual(page('currentMode'), 'records');
+  assert.strictEqual(page('currentMode'), 'lesson');
+  assert.strictEqual(page('lessonRun.lesson.id'), 'ai');
   page(`goHome(); localStorage.values.clear();`);
 });
 
@@ -1003,7 +1007,8 @@ test('상단 로고를 누르면 인트로 없이 메인 화면으로 가고 주
   assert.strictEqual(page('currentMode'), null);
   assert.ok(navHtml().includes(`aria-current="page" onclick="openPearlTab('now')"`));
   assert.ok(!navHtml().includes('pearl-eta')); // 15분 수업 버튼은 없다
-  assert.ok(navHtml().includes('onclick="togglePearlTheme()"'));
+  assert.ok(!navHtml().includes('togglePearlTheme'));
+  assert.ok(navHtml().includes('aria-label="재생목록"'));
   assert.strictEqual(page('logoReplays'), 0);
   page(`openPearlTab('records'); window.setDrivingMode(true);`);
   const before = page('currentMode');
@@ -1083,13 +1088,13 @@ test('탐색하다 다른 수업을 시작하면 이전 구간·초를 저장하
   page('goHome(); localStorage.values.clear();');
 });
 
-test('사람이 멈춘 수업은 재생기가 멈춤을 알려 와도 미니 플레이어에 잠시 멈췄어요로 보인다', () => {
+test('사람이 멈춘 수업은 문구 없이 재생 조작으로 표시하고 시스템 중단 안내와 구분한다', () => {
   page(`goHome(); localStorage.values.clear(); lessonMinutes=15; startLesson('prime'); openPearlTab('records');`);
   assert.equal(page('lessonDockState(lessonRun)'), '듣는 중');
   // 앱의 재생기(VoiceSession.hold)는 사람이 멈출 때도 paused를 알린다.
   page(`pauseLesson(); window.onSpeechEvent(JSON.stringify({ event: 'paused', seq: speechSeq }));`);
   assert.equal(page('lessonRun.playback.interrupted'), true);
-  assert.equal(page('lessonDockState(lessonRun)'), '잠시 멈췄어요');
+  assert.equal(page('lessonDockState(lessonRun)'), '');
   page(`resumeLesson(); window.onSpeechEvent(JSON.stringify({ event: 'resumed', seq: speechSeq }));`);
   assert.equal(page('lessonDockState(lessonRun)'), '듣는 중');
   // 길 안내·통화가 소리를 가져간 때만 다른 소리 안내를 보여 준다.
@@ -1238,4 +1243,40 @@ test('수동 종료는 5초 자동 재생을 시작하지 않으며 완료 직�
 test('제작자 시리즈 다음 편은 원래 판이 들어갈 때만 자동 전환 후보로 삼는다',()=>{
  resetPlaylistTest();page(`lessonQueue.series=new DaitPlaylist.Playlist(DAIT_LESSONS,{},[{title:'소수 이야기',lessons:['cicada','prime']}]).series;var authorRun={lesson:{id:'cicada'},trip:{count:0}};lessonMinutes=8;`);
  assert.equal(page('nextLessonCandidate(authorRun)'),null);page('lessonMinutes=20');assert.equal(page('nextLessonCandidate(authorRun).lesson'),'prime');resetPlaylistTest();
+});
+
+test('카드가 선택한 8분 분량은 같은 수업의 기존 15분 세션으로 돌아가지 않는다',()=>{
+ page(`window.setDrivingMode(false);goHome();localStorage.values.clear();setEta(null);lessonMinutes=15;startLesson('dongbaek');pauseLesson();lessonMinutes=8;startLesson('dongbaek',false,null,{minutes:8});`);
+ assert.equal(page('lessonRun.trip.minutes'),8);
+ assert.ok(page('lessonTimeline(lessonRun).seconds')<8*60);
+ page('goHome();localStorage.values.clear();');
+});
+test('완료 수업의 재생 버튼은 복습을 시작하고 다시 들어도 배지의 최초 날짜를 바꾸지 않는다',()=>{
+ page(`goHome();localStorage.values.clear();writeStored(LESSON_KEY,{...Lesson.normalize(),records:[{lesson:'dongbaek',title:'동백꽃',ymd:'20261101',finished:true}]});openPearlTab('records');syncBadgeLedger();resumeRecord(0);`);
+ assert.equal(page('lessonRun.lesson.id'),'dongbaek');assert.equal(page('lessonView'),null);
+ assert.equal(page('readStored(BADGE_KEY).awards.korean.day'),'20261101');
+ page('goHome();localStorage.values.clear();');
+});
+test('앞으로 이동 한계는 같은 조각을 다시 조립하거나 마지막 들은 조각이 빠져도 남은 청취 이력으로 계산한다',()=>{
+ page(`goHome();localStorage.values.clear();setEta(null);lessonMinutes=15;startLesson('sky');pauseLesson();
+   var firstHeardPiece=lessonRun.pieces[0];lessonRun.wait=null;lessonRun.positionSeconds=4;noteLessonHeard(lessonRun);
+   lessonRun.index=1;lessonRun.positionSeconds=6;noteLessonHeard(lessonRun);
+   lessonRun.pieces=lessonRun.pieces.map(p=>({...p}));seekLessonBy(-3600);`);
+ assert.ok(page('lessonHeardLimit(lessonRun)')>6);
+ page(`lessonRun.pieces=lessonRun.pieces.filter((p,i)=>i!==1);`);
+ assert.ok(Math.abs(page('lessonHeardLimit(lessonRun)')-4)<.01);
+ page('seekLessonBy(30);');assert.ok(page('lessonRun.positionSeconds')<=4.001);assert.ok(page('lessonRun.positionSeconds')>3.9);
+ page('goHome();localStorage.values.clear();');
+});
+
+
+test('기록의 진행 링은 저장한 실제 재생 위치를 쓰며 완료 전에는 가득 차지 않는다',()=>{
+ assert.equal(page('recordFraction({elapsedSeconds:25,totalSeconds:100,finished:false},null)'),.25);
+ assert.equal(page('recordFraction({elapsedSeconds:120,totalSeconds:100,finished:false},null)'),.999);
+ assert.equal(page('recordFraction({finished:true},null)'),1);
+ assert.equal(page('recordFraction({finished:false},null)'),0);
+ page(`goHome();localStorage.values.clear();setEta(null);lessonMinutes=15;startLesson('sky');pauseLesson();lessonRun.wait=null;lessonRun.positionSeconds=4;endLesson();`);
+ assert.equal(page('lessonProgress().records.at(-1).elapsedSeconds'),4);
+ assert.ok(page('lessonProgress().records.at(-1).totalSeconds')>4);
+ page('goHome();localStorage.values.clear();');
 });

@@ -1,0 +1,40 @@
+Create a premium WHITE-background DAIT learning badge collection concept sheet for years of audio learning, spanning children, teens, adults. Portrait 2:3 at highest resolution, spacious but readable FOUR columns by SIX rows, exactly 24 distinct BIG collectible badges. Korean labels clearly typeset below each. No tiny paragraphs. Header exactly "오래 탈수록, 배움도 넓게" and subtitle "다잇 장기 배지 컬렉션 · 대표 24종 시안". Small note "학생부터 어른까지 · 120종 설계안의 일부".
+REFERENCE 1 is the CANONICAL six DAIT badge designs. Reference 2 shows approved same-family extensions. Faithfully retain the first six designs from reference1, then extend this EXACT FAMILY. Consistent SILVER beveled metal rims (not gold rims), layered low-relief cheerful educational enamel illustration, vivid segmented backdrops, raised pictograms and tiny scenes. Alternating shield / round / rounded hexagon as the subjects call for. Original visual language, no Apple logos, no generic flat vectors, no generic gold medallions, no empty numeric reskins. Art appealing across ages, readable and friendly, no vehicle mileage, no racing, no car achievements, no competitive ranking, no point currency, no acorns. The rewards are LEARNING experiences, not driving.
+
+Grid read left to right:
+ROW 1 four:
+1 label "첫 발견": faithfully preserve original green SHIELD with open book, gold star, winding path, trees.
+2 label "국어": faithfully preserve original red hexagon with Korean hanbok girl reading book marked 가 and yellow flower.
+3 label "수학": faithfully preserve original blue circle with white plus, multiplication cross and triangular ruler.
+4 label "탐험": faithfully preserve original orange-green shield with compass, map, mountain scenery and red map pin.
+ROW 2 four:
+5 label "골고루 탐험가": original multicolor hexagon with book/plus/compass and silver 3.
+6 label "생활 속 발견가": original green circle with magnifying glass, leaf, house and silver 5.
+7 label "과학": approved teal circle with microscope, atom and flask.
+8 label "기술": approved orange hexagon with gear, wrench and lightbulb.
+ROW 3 four:
+9 label "음악": approved violet circle with colorful musical notes, staff and little piano.
+10 label "역사": burgundy shield, weathered scroll, small hourglass and ancient stone-column motif, silver rim.
+11 label "지리": turquoise circle, globe, folded map and mountain-contour scene, silver rim.
+12 label "경제": warm ochre hexagon, simple scales balancing two everyday goods with coin and market-stall backdrop, no dollar sign, no casino or wealth trophies.
+ROW 4 four:
+13 label "건강·생활": fresh green shield, heart, apple, water and small sunrise, educational health/life motif, not a certification cross.
+14 label "미술·디자인": coral/purple round badge, painter palette, clean geometrical building and brush.
+15 label "문화·철학": deep violet hexagon, two friendly facing profile silhouettes with large question mark and globe arc, respectful plural cultures, no religious emblems.
+16 label "사회·시민": blue-green shield, civic building and linked hands with a small speech bubble.
+ROW 5 four: distinctive CROSS-FIELD CONNECTION BADGES, combine recognizable scene elements in one cohesive badge, not generic topic symbols.
+17 label "시와 별": midnight-blue circle, open poetry book under silver constellation and gold star.
+18 label "리듬의 수학": violet-blue hexagon, musical notes flowing into fraction circles and repeating geometric beat blocks.
+19 label "빛과 색": cyan-coral circle, triangular glass prism splitting a ray into a colorful arc with small painter palette.
+20 label "지도와 역사": terracotta-green shield, rolled historical map, compass and stone arch.
+ROW 6 four:
+21 label "돈과 선택": orange/teal hexagon, balanced scales with shopping basket and choice branching path, meaningful everyday decisions rather than riches.
+22 label "별빛 시리즈 완주": navy silver-rim shield, a small SET of star-themed books, constellation, checkmark, gold star.
+23 label "생활 과학 시리즈 완주": teal shield with small SET of books, lightbulb, leaf, flask and checkmark, consistent with approved series-completion art.
+24 label "배움의 100일": forest-green round medal with illustrated calendar leaves and a winding path, readable large raised silver 100, simple subtle stars, number grows with experience but not a streak.
+
+Names are visual/design examples, not final implemented achievement labels. All 24 designs must be visibly varied, maintain the six originals' silver metal rim and dimensional enamel rendering. Keep equal optical size and ample white space so small details and Korean labels are not crowded. Footer as concise clean typesetting:
+"주제 탐험 72종 + 분야 연결 24종 + 시리즈 12종 + 누적 기록 12종 = 120종"
+"새 수업·시리즈와 함께 계속 확장 · 쉬어도 기록 유지"
+"팀 검토용 시안 · 새 배지 디자인과 획득 조건은 제안"
+No progress bars, no blue tinted big cards, no invented brand logo. Bright white poster, crisp charcoal/navy text. The main value is actual desirable illustration-rich badges, not text blocks.

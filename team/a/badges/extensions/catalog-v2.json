@@ -1,0 +1,2080 @@
+{
+  "version": "proposal-2026-11-10",
+  "note": "120-item content/art candidate pool. Current relationship and award design is structure-v3, not the legacy per-item condition proposals.",
+  "groups": {
+    "주제 탐험": 72,
+    "분야 연결": 24,
+    "시리즈 완주": 12,
+    "누적 기록": 12
+  },
+  "badges": [
+    {
+      "id": "field-language-first",
+      "name": "언어·문학 첫 발견",
+      "group": "주제 탐험",
+      "field": "language",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_field",
+        "field": "language",
+        "count": 1
+      },
+      "condition": "언어·문학 수업 1편 마치기",
+      "artwork": "korean",
+      "field_label": "언어·문학"
+    },
+    {
+      "id": "topic-language-metaphor",
+      "name": "비유를 발견하다",
+      "group": "주제 탐험",
+      "field": "language",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "language",
+        "topic": "metaphor",
+        "count": 3
+      },
+      "condition": "언어·문학 · 비유를 발견하다 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "언어·문학"
+    },
+    {
+      "id": "topic-language-story",
+      "name": "이야기의 구조",
+      "group": "주제 탐험",
+      "field": "language",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "language",
+        "topic": "story",
+        "count": 3
+      },
+      "condition": "언어·문학 · 이야기의 구조 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "언어·문학"
+    },
+    {
+      "id": "topic-language-poetry",
+      "name": "시를 읽는 마음",
+      "group": "주제 탐험",
+      "field": "language",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "language",
+        "topic": "poetry",
+        "count": 3
+      },
+      "condition": "언어·문학 · 시를 읽는 마음 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "언어·문학"
+    },
+    {
+      "id": "topic-language-word-origins",
+      "name": "말의 뿌리",
+      "group": "주제 탐험",
+      "field": "language",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "language",
+        "topic": "word-origins",
+        "count": 3
+      },
+      "condition": "언어·문학 · 말의 뿌리 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "언어·문학"
+    },
+    {
+      "id": "topic-language-persuasion",
+      "name": "설득의 기술",
+      "group": "주제 탐험",
+      "field": "language",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "language",
+        "topic": "persuasion",
+        "count": 3
+      },
+      "condition": "언어·문학 · 설득의 기술 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "언어·문학"
+    },
+    {
+      "id": "field-math-first",
+      "name": "수리·논리 첫 발견",
+      "group": "주제 탐험",
+      "field": "math",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_field",
+        "field": "math",
+        "count": 1
+      },
+      "condition": "수리·논리 수업 1편 마치기",
+      "artwork": "math",
+      "field_label": "수리·논리"
+    },
+    {
+      "id": "topic-math-primes",
+      "name": "소수의 비밀",
+      "group": "주제 탐험",
+      "field": "math",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "math",
+        "topic": "primes",
+        "count": 3
+      },
+      "condition": "수리·논리 · 소수의 비밀 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "수리·논리"
+    },
+    {
+      "id": "topic-math-probability",
+      "name": "우연을 읽다",
+      "group": "주제 탐험",
+      "field": "math",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "math",
+        "topic": "probability",
+        "count": 3
+      },
+      "condition": "수리·논리 · 우연을 읽다 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "수리·논리"
+    },
+    {
+      "id": "topic-math-ratios",
+      "name": "비율의 감각",
+      "group": "주제 탐험",
+      "field": "math",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "math",
+        "topic": "ratios",
+        "count": 3
+      },
+      "condition": "수리·논리 · 비율의 감각 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "수리·논리"
+    },
+    {
+      "id": "topic-math-statistics",
+      "name": "통계를 읽다",
+      "group": "주제 탐험",
+      "field": "math",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "math",
+        "topic": "statistics",
+        "count": 3
+      },
+      "condition": "수리·논리 · 통계를 읽다 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "수리·논리"
+    },
+    {
+      "id": "topic-math-geometry",
+      "name": "도형의 세계",
+      "group": "주제 탐험",
+      "field": "math",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "math",
+        "topic": "geometry",
+        "count": 3
+      },
+      "condition": "수리·논리 · 도형의 세계 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "수리·논리"
+    },
+    {
+      "id": "field-science-first",
+      "name": "자연·과학 첫 발견",
+      "group": "주제 탐험",
+      "field": "science",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_field",
+        "field": "science",
+        "count": 1
+      },
+      "condition": "자연·과학 수업 1편 마치기",
+      "artwork": "science",
+      "field_label": "자연·과학"
+    },
+    {
+      "id": "topic-science-light",
+      "name": "빛을 따라",
+      "group": "주제 탐험",
+      "field": "science",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "science",
+        "topic": "light",
+        "count": 3
+      },
+      "condition": "자연·과학 · 빛을 따라 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "자연·과학"
+    },
+    {
+      "id": "topic-science-biology",
+      "name": "생명의 원리",
+      "group": "주제 탐험",
+      "field": "science",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "science",
+        "topic": "biology",
+        "count": 3
+      },
+      "condition": "자연·과학 · 생명의 원리 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "자연·과학"
+    },
+    {
+      "id": "topic-science-earth",
+      "name": "지구의 변화",
+      "group": "주제 탐험",
+      "field": "science",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "science",
+        "topic": "earth",
+        "count": 3
+      },
+      "condition": "자연·과학 · 지구의 변화 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "자연·과학"
+    },
+    {
+      "id": "topic-science-space",
+      "name": "우주를 향해",
+      "group": "주제 탐험",
+      "field": "science",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "science",
+        "topic": "space",
+        "count": 3
+      },
+      "condition": "자연·과학 · 우주를 향해 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "자연·과학"
+    },
+    {
+      "id": "topic-science-matter",
+      "name": "물질의 세계",
+      "group": "주제 탐험",
+      "field": "science",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "science",
+        "topic": "matter",
+        "count": 3
+      },
+      "condition": "자연·과학 · 물질의 세계 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "자연·과학"
+    },
+    {
+      "id": "field-technology-first",
+      "name": "기술·디지털 첫 발견",
+      "group": "주제 탐험",
+      "field": "technology",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_field",
+        "field": "technology",
+        "count": 1
+      },
+      "condition": "기술·디지털 수업 1편 마치기",
+      "artwork": "technology",
+      "field_label": "기술·디지털"
+    },
+    {
+      "id": "topic-technology-ai",
+      "name": "AI를 읽다",
+      "group": "주제 탐험",
+      "field": "technology",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "technology",
+        "topic": "ai",
+        "count": 3
+      },
+      "condition": "기술·디지털 · AI를 읽다 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "기술·디지털"
+    },
+    {
+      "id": "topic-technology-networks",
+      "name": "연결된 세상",
+      "group": "주제 탐험",
+      "field": "technology",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "technology",
+        "topic": "networks",
+        "count": 3
+      },
+      "condition": "기술·디지털 · 연결된 세상 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "기술·디지털"
+    },
+    {
+      "id": "topic-technology-digital-safety",
+      "name": "디지털 안전",
+      "group": "주제 탐험",
+      "field": "technology",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "technology",
+        "topic": "digital-safety",
+        "count": 3
+      },
+      "condition": "기술·디지털 · 디지털 안전 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "기술·디지털"
+    },
+    {
+      "id": "topic-technology-algorithms",
+      "name": "알고리즘의 길",
+      "group": "주제 탐험",
+      "field": "technology",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "technology",
+        "topic": "algorithms",
+        "count": 3
+      },
+      "condition": "기술·디지털 · 알고리즘의 길 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "기술·디지털"
+    },
+    {
+      "id": "topic-technology-inventions",
+      "name": "생활을 바꾼 기술",
+      "group": "주제 탐험",
+      "field": "technology",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "technology",
+        "topic": "inventions",
+        "count": 3
+      },
+      "condition": "기술·디지털 · 생활을 바꾼 기술 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "기술·디지털"
+    },
+    {
+      "id": "field-civics-first",
+      "name": "사회·시민 첫 발견",
+      "group": "주제 탐험",
+      "field": "civics",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_field",
+        "field": "civics",
+        "count": 1
+      },
+      "condition": "사회·시민 수업 1편 마치기",
+      "artwork": null,
+      "field_label": "사회·시민"
+    },
+    {
+      "id": "topic-civics-democracy",
+      "name": "민주주의의 원리",
+      "group": "주제 탐험",
+      "field": "civics",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "civics",
+        "topic": "democracy",
+        "count": 3
+      },
+      "condition": "사회·시민 · 민주주의의 원리 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "사회·시민"
+    },
+    {
+      "id": "topic-civics-community",
+      "name": "함께 사는 방법",
+      "group": "주제 탐험",
+      "field": "civics",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "civics",
+        "topic": "community",
+        "count": 3
+      },
+      "condition": "사회·시민 · 함께 사는 방법 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "사회·시민"
+    },
+    {
+      "id": "topic-civics-media",
+      "name": "미디어를 읽다",
+      "group": "주제 탐험",
+      "field": "civics",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "civics",
+        "topic": "media",
+        "count": 3
+      },
+      "condition": "사회·시민 · 미디어를 읽다 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "사회·시민"
+    },
+    {
+      "id": "topic-civics-rights",
+      "name": "인권의 출발",
+      "group": "주제 탐험",
+      "field": "civics",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "civics",
+        "topic": "rights",
+        "count": 3
+      },
+      "condition": "사회·시민 · 인권의 출발 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "사회·시민"
+    },
+    {
+      "id": "topic-civics-world-issues",
+      "name": "세상의 쟁점",
+      "group": "주제 탐험",
+      "field": "civics",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "civics",
+        "topic": "world-issues",
+        "count": 3
+      },
+      "condition": "사회·시민 · 세상의 쟁점 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "사회·시민"
+    },
+    {
+      "id": "field-history-first",
+      "name": "역사 첫 발견",
+      "group": "주제 탐험",
+      "field": "history",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_field",
+        "field": "history",
+        "count": 1
+      },
+      "condition": "역사 수업 1편 마치기",
+      "artwork": null,
+      "field_label": "역사"
+    },
+    {
+      "id": "topic-history-korean-history",
+      "name": "한국사의 흐름",
+      "group": "주제 탐험",
+      "field": "history",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "history",
+        "topic": "korean-history",
+        "count": 3
+      },
+      "condition": "역사 · 한국사의 흐름 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "역사"
+    },
+    {
+      "id": "topic-history-world-history",
+      "name": "세계사의 흐름",
+      "group": "주제 탐험",
+      "field": "history",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "history",
+        "topic": "world-history",
+        "count": 3
+      },
+      "condition": "역사 · 세계사의 흐름 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "역사"
+    },
+    {
+      "id": "topic-history-invention-history",
+      "name": "발명의 발자취",
+      "group": "주제 탐험",
+      "field": "history",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "history",
+        "topic": "invention-history",
+        "count": 3
+      },
+      "condition": "역사 · 발명의 발자취 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "역사"
+    },
+    {
+      "id": "topic-history-everyday-history",
+      "name": "일상의 역사",
+      "group": "주제 탐험",
+      "field": "history",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "history",
+        "topic": "everyday-history",
+        "count": 3
+      },
+      "condition": "역사 · 일상의 역사 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "역사"
+    },
+    {
+      "id": "topic-history-people",
+      "name": "인물과 시대",
+      "group": "주제 탐험",
+      "field": "history",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "history",
+        "topic": "people",
+        "count": 3
+      },
+      "condition": "역사 · 인물과 시대 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "역사"
+    },
+    {
+      "id": "field-geography-first",
+      "name": "지리·세계 첫 발견",
+      "group": "주제 탐험",
+      "field": "geography",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_field",
+        "field": "geography",
+        "count": 1
+      },
+      "condition": "지리·세계 수업 1편 마치기",
+      "artwork": null,
+      "field_label": "지리·세계"
+    },
+    {
+      "id": "topic-geography-maps",
+      "name": "지도 위의 발견",
+      "group": "주제 탐험",
+      "field": "geography",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "geography",
+        "topic": "maps",
+        "count": 3
+      },
+      "condition": "지리·세계 · 지도 위의 발견 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "지리·세계"
+    },
+    {
+      "id": "topic-geography-climate",
+      "name": "기후를 읽다",
+      "group": "주제 탐험",
+      "field": "geography",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "geography",
+        "topic": "climate",
+        "count": 3
+      },
+      "condition": "지리·세계 · 기후를 읽다 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "지리·세계"
+    },
+    {
+      "id": "topic-geography-cities",
+      "name": "도시의 얼굴",
+      "group": "주제 탐험",
+      "field": "geography",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "geography",
+        "topic": "cities",
+        "count": 3
+      },
+      "condition": "지리·세계 · 도시의 얼굴 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "지리·세계"
+    },
+    {
+      "id": "topic-geography-landforms",
+      "name": "땅의 이야기",
+      "group": "주제 탐험",
+      "field": "geography",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "geography",
+        "topic": "landforms",
+        "count": 3
+      },
+      "condition": "지리·세계 · 땅의 이야기 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "지리·세계"
+    },
+    {
+      "id": "topic-geography-countries",
+      "name": "이웃 나라 탐험",
+      "group": "주제 탐험",
+      "field": "geography",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "geography",
+        "topic": "countries",
+        "count": 3
+      },
+      "condition": "지리·세계 · 이웃 나라 탐험 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "지리·세계"
+    },
+    {
+      "id": "field-economy-first",
+      "name": "경제·금융 첫 발견",
+      "group": "주제 탐험",
+      "field": "economy",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_field",
+        "field": "economy",
+        "count": 1
+      },
+      "condition": "경제·금융 수업 1편 마치기",
+      "artwork": null,
+      "field_label": "경제·금융"
+    },
+    {
+      "id": "topic-economy-money",
+      "name": "돈은 어떻게 흐를까",
+      "group": "주제 탐험",
+      "field": "economy",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "economy",
+        "topic": "money",
+        "count": 3
+      },
+      "condition": "경제·금융 · 돈은 어떻게 흐를까 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "경제·금융"
+    },
+    {
+      "id": "topic-economy-prices",
+      "name": "가격의 이유",
+      "group": "주제 탐험",
+      "field": "economy",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "economy",
+        "topic": "prices",
+        "count": 3
+      },
+      "condition": "경제·금융 · 가격의 이유 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "경제·금융"
+    },
+    {
+      "id": "topic-economy-opportunity-cost",
+      "name": "선택의 비용",
+      "group": "주제 탐험",
+      "field": "economy",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "economy",
+        "topic": "opportunity-cost",
+        "count": 3
+      },
+      "condition": "경제·금융 · 선택의 비용 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "경제·금융"
+    },
+    {
+      "id": "topic-economy-consumption",
+      "name": "소비를 읽다",
+      "group": "주제 탐험",
+      "field": "economy",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "economy",
+        "topic": "consumption",
+        "count": 3
+      },
+      "condition": "경제·금융 · 소비를 읽다 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "경제·금융"
+    },
+    {
+      "id": "topic-economy-finance",
+      "name": "금융의 기초",
+      "group": "주제 탐험",
+      "field": "economy",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "economy",
+        "topic": "finance",
+        "count": 3
+      },
+      "condition": "경제·금융 · 금융의 기초 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "경제·금융"
+    },
+    {
+      "id": "field-health-first",
+      "name": "건강·생활 첫 발견",
+      "group": "주제 탐험",
+      "field": "health",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_field",
+        "field": "health",
+        "count": 1
+      },
+      "condition": "건강·생활 수업 1편 마치기",
+      "artwork": null,
+      "field_label": "건강·생활"
+    },
+    {
+      "id": "topic-health-body",
+      "name": "몸의 신호",
+      "group": "주제 탐험",
+      "field": "health",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "health",
+        "topic": "body",
+        "count": 3
+      },
+      "condition": "건강·생활 · 몸의 신호 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "건강·생활"
+    },
+    {
+      "id": "topic-health-food",
+      "name": "식탁의 발견",
+      "group": "주제 탐험",
+      "field": "health",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "health",
+        "topic": "food",
+        "count": 3
+      },
+      "condition": "건강·생활 · 식탁의 발견 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "건강·생활"
+    },
+    {
+      "id": "topic-health-sleep",
+      "name": "잠의 과학",
+      "group": "주제 탐험",
+      "field": "health",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "health",
+        "topic": "sleep",
+        "count": 3
+      },
+      "condition": "건강·생활 · 잠의 과학 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "건강·생활"
+    },
+    {
+      "id": "topic-health-movement",
+      "name": "움직임의 원리",
+      "group": "주제 탐험",
+      "field": "health",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "health",
+        "topic": "movement",
+        "count": 3
+      },
+      "condition": "건강·생활 · 움직임의 원리 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "건강·생활"
+    },
+    {
+      "id": "topic-health-everyday-safety",
+      "name": "생활 속 안전",
+      "group": "주제 탐험",
+      "field": "health",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "health",
+        "topic": "everyday-safety",
+        "count": 3
+      },
+      "condition": "건강·생활 · 생활 속 안전 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "건강·생활"
+    },
+    {
+      "id": "field-music-first",
+      "name": "음악 첫 발견",
+      "group": "주제 탐험",
+      "field": "music",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_field",
+        "field": "music",
+        "count": 1
+      },
+      "condition": "음악 수업 1편 마치기",
+      "artwork": "music",
+      "field_label": "음악"
+    },
+    {
+      "id": "topic-music-rhythm",
+      "name": "리듬의 발견",
+      "group": "주제 탐험",
+      "field": "music",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "music",
+        "topic": "rhythm",
+        "count": 3
+      },
+      "condition": "음악 · 리듬의 발견 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "음악"
+    },
+    {
+      "id": "topic-music-melody",
+      "name": "멜로디의 길",
+      "group": "주제 탐험",
+      "field": "music",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "music",
+        "topic": "melody",
+        "count": 3
+      },
+      "condition": "음악 · 멜로디의 길 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "음악"
+    },
+    {
+      "id": "topic-music-instruments",
+      "name": "악기의 목소리",
+      "group": "주제 탐험",
+      "field": "music",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "music",
+        "topic": "instruments",
+        "count": 3
+      },
+      "condition": "음악 · 악기의 목소리 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "음악"
+    },
+    {
+      "id": "topic-music-genres",
+      "name": "음악의 여러 얼굴",
+      "group": "주제 탐험",
+      "field": "music",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "music",
+        "topic": "genres",
+        "count": 3
+      },
+      "condition": "음악 · 음악의 여러 얼굴 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "음악"
+    },
+    {
+      "id": "topic-music-music-history",
+      "name": "음악과 시대",
+      "group": "주제 탐험",
+      "field": "music",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "music",
+        "topic": "music-history",
+        "count": 3
+      },
+      "condition": "음악 · 음악과 시대 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "음악"
+    },
+    {
+      "id": "field-art-first",
+      "name": "미술·디자인 첫 발견",
+      "group": "주제 탐험",
+      "field": "art",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_field",
+        "field": "art",
+        "count": 1
+      },
+      "condition": "미술·디자인 수업 1편 마치기",
+      "artwork": null,
+      "field_label": "미술·디자인"
+    },
+    {
+      "id": "topic-art-color",
+      "name": "색을 읽다",
+      "group": "주제 탐험",
+      "field": "art",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "art",
+        "topic": "color",
+        "count": 3
+      },
+      "condition": "미술·디자인 · 색을 읽다 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "미술·디자인"
+    },
+    {
+      "id": "topic-art-composition",
+      "name": "구도의 힘",
+      "group": "주제 탐험",
+      "field": "art",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "art",
+        "topic": "composition",
+        "count": 3
+      },
+      "condition": "미술·디자인 · 구도의 힘 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "미술·디자인"
+    },
+    {
+      "id": "topic-art-architecture",
+      "name": "건축을 보다",
+      "group": "주제 탐험",
+      "field": "art",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "art",
+        "topic": "architecture",
+        "count": 3
+      },
+      "condition": "미술·디자인 · 건축을 보다 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "미술·디자인"
+    },
+    {
+      "id": "topic-art-design",
+      "name": "디자인의 이유",
+      "group": "주제 탐험",
+      "field": "art",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "art",
+        "topic": "design",
+        "count": 3
+      },
+      "condition": "미술·디자인 · 디자인의 이유 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "미술·디자인"
+    },
+    {
+      "id": "topic-art-art-history",
+      "name": "미술의 시간",
+      "group": "주제 탐험",
+      "field": "art",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "art",
+        "topic": "art-history",
+        "count": 3
+      },
+      "condition": "미술·디자인 · 미술의 시간 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "미술·디자인"
+    },
+    {
+      "id": "field-culture-first",
+      "name": "문화·철학 첫 발견",
+      "group": "주제 탐험",
+      "field": "culture",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_field",
+        "field": "culture",
+        "count": 1
+      },
+      "condition": "문화·철학 수업 1편 마치기",
+      "artwork": null,
+      "field_label": "문화·철학"
+    },
+    {
+      "id": "topic-culture-questions",
+      "name": "질문의 시작",
+      "group": "주제 탐험",
+      "field": "culture",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "culture",
+        "topic": "questions",
+        "count": 3
+      },
+      "condition": "문화·철학 · 질문의 시작 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "문화·철학"
+    },
+    {
+      "id": "topic-culture-ethics",
+      "name": "옳음의 기준",
+      "group": "주제 탐험",
+      "field": "culture",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "culture",
+        "topic": "ethics",
+        "count": 3
+      },
+      "condition": "문화·철학 · 옳음의 기준 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "문화·철학"
+    },
+    {
+      "id": "topic-culture-cultures",
+      "name": "다른 문화 만나기",
+      "group": "주제 탐험",
+      "field": "culture",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "culture",
+        "topic": "cultures",
+        "count": 3
+      },
+      "condition": "문화·철학 · 다른 문화 만나기 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "문화·철학"
+    },
+    {
+      "id": "topic-culture-beliefs",
+      "name": "믿음과 문화",
+      "group": "주제 탐험",
+      "field": "culture",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "culture",
+        "topic": "beliefs",
+        "count": 3
+      },
+      "condition": "문화·철학 · 믿음과 문화 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "문화·철학"
+    },
+    {
+      "id": "topic-culture-everyday-philosophy",
+      "name": "철학과 일상",
+      "group": "주제 탐험",
+      "field": "culture",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_lessons_in_topic",
+        "field": "culture",
+        "topic": "everyday-philosophy",
+        "count": 3
+      },
+      "condition": "문화·철학 · 철학과 일상 주제의 서로 다른 수업 3편",
+      "artwork": null,
+      "field_label": "문화·철학"
+    },
+    {
+      "id": "connect-poetry-stars",
+      "name": "시와 별",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "language:poetry",
+          "science:space"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「시를 읽는 마음」·「우주를 향해」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-rhythm-math",
+      "name": "리듬의 수학",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "music:rhythm",
+          "math:ratios"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「리듬의 발견」·「비율의 감각」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-light-color",
+      "name": "빛과 색",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "science:light",
+          "art:color"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「빛을 따라」·「색을 읽다」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-maps-history",
+      "name": "지도와 역사",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "geography:maps",
+          "history:world-history"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「지도 위의 발견」·「세계사의 흐름」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-money-choice",
+      "name": "돈과 선택",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "economy:money",
+          "economy:opportunity-cost"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「돈은 어떻게 흐를까」·「선택의 비용」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-art-science",
+      "name": "건축의 과학",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "art:architecture",
+          "science:matter"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「건축을 보다」·「물질의 세계」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-climate-life",
+      "name": "기후와 생활",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "geography:climate",
+          "health:everyday-safety"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「기후를 읽다」·「생활 속 안전」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-ai-judgment",
+      "name": "AI와 판단",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "technology:ai",
+          "culture:questions"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「AI를 읽다」·「질문의 시작」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-words-media",
+      "name": "말과 미디어",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "language:persuasion",
+          "civics:media"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「설득의 기술」·「미디어를 읽다」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-food-science",
+      "name": "식탁의 과학",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "health:food",
+          "science:biology"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「식탁의 발견」·「생명의 원리」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-sound-music",
+      "name": "소리의 원리",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "music:instruments",
+          "science:matter"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「악기의 목소리」·「물질의 세계」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-city-history",
+      "name": "도시의 시간",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "geography:cities",
+          "history:everyday-history"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「도시의 얼굴」·「일상의 역사」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-invention-society",
+      "name": "발명이 바꾼 사회",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "technology:inventions",
+          "civics:community"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「생활을 바꾼 기술」·「함께 사는 방법」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-body-numbers",
+      "name": "몸을 읽는 숫자",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "health:body",
+          "math:statistics"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「몸의 신호」·「통계를 읽다」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-story-ethics",
+      "name": "이야기와 윤리",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "language:story",
+          "culture:ethics"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「이야기의 구조」·「옳음의 기준」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-world-cultures",
+      "name": "지도 너머의 문화",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "geography:countries",
+          "culture:cultures"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「이웃 나라 탐험」·「다른 문화 만나기」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-questions-science",
+      "name": "질문에서 과학으로",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "culture:questions",
+          "science:earth"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「질문의 시작」·「지구의 변화」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-art-technology",
+      "name": "예술과 기술",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "art:design",
+          "technology:inventions"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「디자인의 이유」·「생활을 바꾼 기술」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-music-time",
+      "name": "음악과 시대의 만남",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "music:music-history",
+          "history:people"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「음악과 시대」·「인물과 시대」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "connect-news-numbers",
+      "name": "뉴스 속 숫자",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "topic_pair",
+        "topics": [
+          "civics:media",
+          "math:statistics"
+        ],
+        "distinct_per_topic": 2,
+        "same_lesson_reuse": false
+      },
+      "condition": "「미디어를 읽다」·「통계를 읽다」 관련 수업을 각각 2편씩, 총 4편 이상. 같은 수업을 양쪽에 중복 계산하지 않음",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "breadth-3",
+      "name": "골고루 탐험가",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_fields",
+        "count": 3,
+        "min_lessons_each": 1
+      },
+      "condition": "서로 다른 3개 분야의 수업을 1편 이상씩",
+      "artwork": "well-rounded-explorer",
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "breadth-6",
+      "name": "넓어진 시야",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_fields",
+        "count": 6,
+        "min_lessons_each": 1
+      },
+      "condition": "서로 다른 6개 분야의 수업을 1편 이상씩",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "breadth-9",
+      "name": "분야를 잇는 사람",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_fields",
+        "count": 9,
+        "min_lessons_each": 1
+      },
+      "condition": "서로 다른 9개 분야의 수업을 1편 이상씩",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "breadth-12",
+      "name": "배움의 큰 지도",
+      "group": "분야 연결",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_fields",
+        "count": 12,
+        "min_lessons_each": 1
+      },
+      "condition": "서로 다른 12개 분야의 수업을 1편 이상씩",
+      "artwork": null,
+      "field_label": "여러 분야"
+    },
+    {
+      "id": "series-stars",
+      "name": "별빛 시리즈 완주",
+      "group": "시리즈 완주",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "author_series",
+        "series_draft_key": "stars",
+        "all_required": true,
+        "snapshot_on_release": true
+      },
+      "condition": "향후 제작자가 편성한 해당 시리즈의 공개된 필수편 모두. 현재 공식 시리즈는 비어 있으므로 전부 미활성",
+      "artwork": "series-completion",
+      "field_label": "공통"
+    },
+    {
+      "id": "series-everyday-science",
+      "name": "생활 과학 시리즈 완주",
+      "group": "시리즈 완주",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "author_series",
+        "series_draft_key": "everyday-science",
+        "all_required": true,
+        "snapshot_on_release": true
+      },
+      "condition": "향후 제작자가 편성한 해당 시리즈의 공개된 필수편 모두. 현재 공식 시리즈는 비어 있으므로 전부 미활성",
+      "artwork": "series-completion",
+      "field_label": "공통"
+    },
+    {
+      "id": "series-prime-story",
+      "name": "소수 이야기 완주",
+      "group": "시리즈 완주",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "author_series",
+        "series_draft_key": "prime-story",
+        "all_required": true,
+        "snapshot_on_release": true
+      },
+      "condition": "향후 제작자가 편성한 해당 시리즈의 공개된 필수편 모두. 현재 공식 시리즈는 비어 있으므로 전부 미활성",
+      "artwork": "series-completion",
+      "field_label": "공통"
+    },
+    {
+      "id": "series-words-roots",
+      "name": "말의 뿌리 완주",
+      "group": "시리즈 완주",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "author_series",
+        "series_draft_key": "words-roots",
+        "all_required": true,
+        "snapshot_on_release": true
+      },
+      "condition": "향후 제작자가 편성한 해당 시리즈의 공개된 필수편 모두. 현재 공식 시리즈는 비어 있으므로 전부 미활성",
+      "artwork": "series-completion",
+      "field_label": "공통"
+    },
+    {
+      "id": "series-music-journey",
+      "name": "음악 여행 완주",
+      "group": "시리즈 완주",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "author_series",
+        "series_draft_key": "music-journey",
+        "all_required": true,
+        "snapshot_on_release": true
+      },
+      "condition": "향후 제작자가 편성한 해당 시리즈의 공개된 필수편 모두. 현재 공식 시리즈는 비어 있으므로 전부 미활성",
+      "artwork": "series-completion",
+      "field_label": "공통"
+    },
+    {
+      "id": "series-world-maps",
+      "name": "지도 속 세계 완주",
+      "group": "시리즈 완주",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "author_series",
+        "series_draft_key": "world-maps",
+        "all_required": true,
+        "snapshot_on_release": true
+      },
+      "condition": "향후 제작자가 편성한 해당 시리즈의 공개된 필수편 모두. 현재 공식 시리즈는 비어 있으므로 전부 미활성",
+      "artwork": "series-completion",
+      "field_label": "공통"
+    },
+    {
+      "id": "series-money-life",
+      "name": "생활 속 경제 완주",
+      "group": "시리즈 완주",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "author_series",
+        "series_draft_key": "money-life",
+        "all_required": true,
+        "snapshot_on_release": true
+      },
+      "condition": "향후 제작자가 편성한 해당 시리즈의 공개된 필수편 모두. 현재 공식 시리즈는 비어 있으므로 전부 미활성",
+      "artwork": "series-completion",
+      "field_label": "공통"
+    },
+    {
+      "id": "series-ai-human",
+      "name": "AI와 사람 완주",
+      "group": "시리즈 완주",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "author_series",
+        "series_draft_key": "ai-human",
+        "all_required": true,
+        "snapshot_on_release": true
+      },
+      "condition": "향후 제작자가 편성한 해당 시리즈의 공개된 필수편 모두. 현재 공식 시리즈는 비어 있으므로 전부 미활성",
+      "artwork": "series-completion",
+      "field_label": "공통"
+    },
+    {
+      "id": "series-time-travel",
+      "name": "역사 산책 완주",
+      "group": "시리즈 완주",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "author_series",
+        "series_draft_key": "time-travel",
+        "all_required": true,
+        "snapshot_on_release": true
+      },
+      "condition": "향후 제작자가 편성한 해당 시리즈의 공개된 필수편 모두. 현재 공식 시리즈는 비어 있으므로 전부 미활성",
+      "artwork": "series-completion",
+      "field_label": "공통"
+    },
+    {
+      "id": "series-art-eyes",
+      "name": "미술을 보는 눈 완주",
+      "group": "시리즈 완주",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "author_series",
+        "series_draft_key": "art-eyes",
+        "all_required": true,
+        "snapshot_on_release": true
+      },
+      "condition": "향후 제작자가 편성한 해당 시리즈의 공개된 필수편 모두. 현재 공식 시리즈는 비어 있으므로 전부 미활성",
+      "artwork": "series-completion",
+      "field_label": "공통"
+    },
+    {
+      "id": "series-body-diary",
+      "name": "몸의 이야기 완주",
+      "group": "시리즈 완주",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "author_series",
+        "series_draft_key": "body-diary",
+        "all_required": true,
+        "snapshot_on_release": true
+      },
+      "condition": "향후 제작자가 편성한 해당 시리즈의 공개된 필수편 모두. 현재 공식 시리즈는 비어 있으므로 전부 미활성",
+      "artwork": "series-completion",
+      "field_label": "공통"
+    },
+    {
+      "id": "series-questions-road",
+      "name": "질문의 길 완주",
+      "group": "시리즈 완주",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "author_series",
+        "series_draft_key": "questions-road",
+        "all_required": true,
+        "snapshot_on_release": true
+      },
+      "condition": "향후 제작자가 편성한 해당 시리즈의 공개된 필수편 모두. 현재 공식 시리즈는 비어 있으므로 전부 미활성",
+      "artwork": "series-completion",
+      "field_label": "공통"
+    },
+    {
+      "id": "lessons-1",
+      "name": "첫 발견",
+      "group": "누적 기록",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_canonical_lessons",
+        "count": 1
+      },
+      "condition": "서로 다른 수업 1편 마치기",
+      "artwork": "first-discovery",
+      "field_label": "공통"
+    },
+    {
+      "id": "lessons-3",
+      "name": "탐험",
+      "group": "누적 기록",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_canonical_lessons",
+        "count": 3
+      },
+      "condition": "서로 다른 수업 3편 마치기",
+      "artwork": "exploration",
+      "field_label": "공통"
+    },
+    {
+      "id": "lessons-10",
+      "name": "열 편의 발견",
+      "group": "누적 기록",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_canonical_lessons",
+        "count": 10
+      },
+      "condition": "서로 다른 수업 10편 마치기",
+      "artwork": null,
+      "field_label": "공통"
+    },
+    {
+      "id": "lessons-30",
+      "name": "서른 편의 지도",
+      "group": "누적 기록",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_canonical_lessons",
+        "count": 30
+      },
+      "condition": "서로 다른 수업 30편 마치기",
+      "artwork": null,
+      "field_label": "공통"
+    },
+    {
+      "id": "lessons-100",
+      "name": "백 편의 배움",
+      "group": "누적 기록",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_canonical_lessons",
+        "count": 100
+      },
+      "condition": "서로 다른 수업 100편 마치기",
+      "artwork": null,
+      "field_label": "공통"
+    },
+    {
+      "id": "lessons-300",
+      "name": "삼백 편의 여정",
+      "group": "누적 기록",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "distinct_canonical_lessons",
+        "count": 300
+      },
+      "condition": "서로 다른 수업 300편 마치기",
+      "artwork": null,
+      "field_label": "공통"
+    },
+    {
+      "id": "days-5",
+      "name": "생활 속 발견가",
+      "group": "누적 기록",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "cumulative_learning_days",
+        "count": 5,
+        "consecutive": false
+      },
+      "condition": "수업을 1편 이상 마친 날 누적 5일. 연속일 아님",
+      "artwork": "everyday-discoverer",
+      "field_label": "공통"
+    },
+    {
+      "id": "days-20",
+      "name": "스무 날의 배움",
+      "group": "누적 기록",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "cumulative_learning_days",
+        "count": 20,
+        "consecutive": false
+      },
+      "condition": "수업을 1편 이상 마친 날 누적 20일. 연속일 아님",
+      "artwork": null,
+      "field_label": "공통"
+    },
+    {
+      "id": "days-50",
+      "name": "오십 날의 기록",
+      "group": "누적 기록",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "cumulative_learning_days",
+        "count": 50,
+        "consecutive": false
+      },
+      "condition": "수업을 1편 이상 마친 날 누적 50일. 연속일 아님",
+      "artwork": null,
+      "field_label": "공통"
+    },
+    {
+      "id": "days-100",
+      "name": "배움의 100일",
+      "group": "누적 기록",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "cumulative_learning_days",
+        "count": 100,
+        "consecutive": false
+      },
+      "condition": "수업을 1편 이상 마친 날 누적 100일. 연속일 아님",
+      "artwork": null,
+      "field_label": "공통"
+    },
+    {
+      "id": "days-300",
+      "name": "오래 이어온 호기심",
+      "group": "누적 기록",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "cumulative_learning_days",
+        "count": 300,
+        "consecutive": false
+      },
+      "condition": "수업을 1편 이상 마친 날 누적 300일. 연속일 아님",
+      "artwork": null,
+      "field_label": "공통"
+    },
+    {
+      "id": "days-600",
+      "name": "곁에 둔 배움",
+      "group": "누적 기록",
+      "field": "",
+      "status": "material_candidate",
+      "release_gate": "matching published lessons and reviewed metadata required",
+      "rule": {
+        "type": "cumulative_learning_days",
+        "count": 600,
+        "consecutive": false
+      },
+      "condition": "수업을 1편 이상 마친 날 누적 600일. 연속일 아님",
+      "artwork": null,
+      "field_label": "공통"
+    }
+  ],
+  "role": "content_art_candidates_not_independent_award_rules",
+  "superseded_by": "structure-v3.json"
+}

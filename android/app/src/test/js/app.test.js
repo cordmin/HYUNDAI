@@ -50,7 +50,9 @@ test('화면 코드가 끝까지 실행되고 시작 화면을 그린다', () =>
   page = source => vm.runInContext(source, sandbox);
   // 시험을 빨리 진행하는 도우미는 앱에 싣지 않는다. 실제 UI의 이동 경로는 seekLessonAt이다.
   page(`function skipLessonPiece() { if (currentMode === 'lesson' && lessonRun && !lessonRun.done) nextLessonPiece(true); }
-    function seekLessonSection(index) { const section = lessonRun && lessonTimeline(lessonRun).sections.find(item => item.index === index); if (section) seekLessonAt(section.start); }`);
+    function hearWholeLesson() { const last = lessonRun && lessonTimeline(lessonRun).sections.at(-1); if (last) lessonRun.furthest = { piece: last.piece, offset: last.seconds }; }
+    function seekLessonSection(index) { const section = lessonRun && lessonTimeline(lessonRun).sections.find(item => item.index === index); if (section) { hearWholeLesson(); seekLessonAt(section.start); } }`);
+  // 수업은 들은 곳까지만 앞으로 간다. 이동 시험들은 hearWholeLesson으로 끝까지 들은 것처럼 해 두고 이동한다.
   // 남은 시간은 내비가 알려 준 값으로만 정해진다. 시험에서는 내비 값을 꾸며 넣는다.
   page(`function setEta(minutes) { naviInfo = minutes === null ? null : { name: '', remainTime: minutes * 60, remainDistance: NaN, at: Date.now() }; }`);
   assert.ok(stage.innerHTML.includes('question-title'));
@@ -708,7 +710,7 @@ test('진행바는 음원 경계를 표시하고 구간·초 단위 탐색과 �
   page('seekLessonSection(2);');
   assert.strictEqual(page('lessonRun.index'), 2);
   assert.strictEqual(page('lessonRun.heard.length'), 0); // 건너뛴 조각을 들었다고 기록하지 않는다.
-  page('pauseLesson(); seekLessonAt(lessonTimeline(lessonRun).sections[2].start + 12.5);');
+  page('pauseLesson(); hearWholeLesson(); seekLessonAt(lessonTimeline(lessonRun).sections[2].start + 12.5);');
   assert.strictEqual(page('lessonRun.paused'), true);
   assert.strictEqual(page('seekCalls.at(-1).ms'), 12500);
   assert.strictEqual(page('lessonRun.partialPiece'), 'm3');
@@ -729,7 +731,7 @@ test('브라우저 탐색은 새 음원 metadata 뒤에도 정확한 위치를 �
       get src() { return ''; } };
     var beforeAudioLookup = document.getElementById;
     document.getElementById = id => id === 'audioPlayer' ? audioStub : beforeAudioLookup(id);
-    startLesson('rhythm');
+    startLesson('rhythm'); hearWholeLesson();
     seekLessonAt(lessonTimeline(lessonRun).sections[2].start + 10);
     audioStub.currentTime = 0; audioStub.onloadedmetadata();`);
   assert.strictEqual(page('audioStub.currentTime'), 10); // 이전 readyState가 남아 있어도 새 파일에 offset을 적용한다.
@@ -872,7 +874,7 @@ test('기록 탐색은 수업을 끝내지 않고 주행하면 재생 화면으�
 test('시간 이동은 구간 경계를 넘고 일시정지를 유지하며 주행 중 자유 탐색은 막는다', () => {
   page(`localStorage.values.clear(); setEta(null); window.setDrivingMode(false); goHome(); lessonMinutes = 15; startLesson('sky'); pauseLesson();
     var timeBoundary = lessonTimeline(lessonRun).sections[1].start;
-    seekLessonAt(timeBoundary - 5); seekLessonBy(15);`);
+    hearWholeLesson(); seekLessonAt(timeBoundary - 5); seekLessonBy(15);`);
   assert.strictEqual(page('lessonRun.index'), 1);
   assert.ok(Math.abs(page('lessonRun.positionSeconds') - 10) < .1);
   assert.strictEqual(page('lessonRun.paused'), true);
@@ -884,6 +886,28 @@ test('시간 이동은 구간 경계를 넘고 일시정지를 유지하며 주�
   assert.ok(stageHtml().includes('aria-label="수업 진행 시간"'));
   assert.ok(!stageHtml().includes('수업 구간'));
   page('window.setDrivingMode(false); goHome();');
+});
+
+test('수업은 앞으로 건너뛸 수 없고 들은 곳까지만 다시 돌아간다', () => {
+  page(`localStorage.values.clear(); setEta(null); window.setDrivingMode(false); goHome(); lessonMinutes = 15; startLesson('sky'); pauseLesson();
+    var heardTimeline = lessonTimeline(lessonRun);
+    seekLessonAt(heardTimeline.seconds - 1);`);
+  assert.strictEqual(page('lessonRun.index'), 0); // 처음 듣는 수업은 재생바로 뒤쪽에 갈 수 없다
+  assert.strictEqual(page('lessonRun.positionSeconds || 0'), 0);
+  page('seekLessonBy(15); window.onMediaKey("next"); window.onMediaKey("seek", 600000);');
+  assert.strictEqual(page('lessonRun.index'), 0); // 앞으로 버튼·차의 다음 버튼·차 재생바도 마찬가지다
+  assert.strictEqual(page('lessonRun.positionSeconds || 0'), 0);
+  page('skipLessonPiece(); skipLessonPiece(); seekLessonBy(-3600);'); // 두 조각을 듣고 처음으로 돌아간다
+  assert.strictEqual(page('lessonRun.index'), 0);
+  page('seekLessonAt(heardTimeline.seconds - 1);');
+  assert.strictEqual(page('lessonRun.index'), 2); // 들은 끝까지는 한 번에 돌아온다
+  assert.strictEqual(page('lessonRun.positionSeconds || 0'), 0);
+  page('seekLessonBy(15);');
+  assert.strictEqual(page('lessonRun.index'), 2);
+  assert.strictEqual(page('lessonRun.positionSeconds || 0'), 0);
+  page(`seekLessonBy(-3600); var heardSlider = { value: String(heardTimeline.seconds) }; previewLessonSeek(heardSlider);`);
+  assert.ok(Math.abs(Number(page('heardSlider.value')) - page('lessonTimeline(lessonRun).sections.find(item => item.index === 2).start')) < .01); // 손잡이는 들은 끝에서 멈춘다
+  page('cancelLessonScrub(); window.setDrivingMode(false); goHome();');
 });
 
 test('재생 속도는 음원과 무음 대기·남은 시간에 반영하고 주행 중 설정은 저장하지 않는다', () => {
@@ -923,7 +947,8 @@ test('네이티브 미디어에 실제 배속·위치를 전달하고 핸들의 
   assert.equal(page('mediaSnapshots.at(-1)[7]'),true);
   page('setDrivingMode(true);'); assert.equal(page('mediaSnapshots.at(-1)[7]'),false);
   page('setDrivingMode(false);');
- page(`onMediaKey('next');`); assert.ok(page('lessonRun.index')>=1);
+ page(`onMediaKey('next');`); assert.equal(page('lessonRun.index'),0); // 안 들은 곳으로는 넘어가지 않는다
+ page(`hearWholeLesson(); onMediaKey('next');`); assert.ok(page('lessonRun.index')>=1);
  page(`goHome(); mediaPiece.voiced=mediaVoiced; delete window.AndroidBridge; saveLessonPlaybackPrefs({back:15,forward:30,rate:1});`);
 });
 test('질문 뒤 대기는 2배속에서도 그대로 남고 설정 저장·멈춤·재개로 줄어들지 않는다', () => {

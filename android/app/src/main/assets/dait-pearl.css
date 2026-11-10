@@ -273,10 +273,11 @@ body.lesson-playing .stage-container { padding:calc(6 * var(--u)) calc(28 * var(
 .pearl-play { width:calc(74 * var(--u)); height:calc(74 * var(--u)); min-width:64px; min-height:64px!important; flex-shrink:0; border-radius:50%; background:var(--soft); color:var(--lilac); display:grid; place-items:center; }
 .pearl-play svg { width:calc(30 * var(--u)); height:calc(30 * var(--u)); }
 .pearl-seek:hover { color:var(--lilac); }
+.pearl-seek:disabled { opacity:.35; cursor:default; color:var(--ink); }
 .pearl-play:hover { background:var(--soft); color:var(--lilac); filter:brightness(.95); }
 .pearl-player-progress { width:100%; flex-shrink:0; }
 .pearl-player-progress input { appearance:none; -webkit-appearance:none; width:100%; height:44px; margin:0; padding:0; background:none; cursor:pointer; touch-action:pan-y; }
-.pearl-player-progress input::-webkit-slider-runnable-track { height:4px; border-radius:4px; background:linear-gradient(to right,var(--lilac) var(--seek-fill,0%),var(--soft) var(--seek-fill,0%)); }
+.pearl-player-progress input::-webkit-slider-runnable-track { height:4px; border-radius:4px; background:linear-gradient(to right,var(--lilac) var(--seek-fill,0%),var(--line) var(--seek-fill,0%) var(--seek-heard,0%),var(--soft) var(--seek-heard,0%)); }
 .pearl-player-progress input::-webkit-slider-thumb { appearance:none; -webkit-appearance:none; width:12px; height:12px; border-radius:50%; border:0; background:var(--lilac); margin-top:-4px; }
 .pearl-player-progress input::-moz-range-track { height:4px; background:var(--soft); }
 .pearl-player-progress input::-moz-range-progress { height:4px; background:var(--lilac); }

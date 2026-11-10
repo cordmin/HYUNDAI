@@ -120,10 +120,10 @@ function renderLessonPlayer(container, run) {
     <div class="pearl-transport">
       <button class="pearl-seek" onclick="seekLessonBy(-lessonPlaybackPrefs.back)" aria-label="${lessonIntervalText(prefs.back)} 뒤로">${lessonTransportIcon('back')}<span>${lessonIntervalText(prefs.back)}</span></button>
       <button class="pearl-play" onclick="lessonMainAction()" aria-label="${playing ? '일시정지' : '이어 듣기'}">${lessonTransportIcon(playing ? 'pause' : 'play')}</button>
-      <button class="pearl-seek" onclick="seekLessonBy(lessonPlaybackPrefs.forward)" aria-label="${lessonIntervalText(prefs.forward)} 앞으로">${lessonTransportIcon('forward')}<span>${lessonIntervalText(prefs.forward)}</span></button>
+      <button id="lessonForward" class="pearl-seek" onclick="seekLessonBy(lessonPlaybackPrefs.forward)" aria-label="${lessonIntervalText(prefs.forward)} 앞으로">${lessonTransportIcon('forward')}<span>${lessonIntervalText(prefs.forward)}</span></button>
     </div>
     <div class="pearl-player-progress" aria-label="수업 진행">
-      <input id="lessonSeek" type="range" min="0" max="${lessonTimeline(run).seconds}" step="0.1" value="0" aria-label="${isDrivingMode ? '수업 진행 시간' : '수업 재생 위치'}" oninput="previewLessonSeek(Number(this.value))" onchange="seekLessonAt(Number(this.value))" onblur="cancelLessonScrub()" onpointercancel="cancelLessonScrub()"${isDrivingMode ? ' disabled' : ''}>
+      <input id="lessonSeek" type="range" min="0" max="${lessonTimeline(run).seconds}" step="0.1" value="0" aria-label="${isDrivingMode ? '수업 진행 시간' : '수업 재생 위치'}" oninput="previewLessonSeek(this)" onchange="seekLessonAt(Number(this.value))" onblur="cancelLessonScrub()" onpointercancel="cancelLessonScrub()"${isDrivingMode ? ' disabled' : ''}>
       <div class="pearl-player-times"><span id="lessonElapsed">0:00</span><span class="pearl-timing-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 3-6.4 18-3.3-8.3L3 9.4 21 3Z"/></svg><span id="lessonTimingNote"></span></span><span id="lessonRemaining"></span></div>
     </div>
   </div>`;
@@ -203,11 +203,16 @@ function updateLessonProgress() {
   const timeline = lessonTimeline(run);
   const section = timeline.sections.find(item => item.index === run.index);
   const position = run.done ? timeline.seconds : (section ? section.start + Math.min(section.seconds, currentLessonPosition(run)) : timeline.seconds);
+  noteLessonHeard(run, timeline);
+  const heard = run.done ? timeline.seconds : Math.max(position, lessonHeardLimit(run, timeline));
+  const forward = document.getElementById('lessonForward');
+  if (forward) forward.disabled = run.done || heard - position < 1;
   if (!run.scrubbing) {
     const slider = document.getElementById('lessonSeek');
     if (!slider) return;
     slider.max = timeline.seconds; slider.value = position;
     slider.style.setProperty('--seek-fill', `${timeline.seconds ? position / timeline.seconds * 100 : 0}%`);
+    slider.style.setProperty('--seek-heard', `${timeline.seconds ? heard / timeline.seconds * 100 : 0}%`);
     slider.setAttribute('aria-valuetext', `${lessonTimeText(position)} / ${lessonTimeText(timeline.seconds)}`);
     document.getElementById('lessonElapsed').textContent = lessonTimeText(position);
   }
@@ -241,8 +246,13 @@ function tickLessonProgress() {
   if (!run.done) lessonProgressTimer = setTimeout(tickLessonProgress, 250);
 }
 
-function previewLessonSeek(seconds) {
+// 재생바는 들은 곳 너머로 끌리지 않는다. 손가락이 더 가도 손잡이는 들은 끝에 멈춘다.
+function previewLessonSeek(slider) {
   if (!lessonRun || lessonRun.done || isDrivingMode) return;
+  noteLessonHeard(lessonRun);
+  const limit = lessonHeardLimit(lessonRun);
+  if (Number(slider.value) > limit) slider.value = limit;
+  const seconds = Number(slider.value);
   lessonRun.scrubbing = true;
   document.getElementById('lessonElapsed').textContent = lessonTimeText(seconds);
 }

@@ -113,13 +113,33 @@ function seekLessonBy(delta) {
   if (section) moveLessonTo(section.start + currentLessonPosition(run) + delta);
 }
 
+// 수업은 앞으로 건너뛰지 않는다. 뒤로는 마음대로 가서 다시 듣고, 앞으로는 이번에 들은 곳까지만 돌아온다.
+// 도착 시간 맞춤이 뒤쪽 조각을 바꿔도 같은 조각을 찾도록 '어느 조각의 몇 초'로 기억한다.
+// 기억한 조각이 빠졌으면 지금 위치까지만 간다.
+function lessonHeardLimit(run, timeline = lessonTimeline(run)) {
+  const mark = run.furthest;
+  const section = mark && timeline.sections.find(item => item.piece === mark.piece);
+  return section ? section.start + Math.min(section.seconds, mark.offset) : 0;
+}
+
+function noteLessonHeard(run, timeline = lessonTimeline(run)) {
+  if (!run || run.done) return;
+  const section = timeline.sections.find(item => item.index === run.index);
+  if (!section) return;
+  const offset = Math.min(section.seconds, currentLessonPosition(run));
+  if (section.start + offset > lessonHeardLimit(run, timeline)) run.furthest = { piece: section.piece, offset };
+}
+
 function moveLessonTo(seconds) {
   const run = lessonRun;
   if (!run || run.done || isLessonResting() || !Number.isFinite(seconds)) return;
   const timeline = lessonTimeline(run);
-  const wanted = Math.max(0, Math.min(seconds, timeline.seconds - .05));
+  noteLessonHeard(run, timeline);
+  const wanted = Math.max(0, Math.min(seconds, lessonHeardLimit(run, timeline), timeline.seconds - .05));
   const section = timeline.sections.find(item => wanted < item.start + item.seconds);
   if (!section) return;
+  const here = timeline.sections.find(item => item.index === run.index);
+  if (here && seconds > wanted && Math.abs(wanted - (here.start + currentLessonPosition(run))) < .5) return; // 들은 끝에서 앞으로 누르면 그대로 듣는다
   const paused = run.playback.state !== 'playing';
   stopSpeech();
   clearTimeout(lessonTimer);

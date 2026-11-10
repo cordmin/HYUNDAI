@@ -492,3 +492,24 @@ body.lesson-playing .pleos-display { background-image:linear-gradient(to bottom,
 .lesson-end-note { text-align:center;flex:1;display:grid;place-content:center;font-size:17px; }
 .queue-summary { margin:10px 0;font-size:14px;color:var(--muted); }
 @media(max-height:460px){.lesson-end { gap:8px;padding-top:0; }.lesson-end header {padding-top:0}.lesson-end h1{font-size:23px}.lesson-up-next{padding:6px 16px 10px}.lesson-up-next h2{margin-top:0}.lesson-next-actions{margin-top:8px}}
+
+/* Approved Horizon footer: seek above, elapsed left / guidance centered / remaining right. */
+.pearl-player-times { display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center; }
+.pearl-player-times>#lessonElapsed { justify-self:start; }
+.pearl-player-times>#lessonRemaining { justify-self:end;text-align:right; }
+.pearl-timing-status { display:flex;align-items:center;justify-content:center;gap:calc(8 * var(--u));min-width:0; }
+.pearl-timing-status svg { width:calc(17 * var(--u));height:calc(17 * var(--u));min-width:16px;min-height:16px;flex-shrink:0; }
+.pearl-timing-status:has(#lessonTimingNote:empty) { visibility:hidden; }
+.pearl-timing-status #lessonTimingNote { font-size:inherit; }
+/* Content title owns the end screen; existing palette and next-lesson behavior remain. */
+.lesson-end { padding:calc(14 * var(--u)) calc(24 * var(--u)) calc(10 * var(--u));gap:calc(16 * var(--u)); }
+.lesson-end:has(.lesson-up-next) {gap:calc(12 * var(--u));}
+.lesson-end header { text-align:left;padding:0; }
+.lesson-end .lesson-end-status { margin:0;font-size:calc(14 * var(--u));line-height:1.5; }
+.lesson-end h1 { margin:calc(18 * var(--u)) 0 0;font-size:clamp(28px,calc(34 * var(--u)),50px);line-height:1.2;letter-spacing:-.025em;font-weight:700;text-wrap:balance; }
+.lesson-end .lesson-up-next { padding:0;background:none;box-shadow:none;border:0;border-radius:0; }
+.lesson-end-bottom { display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:auto;padding-top:calc(14 * var(--u));border-top:1px solid var(--line); }
+.lesson-end .lesson-end-note { flex:initial;display:block;text-align:left;margin:0;font-size:calc(16 * var(--u));line-height:1.4; }
+.lesson-end .lesson-end-finish { display:flex;align-items:center;justify-content:center;gap:10px;align-self:auto;margin-left:auto;flex-shrink:0;border:1px solid currentColor;border-radius:999px;padding:8px 20px;min-height:44px;font-size:calc(15 * var(--u)); }
+.lesson-end-finish svg { width:18px;height:18px; }
+@media(max-width:480px) { .pearl-player-times {grid-template-columns:minmax(0,1fr) minmax(0,2fr) minmax(0,1fr);gap:8px;} .pearl-timing-status {gap:4px;} .pearl-timing-status svg {width:16px;height:16px;} .pearl-player-times>#lessonRemaining {font-size:12px;} .lesson-end {padding:12px 14px;}.lesson-end h1 {font-size:30px;}.lesson-end-bottom {gap:12px;}.lesson-end .lesson-end-note {font-size:14px;}.lesson-end .lesson-end-finish {font-size:14px;padding:8px 16px;} }

@@ -549,3 +549,54 @@ test('시리즈를 켜고 이어 붙인 2편은 도착이 당겨져 원래 판�
   const tasting = Lesson.withBreak([], { ...trip, laterMinutes: 6 });
   assert.strictEqual(tasting[0].line, '이어서 소수 이야기 2편 맛보기예요');
 });
+
+test('묶음: 발문과 그 답은 함께 들어가고 함께 빠진다', () => {
+  const grouped = { id: 'g', title: '묶음', pieces: [
+    piece('i1', '도입', true, 60), piece('q1', '발문', false, 40), piece('a1', '전개', false, 40),
+    piece('b1', '전개', false, 30), piece('c1', '정리', true, 60), piece('s1', '짧은정리', true, 15)
+  ] };
+  grouped.pieces[1].group = 'q1';
+  grouped.pieces[2].group = 'q1';
+  // 필수 120초. 남는 70초에는 묶음(80초)이 통째로 안 들어가므로 발문만 들어가지 않고 b1만 들어간다
+  assert.deepStrictEqual(ids(Lesson.assemble(grouped, 190 / 60)), ['i1', 'b1', 'c1']);
+  assert.deepStrictEqual(ids(Lesson.assemble(grouped, 200 / 60)), ['i1', 'q1', 'a1', 'c1']);
+  assert.deepStrictEqual(ids(Lesson.assemble(grouped, 230 / 60)), ['i1', 'q1', 'a1', 'b1', 'c1']);
+
+  const all = Lesson.assemble(grouped, 10);
+  // 발문을 아직 안 들었으면 도착이 당겨질 때 묶음이 통째로 빠진다
+  assert.deepStrictEqual(ids(Lesson.fitRemaining(all, 0, 125, grouped).pieces), ['i1', 'b1', 'c1']);
+  // 발문을 들었으면 그 답은 꼭 남기고 다른 선택 조각을 뺀다
+  assert.deepStrictEqual(ids(Lesson.fitRemaining(all, 1, 125, grouped).pieces), ['i1', 'q1', 'a1', 'c1']);
+  // 답까지는 못 넣어도 필수 정리가 들어가면, 짧은 정리로 끊지 않고 답만 빼고 원래 정리로 끝낸다
+  assert.deepStrictEqual(Lesson.fitRemaining(all, 1, 85, grouped), { pieces: all.filter(p => ['i1', 'q1', 'c1'].includes(p.id)), wrapped: false });
+  // 정리도 못 들어가면 짧은 정리로 끝낸다
+  assert.deepStrictEqual(ids(Lesson.fitRemaining(all, 1, 60, grouped).pieces), ['i1', 'q1', 's1']);
+
+  // 발문까지 듣고 멈췄으면 이어 들을 때 답부터 꼭 넣는다
+  const resume = { lesson: 'g', from: 'a1', heard: ['i1', 'q1'], short: false, ymd: '20261110' };
+  assert.deepStrictEqual(ids(Lesson.resumePlan(grouped, resume, 2)), ['a1', 'c1']);
+  assert.strictEqual(Lesson.resumeFits(grouped, resume, 2), true);
+  assert.strictEqual(Lesson.resumeFits(grouped, resume, 100 / 60), false);
+  // 발문을 말하는 도중에 멈췄으면(offset) 이어 들을 때 그 발문과 답을 꼭 넣는다. 멈춘 위치가 다른 조각에 걸리지 않게 한다
+  const mid = { lesson: 'g', from: 'q1', heard: ['i1'], short: false, ymd: '20261110', offset: 5 };
+  assert.deepStrictEqual(ids(Lesson.resumePlan(grouped, mid, 160 / 60)), ['q1', 'a1', 'c1']);
+  assert.strictEqual(Lesson.resumeFits(grouped, mid, 160 / 60), true);
+  assert.strictEqual(Lesson.resumeFits(grouped, mid, 150 / 60), false);
+  // 조각 사이에서 멈췄으면 예전처럼 들어가는 것만 고른다
+  assert.deepStrictEqual(ids(Lesson.resumePlan(grouped, { ...mid, offset: 0 }, 100 / 60)), ['b1', 'c1']);
+});
+
+test('앱 수업: 어느 시간에 조립해도 묶음은 모두 들어가거나 모두 빠진다', () => {
+  assert.ok(appLessons.some(item => item.pieces.some(p => p.group)));
+  for (const item of appLessons) {
+    const groups = {};
+    item.pieces.filter(p => p.group).forEach(p => (groups[p.group] = groups[p.group] || []).push(p));
+    for (let minutes = 5; minutes <= 30; minutes += 0.25) {
+      const got = new Set(Lesson.assemble(item, minutes));
+      for (const members of Object.values(groups)) {
+        const count = members.filter(p => got.has(p)).length;
+        assert.ok(count === 0 || count === members.length, `${item.id} ${minutes}분 ${members.map(p => p.id)}`);
+      }
+    }
+  }
+});

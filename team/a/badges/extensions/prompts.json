@@ -1,0 +1,24 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "approved-reference.png; based on team/a/badges/source/learning-badges-original.png",
+  "extract_prompts": [
+    {
+      "id": "science",
+      "prompt": "Extract ONLY the science badge from the attached approved DAIT infographic. Precise asset isolation, not a redesign. Preserve silhouette, silver beveled rim, pictograms, enamel colors, relief shading and composition. No background, adjacent badges, labels, captions or card. One complete badge centered on genuine transparent square PNG with narrow equal padding, clean alpha edges and no ground shadow."
+    },
+    {
+      "id": "technology",
+      "prompt": "Extract ONLY the technology badge from the attached approved DAIT infographic. Precise asset isolation, not a redesign. Preserve silhouette, silver beveled rim, pictograms, enamel colors, relief shading and composition. No background, adjacent badges, labels, captions or card. One complete badge centered on genuine transparent square PNG with narrow equal padding, clean alpha edges and no ground shadow."
+    },
+    {
+      "id": "music",
+      "prompt": "Extract ONLY the music badge from the attached approved DAIT infographic. Precise asset isolation, not a redesign. Preserve silhouette, silver beveled rim, pictograms, enamel colors, relief shading and composition. No background, adjacent badges, labels, captions or card. One complete badge centered on genuine transparent square PNG with narrow equal padding, clean alpha edges and no ground shadow."
+    },
+    {
+      "id": "series-completion",
+      "prompt": "Extract ONLY the series-completion badge from the attached approved DAIT infographic. Precise asset isolation, not a redesign. Preserve silhouette, silver beveled rim, pictograms, enamel colors, relief shading and composition. No background, adjacent badges, labels, captions or card. One complete badge centered on genuine transparent square PNG with narrow equal padding, clean alpha edges and no ground shadow."
+    }
+  ],
+  "cleanup_prompt": "Precise alpha-mask cleanup of this existing transparent badge. Remove stray isolated flecks and background residue outside the smooth continuous silver rim. Preserve the complete rim and interior artwork. No glow, shadow, new artwork or labels. Genuine RGBA PNG, equal 3% transparent padding. Mask cleanup only, not a redesign.",
+  "note": "Prompts document the extraction and cleanup requests; AI rendering is not pixel-exact."
+}

@@ -744,15 +744,16 @@ test('브라우저 탐색은 새 음원 metadata 뒤에도 정확한 위치를 �
 });
 
 
-test('기록 화면은 수업 기록과 기존 배지 여섯 장을 보여 준다', () => {
+test('기록 화면은 기존 여섯 배지와 승인된 확장 네 배지를 둘러보기로 보여 준다', () => {
   page(`goHome(); localStorage.values.clear(); openPearlTab('records');`);
   assert.ok(!stageHtml().includes('내 배움 보관함'));
   assert.ok(stageHtml().includes('>배움 기록</button>'));
   assert.ok(stageHtml().includes('>배지 둘러보기</button>'));
   page(`selectRecordTab('badges');`);
-  assert.equal((stageHtml().match(/<img src="badges\//g) || []).length, 6);
-  for (const id of ['first-discovery','korean','math','exploration','well-rounded-explorer','everyday-discoverer']) {
+  assert.equal((stageHtml().match(/<img src="badges\//g) || []).length, 10);
+  for (const id of ['first-discovery','korean','math','science','technology','music','exploration','well-rounded-explorer','everyday-discoverer','series-completion']) {
     assert.ok(fs.existsSync(path.join(__dirname, '../../main/assets/badges', id + '.png')));
+    assert.ok(stageHtml().includes(`src="badges/${id}.png"`));
   }
   assert.ok(!stageHtml().includes('받는 방법은 준비 중'));
   page(`selectRecordTab('lessons'); goHome();`);

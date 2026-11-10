@@ -150,7 +150,9 @@ function selectRecordTab(tab) {
 
 const PEARL_BADGES = [
   ['first-discovery','첫 발견'], ['korean','국어'], ['math','수학'],
-  ['exploration','탐험'], ['well-rounded-explorer','골고루 탐험가'], ['everyday-discoverer','생활 속 발견가']
+  ['science','과학'], ['technology','기술'], ['music','음악'],
+  ['exploration','탐험'], ['well-rounded-explorer','골고루 탐험가'],
+  ['everyday-discoverer','생활 속 발견가'], ['series-completion','시리즈 완주']
 ];
 
 function recordDateLabel(ymd) {

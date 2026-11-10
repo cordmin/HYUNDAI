@@ -1,0 +1,76 @@
+{
+  "recorded_date": "2026-11-10",
+  "status": "user-approved design extension; gallery only, no automatic awarding",
+  "reference": "team/a/badges/source/learning-badges-original.png",
+  "method": "built-in image_gen extraction and alpha cleanup; not pixel-exact",
+  "badges": [
+    {
+      "id": "science",
+      "name": "과학",
+      "file": "android/app/src/main/assets/badges/science.png",
+      "width": 1254,
+      "height": 1254,
+      "alpha_corners": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "transparent_ratio": 0.3301600746828649,
+      "opaque_ratio": 0.000742758738225875,
+      "sha256": "3b85d2c9404c51c86524bfbc7ad4d63f517f1c44e796688f9c19f6a638aed082",
+      "award_rule": null
+    },
+    {
+      "id": "technology",
+      "name": "기술",
+      "file": "android/app/src/main/assets/badges/technology.png",
+      "width": 1254,
+      "height": 1254,
+      "alpha_corners": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "transparent_ratio": 0.3880984358823694,
+      "opaque_ratio": 0.0007319480374126559,
+      "sha256": "2937823757494a73e65d2ed9369c0532d2c196085c828e71e25bbcb9171ceeb4",
+      "award_rule": null
+    },
+    {
+      "id": "music",
+      "name": "음악",
+      "file": "android/app/src/main/assets/badges/music.png",
+      "width": 1254,
+      "height": 1254,
+      "alpha_corners": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "transparent_ratio": 0.3053622347880721,
+      "opaque_ratio": 0.0006359235772481806,
+      "sha256": "fb017497f918205b6839d50e6999d632faf6a3edda0ef3345b67eb04fa5f8c76",
+      "award_rule": null
+    },
+    {
+      "id": "series-completion",
+      "name": "시리즈 완주",
+      "file": "android/app/src/main/assets/badges/series-completion.png",
+      "width": 1254,
+      "height": 1254,
+      "alpha_corners": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "transparent_ratio": 0.3663269562917007,
+      "opaque_ratio": 0.0007249528780629259,
+      "sha256": "fb8252fab9b5349bd1885f01143a9358a0c1a6050d6658104d6cb168e2e1ea3f",
+      "award_rule": null
+    }
+  ]
+}

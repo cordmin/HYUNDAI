@@ -606,3 +606,38 @@ body.lesson-playing .pleos-display { background-image:linear-gradient(to bottom,
   .pearl-color-dialog .pearl-color-presets { gap:6px; }
   .pearl-color-dialog .pearl-color-presets button { padding:6px;font-size:12px; }
 }
+
+/* 차 화면 맞춤(2026-11-10): px로 고정돼 있던 작은 글자와 누르는 곳을 앱 창 크기에 맞춰 함께 키운다.
+   Pleos 에뮬레이터의 앱 창(1224×880)에서 본 화면은 1.7배로 커지는데 이 부분만 그대로라 읽기 어려웠다.
+   설정·재생목록 창은 dait-appearance.js의 fitDialog가 창 전체를 같은 비율로 키운다. */
+@media (min-width:601px) {
+  .playlist-open-btn { min-height:max(44px,calc(36 * var(--u))); padding:0 max(12px,calc(12 * var(--u))); border-radius:max(12px,calc(11 * var(--u))); font-size:max(14px,calc(13 * var(--u))); }
+  .lesson-options-btn { flex-basis:max(44px,calc(40 * var(--u))); width:max(44px,calc(40 * var(--u))); height:max(44px,calc(40 * var(--u))); min-height:max(44px,calc(40 * var(--u))); padding:max(10px,calc(9 * var(--u))); }
+  .lesson-options-btn svg { width:100%; height:100%; }
+  .pearl-notice { min-height:max(56px,calc(46 * var(--u))); gap:max(12px,calc(10 * var(--u))); padding:max(8px,calc(7 * var(--u))) max(14px,calc(13 * var(--u))); border-radius:max(14px,calc(13 * var(--u))); }
+  .notice-copy strong { font-size:max(14px,calc(14 * var(--u))); }
+  .notice-copy span { font-size:max(13px,calc(13 * var(--u))); }
+  .notice-check { flex-basis:max(28px,calc(24 * var(--u))); width:max(28px,calc(24 * var(--u))); height:max(28px,calc(24 * var(--u))); }
+  .notice-check svg { width:64%; height:64%; }
+  .pearl-notice>button { min-height:max(44px,calc(38 * var(--u))); padding:0 max(10px,calc(10 * var(--u))); font-size:max(14px,calc(14 * var(--u))); }
+  .lesson-dock { min-height:max(64px,calc(52 * var(--u))); gap:max(8px,calc(8 * var(--u))); padding:max(6px,calc(5 * var(--u))) max(8px,calc(8 * var(--u))); margin:0 calc(12 * var(--u)) calc(10 * var(--u)); }
+  .lesson-dock-open { gap:max(12px,calc(10 * var(--u))); padding:0 max(8px,calc(8 * var(--u))); }
+  .lesson-dock-copy strong { font-size:max(16px,calc(15 * var(--u))); }
+  .lesson-dock-copy>span { font-size:max(13px,calc(13 * var(--u))); }
+  .lesson-dock-toggle, .lesson-dock-stop { flex-basis:max(48px,calc(40 * var(--u))); width:max(48px,calc(40 * var(--u))); height:max(48px,calc(40 * var(--u))); }
+  .lesson-dock-toggle svg, .lesson-dock-stop svg { width:46%; height:46%; }
+  .pleos-display:has(.lesson-dock:not([hidden])) .pearl-notice { bottom:calc(max(64px,calc(52 * var(--u))) + calc(10 * var(--u)) + 12px); }
+  .lesson-next-top>span, .next-autoplay>span:first-child, .lesson-up-next p { font-size:max(14px,calc(13 * var(--u))); }
+  .lesson-up-next h2 { margin:calc(4 * var(--u)) 0 calc(5 * var(--u)); font-size:max(23px,calc(20 * var(--u))); }
+  .lesson-next-actions { gap:max(10px,calc(8 * var(--u))); margin-top:max(12px,calc(10 * var(--u))); }
+  .lesson-next-actions .primary-btn { flex-basis:max(180px,calc(130 * var(--u))); min-height:max(48px,calc(40 * var(--u))); padding:max(8px,calc(6 * var(--u))) max(16px,calc(14 * var(--u))); font-size:max(17px,calc(15 * var(--u))); }
+  .lesson-end .lesson-end-finish { min-height:max(44px,calc(38 * var(--u))); padding:max(8px,calc(6 * var(--u))) max(20px,calc(16 * var(--u))); gap:max(10px,calc(8 * var(--u))); }
+  .lesson-end-finish svg { width:max(18px,calc(15 * var(--u))); height:max(18px,calc(15 * var(--u))); }
+  /* 종료 화면의 자동 재생 스위치도 같은 비율로 커진다. */
+  .next-autoplay { --k:max(1px,calc(.8 * var(--u))); gap:calc(10 * var(--k)); min-height:max(44px,calc(38 * var(--u))); }
+  .next-autoplay>span:last-child { flex-basis:calc(44 * var(--k)); width:calc(44 * var(--k)); height:calc(26 * var(--k)); border-radius:calc(20 * var(--k)); }
+  .next-autoplay>span:last-child::after { top:calc(4 * var(--k)); left:calc(4 * var(--k)); width:calc(18 * var(--k)); height:calc(18 * var(--k)); }
+  .next-autoplay[aria-checked=true]>span:last-child::after { left:calc(22 * var(--k)); }
+}
+/* 주행 중에는 쓸 수 없는 위쪽 버튼(재생목록·화면 색·설정)을 감추고 음량만 남긴다. */
+body.driving .pearl-tools > .icon-btn { display:none; }

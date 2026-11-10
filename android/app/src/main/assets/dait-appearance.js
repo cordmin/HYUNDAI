@@ -237,12 +237,18 @@
     host.querySelector('.pearl-settings-shade')?.remove();
     if (focusBefore?.isConnected) focusBefore.focus();
   }
+  // 설정 창은 px로 그린 창이다. 차 화면처럼 앱 창이 크면(기준 665×420의 1.3배부터) 창 전체를 같은 비율로 키워
+  // 글자와 누르는 곳이 본 화면보다 작아 보이지 않게 한다. 키운 만큼 자리와 최대 크기는 도로 나눠 앱 영역 안에 둔다.
+  const DIALOG_BASE_SCALE = 1.3;
   function fitDialog() {
     if (!dialog) return;
     const rect = host.getBoundingClientRect();
-    dialog.style.inset = `${rect.top}px ${window.innerWidth - rect.right}px ${window.innerHeight - rect.bottom}px ${rect.left}px`;
-    dialog.style.setProperty('--settings-width', `${rect.width}px`);
-    dialog.style.setProperty('--settings-height', `${rect.height}px`);
+    const scale = Math.min(rect.width / 665, rect.height / 420, 1.7);
+    const zoom = Number.isFinite(scale) ? Math.max(1, scale / DIALOG_BASE_SCALE) : 1;
+    dialog.style.zoom = zoom;
+    dialog.style.inset = [rect.top, window.innerWidth - rect.right, window.innerHeight - rect.bottom, rect.left].map(value => `${value / zoom}px`).join(' ');
+    dialog.style.setProperty('--settings-width', `${rect.width / zoom}px`);
+    dialog.style.setProperty('--settings-height', `${rect.height / zoom}px`);
   }
   function shell(title, body) {
     if (dialog) close();

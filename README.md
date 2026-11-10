@@ -69,5 +69,5 @@ powershell -ExecutionPolicy Bypass -File .\tools\Build-App.ps1
 
 - [현재 작업 상태](현재-작업상태.md)
 - [인수인계(빌드·제출 방법)](인수인계.md)
-- [시연 영상 각본 초안](team/c/시연-각본-초안.md)
+- [시연 영상 각본](시연-각본.md) · [옛 비교안](team/c/시연-각본-초안.md)
 - [기획서 개정안](team/a/기획서-개정안.md)

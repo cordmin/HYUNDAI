@@ -1,0 +1,163 @@
+{
+  "version": "proposal-v3-2026-11-10",
+  "status": "design_only_not_runtime_awards",
+  "content_path": [
+    "field_entry",
+    "series_completion",
+    "series_connection"
+  ],
+  "commemorative_path": [
+    "first_lesson",
+    "distinct_lesson_count",
+    "cumulative_learning_days",
+    "distinct_field_count"
+  ],
+  "fields": [
+    {
+      "id": "language",
+      "label": "언어·문학",
+      "entry_badge_id": "field-language-first",
+      "artwork": "korean"
+    },
+    {
+      "id": "math",
+      "label": "수리·논리",
+      "entry_badge_id": "field-math-first",
+      "artwork": "math"
+    },
+    {
+      "id": "science",
+      "label": "자연·과학",
+      "entry_badge_id": "field-science-first",
+      "artwork": "science"
+    },
+    {
+      "id": "technology",
+      "label": "기술·디지털",
+      "entry_badge_id": "field-technology-first",
+      "artwork": "technology"
+    },
+    {
+      "id": "civics",
+      "label": "사회·시민",
+      "entry_badge_id": "field-civics-first",
+      "artwork": null
+    },
+    {
+      "id": "history",
+      "label": "역사",
+      "entry_badge_id": "field-history-first",
+      "artwork": null
+    },
+    {
+      "id": "geography",
+      "label": "지리·세계",
+      "entry_badge_id": "field-geography-first",
+      "artwork": null
+    },
+    {
+      "id": "economy",
+      "label": "경제·금융",
+      "entry_badge_id": "field-economy-first",
+      "artwork": null
+    },
+    {
+      "id": "health",
+      "label": "건강·생활",
+      "entry_badge_id": "field-health-first",
+      "artwork": null
+    },
+    {
+      "id": "music",
+      "label": "음악",
+      "entry_badge_id": "field-music-first",
+      "artwork": "music"
+    },
+    {
+      "id": "art",
+      "label": "미술·디자인",
+      "entry_badge_id": "field-art-first",
+      "artwork": null
+    },
+    {
+      "id": "culture",
+      "label": "문화·철학",
+      "entry_badge_id": "field-culture-first",
+      "artwork": null
+    }
+  ],
+  "draft_series_examples": [
+    {
+      "id": "draft-poetry",
+      "field_id": "language",
+      "name": "시와 그리움",
+      "status": "draft",
+      "badge_id": "series-draft-poetry"
+    },
+    {
+      "id": "draft-story",
+      "field_id": "language",
+      "name": "이야기의 구조",
+      "status": "draft",
+      "badge_id": "series-draft-story"
+    },
+    {
+      "id": "draft-space",
+      "field_id": "science",
+      "name": "별과 우주",
+      "status": "draft",
+      "badge_id": "series-draft-space"
+    },
+    {
+      "id": "draft-light",
+      "field_id": "science",
+      "name": "빛과 색",
+      "status": "draft",
+      "badge_id": "series-draft-light"
+    }
+  ],
+  "draft_connections_examples": [
+    {
+      "id": "draft-poetry-space",
+      "name": "시와 별",
+      "required_series_ids": [
+        "draft-poetry",
+        "draft-space"
+      ],
+      "status": "draft",
+      "badge_id": "connection-draft-poetry-space"
+    }
+  ],
+  "templates": {
+    "field_entry": {
+      "per": "field",
+      "condition": "first completed canonical lesson in field"
+    },
+    "series_completion": {
+      "per": "published author series version",
+      "condition": "all published required canonical lessons completed",
+      "gate": "nonempty validated required episodes and all audio released",
+      "style_inheritance": [
+        "field palette",
+        "field outline"
+      ],
+      "unique_style": "series scene"
+    },
+    "series_connection": {
+      "per": "curated combination of existing series badges",
+      "condition": "all referenced series badges earned",
+      "gate": "all references published; no dependency cycles",
+      "style_inheritance": [
+        "constituent field palettes",
+        "constituent field motifs"
+      ]
+    },
+    "commemorative": {
+      "per": "global learning milestone",
+      "consecutive_days": false,
+      "style": "shared green family; calendar or experience numeral"
+    }
+  },
+  "legacy_catalog_role": "catalog-v2 is a 120-item content/art idea pool; not 120 independent current award rules",
+  "actual_app": "10 artwork gallery entries only; automatic awards not implemented"
+}

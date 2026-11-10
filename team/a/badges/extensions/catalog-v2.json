@@ -1,6 +1,6 @@
 {
   "version": "proposal-2026-11-10",
-  "note": "Long-term catalog design, not activated app award rules. New lessons may add new topics, series and badges without a fixed final cap.",
+  "note": "120-item content/art candidate pool. Current relationship and award design is structure-v3, not the legacy per-item condition proposals.",
   "groups": {
     "주제 탐험": 72,
     "분야 연결": 24,
@@ -13,7 +13,7 @@
       "name": "언어·문학 첫 발견",
       "group": "주제 탐험",
       "field": "language",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_field",
@@ -29,7 +29,7 @@
       "name": "비유를 발견하다",
       "group": "주제 탐험",
       "field": "language",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -46,7 +46,7 @@
       "name": "이야기의 구조",
       "group": "주제 탐험",
       "field": "language",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -63,7 +63,7 @@
       "name": "시를 읽는 마음",
       "group": "주제 탐험",
       "field": "language",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -80,7 +80,7 @@
       "name": "말의 뿌리",
       "group": "주제 탐험",
       "field": "language",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -97,7 +97,7 @@
       "name": "설득의 기술",
       "group": "주제 탐험",
       "field": "language",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -114,7 +114,7 @@
       "name": "수리·논리 첫 발견",
       "group": "주제 탐험",
       "field": "math",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_field",
@@ -130,7 +130,7 @@
       "name": "소수의 비밀",
       "group": "주제 탐험",
       "field": "math",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -147,7 +147,7 @@
       "name": "우연을 읽다",
       "group": "주제 탐험",
       "field": "math",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -164,7 +164,7 @@
       "name": "비율의 감각",
       "group": "주제 탐험",
       "field": "math",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -181,7 +181,7 @@
       "name": "통계를 읽다",
       "group": "주제 탐험",
       "field": "math",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -198,7 +198,7 @@
       "name": "도형의 세계",
       "group": "주제 탐험",
       "field": "math",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -215,7 +215,7 @@
       "name": "자연·과학 첫 발견",
       "group": "주제 탐험",
       "field": "science",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_field",
@@ -231,7 +231,7 @@
       "name": "빛을 따라",
       "group": "주제 탐험",
       "field": "science",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -248,7 +248,7 @@
       "name": "생명의 원리",
       "group": "주제 탐험",
       "field": "science",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -265,7 +265,7 @@
       "name": "지구의 변화",
       "group": "주제 탐험",
       "field": "science",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -282,7 +282,7 @@
       "name": "우주를 향해",
       "group": "주제 탐험",
       "field": "science",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -299,7 +299,7 @@
       "name": "물질의 세계",
       "group": "주제 탐험",
       "field": "science",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -316,7 +316,7 @@
       "name": "기술·디지털 첫 발견",
       "group": "주제 탐험",
       "field": "technology",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_field",
@@ -332,7 +332,7 @@
       "name": "AI를 읽다",
       "group": "주제 탐험",
       "field": "technology",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -349,7 +349,7 @@
       "name": "연결된 세상",
       "group": "주제 탐험",
       "field": "technology",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -366,7 +366,7 @@
       "name": "디지털 안전",
       "group": "주제 탐험",
       "field": "technology",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -383,7 +383,7 @@
       "name": "알고리즘의 길",
       "group": "주제 탐험",
       "field": "technology",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -400,7 +400,7 @@
       "name": "생활을 바꾼 기술",
       "group": "주제 탐험",
       "field": "technology",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -417,7 +417,7 @@
       "name": "사회·시민 첫 발견",
       "group": "주제 탐험",
       "field": "civics",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_field",
@@ -433,7 +433,7 @@
       "name": "민주주의의 원리",
       "group": "주제 탐험",
       "field": "civics",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -450,7 +450,7 @@
       "name": "함께 사는 방법",
       "group": "주제 탐험",
       "field": "civics",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -467,7 +467,7 @@
       "name": "미디어를 읽다",
       "group": "주제 탐험",
       "field": "civics",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -484,7 +484,7 @@
       "name": "인권의 출발",
       "group": "주제 탐험",
       "field": "civics",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -501,7 +501,7 @@
       "name": "세상의 쟁점",
       "group": "주제 탐험",
       "field": "civics",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -518,7 +518,7 @@
       "name": "역사 첫 발견",
       "group": "주제 탐험",
       "field": "history",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_field",
@@ -534,7 +534,7 @@
       "name": "한국사의 흐름",
       "group": "주제 탐험",
       "field": "history",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -551,7 +551,7 @@
       "name": "세계사의 흐름",
       "group": "주제 탐험",
       "field": "history",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -568,7 +568,7 @@
       "name": "발명의 발자취",
       "group": "주제 탐험",
       "field": "history",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -585,7 +585,7 @@
       "name": "일상의 역사",
       "group": "주제 탐험",
       "field": "history",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -602,7 +602,7 @@
       "name": "인물과 시대",
       "group": "주제 탐험",
       "field": "history",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -619,7 +619,7 @@
       "name": "지리·세계 첫 발견",
       "group": "주제 탐험",
       "field": "geography",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_field",
@@ -635,7 +635,7 @@
       "name": "지도 위의 발견",
       "group": "주제 탐험",
       "field": "geography",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -652,7 +652,7 @@
       "name": "기후를 읽다",
       "group": "주제 탐험",
       "field": "geography",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -669,7 +669,7 @@
       "name": "도시의 얼굴",
       "group": "주제 탐험",
       "field": "geography",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -686,7 +686,7 @@
       "name": "땅의 이야기",
       "group": "주제 탐험",
       "field": "geography",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -703,7 +703,7 @@
       "name": "이웃 나라 탐험",
       "group": "주제 탐험",
       "field": "geography",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -720,7 +720,7 @@
       "name": "경제·금융 첫 발견",
       "group": "주제 탐험",
       "field": "economy",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_field",
@@ -736,7 +736,7 @@
       "name": "돈은 어떻게 흐를까",
       "group": "주제 탐험",
       "field": "economy",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -753,7 +753,7 @@
       "name": "가격의 이유",
       "group": "주제 탐험",
       "field": "economy",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -770,7 +770,7 @@
       "name": "선택의 비용",
       "group": "주제 탐험",
       "field": "economy",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -787,7 +787,7 @@
       "name": "소비를 읽다",
       "group": "주제 탐험",
       "field": "economy",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -804,7 +804,7 @@
       "name": "금융의 기초",
       "group": "주제 탐험",
       "field": "economy",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -821,7 +821,7 @@
       "name": "건강·생활 첫 발견",
       "group": "주제 탐험",
       "field": "health",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_field",
@@ -837,7 +837,7 @@
       "name": "몸의 신호",
       "group": "주제 탐험",
       "field": "health",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -854,7 +854,7 @@
       "name": "식탁의 발견",
       "group": "주제 탐험",
       "field": "health",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -871,7 +871,7 @@
       "name": "잠의 과학",
       "group": "주제 탐험",
       "field": "health",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -888,7 +888,7 @@
       "name": "움직임의 원리",
       "group": "주제 탐험",
       "field": "health",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -905,7 +905,7 @@
       "name": "생활 속 안전",
       "group": "주제 탐험",
       "field": "health",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -922,7 +922,7 @@
       "name": "음악 첫 발견",
       "group": "주제 탐험",
       "field": "music",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_field",
@@ -938,7 +938,7 @@
       "name": "리듬의 발견",
       "group": "주제 탐험",
       "field": "music",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -955,7 +955,7 @@
       "name": "멜로디의 길",
       "group": "주제 탐험",
       "field": "music",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -972,7 +972,7 @@
       "name": "악기의 목소리",
       "group": "주제 탐험",
       "field": "music",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -989,7 +989,7 @@
       "name": "음악의 여러 얼굴",
       "group": "주제 탐험",
       "field": "music",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -1006,7 +1006,7 @@
       "name": "음악과 시대",
       "group": "주제 탐험",
       "field": "music",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -1023,7 +1023,7 @@
       "name": "미술·디자인 첫 발견",
       "group": "주제 탐험",
       "field": "art",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_field",
@@ -1039,7 +1039,7 @@
       "name": "색을 읽다",
       "group": "주제 탐험",
       "field": "art",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -1056,7 +1056,7 @@
       "name": "구도의 힘",
       "group": "주제 탐험",
       "field": "art",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -1073,7 +1073,7 @@
       "name": "건축을 보다",
       "group": "주제 탐험",
       "field": "art",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -1090,7 +1090,7 @@
       "name": "디자인의 이유",
       "group": "주제 탐험",
       "field": "art",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -1107,7 +1107,7 @@
       "name": "미술의 시간",
       "group": "주제 탐험",
       "field": "art",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -1124,7 +1124,7 @@
       "name": "문화·철학 첫 발견",
       "group": "주제 탐험",
       "field": "culture",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_field",
@@ -1140,7 +1140,7 @@
       "name": "질문의 시작",
       "group": "주제 탐험",
       "field": "culture",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -1157,7 +1157,7 @@
       "name": "옳음의 기준",
       "group": "주제 탐험",
       "field": "culture",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -1174,7 +1174,7 @@
       "name": "다른 문화 만나기",
       "group": "주제 탐험",
       "field": "culture",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -1191,7 +1191,7 @@
       "name": "믿음과 문화",
       "group": "주제 탐험",
       "field": "culture",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -1208,7 +1208,7 @@
       "name": "철학과 일상",
       "group": "주제 탐험",
       "field": "culture",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_lessons_in_topic",
@@ -1225,7 +1225,7 @@
       "name": "시와 별",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1245,7 +1245,7 @@
       "name": "리듬의 수학",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1265,7 +1265,7 @@
       "name": "빛과 색",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1285,7 +1285,7 @@
       "name": "지도와 역사",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1305,7 +1305,7 @@
       "name": "돈과 선택",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1325,7 +1325,7 @@
       "name": "건축의 과학",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1345,7 +1345,7 @@
       "name": "기후와 생활",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1365,7 +1365,7 @@
       "name": "AI와 판단",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1385,7 +1385,7 @@
       "name": "말과 미디어",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1405,7 +1405,7 @@
       "name": "식탁의 과학",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1425,7 +1425,7 @@
       "name": "소리의 원리",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1445,7 +1445,7 @@
       "name": "도시의 시간",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1465,7 +1465,7 @@
       "name": "발명이 바꾼 사회",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1485,7 +1485,7 @@
       "name": "몸을 읽는 숫자",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1505,7 +1505,7 @@
       "name": "이야기와 윤리",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1525,7 +1525,7 @@
       "name": "지도 너머의 문화",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1545,7 +1545,7 @@
       "name": "질문에서 과학으로",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1565,7 +1565,7 @@
       "name": "예술과 기술",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1585,7 +1585,7 @@
       "name": "음악과 시대의 만남",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1605,7 +1605,7 @@
       "name": "뉴스 속 숫자",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "topic_pair",
@@ -1625,7 +1625,7 @@
       "name": "골고루 탐험가",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_fields",
@@ -1641,7 +1641,7 @@
       "name": "넓어진 시야",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_fields",
@@ -1657,7 +1657,7 @@
       "name": "분야를 잇는 사람",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_fields",
@@ -1673,7 +1673,7 @@
       "name": "배움의 큰 지도",
       "group": "분야 연결",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_fields",
@@ -1689,7 +1689,7 @@
       "name": "별빛 시리즈 완주",
       "group": "시리즈 완주",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "author_series",
@@ -1706,7 +1706,7 @@
       "name": "생활 과학 시리즈 완주",
       "group": "시리즈 완주",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "author_series",
@@ -1723,7 +1723,7 @@
       "name": "소수 이야기 완주",
       "group": "시리즈 완주",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "author_series",
@@ -1740,7 +1740,7 @@
       "name": "말의 뿌리 완주",
       "group": "시리즈 완주",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "author_series",
@@ -1757,7 +1757,7 @@
       "name": "음악 여행 완주",
       "group": "시리즈 완주",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "author_series",
@@ -1774,7 +1774,7 @@
       "name": "지도 속 세계 완주",
       "group": "시리즈 완주",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "author_series",
@@ -1791,7 +1791,7 @@
       "name": "생활 속 경제 완주",
       "group": "시리즈 완주",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "author_series",
@@ -1808,7 +1808,7 @@
       "name": "AI와 사람 완주",
       "group": "시리즈 완주",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "author_series",
@@ -1825,7 +1825,7 @@
       "name": "역사 산책 완주",
       "group": "시리즈 완주",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "author_series",
@@ -1842,7 +1842,7 @@
       "name": "미술을 보는 눈 완주",
       "group": "시리즈 완주",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "author_series",
@@ -1859,7 +1859,7 @@
       "name": "몸의 이야기 완주",
       "group": "시리즈 완주",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "author_series",
@@ -1876,7 +1876,7 @@
       "name": "질문의 길 완주",
       "group": "시리즈 완주",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "author_series",
@@ -1893,7 +1893,7 @@
       "name": "첫 발견",
       "group": "누적 기록",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_canonical_lessons",
@@ -1908,7 +1908,7 @@
       "name": "탐험",
       "group": "누적 기록",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_canonical_lessons",
@@ -1923,7 +1923,7 @@
       "name": "열 편의 발견",
       "group": "누적 기록",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_canonical_lessons",
@@ -1938,7 +1938,7 @@
       "name": "서른 편의 지도",
       "group": "누적 기록",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_canonical_lessons",
@@ -1953,7 +1953,7 @@
       "name": "백 편의 배움",
       "group": "누적 기록",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_canonical_lessons",
@@ -1968,7 +1968,7 @@
       "name": "삼백 편의 여정",
       "group": "누적 기록",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "distinct_canonical_lessons",
@@ -1983,7 +1983,7 @@
       "name": "생활 속 발견가",
       "group": "누적 기록",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "cumulative_learning_days",
@@ -1999,7 +1999,7 @@
       "name": "스무 날의 배움",
       "group": "누적 기록",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "cumulative_learning_days",
@@ -2015,7 +2015,7 @@
       "name": "오십 날의 기록",
       "group": "누적 기록",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "cumulative_learning_days",
@@ -2031,7 +2031,7 @@
       "name": "배움의 100일",
       "group": "누적 기록",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "cumulative_learning_days",
@@ -2047,7 +2047,7 @@
       "name": "오래 이어온 호기심",
       "group": "누적 기록",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "cumulative_learning_days",
@@ -2063,7 +2063,7 @@
       "name": "곁에 둔 배움",
       "group": "누적 기록",
       "field": "",
-      "status": "proposal",
+      "status": "material_candidate",
       "release_gate": "matching published lessons and reviewed metadata required",
       "rule": {
         "type": "cumulative_learning_days",
@@ -2074,5 +2074,7 @@
       "artwork": null,
       "field_label": "공통"
     }
-  ]
+  ],
+  "role": "content_art_candidates_not_independent_award_rules",
+  "superseded_by": "structure-v3.json"
 }

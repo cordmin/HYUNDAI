@@ -214,7 +214,7 @@ function updateLessonProgress() {
   const remaining = document.getElementById('lessonRemaining');
   if (remaining) remaining.textContent = '수업 ' + lessonTimeText(arrivalPlanner.remaining(run.pieces, run.index, currentLessonPosition(run), lessonPlaybackPrefs.rate)) + ' 남음';
   const note = document.getElementById('lessonTimingNote');
-  if (note) note.textContent = run.done ? '수업을 마쳤어요' : run.playback.state === 'interrupted' ? '다른 소리가 끝나면 이어 들어요' : run.paused ? '잠시 멈췄어요' : hasArrived || Lesson.isClosing(run.pieces[run.index]) ? '도착에 맞춰 마무리 중' : remainMinutes() !== null ? '도착 시간에 맞춰 조절 중' : '';
+  if (note) note.textContent = run.done ? '수업을 마쳤어요' : run.playback.state === 'interrupted' ? '다른 소리가 끝나면 이어 들어요' : run.paused ? '잠시 멈췄어요' : lessonPieceUnvoiced(run) ? '음원 준비 중' : hasArrived || Lesson.isClosing(run.pieces[run.index]) ? '도착에 맞춰 마무리 중' : remainMinutes() !== null ? '도착 시간에 맞춰 조절 중' : '';
   const sectionName = document.getElementById('lessonSectionName');
   if (sectionName) sectionName.textContent = section ? `${timeline.sections.indexOf(section) + 1}/${timeline.sections.length} · ${section.piece.kind}` : '';
   document.querySelectorAll('[data-lesson-segment]').forEach(element => {
@@ -222,6 +222,13 @@ function updateLessonProgress() {
     element.style.setProperty('--heard', `${Math.max(0, Math.min(100, (position - item.start) / item.seconds * 100))}%`);
   });
   document.querySelectorAll('[data-lesson-section]').forEach(element => element.setAttribute('aria-current', Number(element.dataset.lessonSection) === run.index ? 'step' : 'false'));
+}
+
+// 음원이 아직 없는 조각은 대사 길이만큼 소리 없이 지나간다. 멈춘 것으로 보이지 않게 재생 화면에 알린다.
+// 제출용 앱은 음원이 모두 있어야 만들어지므로 이 문구가 나오지 않는다.
+function lessonPieceUnvoiced(run) {
+  const piece = run.pieces[run.index];
+  return !!piece && !Lesson.isBreak(piece) && !piece.voiced;
 }
 
 function tickLessonProgress() {
@@ -263,9 +270,16 @@ function updateLessonDock() {
   const label = document.getElementById('miniLessonRemaining');
   if (!label) return;
   const run = lessonRun;
-  const state = isLessonResting() ? '쉬는 시간' : run.playback.interrupted ? '다른 소리가 끝나면 이어 들어요' : run.paused ? '잠시 멈췄어요' : '듣는 중';
   const seconds = arrivalPlanner.remaining(run.pieces, run.index, currentLessonPosition(run), lessonPlaybackPrefs.rate);
-  label.textContent = `${state} · ${lessonTimeText(seconds)} 남음`;
+  label.textContent = `${lessonDockState(run)} · ${lessonTimeText(seconds)} 남음`;
+}
+
+// 사람이 멈춘 수업은 「잠시 멈췄어요」다. 앱의 재생기는 사람이 멈출 때도 멈춤을 알려 오므로,
+// 길 안내·통화가 소리를 가져간 때(interrupted)와 섞이지 않게 재생 상태 하나로 가린다.
+function lessonDockState(run) {
+  if (isLessonResting()) return '쉬는 시간';
+  const state = run.playback.state;
+  return state === 'playing' ? '듣는 중' : state === 'interrupted' ? '다른 소리가 끝나면 이어 들어요' : '잠시 멈췄어요';
 }
 
 function lessonLabel(run, resting) {

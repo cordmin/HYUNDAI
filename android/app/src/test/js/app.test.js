@@ -1058,6 +1058,30 @@ test('탐색하다 다른 수업을 시작하면 이전 구간·초를 저장하
   page('goHome(); localStorage.values.clear();');
 });
 
+test('사람이 멈춘 수업은 재생기가 멈춤을 알려 와도 미니 플레이어에 잠시 멈췄어요로 보인다', () => {
+  page(`goHome(); localStorage.values.clear(); lessonMinutes=15; startLesson('prime'); openPearlTab('records');`);
+  assert.equal(page('lessonDockState(lessonRun)'), '듣는 중');
+  // 앱의 재생기(VoiceSession.hold)는 사람이 멈출 때도 paused를 알린다.
+  page(`pauseLesson(); window.onSpeechEvent(JSON.stringify({ event: 'paused', seq: speechSeq }));`);
+  assert.equal(page('lessonRun.playback.interrupted'), true);
+  assert.equal(page('lessonDockState(lessonRun)'), '잠시 멈췄어요');
+  page(`resumeLesson(); window.onSpeechEvent(JSON.stringify({ event: 'resumed', seq: speechSeq }));`);
+  assert.equal(page('lessonDockState(lessonRun)'), '듣는 중');
+  // 길 안내·통화가 소리를 가져간 때만 다른 소리 안내를 보여 준다.
+  page(`window.onSpeechEvent(JSON.stringify({ event: 'paused', seq: speechSeq }));`);
+  assert.equal(page('lessonDockState(lessonRun)'), '다른 소리가 끝나면 이어 들어요');
+  page(`window.onSpeechEvent(JSON.stringify({ event: 'resumed', seq: speechSeq })); goHome(); localStorage.values.clear();`);
+});
+
+test('음원이 없는 조각만 재생 화면에 음원 준비 중으로 알린다', () => {
+  page(`goHome(); localStorage.values.clear(); lessonMinutes=15; startLesson('prime'); var unvoicedPiece = lessonRun.pieces[0]; var unvoicedWas = unvoicedPiece.voiced;`);
+  page(`unvoicedPiece.voiced = false;`);
+  assert.equal(page('lessonPieceUnvoiced(lessonRun)'), true);
+  page(`unvoicedPiece.voiced = true;`);
+  assert.equal(page('lessonPieceUnvoiced(lessonRun)'), false);
+  page(`if (unvoicedWas === undefined) delete unvoicedPiece.voiced; else unvoicedPiece.voiced = unvoicedWas; goHome(); localStorage.values.clear();`);
+});
+
 test('뒤로 가기는 수업을 종료하지 않고 추천으로 이동하며 루트에서는 시스템에 넘긴다', () => {
   page(`goHome(); lessonMinutes=15; startLesson('prime'); var backPlaybackSeq=speechSeq;`);
   assert.equal(page('window.handleAppBack()'), true);

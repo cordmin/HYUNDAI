@@ -87,17 +87,28 @@
     return orderFits(lessonOrder(lesson), minutes) || orderFits(shortOrder(lesson), minutes);
   }
 
+  // 앞으로 할 조각 가운데 꼭 넣을 것: 필수 조각, 그리고 같은 묶음의 조각을 이미 들은 조각(발문을 들었으면 그 답).
+  function mustAhead(order, heard = []) {
+    const started = new Set(heard.filter(piece => piece.group).map(piece => piece.group));
+    return order.filter(piece => piece.must || (piece.group && started.has(piece.group)));
+  }
+
   // 필수 조각을 두고, 15분 판 조각부터 대본 순서대로 더한 뒤 30분 판 조각을 더한다.
+  // 같은 묶음(예: 발문과 그 답)은 한꺼번에 들어갈 때만 넣는다. 하나만 들어가 말이 끊기지 않게 한다.
+  // heard는 이미 들은 조각이다. 묶음의 앞 조각을 들었으면 남은 조각은 필수처럼 둔다. keep은 꼭 넣을 조각이다.
   // 시간에 들어가는 조각을 고를 뿐 말하는 차례는 대본 그대로다.
-  function pick(order, budget, rate = 1) {
-    const musts = order.filter(piece => piece.must);
+  function pick(order, budget, rate = 1, heard = [], keep0 = []) {
+    const forced = new Set([...mustAhead(order, heard), ...keep0]);
+    const musts = order.filter(piece => forced.has(piece));
     let used = playbackSeconds(musts, rate);
     const keep = new Set(musts);
-    const extras = order.filter(piece => !piece.must);
+    const extras = order.filter(piece => !keep.has(piece));
     for (const piece of [...extras.filter(piece => !piece.long), ...extras.filter(piece => piece.long)]) {
-      if (used + playbackSeconds([piece], rate) > budget) continue;
-      keep.add(piece);
-      used += playbackSeconds([piece], rate);
+      if (keep.has(piece)) continue;
+      const unit = piece.group ? extras.filter(item => item.group === piece.group) : [piece];
+      if (used + playbackSeconds(unit, rate) > budget) continue;
+      unit.forEach(item => keep.add(item));
+      used += playbackSeconds(unit, rate);
     }
     return order.filter(piece => keep.has(piece));
   }
@@ -194,6 +205,10 @@
     const order = playingOrder(lesson, pieces);
     const ahead = order.slice(order.indexOf(pieces[index]) + 1);
     const budget = remainingSeconds - ARRIVAL_MARGIN_S;
+    if (playbackSeconds(mustAhead(ahead, done), rate) <= budget) {
+      return { pieces: [...done, ...pick(ahead, budget, rate, done)], wrapped: false };
+    }
+    // 들은 발문의 답까지는 못 넣어도 필수 조각이 들어가면, 답을 빼고 원래 정리로 끝낸다. 짧은 정리로 끊는 것보다 낫다.
     if (playbackSeconds(ahead.filter(piece => piece.must), rate) <= budget) {
       return { pieces: [...done, ...pick(ahead, budget, rate)], wrapped: false };
     }
@@ -307,7 +322,7 @@
     const own = pieces.filter(piece => !isBreak(piece));
     const order = playingOrder(lesson, own);
     const ahead = isBreak(now) || isClosing(now) ? [] : order.slice(order.indexOf(now) + 1);
-    const must = playbackSeconds(ahead.filter(piece => piece.must), rate);
+    const must = playbackSeconds(mustAhead(ahead, own.slice(0, index + 1)), rate);
     const count = laterCount(trip, must, playbackSeconds(own.slice(index + 1), rate), remainingSeconds - ARRIVAL_MARGIN_S, rate);
     const kept = { ...trip, count };
     if (isBreak(now)) return { pieces: withBreak(own, kept), count };
@@ -347,13 +362,23 @@
     return start < 0 ? [] : order.slice(start);
   }
 
+  // 조각 중간에서 멈췄으면(offset) 그 조각부터 이어 말하므로 그 조각과 같은 묶음은 꼭 넣는다.
+  function resumeStart(lesson, resume) {
+    const order = resumeOrder(lesson, resume);
+    const start = resume.offset > 0 ? order.slice(0, 1) : [];
+    return { order, start, heard: [...resumeHeard(lesson, resume), ...start] };
+  }
+
   function resumeFits(lesson, resume, minutes) {
-    return orderFits(resumeOrder(lesson, resume), minutes);
+    const { order, start, heard } = resumeStart(lesson, resume);
+    const need = new Set([...mustAhead(order, heard), ...start]);
+    return order.length > 0 && totalSeconds(order.filter(piece => need.has(piece))) <= minutes * 60 - ARRIVAL_MARGIN_S;
   }
 
   // 멈춘 조각부터 대본 차례대로, 남은 시간에 들어가는 만큼 고른다.
   function resumePlan(lesson, resume, minutes) {
-    return pick(resumeOrder(lesson, resume), minutes * 60);
+    const { order, start, heard } = resumeStart(lesson, resume);
+    return pick(order, minutes * 60, 1, heard, start);
   }
 
   function resumeHeard(lesson, resume) {
@@ -441,7 +466,7 @@
 
   const Lesson = {
     TIME_CHOICES, LONG_CHOICES, LONG_TRIP_MINUTES, BREAK_MINUTES, DEFAULT_MINUTES, SHORT_UNDER_MINUTES, assemble, playbackSeconds, fits, recommend, minutesFor, plan, lessonSeconds, fitRemaining,
-    speechSeconds, totalSeconds, required, shortOrder, isShort, recap, shortEnd, isQuestion, isClosing, isLongTrip, periodCount, tripOrder, planTrip, nextPeriod, periods, restOf, isBreak, withBreak, fitTrip,
+    speechSeconds, totalSeconds, required, mustAhead, shortOrder, isShort, recap, shortEnd, isQuestion, isClosing, isLongTrip, periodCount, tripOrder, planTrip, nextPeriod, periods, restOf, isBreak, withBreak, fitTrip,
     resumePoint, resumeFresh, resumeFits, resumePlan, resumeHeard, keepResume, RESUME_DAYS,
     seriesStep, seriesDue, seriesWaiting, playsFull, bridge,
     subjects, bySubject, forRequest, unvoiced, countsAsFinished, monthOf, normalize, finishLesson, mileageLine

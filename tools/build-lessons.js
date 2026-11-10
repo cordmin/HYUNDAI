@@ -59,10 +59,26 @@ function buildPiece(lessonId, row, lengths, file) {
   if (row['판'] === '8') piece.short = true; // 짧은 판 전용 조각. 15·30분 판에는 들어가지 않는다
   if (row['수준']) piece.level = row['수준'];
   if (row['기다림']) piece.wait = Number(row['기다림']);
+  if (row['묶음']) piece.group = row['묶음']; // 같은 묶음(예: 발문과 그 답)은 앱이 함께 넣고 함께 뺀다
   if (lengths[clip]) piece.seconds = lengths[clip];
   const voice = path.join(VOICES, `${clip}.m4a`);
   if (fs.existsSync(voice) && fs.statSync(voice).size > 0) piece.voiced = true; // 빈 파일은 음원으로 치지 않는다
   return piece;
+}
+
+// 묶음: 둘 이상, 같은 판, 필수 여부도 같아야 한다. 복습·이음·짧은 정리는 따로 붙는 조각이라 묶지 않는다.
+function checkGroups(file, pieces) {
+  const groups = {};
+  pieces.filter(piece => piece.group).forEach(piece => (groups[piece.group] = groups[piece.group] || []).push(piece));
+  for (const [name, members] of Object.entries(groups)) {
+    const fail = message => { throw new Error(`${file} 묶음 ${name}: ${message}`); };
+    if (members.length < 2) fail('조각이 둘 이상이어야 합니다');
+    if (members.some(piece => ['복습', '이음', '짧은정리'].includes(piece.kind))) fail('복습·이음·짧은 정리는 묶지 않습니다');
+    if (new Set(members.map(piece => `${!!piece.short}${!!piece.long}`)).size > 1) fail('판이 같아야 합니다');
+    if (new Set(members.map(piece => piece.must)).size > 1) fail('필수가 모두 같아야 합니다');
+    const at = members.map(piece => pieces.indexOf(piece));
+    if (at.some((index, n) => n > 0 && index !== at[n - 1] + 1)) fail('묶음 조각은 대본에서 붙어 있어야 합니다');
+  }
 }
 
 function build() {
@@ -70,6 +86,7 @@ function build() {
   const lessons = readTable(path.join(LESSONS, '목록.csv')).map(row => {
     const pieces = readTable(path.join(LESSONS, row['파일'])).map(line => buildPiece(row['이름'], line, lengths, row['파일']));
     if (new Set(pieces.map(piece => piece.id)).size !== pieces.length) throw new Error(`${row['파일']}: 조각 이름이 겹칩니다`);
+    checkGroups(row['파일'], pieces);
     if (!row['질문']) throw new Error(`목록.csv ${row['이름']}: 첫 화면에 쓸 질문이 없습니다`);
     const lesson = { id: row['이름'], title: row['제목'], question: row['질문'], subject: row['과목'], field: row['분야'], intro: row['소개'], review: row['검수'], pieces };
     // 시리즈: 「시리즈」에 묶음 이름, 「편」에 1부터 차례. 비워 두면 시리즈가 아니다.

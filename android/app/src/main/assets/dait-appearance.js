@@ -4,13 +4,14 @@
   const KEY = 'dait.pearl.colors.v5';
   const DEFAULT = { start:'#ffffff', end:'#eef1f5', accent:'#2563eb' };
   const DARK = { start:'#090b0e', end:'#1b2028', accent:'#2563eb' };
-  const ACCENTS = [['#2563eb','블루'],['#7c3aed','바이올렛'],['#c72975','로즈'],['#d74b36','코랄'],['#a86b12','앰버'],['#16834e','그린'],['#007d87','틸'],['#536378','슬레이트']];
+  const ACCENT_PAIRS = [['#2563eb','블루','#afcbff'],['#7c3aed','바이올렛','#c8b7ef'],['#c72975','로즈','#ebc1d0'],['#d74b36','코랄','#f5c1b8'],['#a86b12','앰버','#eed7a4'],['#16834e','그린','#b9dcc5'],['#007d87','틸','#b4dee0'],['#536378','슬레이트','#c6cfdc']];
+  const ACCENTS = ACCENT_PAIRS.flatMap(([hex,name,pastel])=>[[hex,name],[pastel,`파스텔 ${name}`]]);
   const HEX = /^#[0-9a-f]{6}$/i;
   const host = document.querySelector('.pleos-display');
   const rgb = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
   const luminance = c => c.map(v => { v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }).reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0);
   const contrast = (a,b)=>(Math.max(a,b)+.05)/(Math.min(a,b)+.05);
-  const makeProfiles = (mode,accent) => ({mode,light:{...DEFAULT,accent},dark:{...DARK,accent}});
+  const makeProfiles = (mode,accent) => ({mode,light:DaitPalette.background(accent,'light'),dark:DaitPalette.background(accent,'dark')});
   const storedAppearance = value => ({mode:value.mode,accent:value[value.mode].accent});
   const validAccent = value => ACCENTS.some(([hex])=>hex===value);
   let profiles = makeProfiles('light',DEFAULT.accent);
@@ -343,13 +344,13 @@
     if(!vehiclePolicy.allows('settings')){notice('주행중엔 설정을 바꿀 수 없어요.');return;}
     let selectedAccent=profiles[profiles.mode].accent, selectedMode=profiles.mode;
     const play='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m9 5 11 7-11 7z"/></svg>';
-    shell('앱 색상', `<form id="pearlColorForm"><h3 class="pearl-accent-title">포인트 컬러</h3><div class="pearl-accent-options" role="group" aria-label="포인트 컬러">${ACCENTS.map(([hex,name])=>`<button type="button" data-accent="${hex}" aria-label="${name}" aria-pressed="false"><span style="--swatch:${hex}" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 12 4 4 8-9"/></svg></span></button>`).join('')}</div><div class="pearl-mode-previews" role="group" aria-label="화면 모드 미리보기">${[['light','라이트'],['dark','다크']].map(([mode,label])=>`<button type="button" class="pearl-mode-preview" data-preview-mode="${mode}" aria-label="${label} 모드 적용" aria-pressed="false"><span class="pearl-preview-label">${label}<i aria-hidden="true"></i></span><span class="pearl-preview-screen"><span class="pearl-preview-heading">나의 배움</span><span class="pearl-preview-content"><strong>동백꽃과 점순이</strong><span class="pearl-preview-wave" aria-hidden="true">${[12,23,30,20,12].map(h=>`<i style="height:${h}px"></i>`).join('')}</span></span><span class="pearl-preview-controls" aria-hidden="true"><i class="pearl-preview-play">${play}</i><i class="pearl-preview-track"></i></span></span></button>`).join('')}</div><div class="pearl-settings-footer"><p id="pearlColorMessage" role="status"></p><button class="primary-btn" type="submit">저장</button></div></form>`);
+    shell('앱 색상', `<form id="pearlColorForm"><h3 class="pearl-accent-title">포인트 컬러</h3><div class="pearl-accent-options" role="group" aria-label="포인트 컬러">${ACCENT_PAIRS.map(([hex,name,pastel])=>`<div class="pearl-accent-pair">${[[hex,name],[pastel,`파스텔 ${name}`]].map(([value,label])=>`<button type="button" data-accent="${value}" aria-label="${label}" aria-pressed="false"><span style="--swatch:${value};--swatch-ink:${DaitPalette.contrast(value,'#18212a')>DaitPalette.contrast(value,'#ffffff')?'#18212a':'#ffffff'}" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 12 4 4 8-9"/></svg></span></button>`).join('')}</div>`).join('')}</div><div class="pearl-mode-previews" role="group" aria-label="화면 모드 미리보기">${[['light','라이트'],['dark','다크']].map(([mode,label])=>`<button type="button" class="pearl-mode-preview" data-preview-mode="${mode}" aria-label="${label} 모드 적용" aria-pressed="false"><span class="pearl-preview-label">${label}<i aria-hidden="true"></i></span><span class="pearl-preview-screen"><span class="pearl-preview-heading">나의 배움</span><span class="pearl-preview-content"><strong>동백꽃과 점순이</strong><span class="pearl-preview-wave" aria-hidden="true">${[12,23,30,20,12].map(h=>`<i style="height:${h}px"></i>`).join('')}</span></span><span class="pearl-preview-controls" aria-hidden="true"><i class="pearl-preview-play">${play}</i><i class="pearl-preview-track"></i></span></span></button>`).join('')}</div><div class="pearl-settings-footer"><p id="pearlColorMessage" role="status"></p><button class="primary-btn" type="submit">저장</button></div></form>`);
     dialog.classList.add('pearl-color-dialog','pearl-neutral-colors');
     const sync=()=>{
-      apply({...profiles[selectedMode],accent:selectedAccent},selectedMode);
+      apply(DaitPalette.background(selectedAccent,selectedMode),selectedMode);
       dialog.querySelectorAll('[data-accent]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.accent===selectedAccent)));
       dialog.querySelectorAll('[data-preview-mode]').forEach(b=>{
-        const mode=b.dataset.previewMode, colors={...(mode==='light'?DEFAULT:DARK),accent:selectedAccent};
+        const mode=b.dataset.previewMode, colors=DaitPalette.background(selectedAccent,mode);
         b.setAttribute('aria-pressed',String(mode===selectedMode));
         for(const [key,value] of Object.entries(DaitPalette.derive(colors,mode).tokens))b.style.setProperty(key,value);
         b.style.setProperty('--preview-label-ink',palette.tokens['--ink']);

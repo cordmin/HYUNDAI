@@ -44,8 +44,8 @@ test('손상된 새 설정은 구형 모드를 읽어 복구하고 원본은 지
  const r=loadAppearance({'dait.pearl.colors.v1':legacy,'dait.pearl.colors.v3':{mode:'light',light:{}},'dait.pearl.colors.v4':{mode:'dark',dark:{accent:'bad'}}});
  assert.equal(r.host.dataset.colorMode,'dark');assert.deepEqual(r.store['dait.pearl.colors.v1'],legacy);
 });
-test('8개 포인트 색의 라이트·다크 조작부와 본문 대비를 확인한다',()=>{
- for(const accent of ['#2563eb','#7c3aed','#c72975','#d74b36','#a86b12','#16834e','#007d87','#536378'])for(const mode of ['light','dark']){
+test('16개 포인트 색의 라이트·다크 조작부와 본문 대비를 확인한다',()=>{
+ for(const accent of ['#2563eb','#7c3aed','#c72975','#d74b36','#a86b12','#16834e','#007d87','#536378','#afcbff','#c8b7ef','#ebc1d0','#f5c1b8','#eed7a4','#b9dcc5','#b4dee0','#c6cfdc'])for(const mode of ['light','dark']){
   const t=DaitPalette.derive({start:mode==='light'?'#ffffff':'#090b0e',end:mode==='light'?'#eef1f5':'#1b2028',accent},mode).tokens;
   assert.ok(DaitPalette.contrast(t['--lilac'],t['--on-lilac'])>=4.5,accent+mode);
   assert.ok(DaitPalette.contrast(t['--ink'],t['--card'])>=7,accent+mode);
@@ -85,4 +85,11 @@ test('공통 포인트 색은 모드를 바꾸고 다시 불러와도 유지된�
  assert.equal(r.host.dataset.colorMode,'dark');assert.equal(r.styles['--bg-top'],'#090b0e');
  r.context.window.togglePearlTheme();assert.deepEqual(r.store['dait.pearl.colors.v5'],{mode:'light',accent:state.accent});
  const restored=loadAppearance(r.store);assert.equal(restored.styles['--lilac'],state.accent);
+});
+
+test('선택한 파스텔 색이 배경 그라데이션 끝과 공통 저장에 반영된다',()=>{
+ const accent='#ebc1d0',light=DaitPalette.background(accent,'light'),dark=DaitPalette.background(accent,'dark');
+ assert.equal(light.start,'#ffffff');assert.equal(light.end,accent);assert.equal(dark.start,'#090b0e');assert.notEqual(dark.end,accent);assert.equal(dark.accent,accent);
+ const r=loadAppearance({'dait.pearl.colors.v5':{mode:'light',accent}});assert.equal(r.styles['--bg-bottom'],accent);
+ r.context.window.togglePearlTheme();assert.equal(r.styles['--bg-bottom'],dark.end);assert.equal(r.store['dait.pearl.colors.v5'].accent,accent);
 });

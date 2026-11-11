@@ -658,7 +658,7 @@ button.pearl-badge { color:var(--ink); cursor:pointer; font-family:inherit; }
 .pearl-neutral-colors .pearl-accent-title {font-size:15px;margin:0 0 10px;}
 .pearl-accent-options {display:grid;grid-template-columns:repeat(8,minmax(44px,1fr));gap:6px;}
 .pearl-settings-dialog .pearl-accent-options button {display:grid;place-items:center;min-width:44px;min-height:48px;padding:4px;border:0;border-radius:50%;background:transparent;cursor:pointer;}
-.pearl-accent-options button>span {display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--swatch);color:#fff;box-shadow:0 0 0 3px var(--glass-menu),0 0 0 5px transparent;}
+.pearl-accent-options button>span {display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--swatch);color:var(--swatch-ink,#fff);box-shadow:0 0 0 3px var(--glass-menu),0 0 0 5px transparent;}
 .pearl-accent-options button[aria-pressed=true]>span {box-shadow:0 0 0 3px var(--glass-menu),0 0 0 5px var(--swatch);}
 .pearl-accent-options svg {width:17px;height:17px;visibility:hidden;}
 .pearl-accent-options [aria-pressed=true] svg {visibility:visible;}
@@ -705,3 +705,18 @@ button.pearl-badge { color:var(--ink); cursor:pointer; font-family:inherit; }
 .pearl-record-scroll[hidden]{display:none}
 
 @container(max-height:460px){.pearl-neutral-colors .pearl-settings-heading{margin-bottom:8px}.pearl-neutral-colors .pearl-accent-title{margin-bottom:6px}.pearl-neutral-colors .pearl-mode-previews{margin-top:10px}}
+
+/* Each pastel stays immediately below its original hue, including narrow windows. */
+.pearl-accent-pair {display:flex;flex-direction:column;gap:6px;}
+@container(max-height:460px){
+ .pearl-neutral-colors .pearl-settings-heading{margin-bottom:4px}
+ .pearl-neutral-colors .pearl-accent-title{margin-bottom:4px}
+ .pearl-neutral-colors .pearl-accent-options button{min-height:44px}
+ .pearl-accent-pair{gap:0}
+ .pearl-neutral-colors .pearl-mode-previews{margin-top:8px}
+ .pearl-neutral-colors .pearl-preview-label{margin-bottom:6px;font-size:13px}
+ .pearl-neutral-colors .pearl-preview-heading{display:none}
+ .pearl-neutral-colors .pearl-preview-content{margin:0 0 8px}
+ .pearl-neutral-colors .pearl-preview-play{width:28px;height:28px;flex-basis:28px}
+ .pearl-neutral-colors .pearl-settings-footer{padding-top:8px;margin-top:8px}
+}

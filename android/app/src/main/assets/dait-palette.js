@@ -59,5 +59,9 @@
     };
     return { hue, neutral, darkInk, lightInk, accent, tokens, logo };
   }
-  return { derive, contrast };
+  // The selected accent also owns the gradient, not just the controls.
+  function background(accent,mode) {
+    return {start:mode==='dark'?'#090b0e':'#ffffff',end:mode==='dark'?mix(accent,'#090b0e',.65):accent,accent};
+  }
+  return { derive, contrast, background };
 });

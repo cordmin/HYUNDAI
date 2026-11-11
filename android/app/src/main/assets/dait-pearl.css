@@ -64,16 +64,17 @@ body.in-app .pleos-display { border: 0; }
 .home-card.start { background: var(--glass); }
 .pearl-home { display: flex; flex-direction: column; gap: calc(10 * var(--u)); min-height: 0; flex: 1; }
 .home-card.pearl-hero { position: relative; overflow: hidden; display: flex; flex-direction: row; align-items: center; text-align: left; gap: calc(24 * var(--u)); flex: 1; padding: calc(22 * var(--u)) calc(34 * var(--u)); border-radius: var(--card-radius); }
+.home-card.pearl-hero { -webkit-backdrop-filter:none; backdrop-filter:none; isolation:isolate; }
 .pearl-hero-copy { position: relative; z-index: 1; flex: 1; min-width: 0; }
 /* 수업 주제 그림: 오른쪽에 크게 한 장. 가운데(글자 쪽)로 오기 전에 흐려진다. */
-.pearl-hero[data-pattern]::before { content: ''; position: absolute; inset: 0 calc(14 * var(--u)) 0 0; pointer-events: none; background: var(--lilac); opacity: .13;
+.pearl-hero[data-pattern]::before { content: ''; position: absolute; inset: 0 calc(14 * var(--u)) 0 0; pointer-events: none; background: var(--pattern-ink,var(--lilac)); opacity: .24;
   -webkit-mask-image: linear-gradient(90deg, transparent 52%, #000 72%), var(--pattern); -webkit-mask-composite: source-in;
   mask-image: linear-gradient(90deg, transparent 52%, #000 72%), var(--pattern); mask-composite: intersect;
   -webkit-mask-size: 100% 100%, auto 92%; mask-size: 100% 100%, auto 92%;
   -webkit-mask-position: 0 0, 100% 50%; mask-position: 0 0, 100% 50%;
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
-.pearl-night .pearl-hero[data-pattern]::before { opacity: .16; }
-.pearl-subject { display: inline-block; margin-bottom: calc(12 * var(--u)); padding: calc(5 * var(--u)) calc(12 * var(--u)); border-radius: 99px; background: var(--soft); color: var(--lilac); font-size: calc(13 * var(--u)); font-weight: 700; }
+.pearl-night .pearl-hero[data-pattern]::before { opacity: .22; }
+.pearl-subject { display: inline-block; margin-bottom: calc(12 * var(--u)); padding: calc(5 * var(--u)) calc(12 * var(--u)); border-radius: 99px; background: var(--soft); color: var(--subject-ink,var(--ink)); font-size: calc(13 * var(--u)); font-weight: 700; }
 .pearl-hero .question-title { max-width: 13em; font-size: calc(44 * var(--u)); line-height: 1.18; font-weight: 800; letter-spacing: -.03em; word-break: keep-all; margin: 0 0 calc(12 * var(--u)); }
 .home-card.start.pearl-hero .card-label { color: var(--muted); font-size: calc(14 * var(--u)); margin-bottom: calc(7 * var(--u)); }
 .question-promise { color: var(--ink); font-size: calc(14 * var(--u)); }
@@ -83,7 +84,8 @@ body.in-app .pleos-display { border: 0; }
 .card-btn.quiet, .primary-btn.secondary { background: var(--soft); color: var(--lilac); border: 1px solid var(--line); }
 /* 소리 막대(L안): 굵고 둥근 막대 다섯 개 위로 빛이 천천히 지나간다. 운전 중에는 빛도 멈춘다. */
 .dait-sound { display: flex; align-items: center; justify-content: center; gap: calc(8 * var(--u)); height: calc(64 * var(--u)); flex-shrink: 0; }
-.dait-sound i { display: block; width: calc(13 * var(--u)); height: calc(var(--s) * 100%); border-radius: 99px; transition: height .09s linear; /* 높이를 바꿔 둥근 끝이 찌그러지지 않게 */
+.dait-sound i { display: block; width: calc(13 * var(--u)); height: calc(var(--s) * 100%); border-radius: 99px; transition: height .09s linear; /* 높이를 바꿔 둥근 끝이 찌그러지지 않게 */ }
+.dait-sound i, .pearl-preview-wave i {
   background: linear-gradient(100deg,transparent 40%,#ffffff8c 50%,transparent 60%) no-repeat, linear-gradient(var(--wave-top),var(--wave-bottom));
   background-size: 0 0, 100% 100%; }
 .pearl-player.is-playing .dait-sound i { background-size: 500% 100%, 100% 100%; animation: dait-sound-shine 2.6s linear infinite; animation-delay: calc(var(--k) * .12s); }
@@ -92,8 +94,8 @@ body.driving .pearl-player .dait-sound i { animation: none; background-size: 0 0
 @media (prefers-reduced-motion: reduce) { .pearl-player .dait-sound i { animation: none; background-size: 0 0, 100% 100%; } }
 .pearl-player-wave { height: calc(48 * var(--u)); }
 .pearl-player-wave i { width: calc(11 * var(--u)); }
-.lesson-pick { --record-accent: var(--lilac); --record-soft: var(--soft); --record-line: var(--line); display: flex; flex: 1; min-height: 0; gap: calc(10 * var(--u)); }
-.pearl-night .lesson-pick { --record-accent: var(--lilac); --record-soft: var(--soft); --record-line: var(--line); }
+.lesson-pick { --record-accent: var(--control-ink,var(--ink)); --record-soft: var(--soft); --record-line: var(--line); display: flex; flex: 1; min-height: 0; gap: calc(10 * var(--u)); }
+.pearl-night .lesson-pick { --record-accent: var(--control-ink,var(--ink)); --record-soft: var(--soft); --record-line: var(--line); }
 .pearl-picker .dialogue-top { display: none; }
 .lesson-main { flex: 1; min-width: 0; padding-right: 0; scrollbar-width: none; }
 .lesson-main::-webkit-scrollbar { display: none; }
@@ -114,17 +116,17 @@ body.driving .pearl-player .dait-sound i { animation: none; background-size: 0 0
 .drive-screen { background: linear-gradient(120deg,var(--bg-top),var(--bg-bottom)); }
 .pearl-nav, .pearl-records { color: var(--ink); }
 body.driving .pearl-nav { visibility: hidden; }
-.pearl-records { --record-paper: var(--glass); --record-accent: var(--lilac); --record-soft: var(--soft); --record-line: var(--line); display: flex; flex-direction: column; gap: 0; flex: 1; min-height: 0; }
-.pearl-night .pearl-records { --record-paper: var(--glass); --record-accent: var(--lilac); --record-soft: var(--soft); --record-line: var(--line); }
+.pearl-records { --record-paper: var(--glass); --record-accent: var(--control-ink,var(--ink)); --record-soft: var(--soft); --record-line: var(--line); display: flex; flex-direction: column; gap: 0; flex: 1; min-height: 0; }
+.pearl-night .pearl-records { --record-paper: var(--glass); --record-accent: var(--control-ink,var(--ink)); --record-soft: var(--soft); --record-line: var(--line); }
 .pearl-page-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--glass); border: 1px solid var(--line); padding: calc(10 * var(--u)) calc(12 * var(--u)); border-radius: calc(14 * var(--u)); }
 .pearl-page-title h1 { font-size: calc(23 * var(--u)); margin: 0; }
 .pearl-page-title span { color: var(--muted); font-size: calc(14 * var(--u)); white-space: nowrap; }
 .pearl-record-content { display: flex; gap: calc(10 * var(--u)); flex: 1; min-height: 0; padding: calc(12 * var(--u)); background: var(--record-paper); border-radius: calc(14 * var(--u)); }
 .pearl-record-body { flex: 1; min-width: 0; min-height: 0; overflow: auto; scrollbar-width: none; }
 .pearl-record-body::-webkit-scrollbar { display: none; }
-.pearl-record-scroll { display: flex; flex-direction: column; align-items: center; gap: calc(10 * var(--u)); flex: 0 0 max(64px,calc(52 * var(--u))); }
-.pearl-record-scroll button { display: grid; place-items: center; width: 100%; min-height: max(64px,calc(52 * var(--u))); border: 1px solid var(--record-line); border-radius: calc(14 * var(--u)); background: var(--record-soft); color: var(--record-accent); cursor: pointer; }
-.pearl-record-scroll button svg { width: 28px; height: 28px; }
+.pearl-record-scroll { display: flex; flex-direction: column; align-items: center; gap: calc(10 * var(--u)); flex: 0 0 max(44px,calc(36 * var(--u))); }
+.pearl-record-scroll button { display: grid; place-items: center; width: 100%; height: max(44px,calc(36 * var(--u))); min-height: max(44px,calc(36 * var(--u))); border: 1px solid var(--record-line); border-radius: max(12px,calc(10 * var(--u))); background: var(--record-soft); color: var(--record-accent); cursor: pointer; }
+.pearl-record-scroll button svg { width: max(18px,calc(14 * var(--u))); height: max(18px,calc(14 * var(--u))); }
 .pearl-record-scroll button:disabled { opacity: .35; cursor: default; }
 .pearl-record-track { position: relative; flex: 1; width: 8px; min-height: 12px; background: var(--record-soft); border-radius: 8px; }
 .pearl-scroll-thumb { position: absolute; width: 100%; height: 40%; top: 0; border-radius: 8px; background: var(--record-accent); }
@@ -208,7 +210,7 @@ input { caret-color: var(--lilac); }
 
 /* Existing Pearl colors; the volume button itself extends down. */
 /* 알약 카드 하나가 어두운 화면·설정·소리 버튼을 감싼다. 버튼은 동그란 연분홍 바탕이라 누르는 곳이 보인다. */
-.pearl-tools { margin-left:auto; display:flex; align-items:flex-start; flex-shrink:0; gap:calc(10 * var(--u)); padding:calc(5 * var(--u)) calc(7 * var(--u)); height:calc(max(44px, 44 * var(--u)) + 10 * var(--u)); background:var(--glass); border:1px solid var(--glass-edge); border-radius:999px; box-shadow:var(--glass-shadow); backdrop-filter:blur(18px) saturate(120%); -webkit-backdrop-filter:blur(18px) saturate(120%); position:relative; z-index:5; }
+.pearl-tools { margin-left:auto; display:flex; align-items:flex-start; flex-shrink:0; --tool-size:max(44px,calc(36 * var(--u))); --tool-pad:max(6px,calc(5 * var(--u))); gap:max(6px,calc(6 * var(--u))); padding:var(--tool-pad); height:calc(var(--tool-size) + 2 * var(--tool-pad) + 2px); background:var(--glass); border:1px solid var(--glass-edge); border-radius:999px; box-shadow:var(--glass-shadow); backdrop-filter:blur(18px) saturate(120%); -webkit-backdrop-filter:blur(18px) saturate(120%); position:relative; z-index:5; }
 .pearl-nav .pearl-tools .icon-btn { width:max(44px,calc(44 * var(--u))); height:max(44px,calc(44 * var(--u))); min-height:44px; border:0; border-radius:50%; background:var(--soft); color:var(--lilac); box-shadow:none; }
 .pearl-nav .pearl-tools .pearl-theme-btn[aria-pressed=true] { background:var(--lilac); color:var(--on-lilac); }
 .pearl-nav .pearl-tools .pearl-volume-control > .icon-btn { width:100%; background:transparent; }
@@ -314,9 +316,9 @@ body.lesson-playing .stage-container { padding:calc(6 * var(--u)) calc(28 * var(
 .pearl-settings-dialog.pearl-playback-dialog .icon-btn {width:44px;height:44px}
 
 /* Driving uses the same composition with quiet motion and larger secondary targets. */
-.pearl-tools { height:calc(max(52px,44 * var(--u)) + 10 * var(--u)); }
-.pearl-nav .pearl-tools .icon-btn, .pearl-volume-control { width:max(44px,calc(36 * var(--u))); height:max(44px,calc(36 * var(--u))); }
-.pearl-tools { height:calc(max(44px,36 * var(--u)) + 4 * var(--u)); padding:calc(1 * var(--u)) calc(3 * var(--u)); gap:calc(6 * var(--u)); box-shadow:inset 0 1px 0 var(--glass-sheen), 0 4px 12px rgba(var(--shadow-rgb, 53, 40, 50), 0.039); }
+
+.pearl-nav .pearl-tools .icon-btn, .pearl-volume-control { width:var(--tool-size); height:var(--tool-size); }
+
 .pearl-nav .pearl-tools .icon-btn svg { width:22px; height:22px; }
 .pearl-volume-control.is-open { height:calc(max(44px,36 * var(--u)) + 188 * var(--u)); }
 .pearl-settings-dialog.pearl-playback-dialog button { min-height:48px; }
@@ -643,3 +645,89 @@ body.lesson-playing .pleos-display { background-image:linear-gradient(to bottom,
 }
 /* 주행 중에는 쓸 수 없는 위쪽 버튼(재생목록·화면 색·설정)을 감추고 음량만 남긴다. */
 body.driving .pearl-tools > .icon-btn { display:none; }
+/* Acquired badges use original color; locked badges keep the same readable silhouette. */
+button.pearl-badge { color:var(--ink); cursor:pointer; font-family:inherit; }
+.pearl-badge.is-locked img { filter:grayscale(1); opacity:.55; }
+.pearl-badge.is-earned img { filter:none; opacity:1; }
+.badge-detail-dialog { width:min(720px,calc(100% - 32px)); }
+.badge-detail-layout { display:grid; grid-template-columns:minmax(150px,.9fr) minmax(0,1.2fr); gap:28px; align-items:center; }
+.badge-detail-art img { display:block;width:100%;max-width:240px;aspect-ratio:1;object-fit:contain;margin:auto; }
+.badge-detail-copy h3 { margin:16px 0 7px;font-size:16px;color:var(--ink); }
+.badge-detail-copy h3:first-child {margin-top:0}
+.badge-detail-copy p { margin:0;line-height:1.65;font-size:15px;color:var(--muted);overflow-wrap:anywhere; }
+/* One accent, with light and dark examples visible together. */
+.pearl-neutral-colors .pearl-accent-title {font-size:15px;margin:0 0 10px;}
+.pearl-accent-options {display:grid;grid-template-columns:repeat(8,minmax(44px,1fr));gap:6px;}
+.pearl-settings-dialog .pearl-accent-options button {display:grid;place-items:center;min-width:44px;min-height:48px;padding:4px;border:0;border-radius:50%;background:transparent;cursor:pointer;}
+.pearl-accent-options button>span {display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--swatch);color:var(--swatch-ink,#fff);box-shadow:0 0 0 3px var(--glass-menu),0 0 0 5px transparent;}
+.pearl-accent-options button[aria-pressed=true]>span {box-shadow:0 0 0 3px var(--glass-menu),0 0 0 5px var(--swatch);}
+.pearl-accent-options svg {width:17px;height:17px;visibility:hidden;}
+.pearl-accent-options [aria-pressed=true] svg {visibility:visible;}
+.pearl-mode-previews {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:20px;}
+.pearl-settings-dialog .pearl-mode-preview {display:block;min-width:0;text-align:left;padding:0;border:0;background:transparent;border-radius:16px;color:var(--ink);cursor:pointer;}
+.pearl-preview-label {display:flex;align-items:center;justify-content:space-between;margin:0 4px 10px;font-size:14px;color:var(--preview-label-ink);}
+.pearl-preview-label>i {width:16px;height:16px;border:1.5px solid var(--preview-label-muted);border-radius:50%;box-sizing:border-box;}
+[aria-pressed=true]>.pearl-preview-label>i {border:5px solid var(--preview-selected);}
+.pearl-preview-screen {display:block;padding:16px;border-radius:16px;background:var(--preview-bg);border:0;box-shadow:none;}
+.pearl-preview-heading {display:block;font-size:12px;color:var(--muted);}
+.pearl-preview-content {display:flex;gap:10px;align-items:center;justify-content:space-between;margin:12px 0 18px;}
+.pearl-settings-dialog .pearl-mode-preview strong {font-size:17px;line-height:1.4;color:var(--ink);}
+.pearl-preview-wave {display:flex;gap:3px;align-items:center;flex-shrink:0;}
+.pearl-preview-wave i {width:3px;border-radius:4px;}
+.pearl-preview-controls {display:flex;gap:12px;align-items:center;}
+.pearl-preview-play {display:grid;place-items:center;flex:0 0 32px;width:32px;height:32px;border-radius:50%;background:var(--lilac);color:var(--on-lilac);}
+.pearl-preview-play svg {width:18px;height:18px;}
+.pearl-preview-track {position:relative;height:3px;flex:1;background:var(--soft);border-radius:4px;}
+.pearl-preview-track::before {content:'';display:block;width:40%;height:100%;border-radius:inherit;background:var(--lilac);}
+@container(max-height:460px){.pearl-mode-previews{margin-top:14px;gap:12px}.pearl-preview-screen{padding:12px}.pearl-preview-content{margin:8px 0 12px}}
+@media(max-width:480px){.pearl-accent-options{grid-template-columns:repeat(4,minmax(44px,1fr));gap:2px}.pearl-mode-previews{gap:10px}.pearl-preview-screen{padding:10px}.pearl-settings-dialog .pearl-mode-preview strong{font-size:14px}.pearl-preview-wave{display:none}}
+@media(max-width:480px){.badge-detail-layout{grid-template-columns:1fr;gap:12px}.badge-detail-art img{max-width:130px}.pearl-nav{gap:6px}.pearl-tools{gap:4px;--tool-pad:6px}.pearl-nav nav button{padding:0 9px}.pearl-brand .dait-brand-badge svg{width:48px}}
+
+@container(max-height:460px){.badge-detail-art img{max-width:170px}.badge-detail-copy h3{font-size:14px}.badge-detail-copy p{font-size:14px;line-height:1.5}}
+/* A: paired state rings carry completion/progress; no redundant status/time copy. */
+.pearl-record-grid.pearl-record-list { display:flex; flex-direction:column; gap:0; }
+.pearl-record-list .pearl-record-row { display:flex; align-items:center; gap:calc(18 * var(--u)); min-height:max(100px,calc(90 * var(--u))); padding:calc(16 * var(--u)) calc(12 * var(--u)); border:0; border-bottom:1px solid var(--line); border-radius:0; background:transparent; box-shadow:none; -webkit-backdrop-filter:none; backdrop-filter:none; }
+.pearl-record-list .pearl-record-row:last-child { border-bottom:0; }
+.pearl-record-state-ring { display:grid;place-items:center;flex:0 0 max(44px,calc(44 * var(--u)));width:max(44px,calc(44 * var(--u)));height:max(44px,calc(44 * var(--u)));color:var(--control-ink,var(--ink)); }
+.pearl-record-state-ring svg { width:100%;height:100%;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round; }
+.record-ring-track {stroke:var(--control-track,var(--line))}
+.record-ring-value, .record-ring-check {stroke:currentColor}
+.pearl-record-state-ring.is-complete {color:#24775d}
+.pearl-night .pearl-record-state-ring.is-complete {color:#7dd9b6}
+.pearl-record-list .pearl-record-copy {flex:1;min-width:0;display:flex;flex-direction:column;gap:calc(7 * var(--u));}
+.pearl-record-list .pearl-record-copy strong {font-size:calc(20 * var(--u));font-weight:700;line-height:1.35;letter-spacing:-.025em;}
+.pearl-record-list .pearl-record-date {font-size:calc(13 * var(--u));color:var(--muted);}
+@media(max-width:480px){.pearl-record-list .pearl-record-row{gap:12px;padding:14px 4px}.pearl-record-list .pearl-record-copy strong{font-size:17px}.pearl-record-list .pearl-record-date{font-size:12px}}
+
+.pearl-record-list .pearl-record-state-ring{color:var(--control-ink,var(--ink))}
+.pearl-record-list .pearl-record-state-ring.is-complete{color:#24775d}
+.pearl-night .pearl-record-list .pearl-record-state-ring.is-complete{color:#7dd9b6}
+.pearl-record-scroll[hidden]{display:none}
+
+@container(max-height:460px){.pearl-neutral-colors .pearl-settings-heading{margin-bottom:8px}.pearl-neutral-colors .pearl-accent-title{margin-bottom:6px}.pearl-neutral-colors .pearl-mode-previews{margin-top:10px}}
+
+/* Each pastel stays immediately below its original hue, including narrow windows. */
+.pearl-accent-pair {display:flex;flex-direction:column;gap:6px;}
+@container(max-height:460px){
+ .pearl-neutral-colors .pearl-settings-heading{margin-bottom:4px}
+ .pearl-neutral-colors .pearl-accent-title{margin-bottom:4px}
+ .pearl-neutral-colors .pearl-accent-options button{min-height:44px}
+ .pearl-accent-pair{gap:0}
+ .pearl-neutral-colors .pearl-mode-previews{margin-top:8px}
+ .pearl-neutral-colors .pearl-preview-label{margin-bottom:6px;font-size:13px}
+ .pearl-neutral-colors .pearl-preview-heading{display:none}
+ .pearl-neutral-colors .pearl-preview-content{margin:0 0 8px}
+ .pearl-neutral-colors .pearl-preview-play{width:28px;height:28px;flex-basis:28px}
+ .pearl-neutral-colors .pearl-settings-footer{padding-top:8px;margin-top:8px}
+}
+
+/* Familiar playback actions use the same icon; meaning and timing stay accessible. */
+.pearl-hero .question-actions .pearl-card-play {display:grid;place-items:center;flex:none;width:max(56px,calc(52 * var(--u)));height:max(56px,calc(52 * var(--u)));padding:0;border-radius:50%;}
+.pearl-card-play svg {width:44%;height:44%;}
+.lesson-resume-indicator {position:relative;display:grid;place-items:center;flex:0 0 max(44px,calc(44 * var(--u)));width:max(44px,calc(44 * var(--u)));height:max(44px,calc(44 * var(--u)));}
+.lesson-resume-indicator>.lesson-play {position:absolute;inset:0;margin:auto;width:50%;height:50%;background:none;color:var(--control-ink,var(--ink));}
+.lesson-resume-indicator>.lesson-play svg {width:100%;height:100%;}
+.pearl-settings-color-samples {display:flex;gap:8px;padding:4px 0;}
+.pearl-settings-color-samples i {display:block;width:42px;height:20px;border-radius:6px;}
+.lesson-next-actions .primary-btn.lesson-next-play {display:grid;place-items:center;flex:0 0 max(56px,calc(44 * var(--u)));width:max(56px,calc(44 * var(--u)));min-width:0;height:max(56px,calc(44 * var(--u)));min-height:56px;padding:0;border-radius:50%;}
+.lesson-next-play svg {width:44%;height:44%;}

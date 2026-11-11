@@ -17,59 +17,44 @@ function loadAppearance(values = {}, writable = true) {
   return { store, styles, host, context };
 }
 
-test('이전 파란 테마는 원본을 보관하고 선택한 모드의 로즈 테마로 한 번 전환한다', () => {
-  const old = { mode: 'dark', light: { start: '#f8e9eb', end: '#e7edf5' }, dark: { start: '#151719', end: '#1f2937' } };
-  const result = loadAppearance({ 'dait.pearl.colors.v2': old });
-  assert.deepEqual(result.store['dait.pearl.colors.v2'], old);
-  assert.equal(result.host.dataset.colorMode, 'dark');
-  assert.equal(result.styles['--bg-top'], '#30212a');
-  assert.equal(result.styles['--bg-bottom'], '#452e38');
-  assert.equal(result.store['dait.pearl.colors.v3'].light.end, '#ecd9df');
+test('이전 사용자 배경은 보존하고 선택 모드를 새 화이트·블랙 기본값으로 이관한다', () => {
+ const old={mode:'dark',light:{start:'#44ff88',end:'#baffcc'},dark:{start:'#151719',end:'#1f2937'}};
+ const r=loadAppearance({'dait.pearl.colors.v3':old});
+ assert.deepEqual(r.store['dait.pearl.colors.v3'],old);
+ assert.equal(r.host.dataset.colorMode,'dark');assert.equal(r.styles['--bg-top'],'#090b0e');
+ assert.equal(r.store['dait.pearl.colors.v5'].mode,'dark');
+ assert.equal(r.store['dait.pearl.colors.v5'].accent,'#2563eb');
 });
-
-test('새 테마에서 사용자가 저장한 라이트·다크 배색은 다시 열어도 유지한다', () => {
-  const saved = { mode: 'light', light: { start: '#fffafb', end: '#e2c3cf' }, dark: { start: '#352832', end: '#573746' } };
-  const result = loadAppearance({ 'dait.pearl.colors.v3': saved });
-  assert.deepEqual(result.store['dait.pearl.colors.v3'], saved);
-  assert.equal(result.styles['--bg-top'], '#fffafb');
-  assert.equal(result.styles['--bg-bottom'], '#e2c3cf');
+test('이전 현재 모드의 색을 공통 포인트로 이관하고 두 모드에 같은 색을 쓴다',()=>{
+ const saved={mode:'light',light:{accent:'#16834e'},dark:{accent:'#7c3aed'}};
+ const r=loadAppearance({'dait.pearl.colors.v4':saved});const accent=r.styles['--lilac'];
+ assert.equal(r.styles['--bg-top'],'#ffffff');assert.equal(r.host.dataset.settingsPalette,'neutral');
+ r.context.window.togglePearlTheme();assert.equal(r.styles['--bg-top'],'#090b0e');assert.notEqual(r.styles['--lilac'],accent);
+ r.context.window.togglePearlTheme();assert.equal(r.styles['--lilac'],accent);
+ assert.equal(r.store['dait.pearl.colors.v5'].accent,'#16834e');assert.equal(r.store['dait.pearl.colors.v5'].mode,'light');assert.deepEqual(r.store['dait.pearl.colors.v4'],saved);
+ r.context.isDrivingMode=true;r.context.window.togglePearlTheme();assert.equal(r.host.dataset.colorMode,'light');
 });
-
-test('라이트 모드에 검은 배경을 골라도 밝은 설정 패널의 글자를 흰색으로 바꾸지 않는다', () => {
-  const saved = { mode: 'light', light: { start: '#000000', end: '#111111' }, dark: { start: '#30212a', end: '#452e38' } };
-  const result = loadAppearance({ 'dait.pearl.colors.v3': saved });
-  assert.equal(result.host.dataset.colorMode, 'light');
-  assert.ok(DaitPalette.contrast(result.styles['--ink'], result.styles['--card']) >= 7);
-  assert.ok(DaitPalette.contrast(result.styles['--muted'], result.styles['--card']) >= 4.5);
-  assert.deepEqual(result.store['dait.pearl.colors.v3'], saved);
+test('저장 공간이 없어도 화이트 기본 배경과 읽을 수 있는 본문을 그린다',()=>{
+ const r=loadAppearance({},false);assert.equal(r.styles['--bg-top'],'#ffffff');
+ assert.ok(DaitPalette.contrast(r.styles['--ink'],r.styles['--card'])>=7);
+ assert.ok(DaitPalette.contrast(r.styles['--muted'],r.styles['--card'])>=4.5);
 });
-
-test('처음 실행하거나 저장소가 막혀 있어도 로즈 배경을 그린다', () => {
-  const result = loadAppearance({}, false);
-  assert.equal(result.styles['--bg-top'], '#f8e9eb');
-  assert.equal(result.styles['--bg-bottom'], '#ecd9df');
-  assert.ok(DaitPalette.contrast(result.styles['--ink'], result.styles['--card']) >= 7);
+test('손상된 새 설정은 구형 모드를 읽어 복구하고 원본은 지우지 않는다',()=>{
+ const legacy={start:'#111111',end:'#222222'};
+ const r=loadAppearance({'dait.pearl.colors.v1':legacy,'dait.pearl.colors.v3':{mode:'light',light:{}},'dait.pearl.colors.v4':{mode:'dark',dark:{accent:'bad'}}});
+ assert.equal(r.host.dataset.colorMode,'dark');assert.deepEqual(r.store['dait.pearl.colors.v1'],legacy);
 });
-
-test('구형 단일 배색과 손상된 새 배색도 모드를 보존하며 안전하게 이관한다', () => {
-  const result = loadAppearance({ 'dait.pearl.colors.v1': { start: '#111111', end: '#222222' }, 'dait.pearl.colors.v3': { mode: 'light', light: {} } });
-  assert.equal(result.host.dataset.colorMode, 'dark');
-  assert.equal(result.styles['--bg-bottom'], '#452e38');
+test('16개 포인트 색의 라이트·다크 조작부와 본문 대비를 확인한다',()=>{
+ for(const accent of ['#2563eb','#7c3aed','#c72975','#d74b36','#a86b12','#16834e','#007d87','#536378','#afcbff','#c8b7ef','#ebc1d0','#f5c1b8','#eed7a4','#b9dcc5','#b4dee0','#c6cfdc'])for(const mode of ['light','dark']){
+  const t=DaitPalette.derive({start:mode==='light'?'#ffffff':'#090b0e',end:mode==='light'?'#eef1f5':'#1b2028',accent},mode).tokens;
+  assert.ok(DaitPalette.contrast(t['--lilac'],t['--on-lilac'])>=4.5,accent+mode);
+  assert.ok(DaitPalette.contrast(t['--ink'],t['--card'])>=7,accent+mode);
+  assert.ok(DaitPalette.contrast(t['--muted'],t['--card'])>=4.5,accent+mode);
+  assert.ok(DaitPalette.contrast(t['--subject-ink'],t['--soft'])>=4.5,accent+mode);
+  assert.ok(DaitPalette.contrast(t['--control-ink'],t['--soft'])>=4.5,accent+mode);
+  assert.ok(DaitPalette.contrast(t['--control-ink'],t['--control-track'])>=3,accent+mode);
+ }
 });
-
-test('달 버튼은 밝은 화면과 어두운 화면을 오가며 저장한 배색을 쓴다', () => {
-  const result = loadAppearance({});
-  result.context.window.togglePearlTheme();
-  assert.equal(result.host.dataset.colorMode, 'dark');
-  assert.equal(result.styles['--bg-top'], '#30212a');
-  assert.equal(result.store['dait.pearl.colors.v3'].mode, 'dark');
-  result.context.isDrivingMode = true; result.context.window.togglePearlTheme();
-  assert.equal(result.host.dataset.colorMode, 'dark'); // 주행 중에는 바꾸지 않는다
-  result.context.isDrivingMode = false; result.context.window.togglePearlTheme();
-  assert.equal(result.host.dataset.colorMode, 'light');
-  assert.equal(result.styles['--bg-top'], '#f8e9eb');
-});
-
 
 test('배경 두 색에서 재질·강조색·로고를 함께 만들고 무채색에는 다른 색을 섞지 않는다', () => {
   const colors = [{start:'#4df66b',end:'#191d18'},{start:'#c7e8ff',end:'#203b86'},{start:'#ffba45',end:'#39200e'},{start:'#000000',end:'#ffffff'}];
@@ -88,17 +73,6 @@ test('배경 두 색에서 재질·강조색·로고를 함께 만들고 무채�
   assert.notDeepEqual(green.logo(false),blue.logo(false));
 });
 
-test('달 버튼을 오가면 각 모드에 저장한 배경과 모든 강조색도 함께 복원한다', () => {
-  const saved={mode:'light',light:{start:'#8fe7a2',end:'#e4f9ec'},dark:{start:'#14266b',end:'#070a1c'}};
-  const result=loadAppearance({'dait.pearl.colors.v3':saved});
-  const accent=result.styles['--lilac'], material=result.styles['--glass-menu'];
-  result.context.window.togglePearlTheme();
-  assert.notEqual(result.styles['--lilac'],accent); assert.notEqual(result.styles['--glass-menu'],material);
-  result.context.window.togglePearlTheme();
-  assert.equal(result.styles['--lilac'],accent); assert.equal(result.styles['--glass-menu'],material);
-  assert.deepEqual(result.store['dait.pearl.colors.v3'],saved);
-});
-
 test('노랑·라임을 포함한 RGB 격자 432배색에서 조작·본문 대비를 지킨다', () => {
   for(let r=0;r<=255;r+=51) for(let g=0;g<=255;g+=51) for(let b=0;b<=255;b+=51) for(const mode of ['light','dark']) {
     const start='#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');
@@ -107,4 +81,18 @@ test('노랑·라임을 포함한 RGB 격자 432배색에서 조작·본문 대�
     assert.ok(DaitPalette.contrast(t['--lilac'],t['--soft'])>=3,start+mode);
     assert.ok(DaitPalette.contrast(t['--muted'],t['--card'])>=4.5,start+mode);
   }
+});
+
+test('공통 포인트 색은 모드를 바꾸고 다시 불러와도 유지된다',()=>{
+ const state={mode:'dark',accent:'#c72975'},r=loadAppearance({'dait.pearl.colors.v5':state});
+ assert.equal(r.host.dataset.colorMode,'dark');assert.equal(r.styles['--bg-top'],'#090b0e');
+ r.context.window.togglePearlTheme();assert.deepEqual(r.store['dait.pearl.colors.v5'],{mode:'light',accent:state.accent});
+ const restored=loadAppearance(r.store);assert.equal(restored.styles['--lilac'],state.accent);
+});
+
+test('선택한 파스텔 색이 배경 그라데이션 끝과 공통 저장에 반영된다',()=>{
+ const accent='#ebc1d0',light=DaitPalette.background(accent,'light'),dark=DaitPalette.background(accent,'dark');
+ assert.equal(light.start,'#ffffff');assert.equal(light.end,accent);assert.equal(dark.start,'#090b0e');assert.notEqual(dark.end,accent);assert.equal(dark.accent,accent);
+ const r=loadAppearance({'dait.pearl.colors.v5':{mode:'light',accent}});assert.equal(r.styles['--bg-bottom'],accent);
+ r.context.window.togglePearlTheme();assert.equal(r.styles['--bg-bottom'],dark.end);assert.equal(r.store['dait.pearl.colors.v5'].accent,accent);
 });

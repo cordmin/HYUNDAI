@@ -31,7 +31,7 @@ function updateDriveScreen(sentence) {
   document.getElementById('driveSentence').textContent = inLesson ? (sentence || (lessonRun?.done ? lessonDoneLine(lessonRun) : document.querySelector('.main-question')?.textContent) || '')
     : offer ? (fromStop ? '지난번 멈춘 곳부터 들을까요?' : offer.question) : '주차 후 이어갈게요';
   const offerLine = !offer ? '' : fromStop ? `${offer.title} · 남은 약 ${stopMinutesLeft(offer, minutes)}분` : lessonPromise(offer, minutes);
-  document.getElementById('driveSub').textContent = inLesson ? (lessonRun && lessonRun.paused ? '잠시 멈췄어요' : '')
+  document.getElementById('driveSub').textContent = inLesson ? ''
     : offer ? offerLine : '설정과 자세한 내용은 주차한 뒤 열어요';
   const done = isLessonDone();
   const replay = document.getElementById('driveReplay');

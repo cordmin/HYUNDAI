@@ -13,6 +13,8 @@ function renderLessonPick(container) {
   const periods = trip.lesson ? Lesson.periods(trip) : [];
   const lessons = Lesson.recommend(DAIT_LESSONS, trip.minutes, progress.records, rules);
   const stopped = stoppedLesson(lessonMinutes);
+  const stoppedRecord=stopped && [...progress.records].reverse().find(r=>r.lesson===stopped.id&&!r.finished);
+  const stoppedPoint=progress.resume?.lesson===stopped?.id?progress.resume:null;
   const scrolled = document.querySelector('.lesson-main')?.scrollTop || 0;
   const km = Math.round(progress.km[Lesson.monthOf(toYmd(new Date()))] || 0);
   const mileage = km ? `이번 달 ${km}km ${Lesson.mileageLine(km)}`.trim() : '';
@@ -23,7 +25,7 @@ function renderLessonPick(container) {
         <span class="top-label">수업</span>
       </div>
       <div class="pearl-records">
-      <div class="playlist-list-toolbar">${eta !== null ? '' : `<div class="pearl-record-tabs lesson-time-tabs" role="tablist" aria-label="수업 시간">${[8,15,20].map(minutes => `<button role="tab" aria-controls="lessonList" aria-selected="${minutes === lessonMinutes}" onclick="pickLessonTime(${minutes})">${minutes}분 수업</button>`).join('')}</div>`}<button class="playlist-open-btn" onclick="openPlaylist()">재생목록${lessonQueue.items.length ? ` · ${lessonQueue.items.length}` : ''}</button></div>
+      <div class="playlist-list-toolbar">${eta !== null ? '' : `<div class="pearl-record-tabs lesson-time-tabs" role="tablist" aria-label="수업 시간">${[8,15,20].map(minutes => `<button role="tab" aria-controls="lessonList" aria-selected="${minutes === lessonMinutes}" onclick="pickLessonTime(${minutes})">${minutes}분</button>`).join('')}</div>`}</div>
       <div class="lesson-pick pearl-record-content">
         <div class="lesson-main" id="lessonList" onscroll="updateListScroll('lessonList', 'lessonScroll')">
           ${eta !== null ? `<div class="lesson-filters"><span class="lesson-eta-summary">도착까지 ${Lesson.minutesFor(eta)}분, ${periods.length > 1 ? (trip.rest ? `${periods.length}교시로 들어요` : '수업을 이어 들어요') : '이 수업을 들어요'}</span></div>` : ''}
@@ -32,10 +34,10 @@ function renderLessonPick(container) {
           ${lessons.length === 0 && !stopped ? '<div class="settings-message">이 시간에 맞는 수업이 아직 없어요</div>' : ''}
           <div class="lesson-grid">
           ${stopped ? `<div class="lesson-row">
-            <button class="choice-chip" onclick="startLesson('${stopped.id}', true)">
-              ${LESSON_PLAY_ICON}
+            <button class="choice-chip" aria-label="${escapeHtml(stopped.title)} 이어 듣기" onclick="startLesson('${stopped.id}', true)">
+              <span class="lesson-resume-indicator" aria-hidden="true">${recordStateRing(stoppedRecord||{lesson:stopped.id},stoppedPoint)}${LESSON_PLAY_ICON}</span>
               <span class="lesson-text">
-                <span class="lesson-title">지난번 멈춘 곳부터: ${escapeHtml(stopped.title)}</span>
+                <span class="lesson-title">${escapeHtml(stopped.title)}</span>
                 <span class="lesson-meta">${escapeHtml(stopped.subject)} · 남은 약 ${stopMinutesLeft(stopped, lessonMinutes)}분</span>
               </span>
             </button>
@@ -206,7 +208,7 @@ function updateLessonProgress() {
   noteLessonHeard(run, timeline);
   const heard = run.done ? timeline.seconds : Math.max(position, lessonHeardLimit(run, timeline));
   const forward = document.getElementById('lessonForward');
-  if (forward) forward.disabled = run.done || heard - position < 1;
+  if (forward) forward.disabled = run.done || heard - position < .05;
   if (!run.scrubbing) {
     const slider = document.getElementById('lessonSeek');
     if (!slider) return;
@@ -217,9 +219,9 @@ function updateLessonProgress() {
     document.getElementById('lessonElapsed').textContent = lessonTimeText(position);
   }
   const remaining = document.getElementById('lessonRemaining');
-  if (remaining) remaining.textContent = '수업 ' + lessonTimeText(arrivalPlanner.remaining(run.pieces, run.index, currentLessonPosition(run), lessonPlaybackPrefs.rate)) + ' 남음';
+  if (remaining) remaining.textContent = lessonTimeText(arrivalPlanner.remaining(run.pieces, run.index, currentLessonPosition(run), lessonPlaybackPrefs.rate));
   const note = document.getElementById('lessonTimingNote');
-  if (note) note.textContent = run.done ? '수업을 마쳤어요' : run.playback.state === 'interrupted' ? '다른 소리가 끝나면 이어 들어요' : run.paused ? '잠시 멈췄어요' : lessonPieceUnvoiced(run) ? '음원 준비 중' : hasArrived || Lesson.isClosing(run.pieces[run.index]) ? '도착에 맞춰 마무리 중' : remainMinutes() !== null ? '도착 시간에 맞춰 조절 중' : '';
+  if (note) note.textContent = run.done ? '수업을 마쳤어요' : run.playback.state === 'interrupted' ? '다른 소리가 끝나면 이어 들어요' : run.paused ? '' : lessonPieceUnvoiced(run) ? '음원 준비 중' : hasArrived || Lesson.isClosing(run.pieces[run.index]) ? '도착에 맞춰 마무리 중' : remainMinutes() !== null ? '도착 시간에 맞춰 조절 중' : '';
   const sectionName = document.getElementById('lessonSectionName');
   if (sectionName) sectionName.textContent = section ? `${timeline.sections.indexOf(section) + 1}/${timeline.sections.length} · ${section.piece.kind}` : '';
   document.querySelectorAll('[data-lesson-segment]').forEach(element => {
@@ -281,15 +283,15 @@ function updateLessonDock() {
   if (!label) return;
   const run = lessonRun;
   const seconds = arrivalPlanner.remaining(run.pieces, run.index, currentLessonPosition(run), lessonPlaybackPrefs.rate);
-  label.textContent = `${lessonDockState(run)} · ${lessonTimeText(seconds)} 남음`;
+  label.textContent = [lessonDockState(run), lessonTimeText(seconds)].filter(Boolean).join(' · ');
 }
 
-// 사람이 멈춘 수업은 「잠시 멈췄어요」다. 앱의 재생기는 사람이 멈출 때도 멈춤을 알려 오므로,
+// 사람이 멈춘 상태는 재생 아이콘으로 표시한다. 앱의 재생기는 사람이 멈출 때도 멈춤을 알려 오므로,
 // 길 안내·통화가 소리를 가져간 때(interrupted)와 섞이지 않게 재생 상태 하나로 가린다.
 function lessonDockState(run) {
   if (isLessonResting()) return '쉬는 시간';
   const state = run.playback.state;
-  return state === 'playing' ? '듣는 중' : state === 'interrupted' ? '다른 소리가 끝나면 이어 들어요' : '잠시 멈췄어요';
+  return state === 'interrupted' ? '다른 소리가 끝나면 이어 들어요' : '';
 }
 
 function lessonLabel(run, resting) {
@@ -310,5 +312,5 @@ function lessonMainLabel(run) {
 // Completion has no dead seek controls. The upcoming lesson is actionable here.
 function renderLessonEnd(container,run){
   const next=nextLessonCandidate(run);
-  container.innerHTML=`<section class="lesson-end"><header><p class="lesson-end-status">${escapeHtml(lessonDoneLine(run))}</p><h1>${escapeHtml(run.lesson.title)}</h1></header>${next?`<article class="lesson-up-next"><div class="lesson-next-top"><span id="nextLessonCountdown" role="status">${run.nextAt?run.nextSeconds+'초 후 재생':'다음 수업'}</span><button class="queue-switch next-autoplay" role="switch" aria-label="다음 수업 자동 재생" aria-checked="${lessonQueue.autoNext}" onclick="toggleNextLessonAutoplay()"${isDrivingMode?' disabled':''}><span>자동 재생</span><span aria-hidden="true">${lessonQueue.autoNext?'켜짐':'꺼짐'}</span></button></div><h2>${escapeHtml(next.target.title)}</h2><p>${escapeHtml(next.target.subject)} · ${next.source==='series'?'시리즈 다음 편':next.source==='queue'?'재생목록':'이어서 들을 수업'}</p><div class="lesson-next-actions">${run.nextAt?'<button class="primary-btn secondary" onclick="cancelNextLessonAutoplay()">취소</button>':''}<button class="primary-btn" onclick="playNextQueuedLesson()">지금 재생</button></div></article>`:''}<footer class="lesson-end-bottom">${next?'':'<p class="lesson-end-note">'+(hasArrived?'도착했어요.':'다음 이동에서 이어 들어요.')+'</p>'}<button class="lesson-end-finish" onclick="goHome()">마치기<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button></footer></section>`;
+  container.innerHTML=`<section class="lesson-end"><header><p class="lesson-end-status">${escapeHtml(lessonDoneLine(run))}</p><h1>${escapeHtml(run.lesson.title)}</h1></header>${next?`<article class="lesson-up-next"><div class="lesson-next-top"><span id="nextLessonCountdown" role="status">${run.nextAt?run.nextSeconds+'초 후 재생':'다음 수업'}</span><button class="queue-switch next-autoplay" role="switch" aria-label="다음 수업 자동 재생" aria-checked="${lessonQueue.autoNext}" onclick="toggleNextLessonAutoplay()"${isDrivingMode?' disabled':''}><span>자동 재생</span><span aria-hidden="true">${lessonQueue.autoNext?'켜짐':'꺼짐'}</span></button></div><h2>${escapeHtml(next.target.title)}</h2><p>${escapeHtml(next.target.subject)} · ${next.source==='series'?'시리즈 다음 편':next.source==='queue'?'재생목록':'이어서 들을 수업'}</p><div class="lesson-next-actions">${run.nextAt?'<button class="primary-btn secondary" onclick="cancelNextLessonAutoplay()">취소</button>':''}<button class="primary-btn lesson-next-play" onclick="playNextQueuedLesson()" aria-label="지금 재생">${lessonTransportIcon('play')}</button></div></article>`:''}<footer class="lesson-end-bottom">${next?'':'<p class="lesson-end-note">'+(hasArrived?'도착했어요.':'다음 이동에서 이어 들어요.')+'</p>'}<button class="lesson-end-finish" onclick="goHome()">마치기<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button></footer></section>`;
 }

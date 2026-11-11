@@ -84,7 +84,8 @@ body.in-app .pleos-display { border: 0; }
 .card-btn.quiet, .primary-btn.secondary { background: var(--soft); color: var(--lilac); border: 1px solid var(--line); }
 /* 소리 막대(L안): 굵고 둥근 막대 다섯 개 위로 빛이 천천히 지나간다. 운전 중에는 빛도 멈춘다. */
 .dait-sound { display: flex; align-items: center; justify-content: center; gap: calc(8 * var(--u)); height: calc(64 * var(--u)); flex-shrink: 0; }
-.dait-sound i { display: block; width: calc(13 * var(--u)); height: calc(var(--s) * 100%); border-radius: 99px; transition: height .09s linear; /* 높이를 바꿔 둥근 끝이 찌그러지지 않게 */
+.dait-sound i { display: block; width: calc(13 * var(--u)); height: calc(var(--s) * 100%); border-radius: 99px; transition: height .09s linear; /* 높이를 바꿔 둥근 끝이 찌그러지지 않게 */ }
+.dait-sound i, .pearl-preview-wave i {
   background: linear-gradient(100deg,transparent 40%,#ffffff8c 50%,transparent 60%) no-repeat, linear-gradient(var(--wave-top),var(--wave-bottom));
   background-size: 0 0, 100% 100%; }
 .pearl-player.is-playing .dait-sound i { background-size: 500% 100%, 100% 100%; animation: dait-sound-shine 2.6s linear infinite; animation-delay: calc(var(--k) * .12s); }
@@ -667,18 +668,17 @@ button.pearl-badge { color:var(--ink); cursor:pointer; font-family:inherit; }
 .pearl-preview-label {display:flex;align-items:center;justify-content:space-between;margin:0 4px 10px;font-size:14px;color:var(--preview-label-ink);}
 .pearl-preview-label>i {width:16px;height:16px;border:1.5px solid var(--preview-label-muted);border-radius:50%;box-sizing:border-box;}
 [aria-pressed=true]>.pearl-preview-label>i {border:5px solid var(--preview-selected);}
-.pearl-preview-screen {display:block;padding:16px;border-radius:16px;background:var(--preview-bg);box-shadow:inset 0 0 0 1px var(--line);}
+.pearl-preview-screen {display:block;padding:16px;border-radius:16px;background:var(--preview-bg);border:0;box-shadow:none;}
 .pearl-preview-heading {display:block;font-size:12px;color:var(--muted);}
 .pearl-preview-content {display:flex;gap:10px;align-items:center;justify-content:space-between;margin:12px 0 18px;}
 .pearl-settings-dialog .pearl-mode-preview strong {font-size:17px;line-height:1.4;color:var(--ink);}
 .pearl-preview-wave {display:flex;gap:3px;align-items:center;flex-shrink:0;}
-.pearl-preview-wave i {width:3px;border-radius:4px;background:var(--lilac);}
+.pearl-preview-wave i {width:3px;border-radius:4px;}
 .pearl-preview-controls {display:flex;gap:12px;align-items:center;}
 .pearl-preview-play {display:grid;place-items:center;flex:0 0 32px;width:32px;height:32px;border-radius:50%;background:var(--lilac);color:var(--on-lilac);}
 .pearl-preview-play svg {width:18px;height:18px;}
 .pearl-preview-track {position:relative;height:3px;flex:1;background:var(--soft);border-radius:4px;}
 .pearl-preview-track::before {content:'';display:block;width:40%;height:100%;border-radius:inherit;background:var(--lilac);}
-.pearl-mode-preview[aria-pressed=true] .pearl-preview-screen {box-shadow:inset 0 0 0 2px var(--lilac);}
 @container(max-height:460px){.pearl-mode-previews{margin-top:14px;gap:12px}.pearl-preview-screen{padding:12px}.pearl-preview-content{margin:8px 0 12px}}
 @media(max-width:480px){.pearl-accent-options{grid-template-columns:repeat(4,minmax(44px,1fr));gap:2px}.pearl-mode-previews{gap:10px}.pearl-preview-screen{padding:10px}.pearl-settings-dialog .pearl-mode-preview strong{font-size:14px}.pearl-preview-wave{display:none}}
 @media(max-width:480px){.badge-detail-layout{grid-template-columns:1fr;gap:12px}.badge-detail-art img{max-width:130px}.pearl-nav{gap:6px}.pearl-tools{gap:4px;--tool-pad:6px}.pearl-nav nav button{padding:0 9px}.pearl-brand .dait-brand-badge svg{width:48px}}

@@ -22,16 +22,16 @@ test('이전 사용자 배경은 보존하고 선택 모드를 새 화이트·�
  const r=loadAppearance({'dait.pearl.colors.v3':old});
  assert.deepEqual(r.store['dait.pearl.colors.v3'],old);
  assert.equal(r.host.dataset.colorMode,'dark');assert.equal(r.styles['--bg-top'],'#090b0e');
- assert.equal(r.store['dait.pearl.colors.v4'].light.start,'#ffffff');
- assert.equal(r.store['dait.pearl.colors.v4'].dark.accent,'#2563eb');
+ assert.equal(r.store['dait.pearl.colors.v5'].mode,'dark');
+ assert.equal(r.store['dait.pearl.colors.v5'].accent,'#2563eb');
 });
-test('모드별 포인트 색을 복원하고 배경은 중립색으로 유지한다',()=>{
+test('이전 현재 모드의 색을 공통 포인트로 이관하고 두 모드에 같은 색을 쓴다',()=>{
  const saved={mode:'light',light:{accent:'#16834e'},dark:{accent:'#7c3aed'}};
  const r=loadAppearance({'dait.pearl.colors.v4':saved});const accent=r.styles['--lilac'];
  assert.equal(r.styles['--bg-top'],'#ffffff');assert.equal(r.host.dataset.settingsPalette,'neutral');
  r.context.window.togglePearlTheme();assert.equal(r.styles['--bg-top'],'#090b0e');assert.notEqual(r.styles['--lilac'],accent);
  r.context.window.togglePearlTheme();assert.equal(r.styles['--lilac'],accent);
- assert.equal(r.store['dait.pearl.colors.v4'].light.accent,'#16834e');assert.equal(r.store['dait.pearl.colors.v4'].dark.accent,'#7c3aed');
+ assert.equal(r.store['dait.pearl.colors.v5'].accent,'#16834e');assert.equal(r.store['dait.pearl.colors.v5'].mode,'light');assert.deepEqual(r.store['dait.pearl.colors.v4'],saved);
  r.context.isDrivingMode=true;r.context.window.togglePearlTheme();assert.equal(r.host.dataset.colorMode,'light');
 });
 test('저장 공간이 없어도 화이트 기본 배경과 읽을 수 있는 본문을 그린다',()=>{
@@ -78,4 +78,11 @@ test('노랑·라임을 포함한 RGB 격자 432배색에서 조작·본문 대�
     assert.ok(DaitPalette.contrast(t['--lilac'],t['--soft'])>=3,start+mode);
     assert.ok(DaitPalette.contrast(t['--muted'],t['--card'])>=4.5,start+mode);
   }
+});
+
+test('공통 포인트 색은 모드를 바꾸고 다시 불러와도 유지된다',()=>{
+ const state={mode:'dark',accent:'#c72975'},r=loadAppearance({'dait.pearl.colors.v5':state});
+ assert.equal(r.host.dataset.colorMode,'dark');assert.equal(r.styles['--bg-top'],'#090b0e');
+ r.context.window.togglePearlTheme();assert.deepEqual(r.store['dait.pearl.colors.v5'],{mode:'light',accent:state.accent});
+ const restored=loadAppearance(r.store);assert.equal(restored.styles['--lilac'],state.accent);
 });

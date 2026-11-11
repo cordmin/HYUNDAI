@@ -51,6 +51,8 @@ test('16개 포인트 색의 라이트·다크 조작부와 본문 대비를 확
   assert.ok(DaitPalette.contrast(t['--ink'],t['--card'])>=7,accent+mode);
   assert.ok(DaitPalette.contrast(t['--muted'],t['--card'])>=4.5,accent+mode);
   assert.ok(DaitPalette.contrast(t['--subject-ink'],t['--soft'])>=4.5,accent+mode);
+  assert.ok(DaitPalette.contrast(t['--control-ink'],t['--soft'])>=4.5,accent+mode);
+  assert.ok(DaitPalette.contrast(t['--control-ink'],t['--control-track'])>=3,accent+mode);
  }
 });
 

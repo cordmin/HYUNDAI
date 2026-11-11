@@ -50,6 +50,7 @@
       '--ink':dark?lightInk:darkInk,'--muted':explicit?(dark?'#bdc8d4':'#53616e'):tint(dark?.77:.34,.13*(neutral?0:1)),
       '--lilac':accent,'--lilac-hover':hover,'--on-lilac':onAccent,
       '--subject-ink':subjectInk,'--pattern-ink':tint(dark?.80:.30),
+      '--control-ink':subjectInk,'--control-track':mix(subjectInk,soft,.74),
       '--glass':alpha(paper,dark?.56:.46),'--glass-raised':alpha(card,.68),
       '--glass-menu':alpha(paper,.94),'--glass-hover':alpha(card,.84),
       '--glass-edge':alpha(lightInk,dark?.25:.76),'--glass-sheen':alpha(lightInk,dark?.22:.82),

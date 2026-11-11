@@ -892,7 +892,10 @@ test('시간 이동은 구간 경계를 넘고 일시정지를 유지하며 주�
   page('window.setDrivingMode(false); goHome();');
 });
 
-test('수업은 앞으로 건너뛸 수 없고 들은 곳까지만 다시 돌아간다', () => {
+test('수업은 앞으로 건너뛸 수 없고 들은 곳까지만 다시 돌아간다', t => {
+  // 조각을 직접 넘기는 시험이므로 실행 중 흐른 1ms를 청취로 계산하지 않는다.
+  page('var seekTestNow = Date.now; Date.now = () => 1760000000000;');
+  t.after(() => page('Date.now = seekTestNow;'));
   page(`localStorage.values.clear(); setEta(null); window.setDrivingMode(false); goHome(); lessonMinutes = 15; startLesson('sky'); pauseLesson();
     var heardTimeline = lessonTimeline(lessonRun);
     seekLessonAt(heardTimeline.seconds - 1);`);

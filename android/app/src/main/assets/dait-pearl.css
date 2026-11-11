@@ -720,3 +720,14 @@ button.pearl-badge { color:var(--ink); cursor:pointer; font-family:inherit; }
  .pearl-neutral-colors .pearl-preview-play{width:28px;height:28px;flex-basis:28px}
  .pearl-neutral-colors .pearl-settings-footer{padding-top:8px;margin-top:8px}
 }
+
+/* Familiar playback actions use the same icon; meaning and timing stay accessible. */
+.pearl-hero .question-actions .pearl-card-play {display:grid;place-items:center;flex:none;width:max(56px,calc(52 * var(--u)));height:max(56px,calc(52 * var(--u)));padding:0;border-radius:50%;}
+.pearl-card-play svg {width:44%;height:44%;}
+.lesson-resume-indicator {position:relative;display:grid;place-items:center;flex:0 0 max(44px,calc(44 * var(--u)));width:max(44px,calc(44 * var(--u)));height:max(44px,calc(44 * var(--u)));}
+.lesson-resume-indicator>.lesson-play {position:absolute;inset:0;margin:auto;width:50%;height:50%;background:none;color:var(--control-ink,var(--ink));}
+.lesson-resume-indicator>.lesson-play svg {width:100%;height:100%;}
+.pearl-settings-color-samples {display:flex;gap:8px;padding:4px 0;}
+.pearl-settings-color-samples i {display:block;width:42px;height:20px;border-radius:6px;}
+.lesson-next-actions .primary-btn.lesson-next-play {display:grid;place-items:center;flex:0 0 max(56px,calc(44 * var(--u)));width:max(56px,calc(44 * var(--u)));min-width:0;height:max(56px,calc(44 * var(--u)));min-height:56px;padding:0;border-radius:50%;}
+.lesson-next-play svg {width:44%;height:44%;}

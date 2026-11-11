@@ -287,7 +287,7 @@
     const toggle = (action, label, on) => `<button class="pearl-settings-switch" data-appearance-action="${action}" role="switch" aria-checked="${on}"><strong>${label}</strong><span aria-hidden="true">${on ? '켜짐' : '꺼짐'}</span></button>`;
     shell('설정', `<div class="pearl-settings-menu pearl-settings-home"><div class="pearl-settings-group">
       ${row('playback', '재생 설정', `뒤로 ${lessonIntervalText(prefs.back)} · 앞으로 ${lessonIntervalText(prefs.forward)} · ${prefs.rate.toFixed(1)}배속`)}
-      ${row('colors', '앱 색상', '포인트 색 · 라이트와 다크 미리보기')}
+      ${row('colors', '앱 색상', `<span class="pearl-settings-color-samples" aria-hidden="true">${['light','dark'].map(mode=>`<i style="background:linear-gradient(120deg,${profiles[mode].start},${profiles[mode].end})"></i>`).join('')}</span>`)}
       </div><h3 class="pearl-settings-section">이어서 듣기</h3><div class="pearl-settings-group">
       ${toggle('series', '시리즈 순서대로 듣기', seriesOn())}
       ${toggle('series-cues', '시리즈 연결 안내', lessonQueue.cues)}

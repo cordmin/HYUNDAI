@@ -121,7 +121,7 @@ function lessonCardHtml(lesson, reserved) {
       <div class="question-title">${escapeHtml(lesson.question)}</div>
       <div class="question-promise">${escapeHtml(lessonPromise(lesson, lessonMinutes))}</div>
       <div class="question-actions">
-        <button class="card-btn" onclick="startLesson('${lesson.id}', false, null, {minutes:${lessonMinutes}})">듣기</button>
+        <button class="card-btn pearl-card-play" aria-label="${escapeHtml(lesson.title)} 듣기" onclick="startLesson('${lesson.id}', false, null, {minutes:${lessonMinutes}})">${lessonTransportIcon('play')}</button>
       </div>
     </div>`
     : '<div class="question-title">이번 길은 짧아서 다음에 들려 드릴게요</div>'}
@@ -232,8 +232,8 @@ function renderRecords(container) {
   const badges = syncBadgeLedger();
   container.innerHTML = `<section class="pearl-records">
     <div class="pearl-record-tabs" role="tablist" aria-label="배움 기록 종류">
-      <button id="recordLessonsTab" role="tab" aria-controls="recordPanel" aria-selected="${recordTab === 'lessons'}" onclick="selectRecordTab('lessons')">배움 기록</button>
-      <button id="recordBadgesTab" role="tab" aria-controls="recordPanel" aria-selected="${recordTab === 'badges'}" onclick="selectRecordTab('badges')">배지 둘러보기</button>
+      <button id="recordLessonsTab" role="tab" aria-controls="recordPanel" aria-selected="${recordTab === 'lessons'}" onclick="selectRecordTab('lessons')">기록</button>
+      <button id="recordBadgesTab" role="tab" aria-controls="recordPanel" aria-selected="${recordTab === 'badges'}" onclick="selectRecordTab('badges')">배지</button>
     </div>
     <div class="pearl-record-content"><div class="pearl-record-body" id="recordPanel" onscroll="updateListScroll()" role="tabpanel" aria-labelledby="${recordTab === 'badges' ? 'recordBadgesTab' : 'recordLessonsTab'}">${recordTab === 'badges'
       ? `<div class="pearl-badges">${PEARL_BADGES.map(([id,name]) => `<button type="button" class="pearl-badge ${badges.awards[id] ? 'is-earned' : 'is-locked'}" onclick="openBadge('${id}')" aria-label="${name} 배지 · ${badges.awards[id] ? '획득' : '획득 방법'}"><img src="badges/${id}.png" alt="${name} 배지"><span>${name}</span></button>`).join('')}</div>`

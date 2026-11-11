@@ -397,7 +397,9 @@ test('끝까지 못 들은 수업은 다음 이동에서 멈춘 곳부터 잇고
   assert.strictEqual(resume.from, stopAt);
   assert.strictEqual(resume.short, false);
   page(`openLessons();`);
-  assert.ok(stageHtml().includes('지난번 멈춘 곳부터: 소수는 어디까지 있을까'));
+  assert.ok(stageHtml().includes('소수는 어디까지 있을까'));
+  assert.ok(stageHtml().includes('lesson-resume-indicator'));
+  assert.ok(!stageHtml().includes('지난번 멈춘 곳부터:'));
   assert.strictEqual(stageHtml().split(`startLesson('prime'`).length - 1, 1); // 같은 수업을 목록에 두 번 두지 않는다
   page(`startLesson('prime', true);`);
   // 멈춘 곳부터 잇는다. 이번 시간에 들어가지 않는 더 듣기 조각은 건너뛸 수 있다.
@@ -749,8 +751,8 @@ test('브라우저 탐색은 새 음원 metadata 뒤에도 정확한 위치를 �
 test('기록 화면은 기존 여섯 배지와 승인된 확장 네 배지를 둘러보기로 보여 준다', () => {
   page(`goHome(); localStorage.values.clear(); openPearlTab('records');`);
   assert.ok(!stageHtml().includes('내 배움 보관함'));
-  assert.ok(stageHtml().includes('>배움 기록</button>'));
-  assert.ok(stageHtml().includes('>배지 둘러보기</button>'));
+  assert.ok(stageHtml().includes('>기록</button>'));
+  assert.ok(stageHtml().includes('>배지</button>'));
   page(`selectRecordTab('badges');`);
   assert.equal((stageHtml().match(/<img src="badges\//g) || []).length, 10);
   for (const id of ['first-discovery','korean','math','science','technology','music','exploration','well-rounded-explorer','everyday-discoverer','series-completion']) {
@@ -1093,13 +1095,13 @@ test('탐색하다 다른 수업을 시작하면 이전 구간·초를 저장하
 
 test('사람이 멈춘 수업은 문구 없이 재생 조작으로 표시하고 시스템 중단 안내와 구분한다', () => {
   page(`goHome(); localStorage.values.clear(); lessonMinutes=15; startLesson('prime'); openPearlTab('records');`);
-  assert.equal(page('lessonDockState(lessonRun)'), '듣는 중');
+  assert.equal(page('lessonDockState(lessonRun)'), '');
   // 앱의 재생기(VoiceSession.hold)는 사람이 멈출 때도 paused를 알린다.
   page(`pauseLesson(); window.onSpeechEvent(JSON.stringify({ event: 'paused', seq: speechSeq }));`);
   assert.equal(page('lessonRun.playback.interrupted'), true);
   assert.equal(page('lessonDockState(lessonRun)'), '');
   page(`resumeLesson(); window.onSpeechEvent(JSON.stringify({ event: 'resumed', seq: speechSeq }));`);
-  assert.equal(page('lessonDockState(lessonRun)'), '듣는 중');
+  assert.equal(page('lessonDockState(lessonRun)'), '');
   // 길 안내·통화가 소리를 가져간 때만 다른 소리 안내를 보여 준다.
   page(`window.onSpeechEvent(JSON.stringify({ event: 'paused', seq: speechSeq }));`);
   assert.equal(page('lessonDockState(lessonRun)'), '다른 소리가 끝나면 이어 들어요');

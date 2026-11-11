@@ -40,6 +40,8 @@
       actionLightness-=.015; accent=tint(actionLightness); hover=tint(actionLightness-.05);
     }
     const onAccent=contrast(accent,darkInk)>contrast(accent,lightInk)?darkInk:lightInk;
+    // Pastel fills need a separate, readable ink in the same hue family.
+    const subjectInk=contrast(accent,soft)>=4.5?accent:tint(dark?.84:.27);
     const alpha=(color,n)=>color+Math.round(n*255).toString(16).padStart(2,'0');
     const logo = bright => bright ? [tint(.25),tint(.38),tint(.29)] : [tint(.83),tint(.95,.18),tint(.76)];
     const brand = logo(luminance(mix(colors.start,colors.end,.5))>=.32);
@@ -47,6 +49,7 @@
       '--paper':paper,'--card':card,'--soft':soft,'--line':tint(dark?.39:.79,.16*(neutral?0:1)),
       '--ink':dark?lightInk:darkInk,'--muted':explicit?(dark?'#bdc8d4':'#53616e'):tint(dark?.77:.34,.13*(neutral?0:1)),
       '--lilac':accent,'--lilac-hover':hover,'--on-lilac':onAccent,
+      '--subject-ink':subjectInk,'--pattern-ink':tint(dark?.80:.30),
       '--glass':alpha(paper,dark?.56:.46),'--glass-raised':alpha(card,.68),
       '--glass-menu':alpha(paper,.94),'--glass-hover':alpha(card,.84),
       '--glass-edge':alpha(lightInk,dark?.25:.76),'--glass-sheen':alpha(lightInk,dark?.22:.82),

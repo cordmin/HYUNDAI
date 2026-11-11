@@ -67,14 +67,14 @@ body.in-app .pleos-display { border: 0; }
 .home-card.pearl-hero { -webkit-backdrop-filter:none; backdrop-filter:none; isolation:isolate; }
 .pearl-hero-copy { position: relative; z-index: 1; flex: 1; min-width: 0; }
 /* 수업 주제 그림: 오른쪽에 크게 한 장. 가운데(글자 쪽)로 오기 전에 흐려진다. */
-.pearl-hero[data-pattern]::before { content: ''; position: absolute; inset: 0 calc(14 * var(--u)) 0 0; pointer-events: none; background: var(--lilac); opacity: .13;
+.pearl-hero[data-pattern]::before { content: ''; position: absolute; inset: 0 calc(14 * var(--u)) 0 0; pointer-events: none; background: var(--pattern-ink,var(--lilac)); opacity: .24;
   -webkit-mask-image: linear-gradient(90deg, transparent 52%, #000 72%), var(--pattern); -webkit-mask-composite: source-in;
   mask-image: linear-gradient(90deg, transparent 52%, #000 72%), var(--pattern); mask-composite: intersect;
   -webkit-mask-size: 100% 100%, auto 92%; mask-size: 100% 100%, auto 92%;
   -webkit-mask-position: 0 0, 100% 50%; mask-position: 0 0, 100% 50%;
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
-.pearl-night .pearl-hero[data-pattern]::before { opacity: .16; }
-.pearl-subject { display: inline-block; margin-bottom: calc(12 * var(--u)); padding: calc(5 * var(--u)) calc(12 * var(--u)); border-radius: 99px; background: var(--soft); color: var(--lilac); font-size: calc(13 * var(--u)); font-weight: 700; }
+.pearl-night .pearl-hero[data-pattern]::before { opacity: .22; }
+.pearl-subject { display: inline-block; margin-bottom: calc(12 * var(--u)); padding: calc(5 * var(--u)) calc(12 * var(--u)); border-radius: 99px; background: var(--soft); color: var(--subject-ink,var(--ink)); font-size: calc(13 * var(--u)); font-weight: 700; }
 .pearl-hero .question-title { max-width: 13em; font-size: calc(44 * var(--u)); line-height: 1.18; font-weight: 800; letter-spacing: -.03em; word-break: keep-all; margin: 0 0 calc(12 * var(--u)); }
 .home-card.start.pearl-hero .card-label { color: var(--muted); font-size: calc(14 * var(--u)); margin-bottom: calc(7 * var(--u)); }
 .question-promise { color: var(--ink); font-size: calc(14 * var(--u)); }

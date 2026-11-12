@@ -27,6 +27,7 @@ function renderPearlNav() {
   const lessonTab = currentMode === 'lessonPick' || currentMode === 'lesson';
   const active = hasActiveLesson() && lessonView ? lessonView : currentMode === 'records' ? 'records' : lessonTab ? 'lessons' : 'now';
   document.getElementById('pearlNav').innerHTML = `
+    ${hasActiveLesson() && !lessonView && !isDrivingMode ? '<button class="pearl-collapse-btn" aria-label="재생 화면 접기" onclick="collapseLesson()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>' : ''}
     <button class="pearl-brand" aria-label="다잇 첫 화면" onclick="openPearlTab('now')">${getDaitLogoHtml()}</button>
     <nav>${[['now','추천'],['lessons','수업'],['records','기록']].map(([id,label]) => `<button aria-current="${active === id ? 'page' : 'false'}" onclick="openPearlTab('${id}')">${label}</button>`).join('')}</nav>
     <button class="icon-btn" aria-label="재생목록" onclick="openPlaylist()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M4 6h16M4 11h16M4 16h9M17 15l4 3-4 3z"/></svg></button>
@@ -70,7 +71,7 @@ let homePick = null;
 function homeLesson() {
   const eta = remainMinutes();
   if (eta !== null) lessonMinutes = Lesson.minutesFor(eta);
-  else if (!Lesson.TIME_CHOICES.includes(lessonMinutes)) lessonMinutes = Lesson.DEFAULT_MINUTES;
+  else lessonMinutes = manualLessonMinutes;
   const records = lessonProgress().records;
   const rules = lessonRules();
   const fitting = Lesson.recommend(DAIT_LESSONS, lessonMinutes, records, rules);
@@ -158,8 +159,8 @@ function openBadge(id) {
   if (isDrivingMode) return;
   const definition = DaitBadges.definitions.find(d=>d.id===id);
   if (!definition) return;
-  const earned = syncBadgeLedger().awards[id];
-  if (!earned) { window.playlistNotice?.(definition.condition); return; }
+  const ledger=syncBadgeLedger(),earned=ledger.awards[id];
+  if (!earned) { const p=DaitBadges.progress(id,ledger,DAIT_LESSONS,lessonQueue.series); window.playlistNotice?.(p?.label||definition.condition); return; }
   window.openDaitPanel(definition.name, `<div class="badge-detail-layout"><div class="badge-detail-art"><img src="badges/${id}.png" alt="${escapeHtml(definition.name)} 배지"></div><div class="badge-detail-copy"><h3>배지의 의미</h3><p>${escapeHtml(definition.meaning)}</p><h3>받게 된 배경</h3><p>${escapeHtml(earned.reason)}</p><h3>받은 날짜</h3><p>${escapeHtml(DaitBadges.dateLabel(earned.day))}</p></div></div>`, 'badge-detail-dialog');
 }
 
@@ -184,8 +185,11 @@ function resumeRecord(index) {
   const lesson = DAIT_LESSONS.find(item => item.id === record.lesson);
   if (!lesson) return;
   if (record.finished || !point || !lesson.pieces.some(piece => piece.id === point.from)) {
-    lessonMinutes = record.short ? 8 : Lesson.DEFAULT_MINUTES;
-    startLesson(lesson.id, false, null, {minutes:lessonMinutes, explicitOnly:true, replay:true}); return;
+    const eta=remainMinutes();
+    const storedMinutes=Number.isFinite(record.minutes)&&record.minutes>0&&record.minutes<=120?record.minutes:null;
+    const inferred=record.totalSeconds>0?([8,15,20].find(m=>m*60>=record.totalSeconds)||Math.ceil(record.totalSeconds/60)):null;
+    lessonMinutes = eta!==null?Lesson.minutesFor(eta):storedMinutes||inferred||(record.short?8:Lesson.DEFAULT_MINUTES);
+    startLesson(lesson.id, false, null, {minutes:lessonMinutes, replayIds:eta===null?record.pieceIds:null, explicitOnly:true, replay:true}); return;
   }
   const eta = remainMinutes();
   lessonMinutes = eta !== null ? Lesson.minutesFor(eta) : Math.max(Lesson.DEFAULT_MINUTES, Math.ceil(Lesson.totalSeconds(Lesson.resumePlan(lesson, point, 120)) / 60) + 1);
@@ -241,7 +245,7 @@ function renderRecords(container) {
         ${records.length ? `<div class="pearl-record-grid pearl-record-list">${records.map((record, reverseIndex) => {
           const index = progress.records.length - 1 - reverseIndex;
           const resumable = recordResume(record, index, progress);
-          return `<div class="pearl-record-row">${recordStateRing(record,resumable)}<div class="pearl-record-copy"><span class="pearl-record-date">${escapeHtml(recordDateLabel(record.ymd))}</span><strong>${escapeHtml(record.title)}</strong></div><button class="pearl-record-resume" onclick="resumeRecord(${index})" aria-label="${record.finished ? '완료 수업 다시 듣기' : resumable ? '듣던 수업 이어 듣기' : '듣던 수업 처음부터 듣기'}">${LESSON_PLAY_ICON}</button></div>`;
+          return `<button type="button" class="pearl-record-row" onclick="resumeRecord(${index})" aria-label="${escapeHtml(record.title)} · ${record.finished ? '완료 수업 다시 듣기' : resumable ? '듣던 수업 이어 듣기' : '듣던 수업 처음부터 듣기'}">${recordStateRing(record,resumable)}<span class="pearl-record-copy"><span class="pearl-record-date">${escapeHtml(recordDateLabel(record.ymd))}</span><strong>${escapeHtml(record.title)}</strong></span><span class="pearl-record-resume" aria-hidden="true">${LESSON_PLAY_ICON}</span></button>`;
         }).join('')}</div>` : '<div class="pearl-empty">수업을 들으면 여기에 쌓여요</div>'}`}
     </div>
     ${recordTab === 'lessons' && records.length ? `<div class="pearl-record-scroll" aria-label="기록 목록 이동"><button id="recordScrollUp" onclick="scrollList(-1)" aria-label="이전 기록"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button><div class="pearl-record-track" aria-hidden="true"><div id="recordScrollThumb" class="pearl-scroll-thumb"></div></div><button id="recordScrollDown" onclick="scrollList(1)" aria-label="다음 기록"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div>` : ''}

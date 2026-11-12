@@ -3,7 +3,10 @@
 const LESSON_KEY = 'dait.lessonProgress';
 let lessonRun = null; // 지금 듣는 교시: { lesson, trip, pieces, index, heard, reachedEnd, done, finished, stopped, saved }
 let lessonView = null; // null: 재생 화면. 'now'·'lessons'·'records': 수업을 멈추지 않고 그 화면을 둘러보는 중
-let lessonMinutes = Lesson.DEFAULT_MINUTES;
+const MANUAL_MINUTES_KEY = 'dait.lesson.manualMinutes.v1';
+const initialManualMinutes = settingsStore.read(MANUAL_MINUTES_KEY, Lesson.DEFAULT_MINUTES);
+let manualLessonMinutes = [8,15,20].includes(initialManualMinutes) ? initialManualMinutes : Lesson.DEFAULT_MINUTES;
+let lessonMinutes = manualLessonMinutes;
 let lessonTimer = null;
 let lessonProgressTimer = null;
 const PLAYBACK_KEY = 'dait.pearl.playback.v2';
@@ -62,14 +65,18 @@ function toggleSeries() {
 function lessonProgress() {
   const stored = readStored(LESSON_KEY);
   const progress = Lesson.normalize(stored);
-  if (stored && (Object.hasOwn(stored, 'ieum') || stored.records?.length !== progress.records.length)) writeStored(LESSON_KEY, progress);
+  if (!progress.resume) {
+    const latest = [...progress.records].reverse().find(r=>!r.finished && r.resume && Lesson.resumeFresh(r.resume,toYmd(new Date())));
+    if (latest) progress.resume=latest.resume;
+  }
+  if (stored && (Object.hasOwn(stored, 'ieum') || stored.records?.length !== progress.records.length || (!stored.resume && progress.resume))) writeStored(LESSON_KEY, progress);
   return progress;
 }
 
 function openLessons() {
   if (isDrivingMode) return;
   const eta = remainMinutes();
-  lessonMinutes = eta !== null ? Lesson.minutesFor(eta) : 8; // 수업 화면은 8분 탭부터 보여 준다
+  lessonMinutes = eta !== null ? Lesson.minutesFor(eta) : manualLessonMinutes;
   if (hasActiveLesson()) lessonView = 'lessons';
   else currentMode = 'lessonPick';
   render();
@@ -77,7 +84,8 @@ function openLessons() {
 
 function pickLessonTime(minutes) {
   if (isDrivingMode || remainMinutes() !== null || ![8, 15, 20].includes(minutes)) return;
-  lessonMinutes = minutes;
+  manualLessonMinutes = lessonMinutes = minutes;
+  try { settingsStore.write(MANUAL_MINUTES_KEY,minutes); } catch (_) { window.playlistNotice?.('이번 화면에서만 시간 선택을 유지해요.'); }
   render();
 }
 
@@ -136,12 +144,20 @@ function noteLessonHeard(run, timeline = lessonTimeline(run)) {
   if (section.start + offset > lessonHeardLimit(run, timeline)) run.furthest = { piece: section.piece, offset };
 }
 
+function explainHeardRange() {
+  if (settingsStore.read('dait.seekHint.seen.v1',false)) return;
+  try { settingsStore.write('dait.seekHint.seen.v1',true); } catch (_) {}
+  window.playlistNotice?.('들은 구간 안에서만 이동할 수 있어요.');
+}
+
 function moveLessonTo(seconds) {
   const run = lessonRun;
   if (!run || run.done || isLessonResting() || !Number.isFinite(seconds)) return;
   const timeline = lessonTimeline(run);
   noteLessonHeard(run, timeline);
-  const wanted = Math.max(0, Math.min(seconds, lessonHeardLimit(run, timeline), timeline.seconds - .05));
+  const limit=lessonHeardLimit(run,timeline);
+  if (seconds>limit+.05) explainHeardRange();
+  const wanted = Math.max(0, Math.min(seconds, limit, timeline.seconds - .05));
   const section = timeline.sections.find(item => wanted < item.start + item.seconds);
   if (!section) return;
   const here = timeline.sections.find(item => item.index === run.index);
@@ -177,7 +193,7 @@ function startLesson(lessonId, fromStop, recordPoint, options = {}) {
   consumePlaylistStart(options);
   currentMode = 'lesson';
   hasArrived = false;
-  startPeriod({ ...trip, endsAt: Date.now() + lessonMinutes * 60 * 1000 });
+  startPeriod({ ...trip, replayIds: options.replayIds, endsAt: Date.now() + lessonMinutes * 60 * 1000 });
   syncJourney();
 }
 
@@ -207,8 +223,10 @@ function startPeriod(trip) {
   trip={...trip,lesson:lessonWithSeriesOutro(trip.lesson)};
   const before = trip.resume ? Lesson.resumeHeard(trip.lesson, trip.resume) : [];
   const records = !lessonQueue.cues || !lessonQueue.followSeries || (trip.number > 1 && !trip.rest) ? [] : lessonProgress().records;
+  const byId=new Map(trip.lesson.pieces.map(p=>[p.id,p]));
+  const replay=Array.isArray(trip.replayIds)&&trip.replayIds.length&&new Set(trip.replayIds).size===trip.replayIds.length&&trip.replayIds.every(id=>byId.has(id)) ? trip.replayIds.map(id=>byId.get(id)) : null;
   const pieces = trip.resume ? Lesson.resumePlan(trip.lesson, trip.resume, trip.minutes)
-    : Lesson.plan(trip.lesson, DAIT_LESSONS, trip.minutes, records, { after: lessonQueue.cues && lessonQueue.followSeries && trip.number > 1 && !trip.rest ? trip.prev : null });
+    : replay || Lesson.plan(trip.lesson, DAIT_LESSONS, trip.minutes, records, { after: lessonQueue.cues && lessonQueue.followSeries && trip.number > 1 && !trip.rest ? trip.prev : null });
   const run = {
     lesson: trip.lesson, trip, pieces: Lesson.withBreak(pieces, trip), plannedSeconds: Lesson.lessonSeconds([...before, ...pieces]), short: Lesson.isShort([...before, ...pieces]),
     index: 0, heard: before, heardBefore: before.length, meters: 0, lastMeters: null, lastMetersAt: 0, startedAt: Date.now(),
@@ -453,17 +471,21 @@ function saveLesson(run) {
     const progress = Lesson.finishLesson(lessonProgress(), run.lesson, ymd, run.finished, run.meters / 1000, run.short);
     const timeline = lessonTimeline(run), section = timeline.sections.find(item=>item.index===run.index);
     const record = progress.records[progress.records.length-1];
-    record.totalSeconds = timeline.seconds;
-    record.elapsedSeconds = run.finished ? timeline.seconds : Math.min(timeline.seconds, section ? section.start+position : timeline.seconds);
+    record.pieceIds = [...new Set([...run.heard,...run.pieces].filter(p=>run.lesson.pieces.some(source=>source.id===p.id)).map(p=>p.id))];
+    const beforeSeconds=Lesson.totalSeconds(run.heard.slice(0,run.heardBefore));
+    record.totalSeconds = beforeSeconds+timeline.seconds;
+    record.minutes = Math.max(run.trip.minutes,Math.ceil(record.totalSeconds/60));
+    record.elapsedSeconds = run.finished ? record.totalSeconds : Math.min(record.totalSeconds,beforeSeconds+(section ? section.start+position : timeline.seconds));
     const point = run.finished ? null : Lesson.resumePoint(run.lesson, run.heard, ymd); // 다음 이동에서 멈춘 곳부터 잇게 한다
     const piece = run.pieces[run.index];
     if (!run.finished && piece && run.lesson.pieces.some(item => item.id === piece.id)) {
       progress.records[progress.records.length - 1].resume = {
-        lesson: run.lesson.id, from: piece.id, heard: run.heard.map(item => item.id), short: run.short, ymd,
+        lesson: run.lesson.id, from: piece.id, heard: run.heard.map(item => item.id), short: run.short, ymd, minutes:run.trip.minutes,
         offset: Math.max(0, Math.min(Number(position) || 0, Lesson.totalSeconds([piece]) - .05))
       };
     } else if (point) progress.records[progress.records.length - 1].resume = point;
-    writeStored(LESSON_KEY, point ? Lesson.keepResume(progress, point) : progress);
+    const sharedPoint=record.resume || point;
+    writeStored(LESSON_KEY, sharedPoint ? Lesson.keepResume(progress, sharedPoint) : progress);
     syncBadgeLedger();
   }
 }
@@ -485,6 +507,13 @@ function returnToLesson() {
   if (isDrivingMode || !hasActiveLesson()) return;
   lessonView = null;
   renderStage();
+}
+
+// 접기는 재생 상태·위치를 바꾸지 않고 목록과 미니 플레이어를 보여 준다.
+function collapseLesson() {
+  if (isDrivingMode || !hasActiveLesson()) return;
+  openPearlTab('lessons');
+  document.querySelector('.lesson-dock-open')?.focus();
 }
 
 // 미니 플레이어의 끝내기: 수업을 닫고 보던 화면에 머문다.

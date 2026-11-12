@@ -55,6 +55,30 @@
     }
     return state;
   }
+  function progress(id,state,lessons,series=[]) {
+    const d=definitions.find(d=>d.id===id),done=Object.values(state?.completed||{});
+    if(!d)return null;
+    let current=0,target=1,unit='편',detail='수업 한 편을 마치면 받아요.';
+    if(d.subject){current=done.filter(x=>x.subject===d.subject).length;detail=`${d.subject} 수업 한 편을 마치면 받아요.`;}
+    else if(id==='first-discovery')current=done.length;
+    else if(id==='exploration'){current=done.length;target=3;}
+    else if(id==='well-rounded-explorer'){current=new Set(done.map(x=>x.subject)).size;target=3;unit='과목';}
+    else if(id==='everyday-discoverer'){current=new Set(state?.days||[]).size;target=5;unit='일';}
+    else if(id==='series-completion'){
+      const byId=new Map(lessons.map(l=>[l.id,l]));
+      const choices=series.map(s=>({title:s.title||s.name||'시리즈',ids:(s.requiredEpisodeIds||s.lessons||s.episodes||[]).map(x=>typeof x==='string'?x:x?.lesson)}))
+        .filter(s=>s.ids.length>=2&&new Set(s.ids).size===s.ids.length&&s.ids.every(id=>byId.get(id)?.pieces?.length&&byId.get(id).pieces.every(p=>p.voiced&&p.clip)))
+        .map(s=>({...s,current:s.ids.filter(id=>state?.completed?.[id]).length})).sort((a,b)=>b.current/b.ids.length-a.current/a.ids.length);
+      if(!choices.length)return {label:'시리즈 수업이 준비되면 도전할 수 있어요.'};
+      const best=choices[0];current=best.current;target=best.ids.length;detail=best.title;
+    }
+    current=Math.min(current,target);
+    const left=target-current;
+    const label=id==='series-completion'?`${detail} ${current}/${target}편 · ${left}편 더 마치면 받아요.`
+      : target===1?`${current}/${target}편 · ${detail}`
+      : `${current}/${target}${unit} · ${left}${unit} 더 ${unit==='일'?'배우면':'마치면'} 받아요.`;
+    return {current,target,unit,label};
+  }
   function dateLabel(day) { const v=validDay(day);return v?`${v.slice(0,4)}년 ${+v.slice(4,6)}월 ${+v.slice(6,8)}일`:'이전 학습 기록 · 날짜 정보 없음'; }
-  return {definitions,sync,dateLabel};
+  return {definitions,sync,dateLabel,progress};
 });

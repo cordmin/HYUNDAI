@@ -731,3 +731,13 @@ button.pearl-badge { color:var(--ink); cursor:pointer; font-family:inherit; }
 .pearl-settings-color-samples i {display:block;width:42px;height:20px;border-radius:6px;}
 .lesson-next-actions .primary-btn.lesson-next-play {display:grid;place-items:center;flex:0 0 max(56px,calc(44 * var(--u)));width:max(56px,calc(44 * var(--u)));min-width:0;height:max(56px,calc(44 * var(--u)));min-height:56px;padding:0;border-radius:50%;}
 .lesson-next-play svg {width:44%;height:44%;}
+/* Visible exits and broad targets keep listening uninterrupted. */
+.pearl-collapse-btn {display:grid;place-items:center;flex:0 0 max(44px,calc(36 * var(--u)));width:max(44px,calc(36 * var(--u)));height:max(44px,calc(36 * var(--u)));min-height:44px;padding:10px;border:0;border-radius:50%;background:none;color:var(--control-ink,var(--ink));cursor:pointer;}
+.pearl-collapse-btn svg {width:24px;height:24px;}
+body.driving .pearl-collapse-btn {display:none;}
+.pearl-seek[aria-disabled=true] {opacity:.35;}
+button.pearl-record-row {width:100%;text-align:left;color:var(--ink);font:inherit;cursor:pointer;}
+.pearl-record-row>.pearl-record-resume {color:var(--record-accent);}
+button.pearl-record-row:active:not(:disabled) {transform:none;}
+button.pearl-record-row:hover {background:var(--glass-hover);}
+.playlist-dialog .pearl-notice {position:sticky;bottom:0;left:auto;right:auto!important;margin-top:12px;flex-shrink:0;}

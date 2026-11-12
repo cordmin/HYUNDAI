@@ -60,3 +60,11 @@ test('방금 추가한 고유 항목만 바로 다음으로 옮기고 사라진 
  assert.equal(p.promote(keys[2]),true);assert.deepEqual(p.items.map(i=>i.key),[keys[2],keys[0],keys[1]]);assert.equal(p.items.length,3);
  p.remove(keys[2]);assert.equal(p.promote(keys[2]),false);assert.deepEqual(p.items.map(i=>i.key),[keys[0],keys[1]]);
 });
+
+test('삭제 되돌리기는 고유 항목과 순서를 보존하고 다른 편집을 덮어쓰지 않는다',()=>{
+ const p=new Playlist(lessons);p.add('a');p.add('b');p.add('c');const old=p.items.map(i=>i.key),removed=p.remove(old[1]);
+ p.add('d');assert.equal(p.restore(removed),true);assert.deepEqual(p.items.map(i=>i.lesson),['a','b','c','d']);
+ assert.equal(p.restore(removed),false);assert.equal(p.items.length,4);
+ const again=p.remove(old[1]);p.remove(old[2]);assert.equal(p.restore(again),true);assert.deepEqual(p.items.map(i=>i.lesson),['a','b','d']);
+ const restored=new Playlist(lessons,p.snapshot());assert.deepEqual(restored.items.map(i=>i.lesson),['a','b','d']);
+});

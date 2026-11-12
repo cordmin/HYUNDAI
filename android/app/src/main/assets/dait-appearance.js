@@ -200,8 +200,10 @@
     noticeExitTimer=setTimeout(hide,320);
   }
   function notice(message, action = null) {
+    const mount=dialog?.open?dialog:host;
     let node = document.getElementById('pearlNotice');
     if (!node) { node = document.createElement('div'); node.id = 'pearlNotice'; node.className = 'pearl-notice'; node.setAttribute('role', 'status'); node.setAttribute('aria-atomic','true'); host.append(node); }
+    if(node.parentElement!==mount)mount.append(node);
     const replacing=!node.hidden&&node.dataset.state==='visible',generation=++noticeGeneration;
     clearTimeout(noticeTimer);clearTimeout(noticeExitTimer);noticeMotion?.cancel();
     node.replaceChildren();node.hidden=false;node.dataset.state='visible';node.removeAttribute('aria-hidden');
@@ -217,7 +219,7 @@
       button.addEventListener('click',()=>{if(generation!==noticeGeneration||node.hidden||node.dataset.state!=='visible'||isDrivingMode)return;const focused=document.activeElement===button;dismissNotice(true);action.onClick();if(focused)action.restoreFocus?.()});
       node.append(button);
     }
-    if(actionable){const add=host.querySelector('[data-queue-add]');if(add){node.style.right=Math.max(12,host.getBoundingClientRect().right-add.getBoundingClientRect().left+8)+'px'}else node.style.right='12px'}else node.style.right='12px';
+    if(actionable&&mount===host){const add=host.querySelector('[data-queue-add]');if(add){node.style.right=Math.max(12,host.getBoundingClientRect().right-add.getBoundingClientRect().left+8)+'px'}else node.style.right='12px'}else node.style.right='12px';
     if(!quietMotion()&&node.animate){
       // Repeated additions update the receipt in place instead of stacking or re-opening a panel.
       const moving=replacing?copy:node;

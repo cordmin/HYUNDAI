@@ -6,9 +6,14 @@
   const lesson=id=>DAIT_LESSONS.find(item=>item.id===id);
   function edit(){cancelNextLessonCountdown();const saved=persistPlaylist();renderStage();window.openPlaylist();return saved}
   window.restoreQueueAddFocus=(id,fromStop)=>document.querySelector(`[data-queue-add="${id}"][data-from-stop="${!!fromStop}"]`)?.focus({preventScroll:true});
+  const recentAdds=new Map();
   window.quickAddLesson=(id,fromStop=false)=>{
+    if(isDrivingMode)return;
+    const key=id+':'+!!fromStop,now=performance.now();
+    if(recentAdds.has(key)&&now-recentAdds.get(key)<700)return;
     const focused=document.activeElement?.matches('[data-queue-add]');
     if(!lesson(id)||!addLessonToQueue(id,'last',fromStop))return;
+    recentAdds.set(key,now);
     if(focused)window.restoreQueueAddFocus(id,fromStop);
     const button=document.querySelector(`[data-queue-add="${id}"][data-from-stop="${!!fromStop}"]`);
     if(button){button.classList.add('just-added');setTimeout(()=>button.classList.remove('just-added'),750)}
@@ -28,7 +33,14 @@
     const panel=window.openDaitPanel('재생목록',`${now}<p class="queue-summary">다음 재생${items.length?' · '+items.length+'개':''}</p><div class="queue-scroll">${queue}</div>`,'playlist-dialog',e=>{
       if(isDrivingMode)return;
       const b=e.target.closest('button');if(!b)return;
-      if(b.dataset.queueRemove){lessonQueue.remove(Number(b.dataset.queueRemove));edit();}
+      if(b.dataset.queueRemove){
+        const removed=lessonQueue.remove(Number(b.dataset.queueRemove)),saved=edit();
+        if(removed&&saved)window.playlistNotice('목록에서 뺐어요.',{label:'실행 취소',title:lesson(removed.item.lesson).title,onClick:()=>{
+          if(isDrivingMode)return;
+          if(!lessonQueue.restore(removed)){window.playlistNotice('되돌릴 수 없어요. 목록을 확인해 주세요.');return;}
+          const saved=edit();if(saved)window.playlistNotice('목록에 되돌렸어요.');
+        }});
+      }
       else if(b.dataset.queueMove){lessonQueue.move(Number(b.dataset.queueMove),Number(b.dataset.delta));edit();}
       else if(b.dataset.queuePlay){const key=Number(b.dataset.queuePlay);window.closeDaitPanel();playQueuedLesson(key);}
     });

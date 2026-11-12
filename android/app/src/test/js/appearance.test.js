@@ -5,13 +5,13 @@ const path = require('node:path');
 const vm = require('node:vm');
 const DaitPalette = require('../../main/assets/dait-palette.js');
 
-function loadAppearance(values = {}, writable = true) {
+function loadAppearance(values = {}, writable = true, environment = {}) {
   const store = JSON.parse(JSON.stringify(values)), styles = {}, classes = new Set();
   const host = { style: { setProperty(name, value) { styles[name] = value; } }, dataset: {}, setAttribute() {}, classList: { toggle(name, on) { on ? classes.add(name) : classes.delete(name); }, contains(name) { return classes.has(name); } } };
   const context = { DaitPalette,
     document: { querySelector: () => host, documentElement: { style: { setProperty(name, value) { styles[name] = value; } } } },
     settingsStore: { read: (key, fallback) => store[key] ?? fallback, write(key, value) { if (!writable) throw Error('unavailable'); store[key] = JSON.parse(JSON.stringify(value)); } },
-    appEvents: { on() {} }, window: { addEventListener() {} }, requestAnimationFrame: () => 1, isDrivingMode: false
+    appEvents: { on() {} }, window: { addEventListener() {}, ...environment.window }, CSS:environment.CSS, requestAnimationFrame: () => 1, isDrivingMode: false
   };
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../main/assets/dait-appearance.js'), 'utf8'), context);
   return { store, styles, host, context };
@@ -95,4 +95,15 @@ test('선택한 파스텔 색이 배경 그라데이션 끝과 공통 저장에 
  assert.equal(light.start,'#ffffff');assert.equal(light.end,accent);assert.equal(dark.start,'#090b0e');assert.notEqual(dark.end,accent);assert.equal(dark.accent,accent);
  const r=loadAppearance({'dait.pearl.colors.v5':{mode:'light',accent}});assert.equal(r.styles['--bg-bottom'],accent);
  r.context.window.togglePearlTheme();assert.equal(r.styles['--bg-bottom'],dark.end);assert.equal(r.store['dait.pearl.colors.v5'].accent,accent);
+});
+
+
+test('투명도 줄이기와 블러 미지원 환경은 공통 재질 전체를 읽기 쉬운 불투명 면으로 바꾼다',()=>{
+ for(const environment of [
+  {window:{matchMedia:()=>({matches:true,addEventListener(){}})}},
+  {CSS:{supports:()=>false}}
+ ]){
+  const r=loadAppearance({},true,environment);
+  for(const role of ['--glass','--glass-menu','--glass-control','--glass-selected']) assert.equal(r.styles[role],r.styles['--paper'],role);
+ }
 });

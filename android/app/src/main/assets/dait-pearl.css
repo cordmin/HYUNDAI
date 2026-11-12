@@ -527,8 +527,8 @@ body.lesson-playing .pleos-display { background-image:linear-gradient(to bottom,
 .pearl-settings-shade { position:absolute;inset:0;border-radius:inherit;background:rgba(var(--shadow-rgb,53,40,50),.14);pointer-events:none;z-index:10000; }
 .pearl-settings-heading { gap:12px;margin-bottom:20px; }
 .pearl-settings-heading h2 { flex:1;font-size:24px;letter-spacing:-.03em; }
-.pearl-settings-dialog .pearl-settings-heading .icon-btn { width:44px;height:44px;min-height:44px; }
-.pearl-settings-dialog .pearl-settings-heading .pearl-settings-back { width:36px;min-width:36px;background:none; }
+.pearl-settings-dialog .pearl-settings-heading .icon-btn { width:44px;height:44px;min-width:44px;min-height:44px;flex:0 0 44px;aspect-ratio:1;box-sizing:border-box; }
+.pearl-settings-dialog .pearl-settings-heading .pearl-settings-back { background:none; }
 .pearl-settings-group { padding:0 18px;background:var(--glass-raised);border:1px solid var(--glass-edge);border-radius:18px; }
 .pearl-settings-dialog .pearl-settings-home { display:block;margin:0; }
 .pearl-settings-dialog .pearl-settings-home .pearl-settings-row { display:flex;align-items:center;gap:14px;width:100%;min-height:74px;padding:14px 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent; }

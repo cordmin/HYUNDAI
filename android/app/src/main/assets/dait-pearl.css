@@ -741,3 +741,9 @@ button.pearl-record-row {width:100%;text-align:left;color:var(--ink);font:inheri
 button.pearl-record-row:active:not(:disabled) {transform:none;}
 button.pearl-record-row:hover {background:var(--glass-hover);}
 .playlist-dialog .pearl-notice {position:sticky;bottom:0;left:auto;right:auto!important;margin-top:12px;flex-shrink:0;}
+/* Narrow desktop preview panes keep all controls reachable. Vehicle layout stays one row. */
+@media(max-width:360px){
+ .pearl-nav{flex-wrap:wrap;row-gap:6px}
+ .pearl-nav nav{order:3;flex:1 0 100%;justify-content:space-around}
+ .pearl-nav .pearl-tools{margin-left:auto}
+}

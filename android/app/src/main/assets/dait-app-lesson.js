@@ -65,11 +65,9 @@ function toggleSeries() {
 function lessonProgress() {
   const stored = readStored(LESSON_KEY);
   const progress = Lesson.normalize(stored);
-  if (!progress.resume) {
-    const latest = [...progress.records].reverse().find(r=>!r.finished && r.resume && Lesson.resumeFresh(r.resume,toYmd(new Date())));
-    if (latest) progress.resume=latest.resume;
-  }
-  if (stored && (Object.hasOwn(stored, 'ieum') || stored.records?.length !== progress.records.length || (!stored.resume && progress.resume))) writeStored(LESSON_KEY, progress);
+  const latest = [...progress.records].reverse().find(r=>!r.finished && r.resume && Lesson.resumeFresh(r.resume,toYmd(new Date())));
+  if (latest && (!progress.resume || (latest.resume.lesson===progress.resume.lesson && String(latest.resume.ymd).replace(/-/g,'')===String(progress.resume.ymd).replace(/-/g,'') && Number.isFinite(latest.resume.offset)))) progress.resume=latest.resume;
+  if (stored && (Object.hasOwn(stored, 'ieum') || stored.records?.length !== progress.records.length || JSON.stringify(stored.resume)!==JSON.stringify(progress.resume))) writeStored(LESSON_KEY, progress);
   return progress;
 }
 

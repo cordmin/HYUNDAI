@@ -1331,3 +1331,8 @@ test('구형 완료 기록도 저장된 전체 길이로 20분 복습을 복원�
  resetPlaylistTest();page(`writeStored(LESSON_KEY,{...Lesson.normalize(),records:[{lesson:'dongbaek',title:'동백꽃',ymd:toYmd(new Date()),finished:true,totalSeconds:1186.8}]});resumeRecord(0);`);
  assert.equal(page('lessonRun.trip.minutes'),20);assert.ok(page('lessonTimeline(lessonRun).seconds')>900);resetPlaylistTest();
 });
+
+test('구형 공통 이어 듣기보다 같은 수업 기록의 정확한 중단 초를 우선한다',()=>{
+ resetPlaylistTest();page(`var preciseStop={lesson:'sky',from:'m1',heard:[],ymd:toYmd(new Date()),short:true,offset:7.5};writeStored(LESSON_KEY,{...Lesson.normalize(),resume:{...preciseStop,offset:0},records:[{lesson:'sky',title:'하늘',ymd:toYmd(new Date()),finished:false,resume:preciseStop}]});`);
+ assert.equal(page('lessonProgress().resume.offset'),7.5);assert.equal(page('readStored(LESSON_KEY).resume.offset'),7.5);resetPlaylistTest();
+});

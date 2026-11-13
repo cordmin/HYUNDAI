@@ -73,9 +73,9 @@
     const white = Math.min(...samples.map(v => contrast(v, 1)));
     const accentInk = palette.accent;
     const accent = Math.min(...samples.map(v => contrast(v, luminance(rgb(accentInk)))));
-    if (element.matches('[aria-current=page],[aria-selected=true],[aria-pressed=true]') && accent >= 4.5) return { ink: accentInk, score: accent };
+    if (element.matches('[aria-current=page],[aria-selected=true],[aria-pressed=true]') && !element.closest('.pearl-pb-choices') && accent >= 4.5) return { ink: accentInk, score: accent };
     let result = white > dark ? { ink: palette.lightInk, score: Math.min(...samples.map(v => contrast(v, luminance(rgb(palette.lightInk))))) } : { ink: palette.darkInk, score: dark };
-    if (result.score < 5.2) {
+    if (result.score < 4.5) {
       const black = Math.min(...samples.map(v => contrast(v, 0)));
       if (black > result.score) result = { ink: '#000000', score: black };
     }
@@ -87,12 +87,10 @@
     const elements = [...host.querySelectorAll(TEXT)];
     for (const element of elements) {
       let result = measure(element);
-      if (!result || result.score >= 5.2) continue;
-      // The approved rose settings surfaces are opaque; adjust ink without replacing their colors.
-      if (host.dataset.settingsPalette === 'rose' && element.closest('.pearl-settings-dialog')) continue;
+      if (!result || result.score >= 4.5) continue;
       const pane = element.closest(PANES);
       if (!pane) continue;
-      // Stronger material only where an extreme custom background needs it.
+      // Preserve AA-readable accent controls. Strengthen a pane only if no ink reaches 4.5:1.
       // Leave headlining text and time labels free of plates and filters.
       pane.style.setProperty('background-color', result.ink === palette.lightInk ? palette.darkInk + 'ee' : palette.lightInk + 'ee');
       pane.setAttribute('data-pearl-tint', '');
@@ -174,8 +172,9 @@
     document.documentElement.style.setProperty('--bg-top', colors.start);
     document.documentElement.style.setProperty('--bg-bottom', colors.end);
     palette = DaitPalette.derive(colors, mode);
-    if (typeof CSS !== 'undefined' && !CSS.supports('backdrop-filter', 'blur(1px)') && !CSS.supports('-webkit-backdrop-filter', 'blur(1px)')) {
-      for (const role of ['--glass','--glass-raised','--glass-menu','--glass-hover']) palette.tokens[role] = palette.tokens['--paper'];
+    if (window.matchMedia?.('(prefers-reduced-transparency: reduce)').matches ||
+        (typeof CSS !== 'undefined' && !CSS.supports('backdrop-filter', 'blur(1px)') && !CSS.supports('-webkit-backdrop-filter', 'blur(1px)'))) {
+      for (const role of ['--glass','--glass-raised','--glass-menu','--glass-hover','--glass-control','--glass-selected']) palette.tokens[role] = palette.tokens['--paper'];
     }
     for (const [name, value] of Object.entries(palette.tokens)) {
       document.documentElement.style.setProperty(name, value);
@@ -200,8 +199,10 @@
     noticeExitTimer=setTimeout(hide,320);
   }
   function notice(message, action = null) {
+    const mount=dialog?.open?dialog:host;
     let node = document.getElementById('pearlNotice');
     if (!node) { node = document.createElement('div'); node.id = 'pearlNotice'; node.className = 'pearl-notice'; node.setAttribute('role', 'status'); node.setAttribute('aria-atomic','true'); host.append(node); }
+    if(node.parentElement!==mount)mount.append(node);
     const replacing=!node.hidden&&node.dataset.state==='visible',generation=++noticeGeneration;
     clearTimeout(noticeTimer);clearTimeout(noticeExitTimer);noticeMotion?.cancel();
     node.replaceChildren();node.hidden=false;node.dataset.state='visible';node.removeAttribute('aria-hidden');
@@ -217,7 +218,7 @@
       button.addEventListener('click',()=>{if(generation!==noticeGeneration||node.hidden||node.dataset.state!=='visible'||isDrivingMode)return;const focused=document.activeElement===button;dismissNotice(true);action.onClick();if(focused)action.restoreFocus?.()});
       node.append(button);
     }
-    if(actionable){const add=host.querySelector('[data-queue-add]');if(add){node.style.right=Math.max(12,host.getBoundingClientRect().right-add.getBoundingClientRect().left+8)+'px'}else node.style.right='12px'}else node.style.right='12px';
+    if(actionable&&mount===host){const add=host.querySelector('[data-queue-add]');if(add){node.style.right=Math.max(12,host.getBoundingClientRect().right-add.getBoundingClientRect().left+8)+'px'}else node.style.right='12px'}else node.style.right='12px';
     if(!quietMotion()&&node.animate){
       // Repeated additions update the receipt in place instead of stacking or re-opening a panel.
       const moving=replacing?copy:node;
@@ -387,5 +388,6 @@
   appEvents.on('back', () => { if (!dialog) return false; close(); return true; });
   window.addEventListener('resize', () => { fitDialog(); queueRefresh(); });
   if (window.ResizeObserver) new window.ResizeObserver(fitDialog).observe(host);
+  window.matchMedia?.('(prefers-reduced-transparency: reduce)').addEventListener?.('change', () => apply(active, host.dataset.colorMode));
   apply(saved);
 })();

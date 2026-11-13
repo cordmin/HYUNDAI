@@ -122,7 +122,7 @@ function renderLessonPlayer(container, run) {
     <div class="pearl-transport">
       <button class="pearl-seek" onclick="seekLessonBy(-lessonPlaybackPrefs.back)" aria-label="${lessonIntervalText(prefs.back)} 뒤로">${lessonTransportIcon('back')}<span>${lessonIntervalText(prefs.back)}</span></button>
       <button class="pearl-play" onclick="lessonMainAction()" aria-label="${playing ? '일시정지' : '이어 듣기'}">${lessonTransportIcon(playing ? 'pause' : 'play')}</button>
-      <button id="lessonForward" class="pearl-seek" onclick="seekLessonBy(lessonPlaybackPrefs.forward)" aria-label="${lessonIntervalText(prefs.forward)} 앞으로">${lessonTransportIcon('forward')}<span>${lessonIntervalText(prefs.forward)}</span></button>
+      <button id="lessonForward" class="pearl-seek" aria-description="들은 구간 안에서만 이동할 수 있어요." onclick="seekLessonBy(lessonPlaybackPrefs.forward)" aria-label="${lessonIntervalText(prefs.forward)} 앞으로">${lessonTransportIcon('forward')}<span>${lessonIntervalText(prefs.forward)}</span></button>
     </div>
     <div class="pearl-player-progress" aria-label="수업 진행">
       <input id="lessonSeek" type="range" min="0" max="${lessonTimeline(run).seconds}" step="0.1" value="0" aria-label="${isDrivingMode ? '수업 진행 시간' : '수업 재생 위치'}" oninput="previewLessonSeek(this)" onchange="seekLessonAt(Number(this.value))" onblur="cancelLessonScrub()" onpointercancel="cancelLessonScrub()"${isDrivingMode ? ' disabled' : ''}>
@@ -208,7 +208,7 @@ function updateLessonProgress() {
   noteLessonHeard(run, timeline);
   const heard = run.done ? timeline.seconds : Math.max(position, lessonHeardLimit(run, timeline));
   const forward = document.getElementById('lessonForward');
-  if (forward) forward.disabled = run.done || heard - position < .05;
+  if (forward) { forward.disabled=run.done; forward.setAttribute('aria-disabled',String(run.done || heard-position<.05)); }
   if (!run.scrubbing) {
     const slider = document.getElementById('lessonSeek');
     if (!slider) return;

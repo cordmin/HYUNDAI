@@ -32,3 +32,13 @@ test('날짜 없는 과거 완료에 오늘 날짜를 지어내지 않는다',()
  assert.equal(s.awards.korean.day,null);assert.match(Badges.dateLabel(null),/날짜 정보 없음/);
  assert.match(Badges.dateLabel('20260231'),/날짜 정보 없음/);
 });
+
+test('미획득 조건은 현재 수업·분야·날짜 진행량을 중복 없이 보여 준다',()=>{
+ const s=Badges.sync(null,[record('a','20261110'),record('a','20261111'),record('b','20261111')],lessons);
+ assert.match(Badges.progress('exploration',s,lessons).label,/2\/3편 · 1편/);
+ assert.equal(Badges.progress('well-rounded-explorer',s,lessons).current,2);
+ assert.equal(Badges.progress('everyday-discoverer',s,lessons).current,2);
+ assert.equal(Badges.progress('science',s,lessons).current,0);
+ const series=[{title:'연결',lessons:['a','c']}];assert.match(Badges.progress('series-completion',s,lessons,series).label,/1\/2편/);
+ assert.match(Badges.progress('series-completion',s,lessons,[]).label,/준비/);
+});

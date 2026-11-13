@@ -22,7 +22,18 @@
       if(position==='next')this.items.unshift(item);else this.items.push(item);
       return true;
     }
-    remove(key){this.items=this.items.filter(item=>item.key!==key)}
+    remove(key){
+      const index=this.items.findIndex(item=>item.key===key);if(index<0)return null;
+      const token={item:{...this.items[index]},index,before:this.items[index-1]?.key,after:this.items[index+1]?.key};
+      this.items.splice(index,1);return token;
+    }
+    restore(token){
+      const item=token?.item;
+      if(!item||!this.ids.has(item.lesson)||!Number.isInteger(item.key)||item.key<1||this.items.length>=100||this.items.some(x=>x.key===item.key))return false;
+      const after=this.items.findIndex(x=>x.key===token.after),before=this.items.findIndex(x=>x.key===token.before);
+      const index=after>=0?after:before>=0?before+1:Math.max(0,Math.min(this.items.length,Number(token.index)||0));
+      this.items.splice(index,0,{...item});this.sequence=Math.max(this.sequence,item.key);return true;
+    }
     promote(key){const index=this.items.findIndex(item=>item.key===key);if(index<0)return false;const [item]=this.items.splice(index,1);this.items.unshift(item);return true}
     move(key, delta){if(![-1,1].includes(delta))return false;const i=this.items.findIndex(item=>item.key===key),j=i+delta;if(i<0||j<0||j>=this.items.length)return false;[this.items[i],this.items[j]]=[this.items[j],this.items[i]];return true}
     seriesFor(lesson){return this.series.find(item=>item.lessons.includes(lesson))||null}

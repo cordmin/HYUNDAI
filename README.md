@@ -25,7 +25,32 @@
 | AI는 왜 자신 있게 틀릴까 | 기술 | 49 |
 | 같은 네 박인데 왜 다르게 들릴까 | 음악 | 36 |
 
+## 제출 정보
+
+| 항목 | 내용 |
+|---|---|
+| 팀 / 앱 | 도라이브 / 다잇(DAIT) |
+| 한 줄 소개 | (정하는 중) |
+| APK | `도라이브_다잇_release.apk` — 약 150MB라 GitHub 저장소(100MB 제한) 대신 [GitHub Releases](https://github.com/cordmin/HYUNDAI/releases/tag/submission-2026-11-15)에 올렸습니다 |
+| 개발 에뮬레이터 | Pleos Connect Emulator 2.1.0 (Android 14, API 34, x86_64 시스템 이미지 `pleos_car_emulator`) |
+| 화면 규격 | 2560 × 1440 가로, 밀도 160dpi |
+| 앱 정보 | 패키지 `io.dait.app`, 버전 `0.4-pearl`, release 서명 |
+
 ## 실행
+
+**제출용 APK 설치:** Pleos Connect Emulator 2.1.0을 켠 뒤(RAM 4GB, Cold boot 권장) Release 페이지의 APK를 내려받아 설치하고 실행합니다.
+
+```powershell
+adb install -r 도라이브_다잇_release.apk
+adb shell am start -n io.dait.app/.MainActivity
+```
+
+**테스트 환경과 필요한 설정**
+
+- 인터넷 연결, 로그인, API 키가 필요 없습니다. 수업 음원과 화면은 모두 앱 안에 들어 있습니다.
+- 내비 목적지가 있으면 남은 시간에 맞춰 수업을 조립하고, 없으면 8·15·20분 중 고른 시간으로 조립합니다.
+- 주행 제한은 차량의 주행 제한 신호(`CarUxRestrictionsManager`, 에뮬레이터에서는 기어·속도로 바꿈)를 따릅니다. 주차 상태에서는 모든 조작이, 주행 중에는 일시정지·앞뒤 이동·음량만 됩니다.
+- 핸들 버튼과 Gleo 음성 비서(수업 시작·멈춤·이어 듣기)로도 조작할 수 있습니다.
 
 **화면 미리보기:** `run_preview.bat`을 더블 클릭하면 브라우저에 앱 화면이 열립니다.
 
@@ -35,7 +60,7 @@
 powershell -ExecutionPolicy Bypass -File .\tools\Build-App.ps1
 ```
 
-결과는 `apk/DAIT-dialogue-debug.apk`입니다. 빌드할 때 Android 시험·lint·화면 시험(`android/app/src/test/js`)을 함께 돌립니다. 에뮬레이터 설치와 제출용 빌드는 [인수인계](인수인계.md)를 봅니다.
+결과는 `apk/DAIT-dialogue-debug.apk`입니다. 제출용은 `-Release -TeamName 도라이브`를 붙이면 `apk/도라이브_다잇_release.apk`가 생깁니다(서명 키는 `tools\Make-Release-Key.ps1`로 PC마다 한 번 만들고 저장소에는 올리지 않습니다). 빌드할 때 Android 시험·lint·화면 시험(`android/app/src/test/js`)을 함께 돌립니다. 에뮬레이터 설치와 제출용 빌드는 [인수인계](인수인계.md)를 봅니다.
 
 ## 폴더
 

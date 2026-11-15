@@ -7,7 +7,8 @@
 /android/**/build/
 /voice/.generation.lock
 /voice/*.log
-/apk/
+/apk/*
+!/apk/README.md
 /voice/*.zip
 /team/a/voice/delivery/*.zip
 /team/a/voice/delivery/**/takes/

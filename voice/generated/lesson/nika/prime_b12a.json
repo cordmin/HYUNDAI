@@ -1,0 +1,14 @@
+{
+  "duration": 37.76,
+  "sample_rate": 24000,
+  "peak": 23299,
+  "rms": 2624.06,
+  "sha256": "b84434463df5027260d8bcfb102458fc3afc7efa132c06a2a2ce9739b29a1172",
+  "id": "prime_b12a",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "소수에는 쉬워 보이지만 아직 풀리지 않은 질문이 많습니다. 골드바흐의 추측이 대표적입니다. 이보다 큰 짝수는 모두 두 소수의 합으로 나타낼 수 있다는 생각이지요. 사는 이 더하기 이, 십은 삼 더하기 칠, 이십은 칠 더하기 십삼처럼요. 컴퓨터로 아주 큰 수까지 확인했지만 아직 증명되지는 않았습니다. 많은 예를 확인한 것과 언제나 맞는 이유를 보인 것은 다르다는 오늘의 이야기가 여기에도 그대로 이어집니다.",
+  "fingerprint": "b2a3a0055525bcbea837dd08b64efe4dc7a5421eee665b16acc67770b6885e2c",
+  "generated_at": "2026-11-09T21:13:01+0900",
+  "review": "generated_not_listening_reviewed"
+}

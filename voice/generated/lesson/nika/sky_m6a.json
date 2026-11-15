@@ -1,0 +1,14 @@
+{
+  "duration": 23.0,
+  "sample_rate": 24000,
+  "peak": 27029,
+  "rms": 2397.04,
+  "sha256": "b3e630ef574a03822e3b2009e65bb4cb94d592a12787145e1449305b9149eb51",
+  "id": "sky_m6a",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "높은 산이나 비행기에서 보면 하늘이 더 짙은 남색으로 보입니다. 높이 올라갈수록 위에 남은 공기가 적어 빛을 흩어 주는 알갱이도 줄기 때문입니다. 더 높이 올라가 우주에 닿으면 달에서처럼 까만 하늘이 됩니다. 파란 하늘은 공기가 있다는 표시인 셈입니다.",
+  "fingerprint": "009d1b0b9fff49dcba4195b328bf9d6fb599a056088c01ac5a558811c2e5ea3e",
+  "generated_at": "2026-11-09T21:18:27+0900",
+  "review": "generated_not_listening_reviewed"
+}

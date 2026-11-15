@@ -1,0 +1,14 @@
+{
+  "duration": 28.36,
+  "sample_rate": 24000,
+  "peak": 20326,
+  "rms": 2919.78,
+  "sha256": "a012eef9e174b9b53a9650ec966904f4635888b3b6b515759c8223bd7561c617",
+  "id": "starry_s_b3",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "별 하나에, 별 하나에, 하고 같은 시작이 되풀이되는 것을 소리로 들으면, 마치 별을 하나씩 짚어 가는 것처럼 느껴집니다. 똑같은 말이 이어지는 동안 듣는 사람의 마음도 천천히 느려지지요. 그 사이에 뒤에 오는 말만 조금씩 바뀝니다. 되풀이는 지루함이 아니라, 하나하나를 소중히 부르는 몸짓처럼 들립니다.",
+  "fingerprint": "fca2d50e21788033b7817b0337fed313e3de24440cf56ab688671cfbb08c84f8",
+  "generated_at": "2026-11-09T21:10:16+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 34.36,
+  "sample_rate": 24000,
+  "peak": 26506,
+  "rms": 2889.11,
+  "sha256": "131aa7a5d55a0904e95aaa6f01ad1d6968ba822d026fe7fff986313d8e8dd4fb",
+  "id": "starry_f_n5",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "마지막 대목에는 내 이름자 묻힌 언덕 위에도 자랑처럼 풀이 무성할 거라는 말이 나옵니다. 흙으로 덮은 이름 위에 풀이 자란다는 장면은, 묻었던 것이 사라지지 않고 새로 살아나는 모습처럼 들리지요. 부끄러워 덮었던 이름이 봄에는 자랑이 된다는 대비가 선명합니다. 시는 언제 그런 봄이 오는지 말하지 않습니다. 그래서 이 대목은 약속이라기보다 간절한 바람에 가깝게 들리기도 합니다.",
+  "fingerprint": "06dac2013bae086be955a8d575ccb0d29802736a19319234ce12ea543d566a45",
+  "generated_at": "2026-11-09T21:09:51+0900",
+  "review": "generated_not_listening_reviewed"
+}

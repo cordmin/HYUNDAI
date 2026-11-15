@@ -1,0 +1,14 @@
+{
+  "duration": 39.32,
+  "sample_rate": 24000,
+  "peak": 23784,
+  "rms": 3142.53,
+  "sha256": "6e10d066e56fe9ed3807008bd6e789bc85e90ca3ce4b9422ae77b7ef250f7986",
+  "id": "prime_n7",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "오늘 증명에는 숨은 사실 하나가 쓰입니다. 일보다 큰 자연수는 반드시 어떤 소수로 나누어떨어진다는 것이지요. 왜 그럴까요? 어떤 수의 약수 가운데 일을 뺀 가장 작은 것을 떠올려 보세요. 그 약수가 소수가 아니라면 더 작은 수로 다시 쪼갤 수 있을 텐데, 그 더 작은 수도 원래 수를 나누게 됩니다. 가장 작다고 한 것과 어긋나지요. 그래서 일보다 큰 가장 작은 약수는 언제나 소수입니다. 증명은 이렇게 작은 사실들을 이어 붙여 만들어집니다.",
+  "fingerprint": "a02980d28dc43ee09df4c00ed4559c6e72aa581fea973cd98475e61ef39a3fdb",
+  "generated_at": "2026-11-09T21:22:04+0900",
+  "review": "generated_not_listening_reviewed"
+}

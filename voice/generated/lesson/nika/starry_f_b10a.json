@@ -1,0 +1,14 @@
+{
+  "duration": 31.64,
+  "sample_rate": 24000,
+  "peak": 20847,
+  "rms": 2688.82,
+  "sha256": "8c5c673d9e62bc71ffe5c52f2c96abc3df49efb53e1ef5e9cd0506d317044924",
+  "id": "starry_f_b10a",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이 시의 마지막 대목, 겨울이 지나고 봄이 오면 하는 부분은 시를 처음 쓴 뒤에 덧붙인 것으로 알려져 있습니다. 시를 보여 준 후배가 끝이 조금 허전하다는 뜻을 전했고, 윤동주가 그 뒤에 몇 줄을 더 썼다는 이야기입니다. 그 몇 줄 덕분에 시는 부끄러움에서 끝나지 않고 봄을 기다리는 마음으로 닫힙니다. 끝을 어떻게 맺느냐에 따라 시 전체의 느낌이 달라질 수 있다는 것을 보여 주는 이야기입니다.",
+  "fingerprint": "a207e5313035d88bb6aed64c7ac1097dff4840c73733e8f1d9676aa81e4d2bf7",
+  "generated_at": "2026-11-09T21:09:40+0900",
+  "review": "generated_not_listening_reviewed"
+}

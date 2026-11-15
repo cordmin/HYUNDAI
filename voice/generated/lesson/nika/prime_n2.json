@@ -1,0 +1,14 @@
+{
+  "duration": 35.08,
+  "sample_rate": 24000,
+  "peak": 23032,
+  "rms": 2942.69,
+  "sha256": "83c2c90e5a6086b7b1d3df52570d73faf58f14e724aa757b434ef1067ff135f9",
+  "id": "prime_n2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "에라토스테네스는 이천이백여 년 전 이집트 알렉산드리아의 도서관에서 일한 학자입니다. 그는 소수를 거르는 방법뿐 아니라, 두 도시에서 햇빛이 비치는 각도의 차이를 이용해 지구 둘레를 꽤 가깝게 어림한 사람으로도 알려져 있습니다. 표에서 배수를 지워 가는 방법은 단순하지만, 지금도 컴퓨터가 일정한 범위의 소수를 한꺼번에 찾을 때 이 생각을 바탕으로 한 방법을 씁니다. 오래된 생각이 지금도 쓰이는 셈입니다.",
+  "fingerprint": "ecf467ecccdf3edfba549da1aa00e4660f55fc0daec828210236f45513151086",
+  "generated_at": "2026-11-09T21:11:31+0900",
+  "review": "generated_not_listening_reviewed"
+}

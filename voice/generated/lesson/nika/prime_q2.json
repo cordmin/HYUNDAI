@@ -1,0 +1,14 @@
+{
+  "duration": 19.8,
+  "sample_rate": 24000,
+  "peak": 24271,
+  "rms": 3033.25,
+  "sha256": "114ca9de7cadc29bd584a1238b0aaf7e3297ee0011505f7223434acb4538d953",
+  "id": "prime_q2",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "몇 개의 소수를 더 찾아내는 것과, 어떤 유한한 목록에도 없는 소수가 더 있다고 보이는 것은 어떻게 다를까요? 앞의 일은 예를 늘리고, 뒤의 일은 끝이 없다는 일반적인 이유를 찾습니다. 이 차이를 속으로 떠올려 보세요.",
+  "fingerprint": "790a82a896f58e7115e21c5d9f3016d8b7ddb062cd876a0dfdf3d2d1ba683923",
+  "generated_at": "2026-11-09T21:12:39+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 22.76,
+  "sample_rate": 24000,
+  "peak": 21957,
+  "rms": 2920.15,
+  "sha256": "cd9eca389989cb8ac712c456dbed33ed6e4f2b493c4d6da6361358d2a1fcff57",
+  "id": "prime_q3",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "질문을 하나 드릴게요. 지금까지 알려진 가장 큰 소수와, 가장 큰 소수는 서로 다른 말입니다. 앞의 것은 있고, 뒤의 것은 없지요. 왜 그런지 오늘 배운 증명으로 설명해 볼 수 있을까요? 어떤 목록을 만들어도 거기에 없는 소수가 더 있다는 생각을 떠올려 보세요.",
+  "fingerprint": "e067e133f499c791e043abb24e41f4d65067efd09b8a7cf1ce6ccd2caeb9e9cf",
+  "generated_at": "2026-11-09T21:12:32+0900",
+  "review": "generated_not_listening_reviewed"
+}

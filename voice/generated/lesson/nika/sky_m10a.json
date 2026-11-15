@@ -1,0 +1,14 @@
+{
+  "duration": 21.52,
+  "sample_rate": 24000,
+  "peak": 22818,
+  "rms": 2797.21,
+  "sha256": "484c2c41e9299688bb4cde06597c9731decb2b264ebd383feee66ca58565ae3e",
+  "id": "sky_m10a",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "집에서 해 볼 수 있는 실험도 있습니다. 투명한 컵의 물에 우유를 한두 방울 떨어뜨리고 어두운 곳에서 손전등을 옆으로 비춰 보세요. 옆에서 보면 물이 푸르스름하고, 반대쪽에서 불빛을 보면 주황빛으로 보입니다. 컵 안에 작은 하늘과 노을이 생기는 것입니다.",
+  "fingerprint": "cce68e77bfed2aef3becf1b77466c0a7a0b26913e14bf6f0ef0d07790dd0b838",
+  "generated_at": "2026-11-09T21:18:49+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 29.84,
+  "sample_rate": 24000,
+  "peak": 27426,
+  "rms": 3077.58,
+  "sha256": "e4e56bd4184f342d50d07b6b257a9910f51e7a469dc966ab4545ab100596994f",
+  "id": "sky_n9",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "우주 정거장에서 찍은 지구 사진을 보면, 지구의 가장자리에 얇은 파란 띠가 둘러져 있습니다. 바로 우리가 사는 공기층입니다. 지구의 크기에 견주면 공기층은 사과 껍질처럼 얇게 보입니다. 그 얇은 층이 햇빛을 흩어 낮 하늘을 파랗게 칠하고, 우리가 숨 쉴 공기도 담고 있습니다. 하늘이 파랗다는 것은 그 얇은 공기층이 지금도 우리를 감싸고 있다는 표시이기도 합니다.",
+  "fingerprint": "3b157ca5f02da756aad23002ceaadbc94a96d120b29e20dfb6a7a4bc98f66c6b",
+  "generated_at": "2026-11-09T21:17:50+0900",
+  "review": "generated_not_listening_reviewed"
+}

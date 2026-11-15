@@ -1,0 +1,14 @@
+{
+  "duration": 20.96,
+  "sample_rate": 24000,
+  "peak": 22909,
+  "rms": 3082.87,
+  "sha256": "51029351fe1efa8acafdce25dec6d81f366616b6d74e1759df998320719e79e8",
+  "id": "starry_f_q4",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "잠깐 생각해 볼까요? 만약 내가 별 하나에 이름 하나씩 부른다면, 어떤 이름들이 이어질까요? 사람이어도 좋고, 동물이나 장소, 좋아하는 책이어도 좋습니다. 서로 아주 다른 것들이 한 줄에 놓여도 괜찮습니다. 속으로만 떠올려 보세요.",
+  "fingerprint": "1d346615fb2b3c316130e57ef29dc34749036717b48378cb8d08867b3a383646",
+  "generated_at": "2026-11-09T21:09:12+0900",
+  "review": "generated_not_listening_reviewed"
+}

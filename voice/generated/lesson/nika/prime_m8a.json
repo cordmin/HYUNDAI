@@ -1,0 +1,14 @@
+{
+  "duration": 26.56,
+  "sample_rate": 24000,
+  "peak": 22413,
+  "rms": 2816.32,
+  "sha256": "76b75a359c5df02639c2d4cab2d8299a73fe459e468efc92eaebacfd8620e25a",
+  "id": "prime_m8a",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "소수가 끝없으니 가장 큰 소수는 없습니다. 대신 지금까지 알려진 가장 큰 소수는 있습니다. 최근 기록은 자릿수만 수천만 개인 수로, 세계 곳곳의 사람들이 컴퓨터를 함께 돌려 찾았습니다. 아무리 큰 기록이 나와도 그보다 큰 소수가 반드시 있다는 것을, 우리는 오늘의 증명으로 알 수 있습니다.",
+  "fingerprint": "04bc89607736e44d84fc8de8b474cb528046d4a1f66154216f0dc7a5ff820a1e",
+  "generated_at": "2026-11-09T21:13:48+0900",
+  "review": "generated_not_listening_reviewed"
+}

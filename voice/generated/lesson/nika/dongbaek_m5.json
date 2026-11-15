@@ -1,0 +1,14 @@
+{
+  "duration": 25.56,
+  "sample_rate": 24000,
+  "peak": 27201,
+  "rms": 3177.05,
+  "sha256": "f9abeb9955e4f65068ab68bf4aa9c5e5eedc61acd5e5adf596df68febce5cf12",
+  "id": "dongbaek_m5",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "여기서 장면을 하나 떠올려 보겠습니다. 소년은 왜 감자를 거절했을까요? 감자가 싫어서였을까요, 아니면 점순이의 말이 자기 집의 가난을 들추는 것처럼 들려 마음이 상했을까요? 방금 들은 소년의 속말에서 단서를 찾아보세요. 속으로만 생각해도 좋습니다. 잠시 뒤 이야기를 이어 가겠습니다.",
+  "fingerprint": "a3396c3c37ca913cbc5ac9bb7506808df65546ab125275a3072caca849208687",
+  "generated_at": "2026-11-09T21:06:04+0900",
+  "review": "generated_not_listening_reviewed"
+}

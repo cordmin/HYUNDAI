@@ -1,0 +1,14 @@
+{
+  "duration": 19.16,
+  "sample_rate": 24000,
+  "peak": 22731,
+  "rms": 3237.2,
+  "sha256": "f08341e09a80b83e90841714018735ead80c0263082d06bd6afe82db716a2eb6",
+  "id": "ai_q5",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "생각해 볼 질문입니다. 여행 일정의 아이디어를 얻는 일과, 약을 얼마나 먹을지 정하는 일을 인공지능에 물어본다고 해 보지요. 두 경우에 답을 얼마나 확인해야 할지는 같을까요? 틀렸을 때 생기는 일의 크기를 떠올리며 속으로 생각해 보세요.",
+  "fingerprint": "d0f7aff3e563b99412d4830e30293310c287c9a47301564ebdd580adc434833b",
+  "generated_at": "2026-11-09T21:15:40+0900",
+  "review": "generated_not_listening_reviewed"
+}

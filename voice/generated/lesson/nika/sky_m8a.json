@@ -1,0 +1,14 @@
+{
+  "duration": 26.92,
+  "sample_rate": 24000,
+  "peak": 20980,
+  "rms": 2765.54,
+  "sha256": "fc973d5331b9d8fcd45a3fa8c0dfb278a589eaafc74df3f98107046c7a70b977",
+  "id": "sky_m8a",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "어떤 날은 노을이 유난히 붉고 진합니다. 하늘에 떠 있는 작은 입자나 구름의 높이와 양이 날마다 다르기 때문입니다. 높은 곳의 얇은 구름이 붉은빛을 받아 하늘 전체가 물들기도 하지요. 아침노을과 지평선 가까이 뜬 주황빛 달도, 빛이 공기 속 먼 길을 오며 파란빛을 잃었기 때문입니다.",
+  "fingerprint": "15af9c2b705d7827325b596788cf80aa2fc95ac82ef339c6486b3c995c801516",
+  "generated_at": "2026-11-09T21:18:35+0900",
+  "review": "generated_not_listening_reviewed"
+}

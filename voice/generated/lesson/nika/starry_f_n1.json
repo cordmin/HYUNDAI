@@ -1,0 +1,14 @@
+{
+  "duration": 36.08,
+  "sample_rate": 24000,
+  "peak": 24590,
+  "rms": 2672.29,
+  "sha256": "872db407073973a2f6086b33aff9505b85b1d2fe83c0c2bb1d239a400a4902b5",
+  "id": "starry_f_n1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "시는 눈으로 읽을 때와 소리로 들을 때 느낌이 달라집니다. 별 하나에라는 말이 되풀이될 때, 귀로 들으면 쉼표마다 숨을 고르는 자리가 생기지요. 그 쉼이 별을 하나씩 짚어 가는 손가락처럼 느껴지기도 합니다. 반대로 이름들이 길게 이어지는 대목에서는 숨이 차오르듯 말이 빨라집니다. 시의 뜻뿐 아니라 말의 빠르기와 쉼도 마음을 전한다는 것을, 오늘처럼 듣는 수업에서 특히 잘 느낄 수 있습니다.",
+  "fingerprint": "f8c455dae40bc4a8ea8d94417ec842f6ee8e43501c1948ef33ffe66af1620149",
+  "generated_at": "2026-11-09T21:08:24+0900",
+  "review": "generated_not_listening_reviewed"
+}

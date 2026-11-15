@@ -1,0 +1,14 @@
+{
+  "duration": 31.76,
+  "sample_rate": 24000,
+  "peak": 23086,
+  "rms": 2780.8,
+  "sha256": "9e205685f12096bc00ee12b4ade44ef737d8408eada49fc07d4cb5d8e5d7ab40",
+  "id": "prime_b1a",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "소수라는 이름은 바탕이 된다는 뜻의 한자를 씁니다. 다른 수를 곱해 만들 때 바탕이 되는 수라는 뜻이지요. 영어로는 프라임이라고 하는데, 첫째가는, 으뜸이라는 뜻이 담겨 있습니다. 소수점이 붙은 수를 말하는 소수와는 소리만 같고 한자가 다릅니다. 오늘 이야기하는 소수는 나누어떨어지는 성질로 정하는 자연수입니다. 이름에서도 소수가 수의 기본 재료라는 생각을 읽을 수 있습니다.",
+  "fingerprint": "f9b48612e7f66235baabac67fc54234590f0d51cef2a07365b4cbe05f1eff45a",
+  "generated_at": "2026-11-09T21:11:09+0900",
+  "review": "generated_not_listening_reviewed"
+}

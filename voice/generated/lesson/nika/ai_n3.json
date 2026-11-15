@@ -1,0 +1,14 @@
+{
+  "duration": 28.72,
+  "sample_rate": 24000,
+  "peak": 21299,
+  "rms": 2520.57,
+  "sha256": "7f220e3b0e31f79c177fe0c7a1b2b69e3883093d31083a7336016e33449093ef",
+  "id": "ai_n3",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "두 가지 실수는 다른 곳에서도 만납니다. 화재 경보기를 떠올려 보세요. 연기가 조금만 나도 울리게 하면 불을 놓치는 일은 줄지만, 요리할 때마다 경보가 울릴 수 있습니다. 반대로 둔하게 만들면 잘못 울리는 일은 줄지만 진짜 불을 늦게 알아챌 수 있지요. 어느 쪽을 더 줄일지는 기술만으로 정해지지 않습니다. 그 실수가 사람에게 어떤 일을 일으키는지 함께 따져 정합니다.",
+  "fingerprint": "cdb8d062d1bed90af0292f2f47ac24332de9e7c6e6e1864deb1a7a3f617fa50f",
+  "generated_at": "2026-11-09T21:14:56+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 26.0,
+  "sample_rate": 24000,
+  "peak": 20414,
+  "rms": 2852.23,
+  "sha256": "a6020ef5b4939b858137f41c432b55d8fbff9b5d6426be9462eaf5669426ddb4",
+  "id": "starry_s_b4a",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이 시는 천구백사십일년 가을, 윤동주가 서울에서 공부하던 무렵에 쓰였습니다. 어머니가 계신 북간도는 그의 고향이었지요. 시인은 살아서 시집을 내지 못했고, 이 시는 그가 세상을 떠난 뒤 나온 시집에 실려 널리 알려졌습니다. 이런 사실은 배경으로만 기억하고, 시의 말에 다시 귀 기울여 보겠습니다.",
+  "fingerprint": "59929bd1ed6eb3952e1a94666eae6f1ed32885fc9d27590f5672c923df7d0f8a",
+  "generated_at": "2026-11-09T21:10:24+0900",
+  "review": "generated_not_listening_reviewed"
+}

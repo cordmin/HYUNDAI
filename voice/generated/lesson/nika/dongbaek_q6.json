@@ -1,0 +1,14 @@
+{
+  "duration": 13.72,
+  "sample_rate": 24000,
+  "peak": 19931,
+  "rms": 3255.85,
+  "sha256": "255259ff0ee10ae024e438b7520b88556dcbab168b80f6bb7fad9be6bf7f3059",
+  "id": "dongbaek_q6",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "점순이의 서툰 마음, 소년이 느끼는 두려움, 이야기를 들려주는 말의 맛 가운데 무엇이 가장 마음에 남았나요? 그렇게 느낀 장면 하나를 속으로 떠올려 보세요.",
+  "fingerprint": "c2ef89e899e33044d258e145b6b43da37bb4e7bc7441bbb00a0e5bbd59a26949",
+  "generated_at": "2026-11-09T21:05:03+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 36.68,
+  "sample_rate": 24000,
+  "peak": 24117,
+  "rms": 2925.29,
+  "sha256": "bb54cc8327f8f5b9815a178c8bd2d3f4f539003e48c30dbd3e2cb9cd9af790d1",
+  "id": "prime_b9a",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "소수가 끝없다면 가장 큰 소수는 없습니다. 대신 지금까지 알려진 가장 큰 소수는 있습니다. 요즘 기록을 세우는 소수는 대부분 이를 여러 번 곱한 뒤 일을 뺀 모양의 수이고, 이런 소수를 메르센 소수라고 부릅니다. 세계 곳곳의 사람들이 자기 컴퓨터를 빌려주며 함께 찾고 있습니다. 최근에 찾은 소수는 자릿수만 수천만 개에 이릅니다. 그래도 그보다 큰 소수는 반드시 있습니다. 오늘의 증명이 그것을 보장합니다.",
+  "fingerprint": "7e8c74d588fdf7830ecf046d733ad255f5fd3165233b2cfe688f75aa39b46fc3",
+  "generated_at": "2026-11-09T21:12:14+0900",
+  "review": "generated_not_listening_reviewed"
+}

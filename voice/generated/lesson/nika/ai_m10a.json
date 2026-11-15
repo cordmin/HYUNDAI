@@ -1,0 +1,14 @@
+{
+  "duration": 24.64,
+  "sample_rate": 24000,
+  "peak": 22106,
+  "rms": 3037.98,
+  "sha256": "4350021eee48960c638086ad91f5488a19e25f023553a141a05baa93ab809d34",
+  "id": "ai_m10a",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "인공지능은 생각의 실마리를 얻거나 초안을 잡을 때 도움이 될 수 있습니다. 하지만 건강이나 돈, 안전처럼 틀렸을 때 피해가 큰 일은 다릅니다. 이런 일에서는 인공지능의 답을 출발점으로만 쓰고, 전문가나 공식 자료로 확인한 뒤에 결정해야 합니다. 어디에 쓰느냐에 따라 확인의 무게가 달라집니다.",
+  "fingerprint": "9ba92dbd5a67b1d38e77aa73d71d90f8f40aab050ee76d4ed40c90f5bb2fa19a",
+  "generated_at": "2026-11-09T21:16:32+0900",
+  "review": "generated_not_listening_reviewed"
+}

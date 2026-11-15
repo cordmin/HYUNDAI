@@ -1,0 +1,14 @@
+{
+  "duration": 29.44,
+  "sample_rate": 24000,
+  "peak": 24806,
+  "rms": 3231.02,
+  "sha256": "7ef094ef52c431c1cdb853d56b7f7597be526f3cda8891c6399dae4e7388fe5b",
+  "id": "starry_f_b1a",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "이 시는 천구백사십일년 가을에 쓰였습니다. 윤동주가 서울의 연희전문학교에 다니던 무렵입니다. 시인은 살아 있는 동안 시집을 내지 못했고, 이 시는 그가 세상을 떠난 뒤인 천구백사십팔년에 나온 시집 하늘과 바람과 별과 시에 실려 널리 알려졌습니다. 오늘은 이런 사실을 배경으로만 기억해 두고, 시가 들려주는 말에 귀 기울여 보겠습니다.",
+  "fingerprint": "c424eb1a3b96036a5319237a5dda162c33d844f4385be4b5441f10c83192f8ae",
+  "generated_at": "2026-11-09T21:08:03+0900",
+  "review": "generated_not_listening_reviewed"
+}

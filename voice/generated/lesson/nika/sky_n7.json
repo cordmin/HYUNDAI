@@ -1,0 +1,14 @@
+{
+  "duration": 35.28,
+  "sample_rate": 24000,
+  "peak": 27596,
+  "rms": 3289.75,
+  "sha256": "872721cd43fc3a7ee292b3e1631fbe4b96f68fcb4a6db921cdf962eabb47d5e7",
+  "id": "sky_n7",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "맑은 날 하늘을 잘 보면, 머리 위는 짙은 파란색인데 지평선 가까이로 갈수록 옅어져 희끄무레해집니다. 지평선 쪽에서 오는 빛은 공기를 아주 길게 지나오면서 여러 번 흩어집니다. 그러는 동안 파란빛만이 아니라 다른 색도 조금씩 섞여 들어오고, 먼 곳의 작은 입자들도 빛을 보탭니다. 여러 색이 섞이면 하얀빛에 가까워지지요. 그래서 지평선 쪽 하늘은 머리 위보다 옅게 보입니다.",
+  "fingerprint": "0736360f137848cd92f25fa71b8bdfa3819b4881969813479ce8afea8d7a349b",
+  "generated_at": "2026-11-09T21:17:21+0900",
+  "review": "generated_not_listening_reviewed"
+}

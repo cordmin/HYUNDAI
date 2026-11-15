@@ -1,0 +1,14 @@
+{
+  "duration": 30.44,
+  "sample_rate": 24000,
+  "peak": 21126,
+  "rms": 2915.05,
+  "sha256": "9308616df9298c232b63ea62459ffc598d9e38df8e400743f96d18c8e92b5f74",
+  "id": "starry_f_n4",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "윤동주의 시에는 부끄러움이라는 말이 자주 나옵니다. 서시에서도 하늘을 우러러 한 점 부끄럼이 없기를 바란다고 말하지요. 이 부끄러움은 남에게 들킨 잘못 때문이라기보다, 스스로를 맑게 지키고 싶은 마음에서 나온 것으로 읽히곤 합니다. 별 헤는 밤에서도 이름을 흙으로 덮는 장면을 그런 마음과 이어 볼 수 있습니다. 다만 이것도 하나의 읽기라는 점은 기억해 둘게요.",
+  "fingerprint": "4f0ccb4ab9a588c9f297cfc96e755448b8cd8c119d8aaace26749abf8bc144f9",
+  "generated_at": "2026-11-09T21:09:30+0900",
+  "review": "generated_not_listening_reviewed"
+}

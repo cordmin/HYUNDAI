@@ -1,0 +1,14 @@
+{
+  "duration": 15.52,
+  "sample_rate": 24000,
+  "peak": 17521,
+  "rms": 2032.71,
+  "sha256": "722b2cae498cd027ec59c7df054ef39b4d078edad560d747dae6ffd384e48a13",
+  "id": "dongbaek_q1",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "여기서 생각거리를 하나 드릴게요. 점순이가 건넨 것은 정말 감자뿐이었을까요? 감자와 함께 전하고 싶었던 마음은 무엇이었을까요? 속으로만 떠올려도 좋습니다.",
+  "fingerprint": "5db5756b09a7d43c3987dc4afbb92e7fd8f5b38f72cb24f9134bbf99bd6c2424",
+  "generated_at": "2026-11-09T21:04:38+0900",
+  "review": "generated_not_listening_reviewed"
+}

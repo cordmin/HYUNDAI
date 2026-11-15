@@ -1,0 +1,14 @@
+{
+  "duration": 28.16,
+  "sample_rate": 24000,
+  "peak": 26302,
+  "rms": 2790.52,
+  "sha256": "0177d35ca25de5ececb90982f5cb710c93e01b4d57ae95a9f52f6111d56d27a0",
+  "id": "prime_m3a",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "소수 가운데 삼과 오, 십일과 십삼처럼 차이가 이인 짝을 쌍둥이 소수라고 부릅니다. 수가 커져도 이런 짝은 계속 발견되지만, 끝없이 있는지는 아직 아무도 증명하지 못했습니다. 소수가 끝없다는 사실은 이천 년 전에 증명되었는데, 비슷해 보이는 질문이 지금도 풀리지 않은 셈입니다. 증명이 얼마나 다른 일인지 보여 주는 예입니다.",
+  "fingerprint": "3cb596d52af0aaccff73c871de981db7307e6e0cf85453e3628bbb11bc24af15",
+  "generated_at": "2026-11-09T21:13:40+0900",
+  "review": "generated_not_listening_reviewed"
+}

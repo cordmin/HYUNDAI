@@ -1,0 +1,14 @@
+{
+  "duration": 31.24,
+  "sample_rate": 24000,
+  "peak": 22226,
+  "rms": 3038.62,
+  "sha256": "c470a690e7efb0cd888f2524988c56c558e78aad91314a14658f43588c5fcdde",
+  "id": "ai_n4",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "언어 모델이 다루는 작은 글 단위를 토큰이라고 부릅니다. 토큰은 낱말 하나일 수도 있고, 낱말의 일부나 문장 부호일 수도 있습니다. 자주 쓰는 말은 한 토큰이 되기 쉽고, 드문 말은 여러 조각으로 나뉘기도 합니다. 모델은 이런 조각들이 어떤 순서로 이어지는지에 관한 관계를 학습합니다. 그래서 글자 수를 정확히 세는 일처럼, 사람에게는 쉬운 일을 의외로 틀리기도 합니다.",
+  "fingerprint": "55e14d5c072ecaa4447acf3defb23c6d166a3408aff6f8019961f3b51b699485",
+  "generated_at": "2026-11-09T21:15:16+0900",
+  "review": "generated_not_listening_reviewed"
+}

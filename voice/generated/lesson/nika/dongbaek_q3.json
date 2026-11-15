@@ -1,0 +1,14 @@
+{
+  "duration": 20.08,
+  "sample_rate": 24000,
+  "peak": 26456,
+  "rms": 2777.89,
+  "sha256": "b29811818e8bc002f17beac2a7a1f8265475715e2085580209d74afca041c7fb",
+  "id": "dongbaek_q3",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "점순이의 행동을 오늘의 눈으로 생각해 보겠습니다. 좋아하는 마음이 있었다고 해도 상대를 괴롭히거나 동물을 해치는 행동이 괜찮아지는 것은 아닙니다. 그렇다면 점순이는 어떤 말이나 행동으로 마음을 전할 수 있었을까요?",
+  "fingerprint": "9f8bc45da7308b47f2eb270bc3cb325c0db0a4a89f0ed83966fc6f57f8356cbf",
+  "generated_at": "2026-11-09T21:04:58+0900",
+  "review": "generated_not_listening_reviewed"
+}

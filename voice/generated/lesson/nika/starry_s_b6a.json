@@ -1,0 +1,14 @@
+{
+  "duration": 24.44,
+  "sample_rate": 24000,
+  "peak": 20020,
+  "rms": 2454.97,
+  "sha256": "9866a268659d63265b296e208193cbd2b33031a2ad64a1b499c7fe94821cd83a",
+  "id": "starry_s_b6a",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "봄을 기다리는 마지막 대목은 시를 처음 쓴 뒤에 덧붙인 것으로 알려져 있습니다. 후배가 끝이 허전하다는 뜻을 전한 뒤 윤동주가 몇 줄을 더 썼다는 이야기입니다. 그 몇 줄 덕분에 시는 부끄러움에서 멈추지 않고 봄을 기다리는 마음으로 닫힙니다. 끝을 어떻게 맺느냐가 시 전체의 느낌을 바꿀 수 있지요.",
+  "fingerprint": "ca1a9ee17b1f207931313c48ea47471ffa878993020d19a65972cacc684b9f31",
+  "generated_at": "2026-11-09T21:10:32+0900",
+  "review": "generated_not_listening_reviewed"
+}

@@ -1,0 +1,14 @@
+{
+  "duration": 34.64,
+  "sample_rate": 24000,
+  "peak": 18642,
+  "rms": 2859.4,
+  "sha256": "56722544bb4efb7a076d258c2b7bc0c3afbd0b7eff4fdf04ffd4f92e62e30a06",
+  "id": "starry_f_b2a",
+  "voice": "Nika",
+  "model": "gemini-3.8-flash-tts",
+  "text": "시의 첫머리에서 말하는 이는 계절이 지나가는 하늘이 가을로 가득 차 있다고 말합니다. 하늘을 계절로 채운다는 표현이 독특하지요. 그리고 가을 속의 별들을 다 헤일 듯하다고 말합니다. 그런데 바로 뒤에 다 헤지 못하는 까닭이 이어집니다. 쉬이 아침이 오고, 내일 밤이 남았고, 아직 청춘이 다하지 않았기 때문이라고 하지요. 별을 세는 일이 오늘 밤에 끝나지 않는 일로 그려집니다.",
+  "fingerprint": "d541a949a28fb7260fad7e1764da112c357a85e16de60f1d0b311f8ca4bcd55d",
+  "generated_at": "2026-11-09T21:08:13+0900",
+  "review": "generated_not_listening_reviewed"
+}

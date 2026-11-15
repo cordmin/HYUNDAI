@@ -31,7 +31,7 @@
 |---|---|
 | 팀 / 앱 | 도라이브 / 다잇(DAIT) |
 | 한 줄 소개 | (정하는 중) |
-| APK | `도라이브_다잇_release.apk` — 약 150MB라 GitHub 저장소(100MB 제한) 대신 [GitHub Releases](https://github.com/cordmin/HYUNDAI/releases/tag/submission-2026-11-15)에 올렸습니다 |
+| APK | `도라이브_다잇_release.apk` (Release에서 내려받는 이름은 `Dorive_DAIT_release.apk`, GitHub가 한글 파일 이름을 받지 않음) — 약 150MB라 GitHub 저장소(100MB 제한) 대신 [GitHub Releases](https://github.com/cordmin/HYUNDAI/releases/tag/submission-2026-11-15)에 올렸습니다 |
 | 개발 에뮬레이터 | Pleos Connect Emulator 2.1.0 (Android 14, API 34, x86_64 시스템 이미지 `pleos_car_emulator`) |
 | 화면 규격 | 2560 × 1440 가로, 밀도 160dpi |
 | 앱 정보 | 패키지 `io.dait.app`, 버전 `0.4-pearl`, release 서명 |
@@ -41,7 +41,7 @@
 **제출용 APK 설치:** Pleos Connect Emulator 2.1.0을 켠 뒤(RAM 4GB, Cold boot 권장) Release 페이지의 APK를 내려받아 설치하고 실행합니다.
 
 ```powershell
-adb install -r 도라이브_다잇_release.apk
+adb install -r Dorive_DAIT_release.apk
 adb shell am start -n io.dait.app/.MainActivity
 ```
 

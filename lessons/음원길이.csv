@@ -49,6 +49,10 @@ lesson/ai_q5,19.2
 lesson/ai_r1,19.8
 lesson/ai_s1,19.1
 lesson/cicada_b1,35.9
+lesson/cicada_b10,49
+lesson/cicada_b11,42.3
+lesson/cicada_b12,53.7
+lesson/cicada_b13,43.1
 lesson/cicada_b2,36
 lesson/cicada_b3,47.3
 lesson/cicada_b4,42.7
@@ -56,12 +60,15 @@ lesson/cicada_b5,38.6
 lesson/cicada_b6,39.4
 lesson/cicada_b7,44.3
 lesson/cicada_b8,34.3
+lesson/cicada_b9,61.3
 lesson/cicada_c1,42
 lesson/cicada_c2,28.3
 lesson/cicada_i1,36
 lesson/cicada_i2,30.9
 lesson/cicada_m1,33.5
 lesson/cicada_m10,31.8
+lesson/cicada_m11,44.4
+lesson/cicada_m12,39.4
 lesson/cicada_m2,31.1
 lesson/cicada_m3,35.4
 lesson/cicada_m4,27.2
@@ -72,6 +79,7 @@ lesson/cicada_m8,27.2
 lesson/cicada_m9,20.3
 lesson/cicada_q1,26.2
 lesson/cicada_q2,29.8
+lesson/cicada_q3,34
 lesson/cicada_r1,29.4
 lesson/cicada_s1,22.5
 lesson/dongbaek_b1,36.2
